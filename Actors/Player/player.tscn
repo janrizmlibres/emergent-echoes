@@ -206,12 +206,12 @@ transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition
 graph_offset = Vector2(0, -67.0082)
 
 [node name="Player" type="CharacterBody2D"]
+texture_filter = 1
 motion_mode = 1
 script = ExtResource("1_idj2s")
 metadata/_edit_group_ = true
 
 [node name="Stats" parent="." instance=ExtResource("2_rneyo")]
-money = 30
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -10)
