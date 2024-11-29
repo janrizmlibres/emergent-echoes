@@ -1,5 +1,6 @@
-[gd_scene load_steps=9 format=4 uid="uid://7ju7mpc0by18"]
+[gd_scene load_steps=10 format=4 uid="uid://7ju7mpc0by18"]
 
+[ext_resource type="Script" path="res://World.cs" id="1_1yijo"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://camera_2d.tscn" id="1_pp8dq"]
 [ext_resource type="Texture2D" uid="uid://b3h6fxk0bi5lj" path="res://World/Forest/forest.png" id="1_tpvnw"]
 [ext_resource type="PackedScene" uid="uid://bnmuhsutwyeye" path="res://Actors/Player/player.tscn" id="2_ne4id"]
@@ -151,6 +152,7 @@ sources/0 = SubResource("TileSetAtlasSource_k42pd")
 [node name="World" type="Node2D"]
 y_sort_enabled = true
 texture_filter = 1
+script = ExtResource("1_1yijo")
 
 [node name="Camera2D" parent="." instance=ExtResource("1_pp8dq")]
 position = Vector2(176, 160)
