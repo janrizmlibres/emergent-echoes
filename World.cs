@@ -1,8 +1,6 @@
 using Godot;
 using System;
 
-using Godot.Collections;
-
 namespace EmergentEchoes
 {
 	public partial class World : Node2D
@@ -16,11 +14,6 @@ namespace EmergentEchoes
 				{
 					WorldState.Instance.NPCList.Add(actor);
 				}
-			}
-
-			foreach (CharacterBody2D actor in WorldState.Instance.NPCList)
-			{
-				GD.Print(actor.Name);
 			}
 		}
 
