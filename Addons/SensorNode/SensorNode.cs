@@ -11,12 +11,14 @@ namespace EmergentEchoes
 		{
 			// Initialization of the plugin goes here.
 			Script script = GD.Load<Script>("res://addons/SensorNode/Sensor.cs");
-			// AddCustomType("Sensor", "Node", script);
+			Texture2D texture = GD.Load<Texture2D>("res://addons/SensorNode/Icon.png");
+			AddCustomType("Sensor", "Node", script, texture);
 		}
 
 		public override void _ExitTree()
 		{
 			// Clean-up of the plugin goes here.
+			RemoveCustomType("Sensor");
 		}
 	}
 }

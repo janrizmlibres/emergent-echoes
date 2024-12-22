@@ -31,6 +31,10 @@ window/stretch/mode="canvas_items"
 
 project/assembly_name="EmergentEchoes"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/SensorNode/plugin.cfg")
+
 [input]
 
 up={
