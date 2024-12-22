@@ -33,7 +33,7 @@ project/assembly_name="EmergentEchoes"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/SensorNode/plugin.cfg")
+enabled=PackedStringArray("res://addons/MemoriserNode/plugin.cfg", "res://addons/SensorNode/plugin.cfg", "res://addons/StrategiserNode/plugin.cfg")
 
 [input]
 
