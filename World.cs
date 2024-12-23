@@ -8,11 +8,13 @@ namespace EmergentEchoes
 		// Called when the node enters the scene tree for the first time.
 		public override void _Ready()
 		{
+			WorldState.IWorldStateWriter worldState = WorldState.GetWriter(this);
+
 			foreach (Node child in GetChildren())
 			{
 				if (child is CharacterBody2D actor)
 				{
-					WorldState.Instance.NPCList.Add(actor);
+					worldState.AddNPC(actor);
 				}
 			}
 		}

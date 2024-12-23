@@ -7,9 +7,16 @@ namespace EmergentEchoes
     [Tool]
     public partial class Sensor : Node
     {
-        public static List<CharacterBody2D> GetActors()
+        private readonly WorldState.IWorldStateReader _worldState;
+
+        public Sensor()
         {
-            return WorldState.Instance.NPCList;
+            _worldState = WorldState.GetReader(this);
+        }
+
+        public List<CharacterBody2D> GetActors()
+        {
+            return _worldState.GetNPCList();
         }
     }
 }
