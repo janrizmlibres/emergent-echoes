@@ -1,8 +1,11 @@
-[gd_scene load_steps=15 format=3 uid="uid://blrsgvyqgogoa"]
+[gd_scene load_steps=18 format=3 uid="uid://blrsgvyqgogoa"]
 
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Actors/NPCs/Garreth/garreth.png" id="1_isnnv"]
 [ext_resource type="Script" path="res://Actors/NPCs/Npc.cs" id="1_l7ygd"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Actors/NPCs/npc_anims.res" id="2_or5th"]
+[ext_resource type="Script" path="res://addons/SensorNode/Sensor.cs" id="4_is3ta"]
+[ext_resource type="Script" path="res://addons/MemoriserNode/Memoriser.cs" id="5_qeeqv"]
+[ext_resource type="Script" path="res://addons/StrategiserNode/Strategiser.cs" id="6_xauoa"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0
@@ -52,6 +55,7 @@ graph_offset = Vector2(0, -75.9467)
 [node name="Garreth" type="CharacterBody2D"]
 texture_filter = 1
 script = ExtResource("1_l7ygd")
+Traits = 4
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -59,7 +63,7 @@ position = Vector2(0, -9)
 texture = ExtResource("1_isnnv")
 hframes = 8
 vframes = 6
-frame = 7
+frame = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -80,3 +84,12 @@ parameters/Move/blend_position = 0
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 debug_enabled = true
+
+[node name="Sensor" type="Node" parent="."]
+script = ExtResource("4_is3ta")
+
+[node name="Memoriser" type="Node" parent="."]
+script = ExtResource("5_qeeqv")
+
+[node name="Strategiser" type="Node" parent="."]
+script = ExtResource("6_xauoa")

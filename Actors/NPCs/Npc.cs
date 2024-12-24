@@ -1,11 +1,26 @@
+using EmergentEchoes.Actors.NPCs.Traits;
 using Godot;
 using Godot.Collections;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EmergentEchoes
 {
 	public partial class Npc : CharacterBody2D
 	{
+		[Flags]
+		public enum TraitValues
+		{
+			Thief = 1 << 1,
+			Lawful = 1 << 2,
+		}
+
+		[Export]
+		public TraitValues Traits { get; set; }
+
+		private readonly List<ITrait> _traits = new();
+
 		private Timer _stateTimer;
 		private NavigationAgent2D _navigationAgent2d;
 		private AnimationTree _animationTree;
@@ -39,7 +54,22 @@ namespace EmergentEchoes
 			_navigationAgent2d.DebugEnabled = true;
 
 			_tileMapLayer = GetParent().GetNode<TileMapLayer>("TileMapLayer");
+
 			SetupTilePositions();
+			AddTraits();
+		}
+
+		private void AddTraits()
+		{
+			if (Traits.HasFlag(TraitValues.Thief))
+			{
+				_traits.Add(new ThiefTrait(this, 1.0f));
+			}
+
+			if (Traits.HasFlag(TraitValues.Lawful))
+			{
+				_traits.Add(new LawfulTrait(this, 1.0f));
+			}
 		}
 
 		private void SetupTilePositions()
@@ -53,6 +83,25 @@ namespace EmergentEchoes
 				if (tileData != null && (bool)tileData.GetCustomData("isNavigatable"))
 				{
 					_validTilePositions.Add(cell);
+				}
+			}
+		}
+
+		private void EvaluateTraits()
+		{
+			ITrait bestTrait = _traits
+				.Where(t => t.ShouldActivate())
+				.OrderByDescending(t => t.EvaluationAction())
+				.FirstOrDefault();
+
+			if (bestTrait != null)
+			{
+				Vector2? targetPosition = bestTrait.GetTargetPosition();
+
+				if (targetPosition.HasValue)
+				{
+					// Move to target and execute trait action
+					_navigationAgent2d.TargetPosition = targetPosition.Value;
 				}
 			}
 		}
