@@ -10,7 +10,11 @@ namespace EmergentEchoes.addons.NPCNode
     [Tool]
     public partial class NPC2D : CharacterBody2D
     {
-        [ExportCategory("Traits")]
+        [Export(PropertyHint.Range, "0,10000,")]
+        public int MoneyValue { get; set; } = 10;
+
+        [ExportGroup("Traits")]
+
         [Export(PropertyHint.Range, "0.01,1,0.01")]
         public float Survival { get; set; } = 1;
         [Export(PropertyHint.Range, "0,1,0.01")]
@@ -24,13 +28,8 @@ namespace EmergentEchoes.addons.NPCNode
         [Export(PropertyHint.Range, "0,1,0.01")]
         public float Social { get; set; } = 0;
 
+        [ExportGroup("Resource Weights")]
 
-        [ExportCategory("Resources (Stats)")]
-
-        [Export(PropertyHint.Range, "0,10000,")]
-        public int MoneyValue { get; set; } = 10;
-
-        [ExportGroup("Weights")]
         [Export(PropertyHint.Range, "0,1,0.01")]
         public float Food { get; set; } = 0.5f;
         [Export(PropertyHint.Range, "0,1,0.01")]

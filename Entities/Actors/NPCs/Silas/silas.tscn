@@ -50,7 +50,6 @@ graph_offset = Vector2(0, -75.9467)
 
 [node name="Silas" type="CharacterBody2D"]
 texture_filter = 1
-metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -9)
