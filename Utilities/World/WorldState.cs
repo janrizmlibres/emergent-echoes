@@ -1,3 +1,4 @@
+using EmergentEchoes.Utilities.Internal;
 using Godot;
 using System;
 using System.Collections.Generic;

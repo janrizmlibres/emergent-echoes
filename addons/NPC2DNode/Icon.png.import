@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8wg8i7fd41ih"
-path="res://.godot/imported/Icon.png-b7e87a640ccdd8be42f48dee50324906.ctex"
+uid="uid://cmeeoo50bd1mq"
+path="res://.godot/imported/Icon.png-50fdf3ab0dc1d16ee24fc592a97ccf2c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/SensorNode/Icon.png"
-dest_files=["res://.godot/imported/Icon.png-b7e87a640ccdd8be42f48dee50324906.ctex"]
+source_file="res://addons/NPC2DNode/Icon.png"
+dest_files=["res://.godot/imported/Icon.png-50fdf3ab0dc1d16ee24fc592a97ccf2c.ctex"]
 
 [params]
 
