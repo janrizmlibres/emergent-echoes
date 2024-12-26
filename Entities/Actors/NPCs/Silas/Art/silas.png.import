@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cy1rkbqupy3bh"
-path="res://.godot/imported/silas.png-061ce232bd244c6397771eacda50333c.ctex"
+path="res://.godot/imported/silas.png-8c1376b2b266d5a45b18e80a99f4d238.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Actors/NPCs/Silas/silas.png"
-dest_files=["res://.godot/imported/silas.png-061ce232bd244c6397771eacda50333c.ctex"]
+source_file="res://Entities/Actors/NPCs/Silas/Art/silas.png"
+dest_files=["res://.godot/imported/silas.png-8c1376b2b266d5a45b18e80a99f4d238.ctex"]
 
 [params]
 

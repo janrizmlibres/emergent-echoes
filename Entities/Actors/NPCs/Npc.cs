@@ -14,10 +14,39 @@ namespace EmergentEchoes
 		{
 			Thief = 1 << 1,
 			Lawful = 1 << 2,
+			Generous = 1 << 3,
+			Violent = 1 << 4,
+			Social = 1 << 5,
 		}
 
 		[Export]
 		public TraitValues Traits { get; set; }
+
+		[ExportGroup("Weights")]
+		[Export(PropertyHint.Range, "0.01,1,0.01")]
+		public float Thief { get; set; } = 0.5f;
+		[Export(PropertyHint.Range, "0.01,1,0.01")]
+		public float Lawful { get; set; } = 0.5f;
+		[Export(PropertyHint.Range, "0.01,1,0.01")]
+		public float Generous { get; set; } = 0.5f;
+		[Export(PropertyHint.Range, "0.01,1,0.01")]
+		public float Violent { get; set; } = 0.5f;
+		[Export(PropertyHint.Range, "0.01,1,0.01")]
+		public float Social { get; set; } = 0.5f;
+
+
+		[ExportCategory("Resources (Stats)")]
+
+		[Export(PropertyHint.Range, "0,10000,")]
+		public int MoneyValue { get; set; } = 10;
+
+		[ExportGroup("Weights")]
+		[Export(PropertyHint.Range, "0,1,0.01")]
+		public float Food { get; set; } = 0.5f;
+		[Export(PropertyHint.Range, "0,1,0.01")]
+		public float Companionship { get; set; } = 0.5f;
+		[Export(PropertyHint.Range, "0,1,0.01")]
+		public float Money { get; set; } = 0.5f;
 
 		private readonly List<ITrait> _traits = new();
 

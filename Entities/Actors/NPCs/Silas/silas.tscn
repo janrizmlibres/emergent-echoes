@@ -1,8 +1,8 @@
 [gd_scene load_steps=15 format=3 uid="uid://diiesf6ffioa7"]
 
-[ext_resource type="Script" path="res://Actors/NPCs/Npc.cs" id="1_h13ff"]
-[ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Actors/NPCs/Silas/silas.png" id="2_5inc2"]
-[ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Actors/NPCs/npc_anims.res" id="3_ttgx4"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Npc.cs" id="1_h13ff"]
+[ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_5inc2"]
+[ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="3_ttgx4"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30oj8"]
 radius = 3.0
@@ -53,6 +53,7 @@ graph_offset = Vector2(0, -75.9467)
 texture_filter = 1
 script = ExtResource("1_h13ff")
 Traits = 2
+Thief = 0.24
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
