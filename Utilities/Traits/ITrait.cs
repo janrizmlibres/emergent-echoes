@@ -1,3 +1,4 @@
+using EmergentEchoes.addons.NPCNode;
 using Godot;
 
 namespace EmergentEchoes.Utilities.Traits
@@ -6,7 +7,7 @@ namespace EmergentEchoes.Utilities.Traits
     {
         float EvaluationAction();
         Vector2? GetTargetPosition();
-        void OnInteract(Npc other);
+        void OnInteract(NPC2D other);
         bool ShouldActivate();
     }
 }

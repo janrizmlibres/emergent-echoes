@@ -1,13 +1,14 @@
+using EmergentEchoes.addons.NPCNode;
 using Godot;
 
 namespace EmergentEchoes.Utilities.Traits
 {
     public class ThiefTrait : ITrait
     {
-        private readonly Npc _owner;
+        private readonly NPC2D _owner;
         private readonly float _weight; // Trait importance
 
-        public ThiefTrait(Npc owner, float weight)
+        public ThiefTrait(NPC2D owner, float weight)
         {
             _owner = owner;
             _weight = weight;
@@ -32,7 +33,7 @@ namespace EmergentEchoes.Utilities.Traits
             return null;
         }
 
-        public void OnInteract(Npc other)
+        public void OnInteract(NPC2D other)
         {
             // Handle interaction with other NPCs
             // Update resources, memory, relationships
