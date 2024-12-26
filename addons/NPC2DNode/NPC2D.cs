@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using EmergentEchoes.Utilities.Traits;
 using Godot;
 using Godot.Collections;
@@ -76,6 +75,18 @@ namespace EmergentEchoes.addons.NPCNode
             _tileMapLayer = GetParent().GetNode<TileMapLayer>("TileMapLayer");
 
             SetupTilePositions();
+            AddTraits();
+        }
+
+        private void AddTraits()
+        {
+            _traits.Add(new SurvivalTrait(Survival));
+
+            if (Thief > 0)
+                _traits.Add(new ThiefTrait(Thief));
+
+            if (Lawful > 0)
+                _traits.Add(new LawfulTrait(Lawful));
         }
 
         private void SetupTilePositions()
