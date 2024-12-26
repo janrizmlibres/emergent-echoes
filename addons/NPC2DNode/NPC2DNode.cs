@@ -4,7 +4,6 @@ using System;
 
 namespace EmergentEchoes.addons.NPCNode
 {
-
 	[Tool]
 	public partial class NPC2DNode : EditorPlugin
 	{

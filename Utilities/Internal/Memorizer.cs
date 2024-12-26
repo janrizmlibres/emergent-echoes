@@ -3,7 +3,7 @@ using System;
 
 namespace EmergentEchoes.Utilities.Internal
 {
-    public partial class Sensor : Node
+    public partial class Memorizer : Node
     {
         public override void _Ready()
         {

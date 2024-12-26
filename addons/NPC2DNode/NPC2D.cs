@@ -56,6 +56,8 @@ namespace EmergentEchoes.addons.NPCNode
 
         public override void _Ready()
         {
+            if (Engine.IsEditorHint()) return;
+
             _stateTimer = GetNode<Timer>("StateTimer");
             _navigationAgent2d = GetNode<NavigationAgent2D>("NavigationAgent2D");
             _animationTree = GetNode<AnimationTree>("AnimationTree");
@@ -91,27 +93,10 @@ namespace EmergentEchoes.addons.NPCNode
             }
         }
 
-        private void EvaluateTraits()
-        {
-            ITrait bestTrait = _traits
-                .Where(t => t.ShouldActivate())
-                .OrderByDescending(t => t.EvaluationAction())
-                .FirstOrDefault();
-
-            if (bestTrait != null)
-            {
-                Vector2? targetPosition = bestTrait.GetTargetPosition();
-
-                if (targetPosition.HasValue)
-                {
-                    // Move to target and execute trait action
-                    _navigationAgent2d.TargetPosition = targetPosition.Value;
-                }
-            }
-        }
-
         public override void _PhysicsProcess(double delta)
         {
+            if (Engine.IsEditorHint()) return;
+
             switch (_state)
             {
                 case State.Idle:
@@ -138,6 +123,7 @@ namespace EmergentEchoes.addons.NPCNode
             }
 
             MoveAndSlide();
+
         }
 
         private void IdleState()

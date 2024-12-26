@@ -1,13 +1,11 @@
-using EmergentEchoes.addons.NPCNode;
 using Godot;
+using System;
 
 namespace EmergentEchoes.Utilities.Traits
 {
     public interface ITrait
     {
-        float EvaluationAction();
-        Vector2? GetTargetPosition();
-        void OnInteract(NPC2D other);
-        bool ShouldActivate();
+        public Tuple<string, float> EvaluateAction();
+        public bool ShouldActivate();
     }
 }

@@ -1,20 +1,18 @@
-using EmergentEchoes.addons.NPCNode;
 using Godot;
+using System;
 
 namespace EmergentEchoes.Utilities.Traits
 {
     public class LawfulTrait : ITrait
     {
-        private readonly NPC2D _owner;
         private readonly float _weight; // Trait importance
 
-        public LawfulTrait(NPC2D owner, float weight)
+        public LawfulTrait(float weight)
         {
-            _owner = owner;
             _weight = weight;
         }
 
-        public float EvaluationAction()
+        public Tuple<string, float> EvaluateAction()
         {
             // Calculate score based on:
             // - Current needs/resources
@@ -22,21 +20,7 @@ namespace EmergentEchoes.Utilities.Traits
             // - Probability of success
             // Return weighted score
             // return score * _weight;
-            return 0.0f;
-        }
-
-        public Vector2? GetTargetPosition()
-        {
-            // Find potential target to steal from
-            // Return their position or null if none found
-            // return targetPos;
-            return null;
-        }
-
-        public void OnInteract(NPC2D other)
-        {
-            // Handle interaction with other NPCs
-            // Update resources, memory, relationships
+            return new("Lawful", 0);
         }
 
         public bool ShouldActivate()

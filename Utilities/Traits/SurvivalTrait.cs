@@ -3,11 +3,11 @@ using System;
 
 namespace EmergentEchoes.Utilities.Traits
 {
-    public class ThiefTrait : ITrait
+    public class SurvivalTrait : ITrait
     {
         private readonly float _weight;
 
-        public ThiefTrait(float weight)
+        public SurvivalTrait(float weight)
         {
             _weight = weight;
         }
@@ -20,7 +20,7 @@ namespace EmergentEchoes.Utilities.Traits
             // - Probability of success
             // Return weighted score
             // return score * _weight;
-            return new("Thief", 0);
+            return new("Survival", 0);
         }
 
         public bool ShouldActivate()
