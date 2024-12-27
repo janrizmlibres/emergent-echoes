@@ -56,7 +56,7 @@ position = Vector2(0, -9)
 texture = ExtResource("2_5inc2")
 hframes = 8
 vframes = 6
-frame = 7
+frame = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708

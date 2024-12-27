@@ -1,8 +1,7 @@
-[gd_scene load_steps=21 format=3 uid="uid://bnmuhsutwyeye"]
+[gd_scene load_steps=20 format=3 uid="uid://bnmuhsutwyeye"]
 
-[ext_resource type="Script" path="res://Actors/Player/Player.cs" id="1_idj2s"]
-[ext_resource type="Texture2D" uid="uid://pdwuu8j1am22" path="res://Actors/Player/player_elf.png" id="1_w44yq"]
-[ext_resource type="PackedScene" uid="uid://b35utar8ad6f8" path="res://Actors/stats.tscn" id="2_rneyo"]
+[ext_resource type="Script" path="res://Entities/Actors/Player/Player.cs" id="1_idj2s"]
+[ext_resource type="Texture2D" uid="uid://pdwuu8j1am22" path="res://Entities/Actors/Player/Art/player_elf.png" id="1_w44yq"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6wwjl"]
 radius = 3.0
@@ -210,8 +209,6 @@ texture_filter = 1
 motion_mode = 1
 script = ExtResource("1_idj2s")
 metadata/_edit_group_ = true
-
-[node name="Stats" parent="." instance=ExtResource("2_rneyo")]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -10)
