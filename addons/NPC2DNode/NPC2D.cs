@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using EmergentEchoes.Utilities.Internal;
 using EmergentEchoes.Utilities.Traits;
 using Godot;
 using Godot.Collections;
@@ -36,7 +37,7 @@ namespace EmergentEchoes.addons.NPCNode
         [Export(PropertyHint.Range, "0,1,0.01")]
         public float Money { get; set; } = 0.5f;
 
-        private readonly List<ITrait> _traits = new();
+        private Strategizer _strategizer;
 
         private Timer _stateTimer;
         private NavigationAgent2D _navigationAgent2d;
@@ -80,13 +81,18 @@ namespace EmergentEchoes.addons.NPCNode
 
         private void AddTraits()
         {
-            _traits.Add(new SurvivalTrait(Survival));
+            List<ITrait> traits = new()
+            {
+                new SurvivalTrait(Survival)
+            };
 
             if (Thief > 0)
-                _traits.Add(new ThiefTrait(Thief));
+                traits.Add(new ThiefTrait(Thief));
 
             if (Lawful > 0)
-                _traits.Add(new LawfulTrait(Lawful));
+                traits.Add(new LawfulTrait(Lawful));
+
+            _strategizer = new(traits);
         }
 
         private void SetupTilePositions()
