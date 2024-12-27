@@ -10,14 +10,14 @@ namespace EmergentEchoes.Utilities.Internal
     {
         public static string SelectAction(List<ITrait> traits)
         {
-            List<Tuple<float, string>> actions = traits
+            List<Tuple<string, float>> actions = traits
                 .Where(action => action.ShouldActivate())
                 .Select(trait => trait.EvaluateAction())
-                .Where(action => action.Item1 != 0)
-                .OrderByDescending(action => action.Item1)
+                .Where(action => action.Item2 != 0)
+                .OrderByDescending(action => action.Item2)
                 .ToList();
 
-            return actions.Any() ? actions.First().Item2 : string.Empty;
+            return actions.Any() ? actions.First().Item1 : string.Empty;
         }
     }
 }

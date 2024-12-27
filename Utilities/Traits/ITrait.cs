@@ -5,7 +5,7 @@ namespace EmergentEchoes.Utilities.Traits
 {
     public interface ITrait
     {
-        public Tuple<float, string> EvaluateAction();
+        public Tuple<string, float> EvaluateAction();
         public bool ShouldActivate();
     }
 }
