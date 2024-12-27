@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=4 uid="uid://7ju7mpc0by18"]
 
 [ext_resource type="Script" path="res://World.cs" id="1_1yijo"]
-[ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://camera_2d.tscn" id="1_pp8dq"]
+[ext_resource type="PackedScene" path="res://camera_2d.tscn" id="1_pp8dq"]
 [ext_resource type="PackedScene" uid="uid://bnmuhsutwyeye" path="res://Actors/Player/player.tscn" id="2_ne4id"]
 [ext_resource type="TileSet" uid="uid://5heikm5nk47u" path="res://forest_/forestcombined.tres" id="3_nfo08"]
 [ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Actors/NPCs/Silas/silas.tscn" id="4_gun4a"]
