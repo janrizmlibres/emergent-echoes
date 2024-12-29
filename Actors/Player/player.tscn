@@ -1,8 +1,9 @@
-[gd_scene load_steps=21 format=3 uid="uid://bnmuhsutwyeye"]
+[gd_scene load_steps=22 format=3 uid="uid://bnmuhsutwyeye"]
 
 [ext_resource type="Script" path="res://Actors/Player/Player.cs" id="1_idj2s"]
 [ext_resource type="Texture2D" uid="uid://pdwuu8j1am22" path="res://Actors/Player/player_elf.png" id="1_w44yq"]
 [ext_resource type="PackedScene" uid="uid://b35utar8ad6f8" path="res://Actors/stats.tscn" id="2_rneyo"]
+[ext_resource type="PackedScene" uid="uid://ddv2dvtqnrekh" path="res://World/Game Components/interacting_component.tscn" id="4_y61k5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6wwjl"]
 radius = 3.0
@@ -239,3 +240,5 @@ parameters/Move/blend_position = 1.0
 [node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="."]
 position = Vector2(0, -1)
 radius = 2.0
+
+[node name="InteractingComponent" parent="." instance=ExtResource("4_y61k5")]
