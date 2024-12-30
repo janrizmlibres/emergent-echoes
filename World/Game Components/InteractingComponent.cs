@@ -5,6 +5,8 @@ using EmergentEchoes;
 
 public partial class InteractingComponent : Node2D
 {
+	[Signal] public delegate void OnTreeChoppedEventHandler(CharacterBody2D character);
+	
 	private Label _interactLabel;
 	
 	private readonly List<Interactable> _currentInteractions = new List<Interactable>();
@@ -66,6 +68,7 @@ public partial class InteractingComponent : Node2D
 		_canInteract = false;
 		_interactLabel.Hide();
 		
+		EmitSignal(SignalName.OnTreeChopped, _currentInteractions[0].GetParent<CharacterBody2D>());
 		_currentInteractions[0].CharacterStats = GetParent().GetNode<Stats>("Stats");
 		await Task.FromResult(_currentInteractions[0].Interact.Call());
 
