@@ -68,7 +68,7 @@ public partial class InteractingComponent : Node2D
 		_canInteract = false;
 		_interactLabel.Hide();
 		
-		EmitSignal(SignalName.OnTreeChopped, _currentInteractions[0].GetParent<CharacterBody2D>());
+		EmitSignal(SignalName.OnTreeChopped, GetParent());
 		_currentInteractions[0].CharacterStats = GetParent().GetNode<Stats>("Stats");
 		await Task.FromResult(_currentInteractions[0].Interact.Call());
 
