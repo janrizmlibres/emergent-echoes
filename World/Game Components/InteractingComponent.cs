@@ -1,10 +1,12 @@
 using Godot;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EmergentEchoes;
 
 public partial class InteractingComponent : Node2D
 {
 	private Label _interactLabel;
+	
 	private readonly List<Interactable> _currentInteractions = new List<Interactable>();
 	private bool _canInteract = true;
 
@@ -60,10 +62,11 @@ public partial class InteractingComponent : Node2D
 		{
 			return;
 		}
-
+	
 		_canInteract = false;
 		_interactLabel.Hide();
-
+		
+		_currentInteractions[0].CharacterStats = GetParent().GetNode<Stats>("Stats");
 		await Task.FromResult(_currentInteractions[0].Interact.Call());
 
 		_canInteract = true;

@@ -184,7 +184,7 @@ position = Vector2(229, 260)
 position = Vector2(197, 228)
 
 [node name="Tree2" parent="." instance=ExtResource("7_tnhid")]
-position = Vector2(309, 149)
+position = Vector2(305, 144)
 
 [editable path="Camera2D"]
 [editable path="Player"]

@@ -1,14 +1,17 @@
+using System.Threading.Tasks;
 using Godot;
 
 public partial class Tree : StaticBody2D
 {
+	[Export] public int TreeHealth = 100;
+	
 	private Interactable _interactable;
 	private Label _testLabel;
 	
-	private void OnInteract()
+	private async void OnInteract()
 	{
-		_testLabel.Text = "Interacted with tree!";
 		_interactable.IsInteractable = false;
+		_testLabel.Text = "Tree Chopped";
 	}
 	
 	// Called when the node enters the scene tree for the first time.
@@ -18,10 +21,5 @@ public partial class Tree : StaticBody2D
 		_testLabel = GetNode<Label>("TestLabel");
 
 		_interactable.Interact = new Callable(this, nameof(OnInteract));
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
 	}
 }
