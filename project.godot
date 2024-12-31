@@ -11,13 +11,13 @@ config_version=5
 [application]
 
 config/name="Emergent Echoes"
-run/main_scene="res://world.tscn"
+run/main_scene="res://Stages/Island/world.tscn"
 config/features=PackedStringArray("4.3", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-WorldState="*res://WorldState.cs"
+WorldState="*res://Utilities/World/WorldState.cs"
 
 [display]
 
@@ -33,7 +33,7 @@ project/assembly_name="EmergentEchoes"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/NPC2DNode/plugin.cfg", "res://addons/NPCNode/plugin.cfg")
+enabled=PackedStringArray()
 
 [input]
 
