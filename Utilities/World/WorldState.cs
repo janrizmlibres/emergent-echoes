@@ -1,65 +1,35 @@
-using EmergentEchoes.Utilities.Internal;
+using EmergentEchoes.Entities.Actors;
 using Godot;
 using System;
 using System.Collections.Generic;
 
 namespace EmergentEchoes
 {
-	public sealed partial class WorldState : Node
+	public partial class WorldState : Node
 	{
-		private static readonly Lazy<WorldState> _lazy = new(() => new WorldState());
+		private static readonly Lazy<WorldState> _instance = new(() => new WorldState());
 
-		private static WorldState Instance { get { return _lazy.Value; } }
+		public static WorldState Instance { get { return _instance.Value; } }
 
-		private readonly List<CharacterBody2D> _npcList;
+		private WorldState() { }
 
-		private WorldState()
+		private readonly List<Actor> _actors = new();
+
+		// TODO: Consider limiting access to actors
+
+		public List<Actor> GetActors()
 		{
-			_npcList = new();
+			return _actors;
 		}
 
-		public interface IWorldStateReader
+		public void AddActor(Actor actor)
 		{
-			List<CharacterBody2D> GetNPCList();
+			_actors.Add(actor);
 		}
 
-		public interface IWorldStateWriter
+		public void RemoveActor(Actor actor)
 		{
-			void AddNPC(CharacterBody2D npc);
-
-			void RemoveNPC(CharacterBody2D npc);
-		}
-
-		private class WorldStateReader : IWorldStateReader
-		{
-			public List<CharacterBody2D> GetNPCList() => Instance._npcList;
-		}
-
-		private class WorldStateWriter : IWorldStateWriter
-		{
-			public void AddNPC(CharacterBody2D npc) => Instance._npcList.Add(npc);
-
-			public void RemoveNPC(CharacterBody2D npc) => Instance._npcList.Remove(npc);
-		}
-
-		// TODO: Implement factory pattern for reader and writer
-
-		public static IWorldStateReader GetReader(Sensor caller)
-		{
-			if (caller == null)
-			{
-				throw new UnauthorizedAccessException("Only Sensor instances can get a reader.");
-			}
-			return new WorldStateReader();
-		}
-
-		public static IWorldStateWriter GetWriter(World caller)
-		{
-			if (caller == null)
-			{
-				throw new UnauthorizedAccessException("Only World instances can get a writer.");
-			}
-			return new WorldStateWriter();
+			_actors.Remove(actor);
 		}
 	}
 }
