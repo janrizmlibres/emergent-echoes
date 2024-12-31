@@ -1,9 +1,10 @@
+using EmergentEchoes.Utilities.World;
 using Godot;
 using System;
 
 namespace EmergentEchoes.Utilities.Traits
 {
-    public class SurvivalTrait : ITrait
+    public class SurvivalTrait : Trait
     {
         private readonly float _weight;
 
@@ -12,7 +13,7 @@ namespace EmergentEchoes.Utilities.Traits
             _weight = weight;
         }
 
-        public Tuple<string, float> EvaluateAction()
+        public override Tuple<string, float> EvaluateAction()
         {
             // Calculate score based on:
             // - Current needs/resources
@@ -23,12 +24,9 @@ namespace EmergentEchoes.Utilities.Traits
             return new("Survival", 0);
         }
 
-        public bool ShouldActivate()
+        public override bool ShouldActivate(SocialPractice practice)
         {
-            // Check if conditions are right to activate this trait
-            // E.g. are we desperate for resources?
-            // return conditions;
-            return false;
+            return practice.PracticeType == SocialPractice.Practice.Proactive;
         }
     }
 }
