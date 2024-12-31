@@ -1,0 +1,12 @@
+{
+  "files.exclude": {
+    "**/*.godot": true,
+    "**/*.mono": true,
+    "**/*.vscode": true,
+    ".gitattributes": true,
+    ".gitignore": true,
+    "**/*.csproj": true,
+    "**/*.sln": true,
+    "README.md": true
+  }
+}
