@@ -1,4 +1,5 @@
 using EmergentEchoes.Utilities.Traits;
+using EmergentEchoes.Utilities.World;
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -6,29 +7,19 @@ using System.Linq;
 
 namespace EmergentEchoes.Utilities.Internal
 {
-    public class SocialPractice
-    {
-        public enum Practice
-        {
-            Proactive,
-            RefusedPetition,
-            FailedPetition,
-        }
-    }
-
     public partial class Strategizer : Node
     {
-        private readonly List<ITrait> _traits = new();
+        private readonly List<Trait> _traits;
 
-        public Strategizer(List<ITrait> traits)
+        public Strategizer(List<Trait> traits)
         {
             _traits = traits;
         }
 
-        public string SelectAction()
+        public string SelectAction(SocialPractice practice)
         {
             List<Tuple<string, float>> actions = _traits
-                .Where(action => action.ShouldActivate())
+                .Where(action => action.ShouldActivate(practice))
                 .Select(trait => trait.EvaluateAction())
                 .Where(action => action.Item2 != 0)
                 .OrderByDescending(action => action.Item2)
