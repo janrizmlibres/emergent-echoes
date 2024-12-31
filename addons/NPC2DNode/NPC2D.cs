@@ -1,44 +1,13 @@
-using System;
-using System.Collections.Generic;
-using EmergentEchoes.Utilities.Internal;
-using EmergentEchoes.Utilities.Traits;
+using EmergentEchoes.addons.NPC2DNode;
 using Godot;
+using System;
 using Godot.Collections;
 
 namespace EmergentEchoes.addons.NPCNode
 {
     [Tool]
-    public partial class NPC2D : CharacterBody2D
+    public partial class NPC2D : NPC
     {
-        [Export(PropertyHint.Range, "0,10000,")]
-        public int MoneyValue { get; set; } = 10;
-
-        [ExportGroup("Traits")]
-
-        [Export(PropertyHint.Range, "0.01,1,0.01")]
-        public float Survival { get; set; } = 1;
-        [Export(PropertyHint.Range, "0,1,0.01")]
-        public float Thief { get; set; } = 0;
-        [Export(PropertyHint.Range, "0,1,0.01")]
-        public float Lawful { get; set; } = 0;
-        [Export(PropertyHint.Range, "0,1,0.01")]
-        public float Generous { get; set; } = 0;
-        [Export(PropertyHint.Range, "0,1,0.01")]
-        public float Violent { get; set; } = 0;
-        [Export(PropertyHint.Range, "0,1,0.01")]
-        public float Social { get; set; } = 0;
-
-        [ExportGroup("Resource Weights")]
-
-        [Export(PropertyHint.Range, "0,1,0.01")]
-        public float Food { get; set; } = 0.5f;
-        [Export(PropertyHint.Range, "0,1,0.01")]
-        public float Companionship { get; set; } = 0.5f;
-        [Export(PropertyHint.Range, "0,1,0.01")]
-        public float Money { get; set; } = 0.5f;
-
-        private Strategizer _strategizer;
-
         private Timer _stateTimer;
         private NavigationAgent2D _navigationAgent2d;
         private AnimationTree _animationTree;
@@ -58,6 +27,8 @@ namespace EmergentEchoes.addons.NPCNode
         {
             if (Engine.IsEditorHint()) return;
 
+            base._Ready();
+
             _stateTimer = GetNode<Timer>("StateTimer");
             _navigationAgent2d = GetNode<NavigationAgent2D>("NavigationAgent2D");
             _animationTree = GetNode<AnimationTree>("AnimationTree");
@@ -76,23 +47,6 @@ namespace EmergentEchoes.addons.NPCNode
             _tileMapLayer = GetParent().GetNode<TileMapLayer>("TileMapLayer");
 
             SetupTilePositions();
-            AddTraits();
-        }
-
-        private void AddTraits()
-        {
-            List<ITrait> traits = new()
-            {
-                new SurvivalTrait(Survival)
-            };
-
-            if (Thief > 0)
-                traits.Add(new ThiefTrait(Thief));
-
-            if (Lawful > 0)
-                traits.Add(new LawfulTrait(Lawful));
-
-            _strategizer = new(traits);
         }
 
         private void SetupTilePositions()
