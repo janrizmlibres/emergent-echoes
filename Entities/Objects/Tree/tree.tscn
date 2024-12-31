@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://cfb2no4xxnn2l" path="res://Entities/Objects/Tree/Art/forest_resources.png" id="1_1wpv6"]
 [ext_resource type="Script" path="res://Entities/Objects/Tree/Tree.cs" id="1_wpbbf"]
-[ext_resource type="PackedScene" path="res://Utilities/Game Components/interactable.tscn" id="2_tpp7v"]
+[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Game Components/interactable.tscn" id="2_tpp7v"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_02270"]
 atlas = ExtResource("1_1wpv6")
@@ -43,7 +43,7 @@ position = Vector2(0, 5)
 shape = SubResource("CircleShape2D_hwgqm")
 
 [node name="RegrowTimer" type="Timer" parent="."]
-wait_time = 2.0
+wait_time = 300.0
 one_shot = true
 
 [connection signal="timeout" from="RegrowTimer" to="." method="OnRegrowTimerTimeout"]
