@@ -1,9 +1,10 @@
+using EmergentEchoes.Entities.Actors;
 using Godot;
 using System;
 
 namespace EmergentEchoes
 {
-	public partial class Player : CharacterBody2D
+	public partial class Player : Actor
 	{
 		[Export] private int MaxSpeed { get; set; } = 80;
 		[Export] private int Acceleration { get; set; } = 10;

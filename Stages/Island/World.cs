@@ -1,3 +1,4 @@
+using EmergentEchoes.Entities.Actors;
 using Godot;
 using System;
 
@@ -5,21 +6,17 @@ namespace EmergentEchoes
 {
 	public partial class World : Node2D
 	{
-		// Called when the node enters the scene tree for the first time.
 		public override void _Ready()
 		{
-			WorldState.IWorldStateWriter worldState = WorldState.GetWriter(this);
-
 			foreach (Node child in GetChildren())
 			{
-				if (child is CharacterBody2D actor)
+				if (child is Actor actor)
 				{
-					worldState.AddNPC(actor);
+					WorldState.Instance.AddActor(actor);
 				}
 			}
 		}
 
-		// Called every frame. 'delta' is the elapsed time since the previous frame.
 		public override void _Process(double delta)
 		{
 		}
