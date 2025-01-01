@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace EmergentEchoes.Utilities.World
+namespace EmergentEchoes.Utilities.Components
 {
     public class SocialPractice
     {
@@ -12,6 +12,6 @@ namespace EmergentEchoes.Utilities.World
             FailedPetition,
         }
 
-        public Practice PracticeType { get; set; }
+        public Practice Type { get; set; }
     }
 }
