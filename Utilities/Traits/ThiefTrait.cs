@@ -1,7 +1,7 @@
 using EmergentEchoes.addons.NPC2DNode;
-using EmergentEchoes.addons.NPCNode;
 using EmergentEchoes.Entities.Actors;
-using EmergentEchoes.Utilities.World;
+using EmergentEchoes.Utilities.Actions;
+using EmergentEchoes.Utilities.Components;
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -11,71 +11,63 @@ namespace EmergentEchoes.Utilities.Traits
 {
     public class ThiefTrait : Trait
     {
-        private readonly NPC _owner;
-        private readonly List<ResourceStat> _resources;
         private readonly List<Actor> _actors;
-        private readonly float _weight;
 
-        public ThiefTrait(NPC owner, List<ResourceStat> resources, float weight)
+        public ThiefTrait(NPC2D owner, float weight) : base(owner, weight)
         {
-            _owner = owner;
-            _resources = resources;
-            _weight = weight;
             _actors = _sensor.GetActors();
         }
 
-        public override Tuple<string, float> EvaluateAction()
+        public override Tuple<NPCAction, float> EvaluateAction()
         {
             List<ResourceStat> tangibleResources;
             HashSet<ResourceStat> evaluatedResources = new();
             ResourceStat selectedResource = null;
 
-            tangibleResources = _resources.Where(resource => resource.IsTangible).ToList();
+            tangibleResources = _owner.Resources.Where(resource => resource.IsTangible).ToList();
 
-            while (evaluatedResources.Count != _resources.Count && selectedResource == null)
+            while (evaluatedResources.Count != _owner.Resources.Count && selectedResource == null)
             {
                 selectedResource = tangibleResources
-                   .Where(resource => resource.IsImbalanced() && !evaluatedResources.Contains(resource))
+                   .Where(resource => resource.IsDeficient() && !evaluatedResources.Contains(resource))
                    .First();
 
                 selectedResource ??= tangibleResources
                     .Where(resource => !evaluatedResources.Contains(resource))
                     .First();
 
-                float chosenLikelihood = 0;
                 Actor chosenActor = null;
 
                 List<Actor> otherActors = _actors
-                    .Where(actor => actor.GetInstanceId() != _owner.GetInstanceId()).ToList();
+                    .Where(actor => actor.GetInstanceId() != _owner.GetInstanceId())
+                    .ToList();
 
                 foreach (Actor actor in otherActors)
                 {
                     if (actor.HasResource(selectedResource))
-                    {
-                        float likelihood = _owner.Thief * _weight * selectedResource.Value;
-                        if (likelihood > chosenLikelihood)
-                        {
-                            chosenLikelihood = likelihood;
-                            chosenActor = actor;
-                        }
-                    }
+                        chosenActor = actor;
                 }
 
                 if (chosenActor != null)
                 {
-                    return new Tuple<string, float>($"Steal {selectedResource.ResourceType} from {chosenActor.Name}", chosenLikelihood);
+                    float imbalance = selectedResource.LowerThreshold - selectedResource.Value;
+                    float unweightedScore = Math.Max(0, imbalance) / selectedResource.LowerThreshold;
+                    float weightedScore = unweightedScore * selectedResource.Weight * _weight;
+
+                    TheftAction action = new(_owner, chosenActor);
+                    return new Tuple<NPCAction, float>(action, weightedScore);
                 }
 
                 evaluatedResources.Add(selectedResource);
                 selectedResource = null;
             }
 
-            return new Tuple<string, float>(string.Empty, 0f);
+            return new Tuple<NPCAction, float>(null, 0);
         }
 
         public override bool ShouldActivate(SocialPractice practice)
         {
-            return practice.PracticeType == SocialPractice.Practice.Proactive;
+            return practice.Type == SocialPractice.Practice.Proactive;
         }
 
     }
