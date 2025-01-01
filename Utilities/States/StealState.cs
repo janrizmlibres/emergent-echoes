@@ -1,4 +1,4 @@
-using EmergentEchoes.addons.NPCNode;
+using EmergentEchoes.addons.NPC2DNode;
 using Godot;
 using System;
 

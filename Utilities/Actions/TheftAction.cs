@@ -1,4 +1,4 @@
-using EmergentEchoes.addons.NPCNode;
+using EmergentEchoes.addons.NPC2DNode;
 using EmergentEchoes.Entities.Actors;
 using EmergentEchoes.Utilities.States;
 using Godot;
@@ -24,7 +24,7 @@ namespace EmergentEchoes.Utilities.Actions
             StealState stealState = new(_owner);
 
             moveState.OnComplete += () => TransitionTo(stealState);
-            TransitionTo(moveState);
+            _currentState = moveState;
         }
 
         public override void Update()
