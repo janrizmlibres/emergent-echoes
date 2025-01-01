@@ -1,5 +1,6 @@
-[gd_scene load_steps=14 format=3 uid="uid://diiesf6ffioa7"]
+[gd_scene load_steps=15 format=3 uid="uid://diiesf6ffioa7"]
 
+[ext_resource type="Script" path="res://addons/NPC2DNode/NPC2D.cs" id="1_whnfa"]
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_5inc2"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="3_ttgx4"]
 
@@ -50,13 +51,15 @@ graph_offset = Vector2(0, -75.9467)
 
 [node name="Silas" type="CharacterBody2D"]
 texture_filter = 1
+script = ExtResource("1_whnfa")
+metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -9)
 texture = ExtResource("2_5inc2")
 hframes = 8
 vframes = 6
-frame = 6
+frame = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -73,6 +76,6 @@ anim_player = NodePath("../AnimationPlayer")
 parameters/Idle/blend_position = 0.0
 parameters/Move/blend_position = 0
 
-[node name="StateTimer" type="Timer" parent="."]
-
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+
+[node name="StateTimer" type="Timer" parent="."]
