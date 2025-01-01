@@ -1,4 +1,4 @@
-using EmergentEchoes.Utilities.World;
+using EmergentEchoes.Utilities.Components;
 using Godot;
 using System;
 using System.Collections.Generic;
