@@ -1,14 +1,21 @@
+using EmergentEchoes.Utilities.Actions;
 using Godot;
 using System;
 
 namespace EmergentEchoes.Utilities.Internal
 {
-    public partial class Executor : Node
+    public class Executor
     {
-        public override void _Ready()
+        private readonly NPCAction _action;
+
+        public Executor(NPCAction action)
         {
-            // Called every time the node is added to the scene.
-            // Initialization here
+            _action = action;
+        }
+
+        public void Update()
+        {
+            _action.Update();
         }
     }
 }
