@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace EmergentEchoes.Utilities.Internal
 {
-    public partial class Sensor : Node
+    public class Sensor
     {
-        private WorldState _worldState;
+        private readonly WorldState _worldState;
 
         public Sensor()
         {

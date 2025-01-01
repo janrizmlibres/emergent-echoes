@@ -1,5 +1,6 @@
+using EmergentEchoes.Utilities.Actions;
+using EmergentEchoes.Utilities.Components;
 using EmergentEchoes.Utilities.Traits;
-using EmergentEchoes.Utilities.World;
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace EmergentEchoes.Utilities.Internal
 {
-    public partial class Strategizer : Node
+    public class Strategizer
     {
         private readonly List<Trait> _traits;
 
@@ -16,16 +17,16 @@ namespace EmergentEchoes.Utilities.Internal
             _traits = traits;
         }
 
-        public string SelectAction(SocialPractice practice)
+        public NPCAction SelectAction(SocialPractice practice)
         {
-            List<Tuple<string, float>> actions = _traits
+            List<Tuple<NPCAction, float>> actions = _traits
                 .Where(action => action.ShouldActivate(practice))
                 .Select(trait => trait.EvaluateAction())
                 .Where(action => action.Item2 != 0)
                 .OrderByDescending(action => action.Item2)
                 .ToList();
 
-            return actions.Any() ? actions.First().Item1 : string.Empty;
+            return actions.Any() ? actions.First().Item1 : null;
         }
     }
 }
