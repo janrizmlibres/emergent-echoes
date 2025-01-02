@@ -1,6 +1,8 @@
 using EmergentEchoes.Entities.Actors;
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EmergentEchoes
 {
@@ -15,10 +17,13 @@ namespace EmergentEchoes
 					WorldState.Instance.AddActor(actor);
 				}
 			}
-		}
 
-		public override void _Process(double delta)
-		{
+			List<Actor> actors = WorldState.Instance.GetActors();
+
+			foreach (Actor actor in actors)
+			{
+				actor.AddRelationships(actors.Where(a => a != actor).ToList());
+			}
 		}
 	}
 }
