@@ -5,10 +5,18 @@ using System.Collections.Generic;
 
 namespace EmergentEchoes.Entities.Actors
 {
-    public partial class Actor : CharacterBody2D
+    public abstract partial class Actor : CharacterBody2D
     {
+        [Export(PropertyHint.Range, "0,1000000,")]
+        public int MoneyValue { get; set; } = 10;
+        [Export(PropertyHint.Range, "1,100,")]
+        public int FoodValue { get; set; } = 100;
+
+        [Export]
+        public string ActorName { get; set; }
+
         // TODO: Consider converting resources into dictionary for constant access
-        public List<ResourceStat> Resources { get; protected set; }
+        public List<ResourceStat> Resources { get; protected set; } = new();
 
         public bool HasResource(ResourceStat resource)
         {
@@ -18,5 +26,7 @@ namespace EmergentEchoes.Entities.Actors
 
             return foundResource.Value > 0;
         }
+
+        public abstract void AddRelationships(List<Actor> otherActors);
     }
 }
