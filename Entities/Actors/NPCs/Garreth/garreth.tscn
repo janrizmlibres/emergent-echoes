@@ -52,6 +52,12 @@ graph_offset = Vector2(0, -75.9467)
 [node name="Garreth" type="CharacterBody2D"]
 texture_filter = 1
 script = ExtResource("1_1yk4u")
+Survival = 0.01
+Thief = 0.41
+Lawful = 0.82
+Generous = 0.18
+Violent = 0.28
+Social = 0.61
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -59,7 +65,7 @@ position = Vector2(0, -9)
 texture = ExtResource("1_isnnv")
 hframes = 8
 vframes = 6
-frame = 6
+frame = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
