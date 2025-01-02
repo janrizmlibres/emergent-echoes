@@ -20,7 +20,7 @@ namespace EmergentEchoes.Utilities.Actions
 
         private void InitializeStates()
         {
-            MoveState moveState = new(_owner);
+            MoveState moveState = new(_owner, _target);
             StealState stealState = new(_owner);
 
             moveState.OnComplete += () => TransitionTo(stealState);
