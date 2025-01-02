@@ -1,6 +1,6 @@
 namespace EmergentEchoes.Utilities.Components.Enums
 {
-    public enum Practice
+    public enum SocialPractice
     {
         Proactive,
         RefusedPetition,
