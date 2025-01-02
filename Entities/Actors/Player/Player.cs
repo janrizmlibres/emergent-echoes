@@ -34,7 +34,7 @@ namespace EmergentEchoes
 			Resources.Add(new ResourceStat(StatType.Food, 1, true));
 		}
 
-		public override void AddRelationships(List<Actor> otherActors)
+		public void AddRelationships(List<Actor> otherActors)
 		{
 			foreach (Actor actor in otherActors)
 			{

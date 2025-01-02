@@ -26,7 +26,5 @@ namespace EmergentEchoes.Entities.Actors
 
             return foundResource.Value > 0;
         }
-
-        public abstract void AddRelationships(List<Actor> otherActors);
     }
 }

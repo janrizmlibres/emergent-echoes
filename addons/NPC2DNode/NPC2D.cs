@@ -77,7 +77,7 @@ namespace EmergentEchoes.addons.NPC2DNode
             Resources.Add(new ResourceStat(StatType.Companionship, Companionship, false));
         }
 
-        public override void AddRelationships(List<Actor> otherActors)
+        public void AddRelationships(List<Actor> otherActors)
         {
             foreach (Actor actor in otherActors)
             {
