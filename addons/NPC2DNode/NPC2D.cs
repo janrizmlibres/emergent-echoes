@@ -1,7 +1,8 @@
+using EmergentEchoes.Entities.Actors;
 using EmergentEchoes.Entities.Actors.NPCs;
 using EmergentEchoes.Utilities.Components;
+using EmergentEchoes.Utilities.Components.Enums;
 using EmergentEchoes.Utilities.Internal;
-using EmergentEchoes.Utilities.Records;
 using EmergentEchoes.Utilities.Traits;
 using Godot;
 using System;
@@ -12,10 +13,6 @@ namespace EmergentEchoes.addons.NPC2DNode
     [Tool]
     public partial class NPC2D : NPC
     {
-        [Export(PropertyHint.Range, "0,1000000,")]
-        public int MoneyValue { get; set; } = 10;
-        [Export(PropertyHint.Range, "1,100,")]
-        public int FoodValue { get; set; } = 100;
         [Export(PropertyHint.Range, "1,100,")]
         public int CompanionshipValue { get; set; } = 100;
 
@@ -43,6 +40,7 @@ namespace EmergentEchoes.addons.NPC2DNode
         [Export(PropertyHint.Range, "0,1,0.01")]
         public float Companionship { get; set; } = 0.5f;
 
+        private readonly Memorizer _memorizer = new();
         private Strategizer _strategizer;
         private readonly Executor _executor;
 
@@ -60,26 +58,31 @@ namespace EmergentEchoes.addons.NPC2DNode
         {
             List<Trait> traits = new()
             {
-                new SurvivalTrait(this, Survival)
+                new SurvivalTrait(this, _memorizer, Survival)
             };
 
             if (Thief > 0)
-                traits.Add(new ThiefTrait(this, Thief));
+                traits.Add(new ThiefTrait(this, _memorizer, Thief));
 
             if (Lawful > 0)
-                traits.Add(new LawfulTrait(this, Lawful));
+                traits.Add(new LawfulTrait(this, _memorizer, Lawful));
 
             _strategizer = new(traits);
         }
 
         private void AddResources()
         {
-            Resources = new()
+            Resources.Add(new ResourceStat(StatType.Money, Money, true));
+            Resources.Add(new ResourceStat(StatType.Food, Food, true));
+            Resources.Add(new ResourceStat(StatType.Companionship, Companionship, false));
+        }
+
+        public override void AddRelationships(List<Actor> otherActors)
+        {
+            foreach (Actor actor in otherActors)
             {
-                new ResourceStat(ResourceStat.Stat.Money, Money, true),
-                new ResourceStat(ResourceStat.Stat.Food, Food, true),
-                new ResourceStat(ResourceStat.Stat.Companionship, Companionship, false),
-            };
+                _memorizer.AddRelationship(actor, 0);
+            }
         }
 
         public override void _PhysicsProcess(double delta)

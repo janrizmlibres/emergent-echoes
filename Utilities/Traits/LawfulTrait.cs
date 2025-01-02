@@ -1,6 +1,8 @@
 using EmergentEchoes.addons.NPC2DNode;
 using EmergentEchoes.Utilities.Actions;
 using EmergentEchoes.Utilities.Components;
+using EmergentEchoes.Utilities.Components.Enums;
+using EmergentEchoes.Utilities.Internal;
 using Godot;
 using System;
 
@@ -8,7 +10,7 @@ namespace EmergentEchoes.Utilities.Traits
 {
     public class LawfulTrait : Trait
     {
-        public LawfulTrait(NPC2D owner, float weight) : base(owner, weight) { }
+        public LawfulTrait(NPC2D owner, Memorizer memorizer, float weight) : base(owner, memorizer, weight) { }
 
         public override Tuple<NPCAction, float> EvaluateAction()
         {
@@ -17,7 +19,7 @@ namespace EmergentEchoes.Utilities.Traits
 
         public override bool ShouldActivate(SocialPractice practice)
         {
-            return practice.Type == SocialPractice.Practice.Proactive;
+            return practice == SocialPractice.Proactive;
         }
     }
 }

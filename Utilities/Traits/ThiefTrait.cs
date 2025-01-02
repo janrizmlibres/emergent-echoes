@@ -2,6 +2,8 @@ using EmergentEchoes.addons.NPC2DNode;
 using EmergentEchoes.Entities.Actors;
 using EmergentEchoes.Utilities.Actions;
 using EmergentEchoes.Utilities.Components;
+using EmergentEchoes.Utilities.Components.Enums;
+using EmergentEchoes.Utilities.Internal;
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ namespace EmergentEchoes.Utilities.Traits
     {
         private readonly List<Actor> _actors;
 
-        public ThiefTrait(NPC2D owner, float weight) : base(owner, weight)
+        public ThiefTrait(NPC2D owner, Memorizer memorizer, float weight) : base(owner, memorizer, weight)
         {
             _actors = _sensor.GetActors();
         }
@@ -39,13 +41,17 @@ namespace EmergentEchoes.Utilities.Traits
                 Actor chosenActor = null;
 
                 List<Actor> otherActors = _actors
-                    .Where(actor => actor.GetInstanceId() != _owner.GetInstanceId())
+                    .Where(actor => actor != _owner)
                     .ToList();
 
                 foreach (Actor actor in otherActors)
                 {
-                    if (actor.HasResource(selectedResource))
+                    // TODO: Check also if imbalance is not too severe
+                    // TODO: Evaluate probability or likelihood of success
+                    if (actor.HasResource(selectedResource) && !_memorizer.IsLiked(actor))
+                    {
                         chosenActor = actor;
+                    }
                 }
 
                 if (chosenActor != null)
@@ -67,8 +73,7 @@ namespace EmergentEchoes.Utilities.Traits
 
         public override bool ShouldActivate(SocialPractice practice)
         {
-            return practice.Type == SocialPractice.Practice.Proactive;
+            return practice == SocialPractice.Proactive;
         }
-
     }
 }
