@@ -15,8 +15,12 @@ namespace EmergentEchoes.Entities.Actors
         [Export]
         public string ActorName { get; set; }
 
+        // TODO: Add runtime check if actor name is not set
+
         // TODO: Consider converting resources into dictionary for constant access
         public List<ResourceStat> Resources { get; protected set; } = new();
+
+        protected Dictionary<Actor, float> Relationships { get; set; } = new();
 
         public bool HasResource(ResourceStat resource)
         {
@@ -25,6 +29,14 @@ namespace EmergentEchoes.Entities.Actors
                 ?? throw new Exception("Resource not found.");
 
             return foundResource.Value > 0;
+        }
+
+        public void InitializeRelationships(List<Actor> others)
+        {
+            foreach (Actor actor in others)
+            {
+                Relationships.Add(actor, 0);
+            }
         }
     }
 }

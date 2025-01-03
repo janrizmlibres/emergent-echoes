@@ -24,19 +24,7 @@ namespace EmergentEchoes
 			foreach (Actor actor in actors)
 			{
 				List<Actor> others = actors.Where(a => a != actor).ToList();
-
-				if (actor is Player player)
-				{
-					player.AddRelationships(others);
-				}
-				else if (actor is NPC2D npc)
-				{
-					npc.AddRelationships(others);
-				}
-				else
-				{
-					throw new Exception("Actor type not recognized.");
-				}
+				actor.InitializeRelationships(others);
 			}
 		}
 	}

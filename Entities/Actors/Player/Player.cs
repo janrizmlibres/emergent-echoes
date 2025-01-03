@@ -17,8 +17,6 @@ namespace EmergentEchoes
 		private AnimationTree _animationTree;
 		private AnimationNodeStateMachinePlayback _animationState;
 
-		private Dictionary<Actor, float> Relationships { get; set; } = new();
-
 		public override void _Ready()
 		{
 			_animationTree = GetNode<AnimationTree>("AnimationTree");
@@ -32,14 +30,6 @@ namespace EmergentEchoes
 			// TODO: Consider adding separate resource class for player
 			Resources.Add(new ResourceStat(StatType.Money, 1, true));
 			Resources.Add(new ResourceStat(StatType.Food, 1, true));
-		}
-
-		public void AddRelationships(List<Actor> otherActors)
-		{
-			foreach (Actor actor in otherActors)
-			{
-				Relationships.Add(actor, 0);
-			}
 		}
 
 		public override void _PhysicsProcess(double delta)

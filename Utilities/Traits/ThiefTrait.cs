@@ -48,7 +48,7 @@ namespace EmergentEchoes.Utilities.Traits
                 {
                     // TODO: Check also if imbalance is not too severe
                     // TODO: Evaluate probability or likelihood of success
-                    if (actor.HasResource(selectedResource) && !_memorizer.IsLiked(actor))
+                    if (actor.HasResource(selectedResource) && !_memorizer.IsTrusted(actor))
                     {
                         chosenActor = actor;
                     }

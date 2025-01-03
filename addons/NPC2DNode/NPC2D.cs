@@ -49,6 +49,7 @@ namespace EmergentEchoes.addons.NPC2DNode
             if (Engine.IsEditorHint()) return;
 
             base._Ready();
+            _memorizer.Relationships = Relationships;
 
             AddResources();
             AddTraits();
@@ -75,14 +76,6 @@ namespace EmergentEchoes.addons.NPC2DNode
             Resources.Add(new ResourceStat(StatType.Money, Money, true));
             Resources.Add(new ResourceStat(StatType.Food, Food, true));
             Resources.Add(new ResourceStat(StatType.Companionship, Companionship, false));
-        }
-
-        public void AddRelationships(List<Actor> otherActors)
-        {
-            foreach (Actor actor in otherActors)
-            {
-                _memorizer.AddRelationship(actor, 0);
-            }
         }
 
         public override void _PhysicsProcess(double delta)

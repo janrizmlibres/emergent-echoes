@@ -13,16 +13,21 @@ namespace EmergentEchoes.Utilities.Internal
 
         public LinkedList<Event> ShortTermMemory { get; private set; } = new();
 
-        private readonly Dictionary<Actor, float> _relationships = new();
+        public Dictionary<Actor, float> Relationships { get; set; }
 
-        public void AddRelationship(Actor actor, float value)
+        public bool IsFriendly(Actor actor)
         {
-            _relationships.Add(actor, Math.Clamp(value, -15, 15));
+            return Relationships[actor] > 5;
         }
 
-        public bool IsLiked(Actor actor)
+        public bool IsTrusted(Actor actor)
         {
-            return _relationships[actor] > 10;
+            return Relationships[actor] > 10;
+        }
+
+        public bool IsClose(Actor actor)
+        {
+            return Relationships[actor] > 15;
         }
     }
 }
