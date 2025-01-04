@@ -1,18 +1,18 @@
-using System.Threading.Tasks;
 using Godot;
+using System;
 
-public partial class Tree : StaticBody2D
+public partial class Rock : StaticBody2D
 {
 	private Interactable _interactable;
-	private Sprite2D _saplingSprite;
-	private Sprite2D _treeSprite;
+	private Sprite2D _brokenRock;
+	private Sprite2D _fullRock;
 	private Timer _regrowTimer;
 	
 	private void OnInteract()
 	{
 		_interactable.IsInteractable = false;
-		_saplingSprite.Show();
-		_treeSprite.Hide();
+		_brokenRock.Show();
+		_fullRock.Hide();
 		_regrowTimer.Start();
 	}
 	
@@ -20,16 +20,16 @@ public partial class Tree : StaticBody2D
 	{
 		GD.Print("Tree Grown");
 		_interactable.IsInteractable = true;
-		_saplingSprite.Hide();
-		_treeSprite.Show();
+		_brokenRock.Hide();
+		_fullRock.Show();
 	}
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		_interactable = GetNode<Interactable>("Interactable"); 
-		_saplingSprite = GetNode<Sprite2D>("SaplingSprite");
-		_treeSprite = GetNode<Sprite2D>("TreeSprite");
+		_brokenRock = GetNode<Sprite2D>("BrokenRock");
+		_fullRock = GetNode<Sprite2D>("FullRock");
 		_regrowTimer = GetNode<Timer>("RegrowTimer");
 
 		_interactable.Interact = new Callable(this, nameof(OnInteract));

@@ -1,7 +1,6 @@
 using Godot;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EmergentEchoes;
 
 public partial class InteractingComponent : Node2D
 {
