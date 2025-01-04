@@ -23,23 +23,23 @@ script = ExtResource("1_wpbbf")
 
 [node name="TreeSprite" type="Sprite2D" parent="."]
 texture_filter = 1
+position = Vector2(0, -9)
 texture = SubResource("AtlasTexture_02270")
 
 [node name="SaplingSprite" type="Sprite2D" parent="."]
 visible = false
 texture_filter = 1
-position = Vector2(0, 9)
 texture = SubResource("AtlasTexture_5y27k")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 8)
+position = Vector2(0, -1)
 shape = SubResource("RectangleShape2D_gt5dx")
 
 [node name="Interactable" parent="." instance=ExtResource("2_tpp7v")]
 ActionDescription = "Chop tree"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
-position = Vector2(0, 5)
+position = Vector2(0, -3)
 shape = SubResource("CircleShape2D_hwgqm")
 
 [node name="RegrowTimer" type="Timer" parent="."]
