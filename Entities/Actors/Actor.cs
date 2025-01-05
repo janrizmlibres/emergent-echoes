@@ -7,13 +7,13 @@ namespace EmergentEchoes.Entities.Actors
 {
     public abstract partial class Actor : CharacterBody2D
     {
+        [Export]
+        public string ActorName { get; set; }
+
         [Export(PropertyHint.Range, "0,1000000,")]
         public int MoneyValue { get; set; } = 10;
         [Export(PropertyHint.Range, "1,100,")]
         public int FoodValue { get; set; } = 100;
-
-        [Export]
-        public string ActorName { get; set; }
 
         // TODO: Add runtime check if actor name is not set
 
