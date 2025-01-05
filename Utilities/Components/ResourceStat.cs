@@ -7,6 +7,7 @@ namespace EmergentEchoes.Utilities.Components
     public class ResourceStat
     {
         // TODO: Implement flyweight pattern for resource types
+        // TODO: Consider adding separate resource class for player
 
         public StatType Type { get; private set; }
         public float Value { get; private set; }

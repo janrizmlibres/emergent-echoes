@@ -1,6 +1,5 @@
 using EmergentEchoes.addons.NPC2DNode;
 using EmergentEchoes.Utilities.Actions;
-using EmergentEchoes.Utilities.Components;
 using EmergentEchoes.Utilities.Components.Enums;
 using EmergentEchoes.Utilities.Internal;
 using Godot;
@@ -15,6 +14,7 @@ namespace EmergentEchoes.Utilities.Traits
         public override Tuple<NPCAction, float> EvaluateAction()
         {
             return new(null, 0);
+            // return Tuple<NPCAction, float>(new TheftAction(), 0);
         }
 
         public override bool ShouldActivate(SocialPractice practice)

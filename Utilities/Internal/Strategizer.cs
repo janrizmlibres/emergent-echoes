@@ -1,5 +1,4 @@
 using EmergentEchoes.Utilities.Actions;
-using EmergentEchoes.Utilities.Components;
 using EmergentEchoes.Utilities.Components.Enums;
 using EmergentEchoes.Utilities.Traits;
 using Godot;

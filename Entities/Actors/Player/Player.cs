@@ -1,10 +1,8 @@
-using EmergentEchoes.addons.NPC2DNode;
 using EmergentEchoes.Entities.Actors;
 using EmergentEchoes.Utilities.Components;
 using EmergentEchoes.Utilities.Components.Enums;
 using Godot;
 using System;
-using System.Collections.Generic;
 
 namespace EmergentEchoes
 {
@@ -27,7 +25,6 @@ namespace EmergentEchoes
 
 		private void AddResources()
 		{
-			// TODO: Consider adding separate resource class for player
 			Resources.Add(new ResourceStat(StatType.Money, 1, true));
 			Resources.Add(new ResourceStat(StatType.Food, 1, true));
 		}

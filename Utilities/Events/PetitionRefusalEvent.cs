@@ -16,6 +16,7 @@ namespace EmergentEchoes.Utilities.Events
             _deniedResource = deniedResource;
         }
 
+        // Global History
         public override string GetGlobalDescription()
         {
             return $"{_doer.Name} refused a petition from {_deniedNPC.Name} for {_deniedResource}.";
