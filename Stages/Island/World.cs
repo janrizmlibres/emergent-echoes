@@ -1,4 +1,3 @@
-using EmergentEchoes.addons.NPC2DNode;
 using EmergentEchoes.Entities.Actors;
 using Godot;
 using System;
@@ -24,7 +23,7 @@ namespace EmergentEchoes
 			foreach (Actor actor in actors)
 			{
 				List<Actor> others = actors.Where(a => a != actor).ToList();
-				actor.InitializeRelationships(others);
+				actor.InitializeInternalState(others);
 			}
 		}
 	}
