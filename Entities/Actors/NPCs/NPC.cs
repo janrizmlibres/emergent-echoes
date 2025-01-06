@@ -2,9 +2,9 @@ using Godot;
 using System;
 using Godot.Collections;
 
-namespace EmergentEchoes.Entities.Actors.NPCs
+namespace EmergentEchoes.addons.NPC2DNode.Components
 {
-    public partial class NPC : Actor
+    public partial class NPC : CharacterBody2D
     {
         private Timer _stateTimer;
         private NavigationAgent2D _navigationAgent2d;
@@ -19,10 +19,14 @@ namespace EmergentEchoes.Entities.Actors.NPCs
 
         private State _state = State.Idle;
         private TileMapLayer _tileMapLayer;
-        private Array<Vector2I> _validTilePositions = new();
+        private readonly Array<Vector2I> _validTilePositions = new();
 
         public override void _Ready()
         {
+            if (Engine.IsEditorHint()) return;
+
+            base._Ready();
+
             _stateTimer = GetNode<Timer>("StateTimer");
             _navigationAgent2d = GetNode<NavigationAgent2D>("NavigationAgent2D");
             _animationTree = GetNode<AnimationTree>("AnimationTree");
@@ -34,8 +38,8 @@ namespace EmergentEchoes.Entities.Actors.NPCs
 
             _navigationAgent2d.NavigationFinished += OnChangeState;
             _navigationAgent2d.VelocityComputed += OnNavigationAgentVelocityComputed;
-            _navigationAgent2d.AvoidanceEnabled = true;
             _navigationAgent2d.PathPostprocessing = NavigationPathQueryParameters2D.PathPostProcessing.Edgecentered;
+            _navigationAgent2d.AvoidanceEnabled = true;
             _navigationAgent2d.DebugEnabled = true;
 
             _tileMapLayer = GetParent().GetNode<TileMapLayer>("TileMapLayer");
@@ -60,6 +64,10 @@ namespace EmergentEchoes.Entities.Actors.NPCs
 
         public override void _PhysicsProcess(double delta)
         {
+            if (Engine.IsEditorHint()) return;
+
+            base._PhysicsProcess(delta);
+
             switch (_state)
             {
                 case State.Idle:
