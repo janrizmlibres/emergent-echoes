@@ -1,27 +1,24 @@
-using EmergentEchoes.addons.NPC2DNode;
-using EmergentEchoes.Utilities.Actions;
-using EmergentEchoes.Utilities.Components;
-using EmergentEchoes.Utilities.Components.Enums;
-using EmergentEchoes.Utilities.Internal;
-using Godot;
 using System;
+using NPCProcGen.Core.Actions;
+using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Internal;
 
-namespace EmergentEchoes.Utilities.Traits
+namespace NPCProcGen.Core.Traits
 {
     public abstract class Trait
     {
-        protected readonly NPC2D _owner;
+        protected readonly ActorTag2D _owner;
         protected readonly float _weight;
 
         protected readonly Sensor _sensor;
         protected readonly Memorizer _memorizer;
 
-        public Trait(NPC2D owner, Memorizer memorizer, float weight)
+        public Trait(ActorTag2D owner, float weight, Sensor sensor, Memorizer memorizer)
         {
             _owner = owner;
             _weight = weight;
 
-            _sensor = new Sensor();
+            _sensor = sensor;
             _memorizer = memorizer;
         }
 
