@@ -1,12 +1,14 @@
+using EmergentEchoes.addons.NPC2DNode;
 using EmergentEchoes.Entities.Actors;
 using EmergentEchoes.Utilities.Components;
 using EmergentEchoes.Utilities.Components.Enums;
 using Godot;
 using System;
+using System.Collections.Generic;
 
 namespace EmergentEchoes
 {
-	public partial class Player : Actor
+	public partial class Player : CharacterBody2D
 	{
 		[Export] private int MaxSpeed { get; set; } = 80;
 		[Export] private int Acceleration { get; set; } = 10;
@@ -15,18 +17,12 @@ namespace EmergentEchoes
 		private AnimationTree _animationTree;
 		private AnimationNodeStateMachinePlayback _animationState;
 
+		private Dictionary<Actor2D, float> _relationships { get; set; } = new();
+
 		public override void _Ready()
 		{
 			_animationTree = GetNode<AnimationTree>("AnimationTree");
 			_animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
-
-			AddResources();
-		}
-
-		private void AddResources()
-		{
-			Resources.Add(new ResourceStat(StatType.Money, 1, true));
-			Resources.Add(new ResourceStat(StatType.Food, 1, true));
 		}
 
 		public override void _PhysicsProcess(double delta)
