@@ -1,23 +1,22 @@
-using EmergentEchoes.Utilities.Actions;
-using EmergentEchoes.Utilities.Components.Enums;
-using EmergentEchoes.Utilities.Traits;
-using Godot;
+using NPCProcGen.Core.Actions;
+using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Traits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EmergentEchoes.Utilities.Internal
+namespace NPCProcGen.Core.Internal
 {
     public class Strategizer
     {
-        private readonly List<Trait> _traits;
+        private readonly List<Trait> _traits = new();
 
-        public Strategizer(List<Trait> traits)
+        public void AddTrait(Trait trait)
         {
-            _traits = traits;
+            _traits.Add(trait);
         }
 
-        public NPCAction SelectAction(SocialPractice practice)
+        public NPCAction EvaluateAction(SocialPractice practice)
         {
             List<Tuple<NPCAction, float>> actions = _traits
                 .Where(action => action.ShouldActivate(practice))
