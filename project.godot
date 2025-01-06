@@ -16,7 +16,7 @@ config/features=PackedStringArray("4.3", "C#", "GL Compatibility")
 
 [autoload]
 
-WorldState="*res://Utilities/World/WorldState.cs"
+WorldState="*res://addons/NPCProcGen/Autoloads/WorldState.cs"
 
 [display]
 
@@ -32,7 +32,7 @@ project/assembly_name="EmergentEchoes"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/NPC2DNode/plugin.cfg")
+enabled=PackedStringArray("res://addons/NPCProcGen/plugin.cfg")
 
 [input]
 
