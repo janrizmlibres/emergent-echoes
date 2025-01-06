@@ -1,6 +1,5 @@
-[gd_scene load_steps=15 format=3 uid="uid://blrsgvyqgogoa"]
+[gd_scene load_steps=14 format=3 uid="uid://blrsgvyqgogoa"]
 
-[ext_resource type="Script" path="res://addons/NPC2DNode/NPC2D.cs" id="1_1yk4u"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="1_isnnv"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="2_or5th"]
 
@@ -51,13 +50,6 @@ graph_offset = Vector2(0, -75.9467)
 
 [node name="Garreth" type="CharacterBody2D"]
 texture_filter = 1
-script = ExtResource("1_1yk4u")
-Survival = 0.01
-Thief = 0.41
-Lawful = 0.82
-Generous = 0.18
-Violent = 0.28
-Social = 0.61
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -65,6 +57,7 @@ position = Vector2(0, -9)
 texture = ExtResource("1_isnnv")
 hframes = 8
 vframes = 6
+frame = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
