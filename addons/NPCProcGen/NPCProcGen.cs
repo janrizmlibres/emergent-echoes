@@ -1,11 +1,10 @@
 #if TOOLS
 using Godot;
-using System;
 
 namespace NPCProcGen
 {
 	[Tool]
-	public partial class NPCAgent2DNode : EditorPlugin
+	public partial class NPCProcGen : EditorPlugin
 	{
 		public override void _EnterTree()
 		{
