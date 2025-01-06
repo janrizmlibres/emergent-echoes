@@ -1,10 +1,4 @@
-using EmergentEchoes.addons.NPC2DNode;
-using EmergentEchoes.Entities.Actors;
-using EmergentEchoes.Utilities.Components;
-using EmergentEchoes.Utilities.Components.Enums;
 using Godot;
-using System;
-using System.Collections.Generic;
 
 namespace EmergentEchoes
 {
@@ -16,8 +10,6 @@ namespace EmergentEchoes
 
 		private AnimationTree _animationTree;
 		private AnimationNodeStateMachinePlayback _animationState;
-
-		private Dictionary<Actor2D, float> _relationships { get; set; } = new();
 
 		public override void _Ready()
 		{
