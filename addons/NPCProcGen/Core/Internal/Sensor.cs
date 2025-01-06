@@ -1,9 +1,6 @@
-using EmergentEchoes.Entities.Actors;
-using Godot;
-using System;
 using System.Collections.Generic;
 
-namespace EmergentEchoes.Utilities.Internal
+namespace NPCProcGen.Core.Internal
 {
     public class Sensor
     {
@@ -14,7 +11,7 @@ namespace EmergentEchoes.Utilities.Internal
             _worldState = WorldState.Instance;
         }
 
-        public List<Actor> GetActors()
+        public List<ActorTag2D> GetActors()
         {
             return _worldState.GetActors();
         }
