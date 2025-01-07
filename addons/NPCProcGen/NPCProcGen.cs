@@ -6,31 +6,47 @@ namespace NPCProcGen
 	[Tool]
 	public partial class NPCProcGen : EditorPlugin
 	{
+		private readonly string _npcAgent2DName = "NPCAgent2D";
+		private readonly string _actorTag2DName = "ActorTag2D";
+		private readonly string _autoloadName = "WorldState";
+
+
 		public override void _EnterTree()
 		{
-			Script npcAgent2DScript = GD.Load<Script>("res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs");
-			Texture2D npcAgent2DTexture = GD.Load<Texture2D>("res://addons/NPCProcGen/Nodes/NPCAgent2D/Icon.png");
-			AddCustomType("NPCAgent2D", "Node", npcAgent2DScript, npcAgent2DTexture);
+			RegisterCustomType(
+				"res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs",
+				"res://addons/NPCProcGen/Nodes/NPCAgent2D/Icon.png",
+				_npcAgent2DName
+			);
 
-			Script actorTag2DScript = GD.Load<Script>("res://addons/NPCProcGen/Nodes/ActorTag2D/ActorTag2D.cs");
-			Texture2D actorTag2DTexture = GD.Load<Texture2D>("res://addons/NPCProcGen/Nodes/ActorTag2D/Icon.png");
-			AddCustomType("ActorTag2D", "Node", actorTag2DScript, actorTag2DTexture);
+			RegisterCustomType(
+				"res://addons/NPCProcGen/Nodes/ActorTag2D/ActorTag2D.cs",
+				"res://addons/NPCProcGen/Nodes/ActorTag2D/Icon.png",
+				_actorTag2DName
+			);
+		}
+
+		private void RegisterCustomType(string scriptPath, string iconPath, string name)
+		{
+			Script script = GD.Load<Script>(scriptPath);
+			Texture2D texture = GD.Load<Texture2D>(iconPath);
+			AddCustomType(name, "Node", script, texture);
 		}
 
 		public override void _ExitTree()
 		{
-			RemoveCustomType("NPCAgent2D");
-			RemoveCustomType("ActorTag2D");
+			RemoveCustomType(_npcAgent2DName);
+			RemoveCustomType(_actorTag2DName);
 		}
 
 		public override void _EnablePlugin()
 		{
-			AddAutoloadSingleton("WorldState", "res://addons/NPCProcGen/Autoloads/WorldState.cs");
+			AddAutoloadSingleton(_autoloadName, "res://addons/NPCProcGen/Autoloads/WorldState.cs");
 		}
 
 		public override void _DisablePlugin()
 		{
-			RemoveAutoloadSingleton("WorldState");
+			RemoveAutoloadSingleton(_autoloadName);
 		}
 	}
 }
