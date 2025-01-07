@@ -59,6 +59,7 @@ position = Vector2(0, -9)
 texture = ExtResource("1_isnnv")
 hframes = 8
 vframes = 6
+frame = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -76,6 +77,8 @@ parameters/Idle/blend_position = 0
 parameters/Move/blend_position = 0
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_postprocessing = 1
+avoidance_enabled = true
 debug_enabled = true
 
 [node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("ActorDetector")]
