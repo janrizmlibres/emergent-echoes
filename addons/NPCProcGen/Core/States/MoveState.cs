@@ -1,10 +1,12 @@
+using Godot;
+
 namespace NPCProcGen.Core.States
 {
     public class MoveState : ActionState
     {
-        private readonly ActorTag2D _target;
+        private readonly Node2D _target;
 
-        public MoveState(ActorTag2D owner, ActorTag2D target) : base(owner)
+        public MoveState(ActorTag2D owner, Node2D target) : base(owner)
         {
             _target = target;
         }
