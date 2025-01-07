@@ -63,24 +63,25 @@ namespace NPCProcGen
 
         public override void _Ready()
         {
-            GD.Print("NPCAgent2D Ready");
+            if (Engine.IsEditorHint()) return;
 
-            if (!Engine.IsEditorHint())
+            if (_actorDetector == null || _parent == null)
             {
-                _evaluationTimer.WaitTime = 30;
-                _evaluationTimer.OneShot = true;
-                _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
-                _evaluationTimer.Start();
-
-                AddTraits();
-                AddResources();
+                QueueFree();
+                return;
             }
+
+            _evaluationTimer.WaitTime = 30;
+            _evaluationTimer.OneShot = true;
+            _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
+            _evaluationTimer.Start();
+
+            AddTraits();
+            AddResources();
         }
 
         public override void _EnterTree()
         {
-            GD.Print("NPCAgent2D Entered Tree");
-
             if (Engine.IsEditorHint())
             {
                 CheckParent();

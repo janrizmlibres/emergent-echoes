@@ -24,8 +24,13 @@ namespace NPCProcGen
         {
             if (Engine.IsEditorHint()) return;
 
-            // TODO: Consider implementing a resource manager
+            if (_parent == null)
+            {
+                QueueFree();
+                return;
+            }
 
+            // TODO: Consider implementing a resource manager
             Resources.Add(ResourceType.Money, new ResourceStat(ResourceType.Money, MoneyValue, 1));
             Resources.Add(ResourceType.Food, new ResourceStat(ResourceType.Food, FoodValue, 1));
         }
