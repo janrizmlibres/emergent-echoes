@@ -78,8 +78,9 @@ parameters/Move/blend_position = 0
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 
-[node name="NPCAgent2D" type="Node" parent="."]
+[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("ActorDetector")]
 script = ExtResource("3_x7obk")
+ActorDetector = NodePath("../ActorDetector")
 
 [node name="ActorDetector" parent="." instance=ExtResource("3_dft6w")]
 
