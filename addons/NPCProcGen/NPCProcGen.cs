@@ -6,10 +6,9 @@ namespace NPCProcGen
 	[Tool]
 	public partial class NPCProcGen : EditorPlugin
 	{
-		private readonly string _npcAgent2DName = "NPCAgent2D";
-		private readonly string _actorTag2DName = "ActorTag2D";
-		private readonly string _autoloadName = "WorldState";
-
+		private string _npcAgent2DName = "NPCAgent2D";
+		private string _actorTag2DName = "ActorTag2D";
+		private string _autoloadName = "WorldState";
 
 		public override void _EnterTree()
 		{
