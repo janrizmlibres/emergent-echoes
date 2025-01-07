@@ -1,7 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://blrsgvyqgogoa"]
+[gd_scene load_steps=16 format=3 uid="uid://blrsgvyqgogoa"]
 
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="1_isnnv"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="2_or5th"]
+[ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_attte"]
+[ext_resource type="PackedScene" uid="uid://2wpeggmgbrmi" path="res://Entities/Actors/actor_detector.tscn" id="3_c743w"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0
@@ -57,7 +59,6 @@ position = Vector2(0, -9)
 texture = ExtResource("1_isnnv")
 hframes = 8
 vframes = 6
-frame = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -76,5 +77,10 @@ parameters/Move/blend_position = 0
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 debug_enabled = true
+
+[node name="NPCAgent2D" type="Node" parent="."]
+script = ExtResource("3_attte")
+
+[node name="ActorDetector" parent="." instance=ExtResource("3_c743w")]
 
 [node name="StateTimer" type="Timer" parent="."]
