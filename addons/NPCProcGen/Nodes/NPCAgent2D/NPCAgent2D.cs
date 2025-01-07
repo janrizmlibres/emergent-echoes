@@ -98,7 +98,6 @@ namespace NPCProcGen
         {
             if (Engine.IsEditorHint()) return;
 
-            _memorizer.UpdateActorData(delta);
             _executor.Update();
         }
 
