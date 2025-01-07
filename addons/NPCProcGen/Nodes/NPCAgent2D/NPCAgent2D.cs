@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components;
@@ -12,6 +14,20 @@ namespace NPCProcGen
     {
         [Export(PropertyHint.Range, "1,100,")]
         public int CompanionshipValue { get; set; } = 100;
+
+        [Export]
+        public Area2D ActorDetector
+        {
+            get => _actorDetector;
+            set
+            {
+                if (value != _actorDetector)
+                {
+                    _actorDetector = value;
+                    UpdateConfigurationWarnings();
+                }
+            }
+        }
 
         [ExportGroup("Traits")]
 
@@ -43,26 +59,49 @@ namespace NPCProcGen
         private readonly Executor _executor = new();
 
         private readonly Timer _evaluationTimer = new();
+        private Area2D _actorDetector;
 
         public override void _Ready()
         {
-            if (Engine.IsEditorHint()) return;
+            GD.Print("NPCAgent2D Ready");
 
-            _parent = GetParent() as Node2D;
+            if (!Engine.IsEditorHint())
+            {
+                _evaluationTimer.WaitTime = 30;
+                _evaluationTimer.OneShot = true;
+                _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
+                _evaluationTimer.Start();
+
+                AddTraits();
+                AddResources();
+            }
+        }
+
+        public override void _EnterTree()
+        {
+            GD.Print("NPCAgent2D Entered Tree");
+
+            if (Engine.IsEditorHint())
+            {
+                CheckParent();
+            }
+        }
+
+        public override string[] _GetConfigurationWarnings()
+        {
+            List<string> warnings = new();
 
             if (_parent == null)
             {
-                SetProcess(false);
-                SetPhysicsProcess(false);
+                warnings.Add("The NPCAgent2D can be used only under a Node2D inheriting parent node.");
             }
 
-            _evaluationTimer.WaitTime = 30;
-            _evaluationTimer.OneShot = true;
-            _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
-            _evaluationTimer.Start();
+            if (_actorDetector == null)
+            {
+                warnings.Add("The NPCAgent2D requires an Area2D to detect other actors.");
+            }
 
-            AddTraits();
-            AddResources();
+            return warnings.ToArray();
         }
 
         private void AddTraits()
