@@ -25,8 +25,6 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
         {
             if (Engine.IsEditorHint()) return;
 
-            base._Ready();
-
             _stateTimer = GetNode<Timer>("StateTimer");
             _navigationAgent2d = GetNode<NavigationAgent2D>("NavigationAgent2D");
             _animationTree = GetNode<AnimationTree>("AnimationTree");
@@ -38,9 +36,6 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
 
             _navigationAgent2d.NavigationFinished += OnChangeState;
             _navigationAgent2d.VelocityComputed += OnNavigationAgentVelocityComputed;
-            _navigationAgent2d.PathPostprocessing = NavigationPathQueryParameters2D.PathPostProcessing.Edgecentered;
-            _navigationAgent2d.AvoidanceEnabled = true;
-            _navigationAgent2d.DebugEnabled = true;
 
             _tileMapLayer = GetParent().GetNode<TileMapLayer>("TileMapLayer");
 
@@ -65,8 +60,6 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
         public override void _PhysicsProcess(double delta)
         {
             if (Engine.IsEditorHint()) return;
-
-            base._PhysicsProcess(delta);
 
             switch (_state)
             {
