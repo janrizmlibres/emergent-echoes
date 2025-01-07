@@ -37,14 +37,12 @@ namespace NPCProcGen
         [Export(PropertyHint.Range, "0,1,0.01")]
         public float Companionship { get; set; } = 0.5f;
 
-        private const float EVALUATION_INTERVAL = 30;
-
         private readonly Sensor _sensor = new();
         private readonly Memorizer _memorizer = new();
         private readonly Strategizer _strategizer = new();
         private readonly Executor _executor = new();
 
-        private float _evaluationTimer = 0;
+        private readonly Timer _evaluationTimer = new();
 
         public override void _Ready()
         {
@@ -57,6 +55,11 @@ namespace NPCProcGen
                 SetProcess(false);
                 SetPhysicsProcess(false);
             }
+
+            _evaluationTimer.WaitTime = 30;
+            _evaluationTimer.OneShot = true;
+            _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
+            _evaluationTimer.Start();
 
             AddTraits();
             AddResources();
@@ -97,23 +100,12 @@ namespace NPCProcGen
 
             _memorizer.UpdateActorData(delta);
             _executor.Update();
-
-            if (!_executor.IsExecuting())
-            {
-                WaitForEvaluation(delta);
-            }
         }
 
-        private void WaitForEvaluation(double delta)
+        private void OnEvaluationTimerTimeout()
         {
-            _evaluationTimer += (float)delta;
-
-            if (_evaluationTimer >= EVALUATION_INTERVAL)
-            {
-                NPCAction action = _strategizer.EvaluateAction(SocialPractice.Proactive);
-                _executor.SetAction(action);
-                _evaluationTimer = 0;
-            }
+            NPCAction action = _strategizer.EvaluateAction(SocialPractice.Proactive);
+            _executor.SetAction(action);
         }
     }
 }
