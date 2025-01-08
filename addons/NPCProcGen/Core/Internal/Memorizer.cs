@@ -1,3 +1,4 @@
+using Godot;
 using System.Collections.Generic;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Events;
@@ -40,7 +41,12 @@ namespace NPCProcGen.Core.Internal
             _actorData.Add(actor, new ActorData(actor));
         }
 
-        public void UpdateActorData(double delta)
+        public void UpdateActorLocation(ActorTag2D actor, Vector2 location)
+        {
+            _actorData[actor].LastKnownPosition = location;
+        }
+
+        public void ProcessActorUpdates(double delta)
         {
             foreach (ActorData actorData in _actorData.Values)
             {
