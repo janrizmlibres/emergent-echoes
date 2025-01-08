@@ -15,16 +15,34 @@ namespace NPCProcGen
         [Export(PropertyHint.Range, "1,100,")]
         public int FoodValue { get; set; } = 100;
 
+        [Export]
+        public Marker2D StealMarker
+        {
+            get => _stealMarker;
+            set
+            {
+                if (value != _stealMarker)
+                {
+                    _stealMarker = value;
+                    UpdateConfigurationWarnings();
+                }
+            }
+        }
+
         // TODO: Consider converting resources into dictionary for constant access
         public Dictionary<ResourceType, ResourceStat> Resources { get; private set; } = new();
 
-        protected Node2D _parent;
+        public Node2D Parent { get; protected set; }
+
+        private Marker2D _stealMarker;
 
         public override void _Ready()
         {
             if (Engine.IsEditorHint()) return;
 
-            if (_parent == null)
+            Parent = GetParent() as Node2D;
+
+            if (Parent == null || _stealMarker == null)
             {
                 QueueFree();
                 return;
@@ -39,7 +57,8 @@ namespace NPCProcGen
         {
             if (Engine.IsEditorHint())
             {
-                CheckParent();
+                Parent = GetParent() as Node2D;
+                UpdateConfigurationWarnings();
             }
         }
 
@@ -47,9 +66,14 @@ namespace NPCProcGen
         {
             List<string> warnings = new();
 
-            if (_parent == null)
+            if (Parent == null)
             {
                 warnings.Add("The ActorTag2D can be used only under a Node2D inheriting parent node.");
+            }
+
+            if (_stealMarker == null)
+            {
+                warnings.Add("The ActorTag2D requires a Marker2D node for use in actions such as stealing.");
             }
 
             return warnings.ToArray();
@@ -57,24 +81,7 @@ namespace NPCProcGen
 
         public Vector2 GetParentGlobalPosition()
         {
-            return _parent.GlobalPosition;
-        }
-
-        protected void CheckParent()
-        {
-            _parent = GetParent() as Node2D;
-            UpdateConfigurationWarnings();
-
-            if (_parent == null)
-            {
-                SetProcess(false);
-                SetPhysicsProcess(false);
-            }
-            else
-            {
-                SetProcess(true);
-                SetPhysicsProcess(true);
-            }
+            return Parent.GlobalPosition;
         }
 
         public bool HasResource(ResourceType type)
