@@ -3,6 +3,7 @@ using NPCProcGen.Core.Components.Records;
 using NPCProcGen.Core.Events;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NPCProcGen
 {
@@ -14,19 +15,15 @@ namespace NPCProcGen
 
 		private WorldState() { }
 
-		private readonly List<ActorTag2D> _actors = new();
+		public List<ActorTag2D> Actors { get; private set; } = new();
 
 		private readonly List<Node2D> _structures = new();
-
 		// Actions and interactions that have taken place and what actors performed them
 		private readonly List<Event> _globalEvents = new();
-
 		// Which crimes are publicly known and not yet solved
 		private readonly List<Crime> _unsolvedCrimes = new();
-
 		// Solved crimes and who apprehended the criminal
 		private readonly List<Crime> _solvedCrimes = new();
-
 		// What tasks are delegated to which individuals
 		private readonly List<Event> _taskRecords = new();
 
@@ -35,14 +32,30 @@ namespace NPCProcGen
 
 		// TODO: Consider limiting access to data
 
-		public List<ActorTag2D> GetActors()
+		public void Initialize()
 		{
-			return _actors;
+			FindActorsInNode(GetTree().CurrentScene);
+
+			foreach (ActorTag2D actor in Actors)
+			{
+				if (actor is NPCAgent2D npc)
+				{
+					npc.Initialize(Actors.Where(a => a != actor).ToList());
+				}
+			}
 		}
 
-		public void AddActor(ActorTag2D actor)
+		private void FindActorsInNode(Node node)
 		{
-			_actors.Add(actor);
+			foreach (Node child in node.GetChildren())
+			{
+				if (child is ActorTag2D actor)
+				{
+					Actors.Add(actor);
+				}
+
+				FindActorsInNode(child);
+			}
 		}
 	}
 }
