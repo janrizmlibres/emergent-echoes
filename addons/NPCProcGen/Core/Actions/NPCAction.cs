@@ -1,14 +1,15 @@
 using NPCProcGen.Core.States;
+using Godot;
 using System;
 
 namespace NPCProcGen.Core.Actions
 {
     public abstract class NPCAction
     {
-        protected readonly ActorTag2D _owner;
+        protected readonly NPCAgent2D _owner;
         protected ActionState _currentState;
 
-        public NPCAction(ActorTag2D owner)
+        public NPCAction(NPCAgent2D owner)
         {
             _owner = owner;
         }
@@ -16,14 +17,18 @@ namespace NPCProcGen.Core.Actions
         protected void TransitionTo(ActionState newState)
         {
             _currentState = newState;
+            _currentState.Enter();
         }
 
         protected void CompleteAction()
         {
-            OnComplete?.Invoke();
+            _owner.ReturnToIdle();
         }
 
-        public event Action OnComplete;
+        public void MoveToTarget(Vector2 target)
+        {
+            _owner.EmitSignal(NPCAgent2D.SignalName.MoveToTarget, target);
+        }
 
         public abstract void Update();
     }

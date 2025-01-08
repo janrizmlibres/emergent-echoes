@@ -6,9 +6,8 @@ namespace NPCProcGen.Core.Actions
     {
         private readonly ActorTag2D _target;
 
-        public TheftAction(ActorTag2D owner, ActorTag2D target) : base(owner)
+        public TheftAction(NPCAgent2D owner, ActorTag2D target) : base(owner)
         {
-            _currentState = new StealState(owner);
             _target = target;
 
             InitializeStates();
@@ -16,14 +15,12 @@ namespace NPCProcGen.Core.Actions
 
         private void InitializeStates()
         {
-            MoveState moveState = new(_owner, _target);
-            StealState stealState = new(_owner);
+            MoveState moveState = new(this, _owner, _target.StealMarker);
+            FleeState fleeState = new(this, _owner);
 
-            OnComplete += () => TransitionTo(moveState);
+            moveState.OnComplete += () => TransitionTo(fleeState);
+            fleeState.OnComplete += () => CompleteAction();
 
-            moveState.OnComplete += () => TransitionTo(stealState);
-
-            stealState.OnComplete += () => CompleteAction();
             _currentState = moveState;
         }
 
