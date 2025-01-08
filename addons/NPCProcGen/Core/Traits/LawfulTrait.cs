@@ -7,7 +7,7 @@ namespace NPCProcGen.Core.Traits
 {
     public class LawfulTrait : Trait
     {
-        public LawfulTrait(ActorTag2D owner, float weight, Sensor sensor, Memorizer memorizer)
+        public LawfulTrait(NPCAgent2D owner, float weight, Sensor sensor, Memorizer memorizer)
             : base(owner, weight, sensor, memorizer) { }
 
         public override Tuple<NPCAction, float> EvaluateAction()

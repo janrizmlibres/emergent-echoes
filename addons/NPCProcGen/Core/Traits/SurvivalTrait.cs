@@ -7,7 +7,7 @@ namespace NPCProcGen.Core.Traits
 {
     public class SurvivalTrait : Trait
     {
-        public SurvivalTrait(ActorTag2D owner, float weight, Sensor sensor, Memorizer memorizer)
+        public SurvivalTrait(NPCAgent2D owner, float weight, Sensor sensor, Memorizer memorizer)
             : base(owner, weight, sensor, memorizer) { }
 
         public override Tuple<NPCAction, float> EvaluateAction()
