@@ -55,6 +55,11 @@ namespace NPCProcGen
             return warnings.ToArray();
         }
 
+        public Vector2 GetParentGlobalPosition()
+        {
+            return _parent.GlobalPosition;
+        }
+
         protected void CheckParent()
         {
             _parent = GetParent() as Node2D;

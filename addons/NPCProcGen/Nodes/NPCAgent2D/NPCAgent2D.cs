@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
@@ -76,6 +77,8 @@ namespace NPCProcGen
             _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
             _evaluationTimer.Start();
 
+            _actorDetector.BodyEntered += OnActorDetected;
+
             AddTraits();
             AddResources();
         }
@@ -131,7 +134,7 @@ namespace NPCProcGen
         {
             if (Engine.IsEditorHint()) return;
 
-            _memorizer.UpdateActorData(delta);
+            _memorizer.ProcessActorUpdates(delta);
         }
 
         public override void _PhysicsProcess(double delta)
@@ -145,6 +148,18 @@ namespace NPCProcGen
         {
             NPCAction action = _strategizer.EvaluateAction(SocialPractice.Proactive);
             _executor.SetAction(action);
+        }
+
+        private void OnActorDetected(Node2D body)
+        {
+            foreach (Node child in body.GetChildren())
+            {
+                if (child is ActorTag2D)
+                {
+                    ActorTag2D actor = child as ActorTag2D;
+                    _memorizer.UpdateActorLocation(actor, actor.GetParentGlobalPosition());
+                }
+            }
         }
     }
 }

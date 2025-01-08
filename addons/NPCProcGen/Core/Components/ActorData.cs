@@ -6,7 +6,7 @@ namespace NPCProcGen.Core.Components
     {
         private static readonly float DECAY_DURATION = 60 * 5; // 5 minutes
 
-        public Vector2? LastKnownPosition { get; private set; }
+        public Vector2? LastKnownPosition { get; set; }
         public float Relationship { get; private set; }
 
         private readonly ActorTag2D _actor = null;
