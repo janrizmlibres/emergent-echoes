@@ -36,9 +36,12 @@ namespace NPCProcGen.Core.Internal
             return _actorData[actor].Relationship > 15;
         }
 
-        public void AddActorData(ActorTag2D actor)
+        public void Initialize(List<ActorTag2D> actors)
         {
-            _actorData.Add(actor, new ActorData(actor));
+            foreach (ActorTag2D actor in actors)
+            {
+                _actorData.Add(actor, new ActorData(actor));
+            }
         }
 
         public void UpdateActorLocation(ActorTag2D actor, Vector2 location)

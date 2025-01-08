@@ -54,6 +54,11 @@ namespace NPCProcGen
         [Export(PropertyHint.Range, "0,1,0.01")]
         public float Companionship { get; set; } = 0.5f;
 
+        [Signal]
+        public delegate void MoveToTargetEventHandler(Vector2 target);
+
+        public event Action OnFinishNavigation;
+
         private readonly Sensor _sensor = new();
         private readonly Memorizer _memorizer = new();
         private readonly Strategizer _strategizer = new();
@@ -66,15 +71,19 @@ namespace NPCProcGen
         {
             if (Engine.IsEditorHint()) return;
 
-            if (_actorDetector == null || _parent == null)
+            Parent = GetParent() as Node2D;
+
+            if (_actorDetector == null || Parent == null || StealMarker == null)
             {
                 QueueFree();
                 return;
             }
 
-            _evaluationTimer.WaitTime = 30;
+            _evaluationTimer.WaitTime = 10;
             _evaluationTimer.OneShot = true;
             _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
+
+            AddChild(_evaluationTimer);
             _evaluationTimer.Start();
 
             _actorDetector.BodyEntered += OnActorDetected;
@@ -85,17 +94,14 @@ namespace NPCProcGen
 
         public override void _EnterTree()
         {
-            if (Engine.IsEditorHint())
-            {
-                CheckParent();
-            }
+            base._EnterTree();
         }
 
         public override string[] _GetConfigurationWarnings()
         {
             List<string> warnings = new();
 
-            if (_parent == null)
+            if (Parent == null)
             {
                 warnings.Add("The NPCAgent2D can be used only under a Node2D inheriting parent node.");
             }
@@ -105,7 +111,66 @@ namespace NPCProcGen
                 warnings.Add("The NPCAgent2D requires an Area2D to detect other actors.");
             }
 
+            if (StealMarker == null)
+            {
+                warnings.Add("The NPCAgent2D requires a Marker2D node for use in actions such as stealing.");
+            }
+
             return warnings.ToArray();
+        }
+
+        public override void _Process(double delta)
+        {
+            if (Engine.IsEditorHint()) return;
+
+            _memorizer.ProcessActorUpdates(delta);
+        }
+
+        public override void _PhysicsProcess(double delta)
+        {
+            if (Engine.IsEditorHint()) return;
+
+            _executor.Update();
+        }
+
+        public void ReturnToIdle()
+        {
+            _executor.Action = null;
+            _evaluationTimer.Start();
+        }
+
+        public void Initialize(List<ActorTag2D> actors)
+        {
+            _memorizer.Initialize(actors);
+        }
+
+        public bool ShouldMove()
+        {
+            return _executor.Action != null;
+        }
+
+        public void FinishNavigation()
+        {
+            OnFinishNavigation?.Invoke();
+        }
+
+        private void OnEvaluationTimerTimeout()
+        {
+            GD.Print("Evaluating action");
+            NPCAction action = _strategizer.EvaluateAction(SocialPractice.Proactive);
+            _executor.Action = action;
+        }
+
+        private void OnActorDetected(Node2D body)
+        {
+            foreach (Node child in body.GetChildren())
+            {
+                if (child is ActorTag2D)
+                {
+                    ActorTag2D actor = child as ActorTag2D;
+                    _memorizer.UpdateActorLocation(actor, actor.GetParentGlobalPosition());
+                }
+            }
         }
 
         private void AddTraits()
@@ -128,38 +193,6 @@ namespace NPCProcGen
             Resources.Add(ResourceType.Money, money);
             Resources.Add(ResourceType.Food, food);
             Resources.Add(ResourceType.Companionship, companionship);
-        }
-
-        public override void _Process(double delta)
-        {
-            if (Engine.IsEditorHint()) return;
-
-            _memorizer.ProcessActorUpdates(delta);
-        }
-
-        public override void _PhysicsProcess(double delta)
-        {
-            if (Engine.IsEditorHint()) return;
-
-            _executor.Update();
-        }
-
-        private void OnEvaluationTimerTimeout()
-        {
-            NPCAction action = _strategizer.EvaluateAction(SocialPractice.Proactive);
-            _executor.SetAction(action);
-        }
-
-        private void OnActorDetected(Node2D body)
-        {
-            foreach (Node child in body.GetChildren())
-            {
-                if (child is ActorTag2D)
-                {
-                    ActorTag2D actor = child as ActorTag2D;
-                    _memorizer.UpdateActorLocation(actor, actor.GetParentGlobalPosition());
-                }
-            }
         }
     }
 }
