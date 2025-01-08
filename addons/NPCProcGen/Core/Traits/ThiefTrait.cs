@@ -10,9 +10,9 @@ namespace NPCProcGen.Core.Traits
 {
     public class ThiefTrait : Trait
     {
-        private readonly List<ActorTag2D> _actors;
+        private readonly IReadOnlyList<ActorTag2D> _actors;
 
-        public ThiefTrait(ActorTag2D owner, float weight, Sensor sensor, Memorizer memorizer)
+        public ThiefTrait(NPCAgent2D owner, float weight, Sensor sensor, Memorizer memorizer)
             : base(owner, weight, sensor, memorizer)
         {
             _actors = sensor.GetActors();
@@ -60,7 +60,7 @@ namespace NPCProcGen.Core.Traits
                 selectedType = null;
             }
 
-            return new Tuple<NPCAction, float>(null, 0);
+            return new(null, 0);
         }
 
         public override bool ShouldActivate(SocialPractice practice)

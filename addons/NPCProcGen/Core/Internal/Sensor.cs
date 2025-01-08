@@ -11,9 +11,9 @@ namespace NPCProcGen.Core.Internal
             _worldState = WorldState.Instance;
         }
 
-        public List<ActorTag2D> GetActors()
+        public IReadOnlyList<ActorTag2D> GetActors()
         {
-            return _worldState.GetActors();
+            return _worldState.Actors;
         }
     }
 }
