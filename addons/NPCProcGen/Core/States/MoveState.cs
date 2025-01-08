@@ -1,19 +1,25 @@
+using System;
 using Godot;
+using NPCProcGen.Core.Actions;
 
 namespace NPCProcGen.Core.States
 {
     public class MoveState : ActionState
     {
         private readonly Node2D _target;
+        private readonly NPCAction _action;
 
-        public MoveState(ActorTag2D owner, Node2D target) : base(owner)
+        public MoveState(NPCAction action, NPCAgent2D owner, Node2D target) : base(owner)
         {
+            _action = action;
             _target = target;
         }
 
-        public override void Update()
+        public override void Enter()
         {
-            CompleteState();
+            GD.Print("MoveState Enter");
+            _action.MoveToTarget(_target.GlobalPosition);
+            _owner.OnFinishNavigation += CompleteState;
         }
     }
 }

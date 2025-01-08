@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using Godot.Collections;
+using NPCProcGen;
 
 namespace EmergentEchoes.addons.NPC2DNode.Components
 {
@@ -10,6 +11,7 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
         private NavigationAgent2D _navigationAgent2d;
         private AnimationTree _animationTree;
         private AnimationNodeStateMachinePlayback _animationState;
+        private NPCAgent2D _npcAgent2d;
 
         private enum State { Idle, Wander }
 
@@ -29,6 +31,7 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
             _navigationAgent2d = GetNode<NavigationAgent2D>("NavigationAgent2D");
             _animationTree = GetNode<AnimationTree>("AnimationTree");
             _animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
+            _npcAgent2d = GetNode<NPCAgent2D>("NPCAgent2D");
 
             _stateTimer.Timeout += OnChangeState;
             _stateTimer.OneShot = true;
@@ -37,7 +40,10 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
             _navigationAgent2d.NavigationFinished += OnChangeState;
             _navigationAgent2d.VelocityComputed += OnNavigationAgentVelocityComputed;
 
-            _tileMapLayer = GetParent().GetNode<TileMapLayer>("TileMapLayer");
+            _npcAgent2d.MoveToTarget += OnMoveToTarget;
+            _npcAgent2d.OnFinishNavigation += OnChangeState;
+
+            _tileMapLayer = GetNode<TileMapLayer>("%TileMapLayer");
 
             SetupTilePositions();
         }
@@ -61,14 +67,19 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
         {
             if (Engine.IsEditorHint()) return;
 
-            switch (_state)
+            if (_npcAgent2d.ShouldMove())
             {
-                case State.Idle:
-                    IdleState();
-                    break;
-                case State.Wander:
-                    WanderState();
-                    break;
+                MoveCharacter();
+                return;
+            }
+
+            if (_state == State.Idle)
+            {
+                IdleState();
+            }
+            else if (_state == State.Wander)
+            {
+                MoveCharacter();
             }
 
             if (Velocity.X != 0)
@@ -94,7 +105,7 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
             _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
         }
 
-        private void WanderState()
+        private void MoveCharacter()
         {
             if (_navigationAgent2d.IsNavigationFinished())
             {
@@ -144,6 +155,12 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
                     _navigationAgent2d.TargetPosition = wanderTarget;
                     break;
             }
+        }
+
+        private void OnMoveToTarget(Vector2 target)
+        {
+            _navigationAgent2d.TargetPosition = target;
+            _stateTimer.Stop();
         }
     }
 }

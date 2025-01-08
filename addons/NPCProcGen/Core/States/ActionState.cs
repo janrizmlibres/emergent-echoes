@@ -4,9 +4,9 @@ namespace NPCProcGen.Core.States
 {
     public abstract class ActionState
     {
-        protected readonly ActorTag2D _owner;
+        protected readonly NPCAgent2D _owner;
 
-        public ActionState(ActorTag2D owner)
+        public ActionState(NPCAgent2D owner)
         {
             _owner = owner;
         }
@@ -18,6 +18,7 @@ namespace NPCProcGen.Core.States
 
         public event Action OnComplete;
 
-        public abstract void Update();
+        public virtual void Enter() { }
+        public virtual void Update() { }
     }
 }
