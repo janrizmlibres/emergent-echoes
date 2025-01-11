@@ -145,6 +145,10 @@ namespace NPCProcGen
         public void Initialize(List<ActorTag2D> actors)
         {
             _memorizer.Initialize(actors);
+
+            // ! Remove debug print
+            // GD.Print($"Actor memory of {Parent.Name}:");
+            // _memorizer.PrintActorMemory();
         }
 
         public bool IsActive()
@@ -155,37 +159,6 @@ namespace NPCProcGen
         public bool IsNavigationRequired()
         {
             return _executor.IsNavigationRequired();
-        }
-
-        private void OnEvaluationTimerTimeout()
-        {
-            NPCAction action = _strategizer.EvaluateAction(SocialPractice.Proactive);
-
-            if (action != null)
-            {
-                // ! Remove debug print
-                GD.Print("Action evaluated: " + action.GetType().Name);
-                _executor.SetAction(action);
-                EmitSignal(SignalName.ExecutionStarted);
-            }
-        }
-
-        private void OnActorDetected(Node2D body)
-        {
-            foreach (Node child in body.GetChildren())
-            {
-                if (child is ActorTag2D && child != this)
-                {
-                    ActorTag2D actor = child as ActorTag2D;
-                    _memorizer.UpdateActorLocation(actor, actor.GetParentGlobalPosition());
-                }
-            }
-        }
-
-        private void OnExecutionEnded()
-        {
-            EmitSignal(SignalName.ExecutionEnded);
-            _evaluationTimer.Start();
         }
 
         private void AddTraits()
@@ -208,6 +181,36 @@ namespace NPCProcGen
             Resources.Add(ResourceType.Money, money);
             Resources.Add(ResourceType.Food, food);
             Resources.Add(ResourceType.Companionship, companionship);
+        }
+
+        private void OnEvaluationTimerTimeout()
+        {
+            NPCAction action = _strategizer.EvaluateAction(SocialPractice.Proactive);
+
+            if (action != null)
+            {
+                // ! Remove debug print in production
+                GD.Print($"{Parent.Name} performs action: " + action.GetType().Name);
+                _executor.SetAction(action);
+                EmitSignal(SignalName.ExecutionStarted);
+            }
+        }
+
+        private void OnActorDetected(Node2D body)
+        {
+            foreach (Node child in body.GetChildren())
+            {
+                if (child is ActorTag2D actor && child != this)
+                {
+                    _memorizer.UpdateActorLocation(actor, actor.Parent.GlobalPosition);
+                }
+            }
+        }
+
+        private void OnExecutionEnded()
+        {
+            EmitSignal(SignalName.ExecutionEnded);
+            _evaluationTimer.Start();
         }
     }
 }
