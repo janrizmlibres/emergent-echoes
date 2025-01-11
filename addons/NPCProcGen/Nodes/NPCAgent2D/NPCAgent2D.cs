@@ -57,18 +57,18 @@ namespace NPCProcGen
         [Signal]
         public delegate void ExecutionEndedEventHandler();
 
-        public Vector2 TargetPosition
-        {
-            get => _executor.GetTargetPosition();
-        }
+        public Vector2 TargetPosition => Executor.GetTargetPosition();
+
+        public Sensor Sensor { get; private set; } = new();
+        public Memorizer Memorizer { get; private set; } = new();
+        public Strategizer Strategizer { get; private set; } = new();
+        public Executor Executor { get; private set; } = new();
+
+        // TODO: Consider using raycast for detection
+        private readonly List<ActorTag2D> _detectedActors = new();
 
         private readonly Timer _evaluationTimer = new();
         private Area2D _actorDetector = null;
-
-        private readonly Sensor _sensor = new();
-        private readonly Memorizer _memorizer = new();
-        private readonly Strategizer _strategizer = new();
-        private readonly Executor _executor = new();
 
         public override void _Ready()
         {
@@ -89,8 +89,9 @@ namespace NPCProcGen
             AddChild(_evaluationTimer);
             _evaluationTimer.Start();
 
-            _actorDetector.BodyEntered += OnActorDetected;
-            _executor.OnExecutionEnded += OnExecutionEnded;
+            _actorDetector.BodyEntered += OnActorEntered;
+            _actorDetector.BodyExited += OnActorExited;
+            Executor.OnExecutionEnded += OnExecutionEnded;
 
             AddTraits();
             AddResources();
@@ -127,59 +128,64 @@ namespace NPCProcGen
         {
             if (Engine.IsEditorHint()) return;
 
-            _memorizer.ProcessUpdates(delta);
+            Memorizer.ProcessUpdates(delta);
         }
 
         public override void _PhysicsProcess(double delta)
         {
             if (Engine.IsEditorHint()) return;
 
-            _executor.Update(delta);
+            Executor.Update(delta);
         }
 
         public void CompleteNavigation()
         {
-            _executor.NotifyNavigationState();
+            Executor.NotifyNavigationState();
         }
 
         public void CompleteTheft()
         {
-            _executor.NotifyStealState();
+            Executor.NotifyStateChange();
         }
 
         public void Initialize(List<ActorTag2D> actors)
         {
-            _memorizer.Initialize(actors);
+            Memorizer.Initialize(actors);
 
             // ! Remove debug print
             // GD.Print($"Actor memory of {Parent.Name}:");
             // _memorizer.PrintActorMemory();
         }
 
+        public bool IsActorInRange(ActorTag2D actor)
+        {
+            return _detectedActors.Contains(actor);
+        }
+
         public bool IsActive()
         {
-            return _executor.HasAction();
+            return Executor.HasAction();
         }
 
         public bool IsNavigationRequired()
         {
-            return _executor.IsNavigationRequired();
+            return Executor.QueryNavigationState();
         }
 
-        public bool CanSteal()
+        public bool IsStealing()
         {
-            return _executor.CanSteal();
+            return Executor.QueryStealState();
         }
 
         private void AddTraits()
         {
-            _strategizer.AddTrait(new SurvivalTrait(this, Survival, _sensor, _memorizer));
+            Strategizer.AddTrait(new SurvivalTrait(this, Survival, Sensor, Memorizer));
 
             if (Thief > 0)
-                _strategizer.AddTrait(new ThiefTrait(this, Thief, _sensor, _memorizer));
+                Strategizer.AddTrait(new ThiefTrait(this, Thief, Sensor, Memorizer));
 
             if (Lawful > 0)
-                _strategizer.AddTrait(new LawfulTrait(this, Lawful, _sensor, _memorizer));
+                Strategizer.AddTrait(new LawfulTrait(this, Lawful, Sensor, Memorizer));
         }
 
         private void AddResources()
@@ -195,24 +201,36 @@ namespace NPCProcGen
 
         private void OnEvaluationTimerTimeout()
         {
-            NPCAction action = _strategizer.EvaluateAction(SocialPractice.Proactive);
+            NPCAction action = Strategizer.EvaluateAction(SocialPractice.Proactive);
 
             if (action != null)
             {
                 // ! Remove debug print in production
                 GD.Print($"{Parent.Name} performs action: " + action.GetType().Name);
-                _executor.SetAction(action);
+                Executor.SetAction(action);
                 EmitSignal(SignalName.ExecutionStarted);
             }
         }
 
-        private void OnActorDetected(Node2D body)
+        private void OnActorEntered(Node2D body)
         {
             foreach (Node child in body.GetChildren())
             {
-                if (child is ActorTag2D actor && child != this)
+                if (child is ActorTag2D actor)
                 {
-                    _memorizer.UpdateActorLocation(actor, actor.Parent.GlobalPosition);
+                    _detectedActors.Add(actor);
+                }
+            }
+        }
+
+        private void OnActorExited(Node2D body)
+        {
+            foreach (Node child in body.GetChildren())
+            {
+                if (child is ActorTag2D actor)
+                {
+                    Memorizer.UpdateActorLocation(actor, actor.Parent.GlobalPosition);
+                    _detectedActors.Remove(actor);
                 }
             }
         }
