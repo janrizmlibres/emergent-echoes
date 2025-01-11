@@ -45,11 +45,13 @@ namespace NPCProcGen.Core.Internal
         }
 
         // ! Remove debug function
-        public void PrintActors()
+        public void PrintActorMemory()
         {
-            foreach (ActorTag2D actorData in _actorData.Keys)
+            foreach (KeyValuePair<ActorTag2D, ActorData> kvp in _actorData)
             {
-                GD.Print(actorData.Parent.Name);
+                GD.Print($"Actor: {kvp.Key.Parent.Name}");
+                GD.Print($"Position: {kvp.Value.LastKnownPosition}");
+                GD.Print($"Relationship: {kvp.Value.Relationship}");
             }
         }
 
