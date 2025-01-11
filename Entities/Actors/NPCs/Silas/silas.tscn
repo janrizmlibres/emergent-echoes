@@ -79,6 +79,7 @@ parameters/Idle/blend_position = 0.0
 parameters/Move/blend_position = 0
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+target_desired_distance = 1.0
 path_postprocessing = 1
 avoidance_enabled = true
 radius = 5.0
@@ -94,7 +95,7 @@ StealMarker = NodePath("../StealMarker/Marker2D")
 rotation = 3.14159
 
 [node name="Marker2D" type="Marker2D" parent="StealMarker"]
-position = Vector2(-10, 0)
+position = Vector2(-10, -2.53518e-05)
 
 [node name="ActorDetector" parent="." instance=ExtResource("3_dft6w")]
 
