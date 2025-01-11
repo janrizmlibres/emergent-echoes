@@ -134,12 +134,17 @@ namespace NPCProcGen
         {
             if (Engine.IsEditorHint()) return;
 
-            _executor.Update();
+            _executor.Update(delta);
         }
 
-        public void FinishNavigation()
+        public void CompleteNavigation()
         {
-            _executor.RunNextState();
+            _executor.NotifyNavigationState();
+        }
+
+        public void CompleteTheft()
+        {
+            _executor.NotifyStealState();
         }
 
         public void Initialize(List<ActorTag2D> actors)
@@ -159,6 +164,11 @@ namespace NPCProcGen
         public bool IsNavigationRequired()
         {
             return _executor.IsNavigationRequired();
+        }
+
+        public bool CanSteal()
+        {
+            return _executor.CanSteal();
         }
 
         private void AddTraits()

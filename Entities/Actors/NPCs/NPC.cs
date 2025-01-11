@@ -80,7 +80,7 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
                         // ! Remove debug print
                         // GD.Print("Navigation finished");
                         _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
-                        _npcAgent2d.FinishNavigation();
+                        _npcAgent2d.CompleteNavigation();
                     }
 
                     Vector2 destination = _navigationAgent2d.GetNextPathPosition();
@@ -103,6 +103,12 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
                     }
 
                     MoveAndSlide();
+                }
+
+                if (_npcAgent2d.CanSteal())
+                {
+                    // TODO: Implement stealing
+                    _npcAgent2d.CompleteTheft();
                 }
 
                 return;
