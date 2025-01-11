@@ -38,29 +38,42 @@ namespace NPCProcGen.Core.Traits
                     .OrderBy(_ => _rng.Next())
                     .ToList();
 
+                Vector2? actorLastPos = null;
+
                 foreach (ActorTag2D actor in otherActors)
                 {
+                    actorLastPos = _owner.Memorizer.GetActorLocation(actor);
+
+                    // TODO: Add check if actor workplace is known
                     // TODO: Check also if imbalance is not too severe
-                    // TODO: Evaluate probability or likelihood of success
-                    if (actor.HasResource((ResourceType)selectedType) && !_memorizer.IsTrusted(actor))
+                    // TODO: Evaluate probability or likelihood of success if applicable
+                    if (actorLastPos.HasValue
+                        && actor.HasResource((ResourceType)selectedType)
+                        && !_memorizer.IsTrusted(actor))
                     {
                         chosenActor = actor;
+                        break;
                     }
                 }
 
                 if (chosenActor != null)
                 {
-                    ResourceStat chosenResource = _owner.Resources[(ResourceType)selectedType];
+                    ResourceStat chosenResource = _owner.Resources[selectedType.Value];
 
                     float imbalance = chosenResource.LowerThreshold - chosenResource.Value;
                     float unweightedScore = Math.Max(0, imbalance) / chosenResource.LowerThreshold;
                     float weightedScore = unweightedScore * chosenResource.Weight * _weight;
 
-                    TheftAction action = new(_owner, chosenActor);
+                    TheftAction action = new(
+                        _owner,
+                        chosenActor,
+                        actorLastPos.Value,
+                        selectedType.Value
+                    );
                     return new Tuple<NPCAction, float>(action, weightedScore);
                 }
 
-                UnevaluatedTypes.Remove((ResourceType)selectedType);
+                UnevaluatedTypes.Remove(selectedType.Value);
                 selectedType = null;
             }
 
