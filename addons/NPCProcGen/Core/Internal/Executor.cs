@@ -1,3 +1,5 @@
+using System;
+using Godot;
 using NPCProcGen.Core.Actions;
 
 namespace NPCProcGen.Core.Internal
@@ -5,11 +7,45 @@ namespace NPCProcGen.Core.Internal
     public class Executor
     {
         // TODO: Convert to a stack of actions to handle intercepts in the middle of an action
-        public NPCAction Action { set; get; } = null;
+        private NPCAction _action = null;
+
+        public event Action OnExecutionEnded;
 
         public void Update()
         {
-            Action?.Update();
+            _action?.Update();
+        }
+
+        public void SetAction(NPCAction action)
+        {
+            _action = action;
+            _action.OnComplete += OnActionComplete;
+        }
+
+        private void OnActionComplete()
+        {
+            OnExecutionEnded?.Invoke();
+            _action = null;
+        }
+
+        public Vector2 GetTargetPosition()
+        {
+            return _action.GetTargetPosition();
+        }
+
+        public bool HasAction()
+        {
+            return _action != null;
+        }
+
+        public bool IsNavigationRequired()
+        {
+            return _action?.HasNavigationState() ?? false;
+        }
+
+        public void RunNextState()
+        {
+            _action?.CompleteState();
         }
     }
 }
