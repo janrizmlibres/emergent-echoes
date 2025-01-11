@@ -16,17 +16,14 @@ namespace NPCProcGen.Core.Actions
             _owner = owner;
         }
 
-        public void NotifyNavigationState()
+        public void CompleteNavigation()
         {
             _currentState.CompleteNavigation();
         }
 
-        public void NotifyStealState()
+        public void CompleteState()
         {
-            if (_currentState is StealState state)
-            {
-                state.CompleteTheft();
-            }
+            _currentState.CompleteState();
         }
 
         public bool HasNavigationState()
@@ -34,9 +31,9 @@ namespace NPCProcGen.Core.Actions
             return _currentState.IsNavigationState();
         }
 
-        public bool CanSteal()
+        public bool IsStealing()
         {
-            return _currentState is StealState state && state.CanSteal();
+            return _currentState is StealState state && state.IsStealing();
         }
 
         public Vector2 GetTargetPosition()
