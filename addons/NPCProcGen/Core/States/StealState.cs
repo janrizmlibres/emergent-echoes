@@ -1,32 +1,49 @@
+using System;
 using Godot;
-using NPCProcGen.Core.Actions;
+using NPCProcGen.Core.Components.Enums;
 
 namespace NPCProcGen.Core.States
 {
-    public class StealState : ActionState
+    public class StealState : ActionState, ILinearState
     {
         private readonly ActorTag2D _target;
+        private readonly ResourceType _resourceType;
 
-        public StealState(NPCAgent2D owner, ActorTag2D target) : base(owner)
+        private bool _isTargetReached = false;
+
+        public event Action OnComplete;
+
+        public StealState(NPCAgent2D owner, ActorTag2D target, ResourceType resourceType)
+            : base(owner)
         {
             _target = target;
+            _resourceType = resourceType;
         }
-
-        public override void CompleteState()
-        {
-            throw new System.NotImplementedException();
-        }
-
 
         public override void Enter()
         {
             GD.Print("StealState Enter");
         }
 
-        public override Vector2 GetTargetPosition()
+        public override void CompleteNavigation()
         {
-            return _owner.Parent.GlobalPosition;
+            // TODO: Transfer resources and implement stealing
+            _isTargetReached = true;
         }
 
+        public override Vector2 GetTargetPosition()
+        {
+            return _target.Parent.GlobalPosition;
+        }
+
+        public void CompleteTheft()
+        {
+            OnComplete?.Invoke();
+        }
+
+        public bool CanSteal()
+        {
+            return _isTargetReached;
+        }
     }
 }

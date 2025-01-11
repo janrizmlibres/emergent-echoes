@@ -20,7 +20,7 @@ namespace NPCProcGen.Core.States
             GD.Print("MoveState Enter");
         }
 
-        public override void CompleteState()
+        public override void CompleteNavigation()
         {
             OnComplete?.Invoke();
         }

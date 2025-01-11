@@ -34,7 +34,6 @@ namespace NPCProcGen.Core.States
         public ActionState(NPCAgent2D owner)
         {
             _owner = owner;
-            // IsNavigationState = isNavigationState;
         }
 
         public bool IsNavigationState()
@@ -48,9 +47,9 @@ namespace NPCProcGen.Core.States
         }
 
         public virtual void Enter() { }
-        public virtual void Update() { }
+        public virtual void Update(double delta) { }
 
         public abstract Vector2 GetTargetPosition();
-        public abstract void CompleteState();
+        public abstract void CompleteNavigation();
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using Godot;
-using NPCProcGen.Core.Actions;
 
 namespace NPCProcGen.Core.States
 {
@@ -25,17 +24,15 @@ namespace NPCProcGen.Core.States
         {
             float angle = GD.Randf() * 2 * Mathf.Pi;
 
-            // Get random radius (using square root for uniform distribution)
             float random_radius = Mathf.Sqrt(GD.Randf()) * _fleeDistance;
 
-            // Convert polar coordinates to Cartesian
             return center + new Vector2(
                 Mathf.Cos(angle) * random_radius,
                 Mathf.Sin(angle) * random_radius
             );
         }
 
-        public override void CompleteState()
+        public override void CompleteNavigation()
         {
             OnComplete?.Invoke();
         }
