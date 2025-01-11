@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
@@ -10,6 +11,8 @@ namespace NPCProcGen.Core.Traits
 {
     public class ThiefTrait : Trait
     {
+        private static readonly Random _rng = new();
+
         private readonly IReadOnlyList<ActorTag2D> _actors;
 
         public ThiefTrait(NPCAgent2D owner, float weight, Sensor sensor, Memorizer memorizer)
@@ -25,13 +28,14 @@ namespace NPCProcGen.Core.Traits
 
             while (UnevaluatedTypes.Count > 0 && selectedType == null)
             {
-                selectedType = UnevaluatedTypes.First(resource => _owner.Resources[resource].IsDeficient());
+                selectedType = UnevaluatedTypes.FirstOrDefault(resource => _owner.Resources[resource].IsDeficient());
                 selectedType ??= UnevaluatedTypes.First();
 
                 ActorTag2D chosenActor = null;
 
                 List<ActorTag2D> otherActors = _actors
                     .Where(actor => actor != _owner)
+                    .OrderBy(_ => _rng.Next())
                     .ToList();
 
                 foreach (ActorTag2D actor in otherActors)
