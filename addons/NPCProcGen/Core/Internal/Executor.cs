@@ -38,24 +38,24 @@ namespace NPCProcGen.Core.Internal
             return _action != null;
         }
 
-        public bool IsNavigationRequired()
+        public bool QueryNavigationState()
         {
             return _action?.HasNavigationState() ?? false;
         }
 
-        public bool CanSteal()
+        public bool QueryStealState()
         {
-            return _action.CanSteal();
+            return _action.IsStealing();
         }
 
         public void NotifyNavigationState()
         {
-            _action?.NotifyNavigationState();
+            _action?.CompleteNavigation();
         }
 
-        public void NotifyStealState()
+        public void NotifyStateChange()
         {
-            _action?.NotifyStealState();
+            _action?.CompleteState();
         }
     }
 }
