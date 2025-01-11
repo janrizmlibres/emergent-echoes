@@ -32,9 +32,16 @@ namespace NPCProcGen
 
 		// TODO: Consider limiting access to data
 
-		public void Initialize()
+		public void Initialize(Node2D currentScene)
 		{
-			FindActorsInNode(GetTree().CurrentScene);
+			FindActorsInNode(currentScene);
+
+			// ! Remove print debug loop in production
+			GD.Print("Actors in World State:");
+			foreach (ActorTag2D actor in Actors)
+			{
+				GD.Print(actor.Parent.Name);
+			}
 
 			foreach (ActorTag2D actor in Actors)
 			{
