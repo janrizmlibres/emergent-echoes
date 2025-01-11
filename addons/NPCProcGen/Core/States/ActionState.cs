@@ -26,6 +26,8 @@ namespace NPCProcGen.Core.States
         private readonly static List<Type> _navigationStates = new()
         {
             typeof(MoveState),
+            typeof(WanderState),
+            typeof(StealState),
             typeof(FleeState)
         };
 
