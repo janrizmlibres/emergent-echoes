@@ -32,9 +32,9 @@ namespace NPCProcGen.Core.Actions
             TransitionTo(moveState);
         }
 
-        public override void Update()
+        public override void Update(double delta)
         {
-            _currentState.Update();
+            _currentState.Update(delta);
         }
     }
 }
