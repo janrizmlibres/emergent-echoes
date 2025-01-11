@@ -79,11 +79,6 @@ namespace NPCProcGen
             return warnings.ToArray();
         }
 
-        public Vector2 GetParentGlobalPosition()
-        {
-            return Parent.GlobalPosition;
-        }
-
         public bool HasResource(ResourceType type)
         {
             if (Resources.TryGetValue(type, out ResourceStat resource))
