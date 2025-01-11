@@ -44,7 +44,7 @@ namespace NPCProcGen.Core.Internal
             }
         }
 
-        // ! Remove debug function
+        // ! Remove debug function in production
         public void PrintActorMemory()
         {
             foreach (KeyValuePair<ActorTag2D, ActorData> kvp in _actorData)

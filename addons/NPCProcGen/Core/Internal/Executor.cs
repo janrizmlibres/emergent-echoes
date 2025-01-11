@@ -11,9 +11,9 @@ namespace NPCProcGen.Core.Internal
 
         public event Action OnExecutionEnded;
 
-        public void Update()
+        public void Update(double delta)
         {
-            _action?.Update();
+            _action?.Update(delta);
         }
 
         public void SetAction(NPCAction action)
@@ -43,9 +43,19 @@ namespace NPCProcGen.Core.Internal
             return _action?.HasNavigationState() ?? false;
         }
 
-        public void RunNextState()
+        public bool CanSteal()
         {
-            _action?.CompleteState();
+            return _action.CanSteal();
+        }
+
+        public void NotifyNavigationState()
+        {
+            _action?.NotifyNavigationState();
+        }
+
+        public void NotifyStealState()
+        {
+            _action?.NotifyStealState();
         }
     }
 }
