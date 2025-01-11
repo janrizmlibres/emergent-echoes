@@ -4,22 +4,30 @@ using NPCProcGen.Core.Actions;
 
 namespace NPCProcGen.Core.States
 {
-    public class MoveState : ActionState
+    public class MoveState : ActionState, ILinearState
     {
         private readonly Node2D _target;
-        private readonly NPCAction _action;
 
-        public MoveState(NPCAction action, NPCAgent2D owner, Node2D target) : base(owner)
+        public event Action OnComplete;
+
+        public MoveState(NPCAgent2D owner, Node2D target) : base(owner)
         {
-            _action = action;
             _target = target;
         }
 
         public override void Enter()
         {
             GD.Print("MoveState Enter");
-            _action.MoveToTarget(_target.GlobalPosition);
-            _owner.OnFinishNavigation += CompleteState;
+        }
+
+        public override void CompleteState()
+        {
+            OnComplete?.Invoke();
+        }
+
+        public override Vector2 GetTargetPosition()
+        {
+            return _target.GlobalPosition;
         }
     }
 }
