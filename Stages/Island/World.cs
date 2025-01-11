@@ -7,7 +7,7 @@ namespace EmergentEchoes
 	{
 		public override void _Ready()
 		{
-			WorldState.Instance.Initialize();
+			WorldState.Instance.Initialize(this);
 		}
 	}
 }
