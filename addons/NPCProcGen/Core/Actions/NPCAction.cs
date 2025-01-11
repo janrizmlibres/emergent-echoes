@@ -9,9 +9,26 @@ namespace NPCProcGen.Core.Actions
         protected readonly NPCAgent2D _owner;
         protected ActionState _currentState;
 
+        public event Action OnComplete;
+
         public NPCAction(NPCAgent2D owner)
         {
             _owner = owner;
+        }
+
+        public void CompleteState()
+        {
+            _currentState.CompleteState();
+        }
+
+        public bool HasNavigationState()
+        {
+            return _currentState.IsNavigationState();
+        }
+
+        public Vector2 GetTargetPosition()
+        {
+            return _currentState.GetTargetPosition();
         }
 
         protected void TransitionTo(ActionState newState)
@@ -22,12 +39,7 @@ namespace NPCProcGen.Core.Actions
 
         protected void CompleteAction()
         {
-            _owner.ReturnToIdle();
-        }
-
-        public void MoveToTarget(Vector2 target)
-        {
-            _owner.EmitSignal(NPCAgent2D.SignalName.MoveToTarget, target);
+            OnComplete?.Invoke();
         }
 
         public abstract void Update();

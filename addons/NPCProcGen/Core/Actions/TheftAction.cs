@@ -1,7 +1,15 @@
+using System.Numerics;
 using NPCProcGen.Core.States;
 
 namespace NPCProcGen.Core.Actions
 {
+    public enum Rando
+    {
+        One,
+        Two,
+        Three
+    }
+
     public class TheftAction : NPCAction
     {
         private readonly ActorTag2D _target;
@@ -15,13 +23,13 @@ namespace NPCProcGen.Core.Actions
 
         private void InitializeStates()
         {
-            MoveState moveState = new(this, _owner, _target.StealMarker);
-            FleeState fleeState = new(this, _owner);
+            MoveState moveState = new(_owner, _target.StealMarker);
+            FleeState fleeState = new(_owner);
 
             moveState.OnComplete += () => TransitionTo(fleeState);
             fleeState.OnComplete += () => CompleteAction();
 
-            _currentState = moveState;
+            TransitionTo(moveState);
         }
 
         public override void Update()
