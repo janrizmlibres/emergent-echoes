@@ -51,5 +51,8 @@ namespace NPCProcGen.Core.States
 
         public abstract Vector2 GetTargetPosition();
         public abstract void CompleteNavigation();
+
+        // TODO: Consider refactoring
+        public abstract void CompleteState();
     }
 }

@@ -50,6 +50,11 @@ namespace NPCProcGen.Core.States
             _isWandering = false;
         }
 
+        public override void CompleteState()
+        {
+            OnComplete?.Invoke();
+        }
+
         public override Vector2 GetTargetPosition()
         {
             return _target;

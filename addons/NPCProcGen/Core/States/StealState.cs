@@ -36,12 +36,12 @@ namespace NPCProcGen.Core.States
             return _target.Parent.GlobalPosition;
         }
 
-        public void CompleteTheft()
+        public override void CompleteState()
         {
             OnComplete?.Invoke();
         }
 
-        public bool CanSteal()
+        public bool IsStealing()
         {
             return _isTargetReached;
         }

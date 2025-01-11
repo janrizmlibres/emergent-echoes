@@ -37,6 +37,11 @@ namespace NPCProcGen.Core.States
             OnComplete?.Invoke();
         }
 
+        public override void CompleteState()
+        {
+            OnComplete?.Invoke();
+        }
+
         public override Vector2 GetTargetPosition()
         {
             return _target;
