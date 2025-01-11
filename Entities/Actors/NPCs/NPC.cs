@@ -40,8 +40,8 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
             _navigationAgent2d.NavigationFinished += OnChangeState;
             _navigationAgent2d.VelocityComputed += OnNavigationAgentVelocityComputed;
 
-            _npcAgent2d.MoveToTarget += OnMoveToTarget;
-            _npcAgent2d.OnFinishNavigation += OnChangeState;
+            _npcAgent2d.ExecutionStarted += OnExecutionStarted;
+            _npcAgent2d.ExecutionEnded += OnExecutionEnded;
 
             _tileMapLayer = GetNode<TileMapLayer>("%TileMapLayer");
 
@@ -67,9 +67,44 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
         {
             if (Engine.IsEditorHint()) return;
 
-            if (_npcAgent2d.ShouldMove())
+            if (_npcAgent2d.IsActive())
             {
-                MoveCharacter();
+                if (_npcAgent2d.IsNavigationRequired())
+                {
+                    // ! Remove debug print
+                    // GD.Print("Navigation for NPC required");
+                    _navigationAgent2d.TargetPosition = _npcAgent2d.TargetPosition;
+
+                    if (_navigationAgent2d.IsNavigationFinished())
+                    {
+                        // ! Remove debug print
+                        // GD.Print("Navigation finished");
+                        _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
+                        _npcAgent2d.FinishNavigation();
+                    }
+
+                    Vector2 destination = _navigationAgent2d.GetNextPathPosition();
+                    Vector2 direction = GlobalPosition.DirectionTo(destination);
+                    _navigationAgent2d.Velocity = Velocity.MoveToward(direction * MaxSpeed, Acceleration);
+
+                    if (Velocity.X != 0)
+                    {
+                        _animationTree.Set("parameters/Idle/blend_position", Velocity.X);
+                        _animationTree.Set("parameters/Move/blend_position", Velocity.X);
+                        _animationState.Travel("Move");
+                    }
+                    else if (Velocity.Y != 0)
+                    {
+                        _animationState.Travel("Move");
+                    }
+                    else
+                    {
+                        _animationState.Travel("Idle");
+                    }
+
+                    MoveAndSlide();
+                }
+
                 return;
             }
 
@@ -157,10 +192,17 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
             }
         }
 
-        private void OnMoveToTarget(Vector2 target)
+        private void OnExecutionStarted()
         {
-            _navigationAgent2d.TargetPosition = target;
             _stateTimer.Stop();
+        }
+
+        private void OnExecutionEnded()
+        {
+            // ! Remove debug print
+            GD.Print("Execution Ended");
+            _state = State.Idle;
+            _stateTimer.Start(GD.RandRange(1.0, 3.0));
         }
     }
 }

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components;
@@ -55,17 +53,22 @@ namespace NPCProcGen
         public float Companionship { get; set; } = 0.5f;
 
         [Signal]
-        public delegate void MoveToTargetEventHandler(Vector2 target);
+        public delegate void ExecutionStartedEventHandler();
+        [Signal]
+        public delegate void ExecutionEndedEventHandler();
 
-        public event Action OnFinishNavigation;
+        public Vector2 TargetPosition
+        {
+            get => _executor.GetTargetPosition();
+        }
+
+        private readonly Timer _evaluationTimer = new();
+        private Area2D _actorDetector = null;
 
         private readonly Sensor _sensor = new();
         private readonly Memorizer _memorizer = new();
         private readonly Strategizer _strategizer = new();
         private readonly Executor _executor = new();
-
-        private readonly Timer _evaluationTimer = new();
-        private Area2D _actorDetector;
 
         public override void _Ready()
         {
@@ -87,6 +90,7 @@ namespace NPCProcGen
             _evaluationTimer.Start();
 
             _actorDetector.BodyEntered += OnActorDetected;
+            _executor.OnExecutionEnded += OnExecutionEnded;
 
             AddTraits();
             AddResources();
@@ -113,7 +117,7 @@ namespace NPCProcGen
 
             if (StealMarker == null)
             {
-                warnings.Add("The NPCAgent2D requires a Marker2D node for use in actions such as stealing.");
+                warnings.Add("The NPCAgent2D requires a Marker2D node to make stealing possible.");
             }
 
             return warnings.ToArray();
@@ -123,7 +127,7 @@ namespace NPCProcGen
         {
             if (Engine.IsEditorHint()) return;
 
-            _memorizer.ProcessActorUpdates(delta);
+            _memorizer.ProcessUpdates(delta);
         }
 
         public override void _PhysicsProcess(double delta)
@@ -133,10 +137,9 @@ namespace NPCProcGen
             _executor.Update();
         }
 
-        public void ReturnToIdle()
+        public void FinishNavigation()
         {
-            _executor.Action = null;
-            _evaluationTimer.Start();
+            _executor.RunNextState();
         }
 
         public void Initialize(List<ActorTag2D> actors)
@@ -144,33 +147,45 @@ namespace NPCProcGen
             _memorizer.Initialize(actors);
         }
 
-        public bool ShouldMove()
+        public bool IsActive()
         {
-            return _executor.Action != null;
+            return _executor.HasAction();
         }
 
-        public void FinishNavigation()
+        public bool IsNavigationRequired()
         {
-            OnFinishNavigation?.Invoke();
+            return _executor.IsNavigationRequired();
         }
 
         private void OnEvaluationTimerTimeout()
         {
-            GD.Print("Evaluating action");
             NPCAction action = _strategizer.EvaluateAction(SocialPractice.Proactive);
-            _executor.Action = action;
+
+            if (action != null)
+            {
+                // ! Remove debug print
+                GD.Print("Action evaluated: " + action.GetType().Name);
+                _executor.SetAction(action);
+                EmitSignal(SignalName.ExecutionStarted);
+            }
         }
 
         private void OnActorDetected(Node2D body)
         {
             foreach (Node child in body.GetChildren())
             {
-                if (child is ActorTag2D)
+                if (child is ActorTag2D && child != this)
                 {
                     ActorTag2D actor = child as ActorTag2D;
                     _memorizer.UpdateActorLocation(actor, actor.GetParentGlobalPosition());
                 }
             }
+        }
+
+        private void OnExecutionEnded()
+        {
+            EmitSignal(SignalName.ExecutionEnded);
+            _evaluationTimer.Start();
         }
 
         private void AddTraits()
