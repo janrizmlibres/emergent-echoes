@@ -69,48 +69,7 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
 
             if (_npcAgent2d.IsActive())
             {
-                if (_npcAgent2d.IsNavigationRequired())
-                {
-                    // ! Remove debug print
-                    // GD.Print("Navigation for NPC required");
-                    _navigationAgent2d.TargetPosition = _npcAgent2d.TargetPosition;
-
-                    if (_navigationAgent2d.IsNavigationFinished())
-                    {
-                        // ! Remove debug print
-                        // GD.Print("Navigation finished");
-                        _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
-                        _npcAgent2d.CompleteNavigation();
-                    }
-
-                    Vector2 destination = _navigationAgent2d.GetNextPathPosition();
-                    Vector2 direction = GlobalPosition.DirectionTo(destination);
-                    _navigationAgent2d.Velocity = Velocity.MoveToward(direction * MaxSpeed, Acceleration);
-
-                    if (Velocity.X != 0)
-                    {
-                        _animationTree.Set("parameters/Idle/blend_position", Velocity.X);
-                        _animationTree.Set("parameters/Move/blend_position", Velocity.X);
-                        _animationState.Travel("Move");
-                    }
-                    else if (Velocity.Y != 0)
-                    {
-                        _animationState.Travel("Move");
-                    }
-                    else
-                    {
-                        _animationState.Travel("Idle");
-                    }
-
-                    MoveAndSlide();
-                }
-
-                if (_npcAgent2d.CanSteal())
-                {
-                    // TODO: Implement stealing
-                    _npcAgent2d.CompleteTheft();
-                }
-
+                ExecuteNPCAction();
                 return;
             }
 
@@ -123,6 +82,43 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
                 MoveCharacter();
             }
 
+            HandleAnimation();
+            MoveAndSlide();
+        }
+
+        private void ExecuteNPCAction()
+        {
+            if (_npcAgent2d.IsNavigationRequired())
+            {
+                // ! Remove debug print
+                // GD.Print("Navigation for NPC required");
+                _navigationAgent2d.TargetPosition = _npcAgent2d.TargetPosition;
+
+                if (_navigationAgent2d.IsNavigationFinished())
+                {
+                    // ! Remove debug print
+                    // GD.Print("Navigation finished");
+                    _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
+                    _npcAgent2d.CompleteNavigation();
+                }
+
+                Vector2 destination = _navigationAgent2d.GetNextPathPosition();
+                Vector2 direction = GlobalPosition.DirectionTo(destination);
+                _navigationAgent2d.Velocity = Velocity.MoveToward(direction * MaxSpeed, Acceleration);
+
+                HandleAnimation();
+                MoveAndSlide();
+            }
+
+            if (_npcAgent2d.IsStealing())
+            {
+                // TODO: Implement stealing
+                _npcAgent2d.CompleteTheft();
+            }
+        }
+
+        private void HandleAnimation()
+        {
             if (Velocity.X != 0)
             {
                 _animationTree.Set("parameters/Idle/blend_position", Velocity.X);
@@ -137,8 +133,6 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
             {
                 _animationState.Travel("Idle");
             }
-
-            MoveAndSlide();
         }
 
         private void IdleState()
