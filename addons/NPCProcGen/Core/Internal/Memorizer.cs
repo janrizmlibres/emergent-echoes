@@ -44,12 +44,21 @@ namespace NPCProcGen.Core.Internal
             }
         }
 
+        // ! Remove debug function
+        public void PrintActors()
+        {
+            foreach (ActorTag2D actorData in _actorData.Keys)
+            {
+                GD.Print(actorData.Parent.Name);
+            }
+        }
+
         public void UpdateActorLocation(ActorTag2D actor, Vector2 location)
         {
             _actorData[actor].LastKnownPosition = location;
         }
 
-        public void ProcessActorUpdates(double delta)
+        public void ProcessUpdates(double delta)
         {
             foreach (ActorData actorData in _actorData.Values)
             {
