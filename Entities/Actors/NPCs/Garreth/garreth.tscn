@@ -81,7 +81,7 @@ position = Vector2(0, -9)
 texture = ExtResource("1_isnnv")
 hframes = 8
 vframes = 6
-frame = 4
+frame = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -102,11 +102,13 @@ parameters/Move/blend_position = 0
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_postprocessing = 1
 avoidance_enabled = true
-debug_enabled = true
+radius = 5.0
 
 [node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("ActorDetector", "StealMarker")]
 script = ExtResource("3_attte")
 ActorDetector = NodePath("../ActorDetector")
+Survival = 0.4
+Lawful = 0.65
 StealMarker = NodePath("../StealMarker/Marker2D")
 
 [node name="StealMarker" type="Node2D" parent="."]
