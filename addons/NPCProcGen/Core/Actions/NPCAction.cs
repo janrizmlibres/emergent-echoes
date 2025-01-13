@@ -9,21 +9,27 @@ namespace NPCProcGen.Core.Actions
         protected readonly NPCAgent2D _owner;
         protected ActionState _currentState;
 
-        public event Action OnComplete;
+        public event Action ActionComplete;
 
         public NPCAction(NPCAgent2D owner)
         {
             _owner = owner;
         }
 
-        public void CompleteNavigation()
+        protected void TransitionTo(ActionState newState)
         {
-            _currentState.CompleteNavigation();
+            _currentState = newState;
+            _currentState.Enter();
         }
 
-        public void CompleteState()
+        protected void OnActionComplete()
         {
-            _currentState.CompleteState();
+            ActionComplete?.Invoke();
+        }
+
+        public Vector2 GetTargetPosition()
+        {
+            return _currentState.GetTargetPosition();
         }
 
         public bool HasNavigationState()
@@ -34,22 +40,6 @@ namespace NPCProcGen.Core.Actions
         public bool IsStealing()
         {
             return _currentState is StealState state && state.IsStealing();
-        }
-
-        public Vector2 GetTargetPosition()
-        {
-            return _currentState.GetTargetPosition();
-        }
-
-        protected void TransitionTo(ActionState newState)
-        {
-            _currentState = newState;
-            _currentState.Enter();
-        }
-
-        protected void CompleteAction()
-        {
-            OnComplete?.Invoke();
         }
 
         public abstract void Update(double delta);

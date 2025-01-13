@@ -11,12 +11,12 @@ namespace NPCProcGen.Core.Actions
 
         private Vector2 _targetLastPos;
 
-        public TheftAction(NPCAgent2D owner, ActorTag2D target, Vector2 lastPos, ResourceType type)
+        public TheftAction(NPCAgent2D owner, ActorTag2D target, ResourceType type)
             : base(owner)
         {
             _target = target;
-            _targetLastPos = lastPos;
             _resourceType = type;
+            _targetLastPos = _owner.Memorizer.GetActorLocation(_target).Value;
 
             InitializeStates();
         }
@@ -26,8 +26,8 @@ namespace NPCProcGen.Core.Actions
             StealState stealState = new(_owner, _target, _resourceType);
             FleeState fleeState = new(_owner);
 
-            stealState.OnComplete += () => TransitionTo(fleeState);
-            fleeState.OnComplete += () => CompleteAction();
+            stealState.StateComplete += () => TransitionTo(fleeState);
+            fleeState.StateComplete += OnActionComplete;
 
             if (_owner.IsActorInRange(_target))
             {
@@ -36,10 +36,10 @@ namespace NPCProcGen.Core.Actions
             }
 
             MoveState moveState = new(_owner, _targetLastPos);
-            WanderState wanderState = new(_owner);
+            WanderState wanderState = new(_owner, _target);
 
-            moveState.OnComplete += () => TransitionTo(wanderState);
-            wanderState.OnComplete += () => TransitionTo(stealState);
+            moveState.StateComplete += () => TransitionTo(wanderState);
+            wanderState.StateComplete += () => TransitionTo(stealState);
 
             TransitionTo(moveState);
         }
