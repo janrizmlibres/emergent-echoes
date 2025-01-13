@@ -61,7 +61,7 @@ position = Vector2(0, -9)
 texture = ExtResource("2_5inc2")
 hframes = 8
 vframes = 6
-frame = 4
+frame = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -79,7 +79,6 @@ parameters/Idle/blend_position = 0.0
 parameters/Move/blend_position = 0
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
-target_desired_distance = 1.0
 path_postprocessing = 1
 avoidance_enabled = true
 radius = 5.0

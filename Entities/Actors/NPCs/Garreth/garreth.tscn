@@ -100,7 +100,6 @@ parameters/Idle/blend_position = 0
 parameters/Move/blend_position = 0
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
-target_desired_distance = 1.0
 path_postprocessing = 1
 avoidance_enabled = true
 radius = 5.0
