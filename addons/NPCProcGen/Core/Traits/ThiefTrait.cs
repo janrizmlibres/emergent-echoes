@@ -64,12 +64,7 @@ namespace NPCProcGen.Core.Traits
                     float unweightedScore = Math.Max(0, imbalance) / chosenResource.LowerThreshold;
                     float weightedScore = unweightedScore * chosenResource.Weight * _weight;
 
-                    TheftAction action = new(
-                        _owner,
-                        chosenActor,
-                        actorLastPos.Value,
-                        selectedType.Value
-                    );
+                    TheftAction action = new(_owner, chosenActor, selectedType.Value);
                     return new Tuple<NPCAction, float>(action, weightedScore);
                 }
 
