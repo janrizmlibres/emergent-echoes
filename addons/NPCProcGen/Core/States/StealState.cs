@@ -11,7 +11,7 @@ namespace NPCProcGen.Core.States
 
         private bool _isTargetReached = false;
 
-        public event Action OnComplete;
+        public event Action StateComplete;
 
         public StealState(NPCAgent2D owner, ActorTag2D target, ResourceType resourceType)
             : base(owner)
@@ -23,12 +23,8 @@ namespace NPCProcGen.Core.States
         public override void Enter()
         {
             GD.Print("StealState Enter");
-        }
-
-        public override void CompleteNavigation()
-        {
-            // TODO: Transfer resources and implement stealing
-            _isTargetReached = true;
+            _owner.NotifManager.NavigationComplete += OnNavigationComplete;
+            _owner.NotifManager.TheftComplete += OnTheftComplete;
         }
 
         public override Vector2 GetTargetPosition()
@@ -36,14 +32,20 @@ namespace NPCProcGen.Core.States
             return _target.Parent.GlobalPosition;
         }
 
-        public override void CompleteState()
-        {
-            OnComplete?.Invoke();
-        }
-
         public bool IsStealing()
         {
             return _isTargetReached;
+        }
+
+        private void OnNavigationComplete()
+        {
+            // TODO: Transfer resources and implement stealing
+            _isTargetReached = true;
+        }
+
+        private void OnTheftComplete()
+        {
+            StateComplete?.Invoke();
         }
     }
 }

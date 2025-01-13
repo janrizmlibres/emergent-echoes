@@ -1,24 +1,22 @@
 using System;
 using System.Collections.Generic;
-using EmergentEchoes.addons.NPC2DNode.Components;
 using Godot;
-using NPCProcGen.Core.Actions;
 
 namespace NPCProcGen.Core.States
 {
     public interface ILinearState
     {
-        public event Action OnComplete;
+        public event Action StateComplete;
     }
 
     public interface IBinaryState
     {
-        public event Action<bool> OnComplete;
+        public event Action<bool> StateComplete;
     }
 
     public interface INonlinearState
     {
-        public event Action<Enum> OnComplete;
+        public event Action<Enum> StateComplete;
     }
 
     public abstract class ActionState
@@ -52,9 +50,5 @@ namespace NPCProcGen.Core.States
         public virtual void Update(double delta) { }
 
         public abstract Vector2 GetTargetPosition();
-        public abstract void CompleteNavigation();
-
-        // TODO: Consider refactoring
-        public abstract void CompleteState();
     }
 }

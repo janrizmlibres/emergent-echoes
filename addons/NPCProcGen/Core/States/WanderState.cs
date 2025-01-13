@@ -6,21 +6,30 @@ namespace NPCProcGen.Core.States
     public class WanderState : ActionState, ILinearState
     {
         private readonly static Random _rnd = new();
-
         private static readonly int _min = 5;
         private static readonly int _max = 10;
 
-        private float _totalDuration = 30;
+        private float _maxDuration = 30;
         private float _wanderInterval = _rnd.Next(_min, _max);
         private float _timer = 0;
 
-        private Vector2 _target;
         private bool _isWandering = false;
 
-        public event Action OnComplete;
+        private readonly ActorTag2D _target = null;
+        private Vector2 _targetPosition;
 
-        public WanderState(NPCAgent2D owner) : base(owner)
+        public event Action StateComplete;
+
+        public WanderState(NPCAgent2D owner, ActorTag2D target) : base(owner)
         {
+            _target = target;
+        }
+
+        public override void Enter()
+        {
+            GD.Print("WanderState Enter");
+            _owner.NotifManager.NavigationComplete += OnNavigationComplete;
+            _owner.NotifManager.ActorDetected += OnActorDetected;
         }
 
         public override void Update(double delta)
@@ -30,7 +39,7 @@ namespace NPCProcGen.Core.States
                 _timer += (float)delta;
             }
 
-            _totalDuration -= (float)delta;
+            _maxDuration -= (float)delta;
 
             if (_timer >= _wanderInterval)
             {
@@ -39,25 +48,28 @@ namespace NPCProcGen.Core.States
                 _isWandering = true;
             }
 
-            if (_totalDuration <= 0)
+            if (_maxDuration <= 0)
             {
-                OnComplete?.Invoke();
+                StateComplete?.Invoke();
             }
-        }
-
-        public override void CompleteNavigation()
-        {
-            _isWandering = false;
-        }
-
-        public override void CompleteState()
-        {
-            OnComplete?.Invoke();
         }
 
         public override Vector2 GetTargetPosition()
         {
-            return _target;
+            return _target?.Parent.GlobalPosition ?? _targetPosition;
+        }
+
+        private void OnNavigationComplete()
+        {
+            _isWandering = false;
+        }
+
+        private void OnActorDetected(ActorTag2D actor)
+        {
+            if (_target == actor)
+            {
+                StateComplete?.Invoke();
+            }
         }
     }
 }

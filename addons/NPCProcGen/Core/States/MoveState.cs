@@ -1,16 +1,15 @@
 using System;
-using System.Runtime;
 using Godot;
-using NPCProcGen.Core.Actions;
 
 namespace NPCProcGen.Core.States
 {
     public class MoveState : ActionState, ILinearState
     {
-        private readonly Node2D _target = null;
+        private readonly Node2D _targetNode = null;
+        private readonly ActorTag2D _target = null;
         private Vector2 _targetPosition;
 
-        public event Action OnComplete;
+        public event Action StateComplete;
 
         public MoveState(NPCAgent2D owner, Vector2 targetPosition)
             : base(owner)
@@ -18,31 +17,45 @@ namespace NPCProcGen.Core.States
             _targetPosition = targetPosition;
         }
 
-        public MoveState(NPCAgent2D owner, Node2D target)
+        public MoveState(NPCAgent2D owner, ActorTag2D target)
             : base(owner)
         {
             _target = target;
+            _targetPosition = target.Parent.GlobalPosition;
+        }
+
+        public MoveState(NPCAgent2D owner, Node2D target)
+            : base(owner)
+        {
+            _targetNode = target;
             _targetPosition = target.GlobalPosition;
         }
 
         public override void Enter()
         {
             GD.Print("MoveState Enter");
-        }
-
-        public override void CompleteNavigation()
-        {
-            OnComplete?.Invoke();
-        }
-
-        public override void CompleteState()
-        {
-            OnComplete?.Invoke();
+            _owner.NotifManager.NavigationComplete += OnNavigationComplete;
+            _owner.NotifManager.ActorDetected += OnActorDetected;
         }
 
         public override Vector2 GetTargetPosition()
         {
-            return _target?.GlobalPosition ?? _targetPosition;
+            return _target?.Parent.GlobalPosition
+                ?? _targetNode?.GlobalPosition
+                ?? _targetPosition;
+        }
+
+        private void OnNavigationComplete()
+        {
+            StateComplete?.Invoke();
+        }
+
+        private void OnActorDetected(ActorTag2D actor)
+        {
+            if (actor == _target)
+            {
+                StateComplete?.Invoke();
+            }
         }
     }
 }
