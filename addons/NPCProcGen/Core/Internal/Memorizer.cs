@@ -21,18 +21,7 @@ namespace NPCProcGen.Core.Internal
             }
         }
 
-        // ! Remove debug function in production
-        public void PrintActorMemory()
-        {
-            foreach (KeyValuePair<ActorTag2D, ActorData> kvp in _actorData)
-            {
-                GD.Print($"Actor: {kvp.Key.Parent.Name}");
-                GD.Print($"Position: {kvp.Value.LastKnownPosition}");
-                GD.Print($"Relationship: {kvp.Value.Relationship}");
-            }
-        }
-
-        public void ProcessUpdates(double delta)
+        public void Update(double delta)
         {
             foreach (ActorData actorData in _actorData.Values)
             {
@@ -50,14 +39,6 @@ namespace NPCProcGen.Core.Internal
             return _actorData[actor].LastKnownPosition;
         }
 
-        // * Hostile: -15 to -11
-        // * Distrusted: -10 to -6
-        // * Unfriendly: -5 to -1
-        // * Neutral: 0 to 5
-        // * Friendly: 6 to 10
-        // * Trusted: 11 to 15
-        // * Close: 16 to 20
-
         public bool IsFriendly(ActorTag2D actor)
         {
             return _actorData[actor].Relationship > 5;
@@ -74,3 +55,11 @@ namespace NPCProcGen.Core.Internal
         }
     }
 }
+
+// * Hostile: -15 to -11
+// * Distrusted: -10 to -6
+// * Unfriendly: -5 to -1
+// * Neutral: 0 to 5
+// * Friendly: 6 to 10
+// * Trusted: 11 to 15
+// * Close: 16 to 20

@@ -9,7 +9,7 @@ namespace NPCProcGen.Core.Internal
         // TODO: Convert to a stack of actions to handle intercepts in the middle of an action
         private NPCAction _action = null;
 
-        public event Action OnExecutionEnded;
+        public event Action ExecutionEnded;
 
         public void Update(double delta)
         {
@@ -19,13 +19,7 @@ namespace NPCProcGen.Core.Internal
         public void SetAction(NPCAction action)
         {
             _action = action;
-            _action.OnComplete += OnActionComplete;
-        }
-
-        private void OnActionComplete()
-        {
-            OnExecutionEnded?.Invoke();
-            _action = null;
+            _action.ActionComplete += OnActionComplete;
         }
 
         public Vector2 GetTargetPosition()
@@ -40,22 +34,19 @@ namespace NPCProcGen.Core.Internal
 
         public bool QueryNavigationState()
         {
+            // TODO: Reimplement logic since it's flawed
             return _action?.HasNavigationState() ?? false;
         }
 
         public bool QueryStealState()
         {
-            return _action.IsStealing();
+            return _action?.IsStealing() ?? false;
         }
 
-        public void NotifyNavigationState()
+        private void OnActionComplete()
         {
-            _action?.CompleteNavigation();
-        }
-
-        public void NotifyStateChange()
-        {
-            _action?.CompleteState();
+            ExecutionEnded?.Invoke();
+            _action = null;
         }
     }
 }
