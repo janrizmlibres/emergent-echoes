@@ -32,6 +32,7 @@ namespace NPCProcGen
         // TODO: Consider converting resources into dictionary for constant access
         public Dictionary<ResourceType, ResourceStat> Resources { get; private set; } = new();
 
+        // TODO: Remove this property since Node2D already has an owner property
         public Node2D Parent { get; protected set; }
 
         private Marker2D _stealMarker;

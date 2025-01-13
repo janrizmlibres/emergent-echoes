@@ -90,13 +90,13 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
         {
             if (_npcAgent2d.IsNavigationRequired())
             {
-                // ! Remove debug print
+                // ! Remove debug print in production
                 // GD.Print("Navigation for NPC required");
                 _navigationAgent2d.TargetPosition = _npcAgent2d.TargetPosition;
 
                 if (_navigationAgent2d.IsNavigationFinished())
                 {
-                    // ! Remove debug print
+                    // ! Remove debug print in production
                     // GD.Print("Navigation finished");
                     _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
                     _npcAgent2d.CompleteNavigation();

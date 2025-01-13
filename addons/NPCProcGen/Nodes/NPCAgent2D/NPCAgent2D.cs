@@ -3,6 +3,7 @@ using Godot;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 using NPCProcGen.Core.Traits;
 
@@ -64,11 +65,13 @@ namespace NPCProcGen
         public Strategizer Strategizer { get; private set; } = new();
         public Executor Executor { get; private set; } = new();
 
+        public NotifManager NotifManager { get; private set; } = new();
+
         // TODO: Consider using raycast for detection
         private readonly List<ActorTag2D> _detectedActors = new();
+        private Area2D _actorDetector = null;
 
         private readonly Timer _evaluationTimer = new();
-        private Area2D _actorDetector = null;
 
         public override void _Ready()
         {
@@ -76,22 +79,23 @@ namespace NPCProcGen
 
             Parent = GetParent() as Node2D;
 
-            if (_actorDetector == null || Parent == null || StealMarker == null)
+            if (Parent == null || _actorDetector == null || StealMarker == null)
             {
                 QueueFree();
                 return;
             }
 
+            AddChild(_evaluationTimer);
+
             _evaluationTimer.WaitTime = 10;
             _evaluationTimer.OneShot = true;
             _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
-
-            AddChild(_evaluationTimer);
             _evaluationTimer.Start();
 
-            _actorDetector.BodyEntered += OnActorEntered;
-            _actorDetector.BodyExited += OnActorExited;
-            Executor.OnExecutionEnded += OnExecutionEnded;
+            _actorDetector.BodyEntered += OnBodyEntered;
+            _actorDetector.BodyExited += OnBodyExited;
+
+            Executor.ExecutionEnded += OnExecutionEnded;
 
             AddTraits();
             AddResources();
@@ -128,7 +132,7 @@ namespace NPCProcGen
         {
             if (Engine.IsEditorHint()) return;
 
-            Memorizer.ProcessUpdates(delta);
+            Memorizer.Update(delta);
         }
 
         public override void _PhysicsProcess(double delta)
@@ -140,12 +144,12 @@ namespace NPCProcGen
 
         public void CompleteNavigation()
         {
-            Executor.NotifyNavigationState();
+            NotifManager.NotifyNavigationComplete();
         }
 
         public void CompleteTheft()
         {
-            Executor.NotifyStateChange();
+            NotifManager.NotifyTheftComplete();
         }
 
         public void Initialize(List<ActorTag2D> actors)
@@ -212,18 +216,19 @@ namespace NPCProcGen
             }
         }
 
-        private void OnActorEntered(Node2D body)
+        private void OnBodyEntered(Node2D body)
         {
             foreach (Node child in body.GetChildren())
             {
                 if (child is ActorTag2D actor)
                 {
                     _detectedActors.Add(actor);
+                    NotifManager.NotifyActorDetected(actor);
                 }
             }
         }
 
-        private void OnActorExited(Node2D body)
+        private void OnBodyExited(Node2D body)
         {
             foreach (Node child in body.GetChildren())
             {
