@@ -1,15 +1,29 @@
 using System;
 using Godot;
+using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
-    public class MoveState : ActionState, ILinearState
+    public class MoveState : ActionState, INavigationState
     {
         private readonly Node2D _targetNode = null;
         private readonly ActorTag2D _target = null;
-        private Vector2 _targetPosition;
+        private Vector2? _targetPosition = null;
 
-        public event Action StateComplete;
+        public event Action CompleteState;
+
+        public MoveState(NPCAgent2D owner, Node2D target)
+            : base(owner)
+        {
+            _targetNode = target;
+        }
+
+        public MoveState(NPCAgent2D owner, ActorTag2D target, Vector2? lastPos = null)
+            : base(owner)
+        {
+            _target = target;
+            _targetPosition = lastPos;
+        }
 
         public MoveState(NPCAgent2D owner, Vector2 targetPosition)
             : base(owner)
@@ -17,45 +31,39 @@ namespace NPCProcGen.Core.States
             _targetPosition = targetPosition;
         }
 
-        public MoveState(NPCAgent2D owner, ActorTag2D target)
-            : base(owner)
-        {
-            _target = target;
-            _targetPosition = target.Parent.GlobalPosition;
-        }
-
-        public MoveState(NPCAgent2D owner, Node2D target)
-            : base(owner)
-        {
-            _targetNode = target;
-            _targetPosition = target.GlobalPosition;
-        }
-
         public override void Enter()
         {
-            GD.Print("MoveState Enter");
+            GD.Print($"{_owner.Parent.Name} MoveState Enter");
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
-            _owner.NotifManager.ActorDetected += OnActorDetected;
         }
 
-        public override Vector2 GetTargetPosition()
+        public override void Update(double delta)
         {
-            return _target?.Parent.GlobalPosition
-                ?? _targetNode?.GlobalPosition
-                ?? _targetPosition;
+            if (_owner.IsActorInRange(_target))
+            {
+                OnNavigationComplete();
+            }
+        }
+
+        public bool IsNavigating()
+        {
+            return true;
+        }
+
+        public Vector2 GetTargetPosition()
+        {
+            if (_targetNode != null)
+            {
+                return _targetNode.GlobalPosition;
+            }
+
+            return _targetPosition ?? _target.Parent.GlobalPosition;
         }
 
         private void OnNavigationComplete()
         {
-            StateComplete?.Invoke();
-        }
-
-        private void OnActorDetected(ActorTag2D actor)
-        {
-            if (actor == _target)
-            {
-                StateComplete?.Invoke();
-            }
+            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
+            CompleteState?.Invoke();
         }
     }
 }

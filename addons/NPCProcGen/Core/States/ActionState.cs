@@ -4,31 +4,14 @@ using Godot;
 
 namespace NPCProcGen.Core.States
 {
-    public interface ILinearState
+    public interface INavigationState
     {
-        public event Action StateComplete;
-    }
-
-    public interface IBinaryState
-    {
-        public event Action<bool> StateComplete;
-    }
-
-    public interface INonlinearState
-    {
-        public event Action<Enum> StateComplete;
+        public bool IsNavigating();
+        public Vector2 GetTargetPosition();
     }
 
     public abstract class ActionState
     {
-        private readonly static List<Type> _navigationStates = new()
-        {
-            typeof(MoveState),
-            typeof(WanderState),
-            typeof(StealState),
-            typeof(FleeState)
-        };
-
         protected readonly NPCAgent2D _owner;
 
         public ActionState(NPCAgent2D owner)
@@ -36,19 +19,8 @@ namespace NPCProcGen.Core.States
             _owner = owner;
         }
 
-        public bool IsNavigationState()
-        {
-            if (_navigationStates.Contains(GetType()))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
         public virtual void Enter() { }
         public virtual void Update(double delta) { }
-
-        public abstract Vector2 GetTargetPosition();
+        public virtual void Exit() { }
     }
 }
