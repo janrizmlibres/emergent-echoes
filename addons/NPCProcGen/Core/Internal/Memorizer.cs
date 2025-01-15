@@ -30,6 +30,7 @@ namespace NPCProcGen.Core.Internal
             }
         }
 
+        // TODO: Fix existing bug
         public void UpdateActorLocation(ActorTag2D actor, Vector2 location)
         {
             DebugTool.Assert(_actorData.ContainsKey(actor), $"Actor {actor.Parent.Name} not found in memorizer.");
