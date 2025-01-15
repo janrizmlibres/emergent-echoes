@@ -1,0 +1,171 @@
+[gd_scene load_steps=16 format=4 uid="uid://bf75pmpbofcom"]
+
+[ext_resource type="Texture2D" uid="uid://chgvaem56fe0c" path="res://Stages/Island/Areas/Village/Art/Doors.png" id="1_ui4q7"]
+[ext_resource type="Texture2D" uid="uid://bjnpwkra7hidq" path="res://Stages/Island/Areas/Village/Art/Wooden_House_Roof_Tilset.png" id="2_7o3yb"]
+[ext_resource type="Texture2D" uid="uid://bh570b11yu6un" path="res://Stages/Island/Areas/Village/Art/Wooden_House_Walls_Tilset.png" id="3_j2tqy"]
+[ext_resource type="Script" path="res://Entities/Objects/House/Door.cs" id="4_0iuy2"]
+[ext_resource type="Script" path="res://Entities/Objects/House/InteriorArea.cs" id="5_c86oi"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jsen2"]
+texture = ExtResource("1_ui4q7")
+0:0/0 = 0
+0:1/0 = 0
+0:2/0 = 0
+0:3/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nci2s"]
+texture = ExtResource("2_7o3yb")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_07ll6"]
+texture = ExtResource("3_j2tqy")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_df2je"]
+sources/0 = SubResource("TileSetAtlasSource_jsen2")
+sources/2 = SubResource("TileSetAtlasSource_nci2s")
+sources/3 = SubResource("TileSetAtlasSource_07ll6")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rv1c2"]
+atlas = ExtResource("1_ui4q7")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d4bl8"]
+atlas = ExtResource("1_ui4q7")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a3q5u"]
+size = Vector2(16, 31)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_j1vub"]
+texture = ExtResource("2_7o3yb")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_t01s4"]
+sources/0 = SubResource("TileSetAtlasSource_j1vub")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kiykv"]
+size = Vector2(48, 32)
+
+[node name="House" type="StaticBody2D"]
+
+[node name="Interior" type="TileMapLayer" parent="."]
+texture_filter = 1
+tile_map_data = PackedByteArray("AAD+//7/AwAAAAEAAAD+////AwAAAAIAAAD/////AwABAAIAAAABAP//AwABAAIAAAACAP//AwACAAIAAAACAP7/AwACAAEAAAD///7/AwABAAEAAAAAAP7/AwABAAEAAAABAP7/AwABAAEAAAD+//3/AwAAAAEAAAACAP3/AwACAAEAAAD+//z/AwAAAAAAAAD///z/AwABAAAAAAAAAPz/AwABAAAAAAABAPz/AwABAAAAAAACAPz/AwACAAAAAAD///3/AwABAAEAAAAAAP3/AwABAAEAAAABAP3/AwABAAEAAAAAAP//AwABAAEAAAA=")
+tile_set = SubResource("TileSet_df2je")
+
+[node name="Door" type="Area2D" parent="."]
+collision_layer = 0
+script = ExtResource("4_0iuy2")
+
+[node name="OpenDoor" type="Sprite2D" parent="Door"]
+visible = false
+texture_filter = 1
+position = Vector2(8, -8)
+texture = SubResource("AtlasTexture_rv1c2")
+
+[node name="CloseDoor" type="Sprite2D" parent="Door"]
+texture_filter = 1
+position = Vector2(8, -8)
+texture = SubResource("AtlasTexture_d4bl8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Door"]
+position = Vector2(8, -6.5)
+shape = SubResource("RectangleShape2D_a3q5u")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-20, -64, 37, -64, 37, 0, 16, 0, 16, -16, 32, -16, 32, -48, -16, -48, -16, -16, 0, -16, 0, 1, -21, 1)
+
+[node name="Roof" type="TileMapLayer" parent="."]
+texture_filter = 1
+tile_map_data = PackedByteArray("AAD+////AAAAAAQAAAD/////AAABAAQAAAAAAP//AAABAAQAAAABAP//AAABAAQAAAACAP//AAACAAQAAAD+//7/AAAAAAMAAAD///7/AAABAAMAAAAAAP7/AAABAAMAAAABAP7/AAABAAMAAAACAP7/AAACAAMAAAACAP3/AAACAAIAAAABAP3/AAABAAIAAAAAAP3/AAABAAIAAAD///3/AAABAAIAAAD+//3/AAAAAAIAAAD+//z/AAAAAAEAAAD///z/AAABAAEAAAAAAPz/AAABAAEAAAABAPz/AAABAAEAAAACAPz/AAACAAEAAAACAPv/AAACAAAAAAABAPv/AAABAAAAAAAAAPv/AAABAAAAAAD///v/AAABAAAAAAD+//v/AAAAAAAAAAA=")
+tile_set = SubResource("TileSet_t01s4")
+
+[node name="InteriorArea" type="Area2D" parent="."]
+script = ExtResource("5_c86oi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteriorArea"]
+position = Vector2(8, -32)
+shape = SubResource("RectangleShape2D_kiykv")
+
+[connection signal="body_entered" from="Door" to="Door" method="OnCharacterEntered"]
+[connection signal="body_exited" from="Door" to="Door" method="OnCharacterExited"]
+[connection signal="body_entered" from="InteriorArea" to="InteriorArea" method="OnCharacterEntered"]
+[connection signal="body_exited" from="InteriorArea" to="InteriorArea" method="OnCharacterExited"]
