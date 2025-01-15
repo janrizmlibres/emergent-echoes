@@ -4,7 +4,7 @@ namespace NPCProcGen.Core.Components
 {
     public class ActorData
     {
-        private static readonly float DECAY_DURATION = 60; // 1 minute
+        private static readonly float _decayDuration = 60;
 
         public Vector2? LastKnownPosition { get; set; } = null;
         public float Relationship { get; private set; } = 0;
@@ -24,7 +24,7 @@ namespace NPCProcGen.Core.Components
 
             _decayTimer += (float)delta;
 
-            if (_decayTimer >= DECAY_DURATION)
+            if (_decayTimer >= _decayDuration)
             {
                 LastKnownPosition = null;
                 _decayTimer = 0;
