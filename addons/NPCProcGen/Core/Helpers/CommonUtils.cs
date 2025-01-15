@@ -1,10 +1,13 @@
+using System;
 using Godot;
 
 namespace NPCProcGen.Core.Helpers
 {
     public static class CommonUtils
     {
-        public static Vector2 GetRandomFleePosition(Vector2 center, float radius)
+        public static Random Rnd { get; private set; } = new Random();
+
+        public static Vector2 GetRandomPosInCircularArea(Vector2 center, float radius)
         {
             float angle = GD.Randf() * 2 * Mathf.Pi;
 
