@@ -1,6 +1,7 @@
 using NPCProcGen.Core.States;
 using Godot;
 using System;
+using NPCProcGen.Core.Components.Enums;
 
 namespace NPCProcGen.Core.Actions
 {
@@ -29,17 +30,22 @@ namespace NPCProcGen.Core.Actions
 
         public Vector2 GetTargetPosition()
         {
-            return _currentState.GetTargetPosition();
+            return (_currentState as INavigationState)?.GetTargetPosition() ?? _owner.Parent.GlobalPosition;
         }
 
-        public bool HasNavigationState()
+        public bool IsNavigating()
         {
-            return _currentState.IsNavigationState();
+            return _currentState is INavigationState state && state.IsNavigating();
         }
 
         public bool IsStealing()
         {
             return _currentState is StealState state && state.IsStealing();
+        }
+
+        public Tuple<ResourceType, float> GetStolenResource()
+        {
+            return (_currentState as StealState)?.GetResourceToSteal() ?? null;
         }
 
         public abstract void Update(double delta);
