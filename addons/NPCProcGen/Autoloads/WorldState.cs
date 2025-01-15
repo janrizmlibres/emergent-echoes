@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NPCProcGen
+namespace NPCProcGen.Autoloads
 {
 	public partial class WorldState : Node
 	{
@@ -15,7 +15,7 @@ namespace NPCProcGen
 
 		private WorldState() { }
 
-		public List<ActorTag2D> Actors { get; private set; } = new();
+		public IReadOnlyList<ActorTag2D> Actors { get; private set; }
 
 		private readonly List<Node2D> _structures = new();
 		// Actions and interactions that have taken place and what actors performed them
@@ -32,36 +32,16 @@ namespace NPCProcGen
 
 		// TODO: Consider limiting access to data
 
-		public void Initialize(Node2D currentScene)
+		public void Initialize(List<ActorTag2D> actors)
 		{
-			FindActorsInNode(currentScene);
+			Actors = actors;
 
-			// ! Remove print debug loop in production
-			GD.Print("Actors in World State:");
-			foreach (ActorTag2D actor in Actors)
-			{
-				GD.Print(actor.Parent.Name);
-			}
-
-			foreach (ActorTag2D actor in Actors)
+			foreach (ActorTag2D actor in actors)
 			{
 				if (actor is NPCAgent2D npc)
 				{
-					npc.Initialize(Actors.Where(a => a != actor).ToList());
+					npc.Initialize(actors.Where(a => npc != a).ToList());
 				}
-			}
-		}
-
-		private void FindActorsInNode(Node node)
-		{
-			foreach (Node child in node.GetChildren())
-			{
-				if (child is ActorTag2D actor)
-				{
-					Actors.Add(actor);
-				}
-
-				FindActorsInNode(child);
 			}
 		}
 	}
