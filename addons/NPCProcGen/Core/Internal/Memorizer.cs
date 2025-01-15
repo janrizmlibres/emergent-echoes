@@ -2,6 +2,7 @@ using Godot;
 using System.Collections.Generic;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Events;
+using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.Internal
 {
@@ -31,6 +32,7 @@ namespace NPCProcGen.Core.Internal
 
         public void UpdateActorLocation(ActorTag2D actor, Vector2 location)
         {
+            DebugTool.Assert(_actorData.ContainsKey(actor), $"Actor {actor.Parent.Name} not found in memorizer.");
             _actorData[actor].LastKnownPosition = location;
         }
 
