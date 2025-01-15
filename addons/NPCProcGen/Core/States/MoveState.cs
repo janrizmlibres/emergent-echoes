@@ -33,7 +33,6 @@ namespace NPCProcGen.Core.States
 
         public override void Enter()
         {
-            GD.Print($"{_owner.Parent.Name} MoveState Enter");
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
         }
 

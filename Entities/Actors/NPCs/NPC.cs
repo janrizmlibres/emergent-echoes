@@ -199,7 +199,6 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
 
         private void OnExecutionEnded()
         {
-            GD.Print("Action Execution Ended");
             _state = State.Idle;
             _stateTimer.Start(GD.RandRange(1.0, 3.0));
         }

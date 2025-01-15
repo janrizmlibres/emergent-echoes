@@ -16,7 +16,6 @@ namespace NPCProcGen.Core.States
 
         public override void Enter()
         {
-            GD.Print($"{_owner.Parent.Name} FleeState Enter");
             _target = CommonUtils.GetRandomPosInCircularArea(_owner.Parent.GlobalPosition, _fleeDistance);
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
         }

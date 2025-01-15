@@ -26,7 +26,6 @@ namespace NPCProcGen.Core.States
 
         public override void Enter()
         {
-            GD.Print($"{_owner.Parent.Name} StealState Enter");
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
             _owner.NotifManager.TheftComplete += OnTheftComplete;
         }

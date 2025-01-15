@@ -34,7 +34,6 @@ namespace NPCProcGen.Core.Traits
 
             while (unevaluatedTypes.Count > 0 && selectedType == null)
             {
-                GD.Print("Evaluating theft action...");
                 selectedType = SelectResourceType(unevaluatedTypes);
                 DebugTool.Assert(selectedType != null, "Resource type must not be null");
 
