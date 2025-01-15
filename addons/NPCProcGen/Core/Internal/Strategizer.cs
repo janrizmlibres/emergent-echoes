@@ -19,9 +19,8 @@ namespace NPCProcGen.Core.Internal
         public NPCAction EvaluateAction(SocialPractice practice)
         {
             List<Tuple<NPCAction, float>> actions = _traits
-                .Where(action => action.ShouldActivate(practice))
-                .Select(trait => trait.EvaluateAction())
-                .Where(action => action.Item2 != 0)
+                .Select(trait => trait.EvaluateAction(practice))
+                .Where(action => action != null && action.Item2 != 0)
                 .OrderByDescending(action => action.Item2)
                 .ToList();
 
