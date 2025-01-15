@@ -8,7 +8,9 @@ namespace NPCProcGen
 	{
 		private string _npcAgent2DName = "NPCAgent2D";
 		private string _actorTag2DName = "ActorTag2D";
-		private string _autoloadName = "WorldState";
+
+		private string _worldStateName = "WorldState";
+		private string _resourceMngrName = "ResourceManager";
 
 		public override void _EnterTree()
 		{
@@ -40,12 +42,14 @@ namespace NPCProcGen
 
 		public override void _EnablePlugin()
 		{
-			AddAutoloadSingleton(_autoloadName, "res://addons/NPCProcGen/Autoloads/WorldState.cs");
+			AddAutoloadSingleton(_worldStateName, "res://addons/NPCProcGen/Autoloads/WorldState.cs");
+			// AddAutoloadSingleton(_resourceMngrName, "res://addons/NPCProcGen/Autoloads/ResourceManager.cs");
 		}
 
 		public override void _DisablePlugin()
 		{
-			RemoveAutoloadSingleton(_autoloadName);
+			RemoveAutoloadSingleton(_worldStateName);
+			// RemoveAutoloadSingleton(_resourceMngrName);
 		}
 	}
 }
