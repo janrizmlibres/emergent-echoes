@@ -1,5 +1,5 @@
 using Godot;
-using NPCProcGen;
+using NPCProcGen.Autoloads;
 
 namespace EmergentEchoes
 {
@@ -7,7 +7,7 @@ namespace EmergentEchoes
 	{
 		public override void _Ready()
 		{
-			WorldState.Instance.Initialize(this);
+			AutoloadInitializer.Init(this);
 		}
 	}
 }

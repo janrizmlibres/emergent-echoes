@@ -33,11 +33,11 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
             _animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
             _npcAgent2d = GetNode<NPCAgent2D>("NPCAgent2D");
 
-            _stateTimer.Timeout += OnChangeState;
+            _stateTimer.Timeout += OnNavigationFinished;
             _stateTimer.OneShot = true;
             _stateTimer.Start(GD.RandRange(1.0, 3.0));
 
-            _navigationAgent2d.NavigationFinished += OnChangeState;
+            _navigationAgent2d.NavigationFinished += OnNavigationFinished;
             _navigationAgent2d.VelocityComputed += OnNavigationAgentVelocityComputed;
 
             _npcAgent2d.ExecutionStarted += OnExecutionStarted;
@@ -90,16 +90,11 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
         {
             if (_npcAgent2d.IsNavigationRequired())
             {
-                // ! Remove debug print in production
-                // GD.Print("Navigation for NPC required");
                 _navigationAgent2d.TargetPosition = _npcAgent2d.TargetPosition;
 
                 if (_navigationAgent2d.IsNavigationFinished())
                 {
-                    // ! Remove debug print in production
-                    // GD.Print("Navigation finished");
                     _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
-                    _npcAgent2d.CompleteNavigation();
                 }
 
                 Vector2 destination = _navigationAgent2d.GetNextPathPosition();
@@ -112,7 +107,6 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
 
             if (_npcAgent2d.IsStealing())
             {
-                // TODO: Implement stealing
                 _npcAgent2d.CompleteTheft();
             }
         }
@@ -176,7 +170,13 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
             Velocity = safeVelocity;
         }
 
-        private void OnChangeState()
+        private void OnNavigationFinished()
+        {
+            _npcAgent2d.CompleteNavigation();
+            ChangeState();
+        }
+
+        private void ChangeState()
         {
             _state = RandomizeState();
 
@@ -199,8 +199,7 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
 
         private void OnExecutionEnded()
         {
-            // ! Remove debug print
-            GD.Print("Execution Ended");
+            GD.Print("Action Execution Ended");
             _state = State.Idle;
             _stateTimer.Start(GD.RandRange(1.0, 3.0));
         }

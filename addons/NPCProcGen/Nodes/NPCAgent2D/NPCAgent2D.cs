@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 using NPCProcGen.Core.Actions;
-using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
@@ -58,6 +58,8 @@ namespace NPCProcGen
         [Signal]
         public delegate void ExecutionEndedEventHandler();
 
+        private static readonly float _evaluationInterval = 10;
+
         public Vector2 TargetPosition => Executor.GetTargetPosition();
 
         public Sensor Sensor { get; private set; } = new();
@@ -71,7 +73,7 @@ namespace NPCProcGen
         private readonly List<ActorTag2D> _detectedActors = new();
         private Area2D _actorDetector = null;
 
-        private readonly Timer _evaluationTimer = new();
+        private float _evaluationTimer = 0;
 
         public override void _Ready()
         {
@@ -85,20 +87,12 @@ namespace NPCProcGen
                 return;
             }
 
-            AddChild(_evaluationTimer);
-
-            _evaluationTimer.WaitTime = 10;
-            _evaluationTimer.OneShot = true;
-            _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
-            _evaluationTimer.Start();
-
             _actorDetector.BodyEntered += OnBodyEntered;
             _actorDetector.BodyExited += OnBodyExited;
 
             Executor.ExecutionEnded += OnExecutionEnded;
 
             AddTraits();
-            AddResources();
         }
 
         public override void _EnterTree()
@@ -132,6 +126,17 @@ namespace NPCProcGen
         {
             if (Engine.IsEditorHint()) return;
 
+            if (!Executor.HasAction())
+            {
+                _evaluationTimer += (float)delta;
+
+                if (_evaluationTimer >= _evaluationInterval)
+                {
+                    _evaluationTimer = 0;
+                    OnEvaluationTimerTimeout();
+                }
+            }
+
             Memorizer.Update(delta);
         }
 
@@ -142,23 +147,9 @@ namespace NPCProcGen
             Executor.Update(delta);
         }
 
-        public void CompleteNavigation()
-        {
-            NotifManager.NotifyNavigationComplete();
-        }
-
-        public void CompleteTheft()
-        {
-            NotifManager.NotifyTheftComplete();
-        }
-
         public void Initialize(List<ActorTag2D> actors)
         {
             Memorizer.Initialize(actors);
-
-            // ! Remove debug print
-            // GD.Print($"Actor memory of {Parent.Name}:");
-            // _memorizer.PrintActorMemory();
         }
 
         public bool IsActorInRange(ActorTag2D actor)
@@ -173,12 +164,27 @@ namespace NPCProcGen
 
         public bool IsNavigationRequired()
         {
-            return Executor.QueryNavigationState();
+            return Executor.QueryNavigationAction();
         }
 
         public bool IsStealing()
         {
             return Executor.QueryStealState();
+        }
+
+        public void CompleteNavigation()
+        {
+            NotifManager.NotifyNavigationComplete();
+        }
+
+        public void CompleteTheft()
+        {
+            NotifManager.NotifyTheftComplete();
+        }
+
+        public Tuple<ResourceType, float> GetStolenResource()
+        {
+            return Executor.QueryStolenResource();
         }
 
         private void AddTraits()
@@ -192,38 +198,28 @@ namespace NPCProcGen
                 Strategizer.AddTrait(new LawfulTrait(this, Lawful, Sensor, Memorizer));
         }
 
-        private void AddResources()
-        {
-            ResourceStat money = new(ResourceType.Money, MoneyValue, Money);
-            ResourceStat food = new(ResourceType.Food, FoodValue, Food);
-            ResourceStat companionship = new(ResourceType.Companionship, CompanionshipValue, Companionship);
-
-            Resources.Add(ResourceType.Money, money);
-            Resources.Add(ResourceType.Food, food);
-            Resources.Add(ResourceType.Companionship, companionship);
-        }
-
         private void OnEvaluationTimerTimeout()
         {
             NPCAction action = Strategizer.EvaluateAction(SocialPractice.Proactive);
 
             if (action != null)
             {
-                // ! Remove debug print in production
-                GD.Print($"{Parent.Name} performs action: " + action.GetType().Name);
+                GD.Print("Action evaluated: " + action.GetType().Name);
                 Executor.SetAction(action);
                 EmitSignal(SignalName.ExecutionStarted);
             }
         }
 
+        // TODO: Resolve self detection in editor
         private void OnBodyEntered(Node2D body)
         {
+            if (Parent == body) return;
+
             foreach (Node child in body.GetChildren())
             {
                 if (child is ActorTag2D actor)
                 {
                     _detectedActors.Add(actor);
-                    NotifManager.NotifyActorDetected(actor);
                 }
             }
         }
@@ -243,7 +239,6 @@ namespace NPCProcGen
         private void OnExecutionEnded()
         {
             EmitSignal(SignalName.ExecutionEnded);
-            _evaluationTimer.Start();
         }
     }
 }

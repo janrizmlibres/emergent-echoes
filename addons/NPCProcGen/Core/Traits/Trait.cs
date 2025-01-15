@@ -22,13 +22,6 @@ namespace NPCProcGen.Core.Traits
             _memorizer = memorizer;
         }
 
-        // ! Remove this debug function in production
-        public string GetOwnerName()
-        {
-            return _owner.Parent.Name;
-        }
-
-        public abstract Tuple<NPCAction, float> EvaluateAction();
-        public abstract bool ShouldActivate(SocialPractice practice);
+        public abstract Tuple<NPCAction, float> EvaluateAction(SocialPractice practice);
     }
 }

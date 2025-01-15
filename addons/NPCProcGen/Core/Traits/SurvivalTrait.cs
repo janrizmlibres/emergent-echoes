@@ -10,14 +10,9 @@ namespace NPCProcGen.Core.Traits
         public SurvivalTrait(NPCAgent2D owner, float weight, Sensor sensor, Memorizer memorizer)
             : base(owner, weight, sensor, memorizer) { }
 
-        public override Tuple<NPCAction, float> EvaluateAction()
+        public override Tuple<NPCAction, float> EvaluateAction(SocialPractice practice)
         {
-            return new(null, 0);
-        }
-
-        public override bool ShouldActivate(SocialPractice practice)
-        {
-            return practice == SocialPractice.Proactive;
+            return null;
         }
     }
 }

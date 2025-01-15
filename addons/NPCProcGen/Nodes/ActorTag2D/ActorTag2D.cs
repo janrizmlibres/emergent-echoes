@@ -29,10 +29,6 @@ namespace NPCProcGen
             }
         }
 
-        // TODO: Consider converting resources into dictionary for constant access
-        public Dictionary<ResourceType, ResourceStat> Resources { get; private set; } = new();
-
-        // TODO: Remove this property since Node2D already has an owner property
         public Node2D Parent { get; protected set; }
 
         private Marker2D _stealMarker;
@@ -48,10 +44,6 @@ namespace NPCProcGen
                 QueueFree();
                 return;
             }
-
-            // TODO: Consider implementing a resource manager
-            Resources.Add(ResourceType.Money, new ResourceStat(ResourceType.Money, MoneyValue, 1));
-            Resources.Add(ResourceType.Food, new ResourceStat(ResourceType.Food, FoodValue, 1));
         }
 
         public override void _EnterTree()
@@ -78,16 +70,6 @@ namespace NPCProcGen
             }
 
             return warnings.ToArray();
-        }
-
-        public bool HasResource(ResourceType type)
-        {
-            if (Resources.TryGetValue(type, out ResourceStat resource))
-            {
-                return resource.Value > 0;
-            }
-
-            return false;
         }
     }
 }

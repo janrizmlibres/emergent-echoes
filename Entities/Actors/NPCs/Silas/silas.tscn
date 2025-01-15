@@ -53,6 +53,7 @@ graph_offset = Vector2(0, -75.9467)
 
 [node name="Silas" type="CharacterBody2D"]
 texture_filter = 1
+position = Vector2(80, 3)
 script = ExtResource("1_scutl")
 metadata/_edit_group_ = true
 
