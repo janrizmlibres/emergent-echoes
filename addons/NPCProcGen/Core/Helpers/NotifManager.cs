@@ -6,7 +6,6 @@ namespace NPCProcGen.Core.Helpers
     {
         public event Action NavigationComplete;
         public event Action TheftComplete;
-        public event Action<ActorTag2D> ActorDetected;
 
         public void NotifyNavigationComplete()
         {
@@ -16,11 +15,6 @@ namespace NPCProcGen.Core.Helpers
         public void NotifyTheftComplete()
         {
             TheftComplete?.Invoke();
-        }
-
-        public void NotifyActorDetected(ActorTag2D actor)
-        {
-            ActorDetected?.Invoke(actor);
         }
     }
 }
