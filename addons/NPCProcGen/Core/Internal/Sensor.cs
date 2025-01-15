@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using NPCProcGen.Autoloads;
+using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.Internal
 {
