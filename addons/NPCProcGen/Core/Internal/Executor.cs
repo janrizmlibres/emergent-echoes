@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using NPCProcGen.Core.Actions;
+using NPCProcGen.Core.Components.Enums;
 
 namespace NPCProcGen.Core.Internal
 {
@@ -32,15 +33,19 @@ namespace NPCProcGen.Core.Internal
             return _action != null;
         }
 
-        public bool QueryNavigationState()
+        public bool QueryNavigationAction()
         {
-            // TODO: Reimplement logic since it's flawed
-            return _action?.HasNavigationState() ?? false;
+            return _action?.IsNavigating() ?? false;
         }
 
         public bool QueryStealState()
         {
             return _action?.IsStealing() ?? false;
+        }
+
+        public Tuple<ResourceType, float> QueryStolenResource()
+        {
+            return _action?.GetStolenResource() ?? null;
         }
 
         private void OnActionComplete()
