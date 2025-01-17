@@ -50,18 +50,18 @@ namespace NPCProcGen.Autoloads
             }
         }
 
-        public void PrintActors()
-        {
-            GD.Print("Actors and Resources in ResourceManager:");
-            foreach (ActorTag2D actor in _actorResources.Keys)
-            {
-                GD.Print(actor.Parent.Name);
-                foreach (ResourceStat resource in _actorResources[actor].Values)
-                {
-                    GD.Print(resource.Type.ToString() + ": " + resource.Amount);
-                }
-            }
-        }
+        // public void PrintActors()
+        // {
+        //     GD.Print("Actors and Resources in ResourceManager:");
+        //     foreach (ActorTag2D actor in _actorResources.Keys)
+        //     {
+        //         GD.Print(actor.Parent.Name);
+        //         foreach (ResourceStat resource in _actorResources[actor].Values)
+        //         {
+        //             GD.Print(resource.Type.ToString() + ": " + resource.Amount);
+        //         }
+        //     }
+        // }
 
         public ResourceStat GetResource(ActorTag2D actor, ResourceType type)
         {
