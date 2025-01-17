@@ -6,6 +6,7 @@
 limit_smoothed = true
 position_smoothing_enabled = true
 script = ExtResource("1_32a56")
+metadata/_edit_group_ = true
 
 [node name="TopLeft" type="Marker2D" parent="."]
 

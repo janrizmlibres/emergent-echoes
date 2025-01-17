@@ -1,11 +1,34 @@
-[gd_scene load_steps=14 format=3 uid="uid://blrsgvyqgogoa"]
+[gd_scene load_steps=19 format=3 uid="uid://blrsgvyqgogoa"]
 
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/NPC.cs" id="1_e0pu4"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="1_isnnv"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="2_or5th"]
+[ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_attte"]
+[ext_resource type="PackedScene" uid="uid://2wpeggmgbrmi" path="res://Entities/Actors/actor_detector.tscn" id="3_c743w"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0
 height = 10.0
+
+[sub_resource type="Animation" id="Animation_pl05y"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("StealMarker:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [3.14159]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bfue1"]
+_data = {
+"RESET": SubResource("Animation_pl05y")
+}
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8poqu"]
 animation = &"npc_anims/idle_left"
@@ -50,6 +73,7 @@ graph_offset = Vector2(0, -75.9467)
 
 [node name="Garreth" type="CharacterBody2D"]
 texture_filter = 1
+script = ExtResource("1_e0pu4")
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -65,6 +89,7 @@ shape = SubResource("CapsuleShape2D_tfsnf")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
+"": SubResource("AnimationLibrary_bfue1"),
 "npc_anims": ExtResource("2_or5th")
 }
 
@@ -74,7 +99,24 @@ anim_player = NodePath("../AnimationPlayer")
 parameters/Idle/blend_position = 0
 parameters/Move/blend_position = 0
 
-[node name="StateTimer" type="Timer" parent="."]
-
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
-debug_enabled = true
+path_postprocessing = 1
+avoidance_enabled = true
+radius = 5.0
+
+[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("ActorDetector", "StealMarker")]
+script = ExtResource("3_attte")
+ActorDetector = NodePath("../ActorDetector")
+Survival = 0.4
+Lawful = 0.65
+StealMarker = NodePath("../StealMarker/Marker2D")
+
+[node name="StealMarker" type="Node2D" parent="."]
+rotation = 3.14159
+
+[node name="Marker2D" type="Marker2D" parent="StealMarker"]
+position = Vector2(-10, -2.53518e-05)
+
+[node name="ActorDetector" parent="." instance=ExtResource("3_c743w")]
+
+[node name="StateTimer" type="Timer" parent="."]
