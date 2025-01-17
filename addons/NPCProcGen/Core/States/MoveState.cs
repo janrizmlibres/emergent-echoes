@@ -1,24 +1,17 @@
 using System;
 using Godot;
-using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Components.Enums;
 
 namespace NPCProcGen.Core.States
 {
-    public class MoveState : ActionState, INavigationState
+    public class MoveState : BaseState, INavigationState
     {
-        private readonly Node2D _targetNode = null;
-        private readonly ActorTag2D _target = null;
+        private readonly Node2D _target = null;
         private Vector2? _targetPosition = null;
 
-        public event Action CompleteState;
+        public event Action<bool> CompleteState;
 
-        public MoveState(NPCAgent2D owner, Node2D target)
-            : base(owner)
-        {
-            _targetNode = target;
-        }
-
-        public MoveState(NPCAgent2D owner, ActorTag2D target, Vector2? lastPos = null)
+        public MoveState(NPCAgent2D owner, Node2D target, Vector2? lastPos = null)
             : base(owner)
         {
             _target = target;
@@ -33,16 +26,17 @@ namespace NPCProcGen.Core.States
 
         public override void Enter()
         {
-            GD.Print($"{_owner.Parent.Name} MoveState Enter");
+            GD.Print($"{_owner.Parent.Name} MoveState Enter - Instance: {GetHashCode()}");
+            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Move));
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
+            _owner.NotifManager.ActorDetected += OnActorDetected;
         }
 
-        public override void Update(double delta)
+        public override void Exit()
         {
-            if (_owner.IsActorInRange(_target))
-            {
-                OnNavigationComplete();
-            }
+            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Move));
+            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
+            _owner.NotifManager.ActorDetected -= OnActorDetected;
         }
 
         public bool IsNavigating()
@@ -52,18 +46,25 @@ namespace NPCProcGen.Core.States
 
         public Vector2 GetTargetPosition()
         {
-            if (_targetNode != null)
-            {
-                return _targetNode.GlobalPosition;
-            }
-
-            return _targetPosition ?? _target.Parent.GlobalPosition;
+            return _targetPosition ?? _target.GlobalPosition;
         }
 
         private void OnNavigationComplete()
         {
-            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
-            CompleteState?.Invoke();
+            OnCompleteState(false);
+        }
+
+        private void OnActorDetected(ActorTag2D target)
+        {
+            if (target.Parent == _target)
+            {
+                OnCompleteState(true);
+            }
+        }
+
+        private void OnCompleteState(bool isActorDetected)
+        {
+            CompleteState?.Invoke(isActorDetected);
         }
     }
 }
