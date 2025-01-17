@@ -22,6 +22,6 @@ namespace NPCProcGen.Core.Traits
             _memorizer = memorizer;
         }
 
-        public abstract Tuple<NPCAction, float> EvaluateAction(SocialPractice practice);
+        public abstract Tuple<BaseAction, float> EvaluateAction(SocialPractice practice);
     }
 }
