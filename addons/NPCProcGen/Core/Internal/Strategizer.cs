@@ -16,11 +16,11 @@ namespace NPCProcGen.Core.Internal
             _traits.Add(trait);
         }
 
-        public NPCAction EvaluateAction(SocialPractice practice)
+        public BaseAction EvaluateAction(SocialPractice practice)
         {
-            List<Tuple<NPCAction, float>> actions = _traits
+            List<Tuple<BaseAction, float>> actions = _traits
                 .Select(trait => trait.EvaluateAction(practice))
-                .Where(action => action != null && action.Item2 != 0)
+                .Where(action => action != null)
                 .OrderByDescending(action => action.Item2)
                 .ToList();
 
