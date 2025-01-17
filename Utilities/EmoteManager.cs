@@ -1,7 +1,5 @@
-using System.Diagnostics;
 using EmergentEchoes.Entities.UI.Indicators;
 using Godot;
-using NPCProcGen.Core.Helpers;
 
 namespace EmergentEchoes.Utilities
 {
@@ -9,6 +7,7 @@ namespace EmergentEchoes.Utilities
     {
         private readonly static PackedScene _emoteBubbleScene =
             GD.Load<PackedScene>("res://Entities/UI/Indicators/Emote Bubbles/emote_bubble.tscn");
+
         private readonly static AnimationLibrary _exclamationAnim =
             GD.Load<AnimationLibrary>(
                 "res://Entities/UI/Indicators/Emote Bubbles/Data/exclamation_anim.res"

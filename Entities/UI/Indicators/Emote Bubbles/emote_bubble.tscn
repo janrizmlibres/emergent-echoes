@@ -1,7 +1,464 @@
-[gd_scene load_steps=3 format=3 uid="uid://c45btaj8rrou0"]
+[gd_scene load_steps=38 format=3 uid="uid://c45btaj8rrou0"]
 
 [ext_resource type="Script" path="res://Entities/UI/Indicators/Emote Bubbles/EmoteBubble.cs" id="1_ig6ot"]
 [ext_resource type="Texture2D" uid="uid://bkr5hlk7r2bec" path="res://Entities/UI/Indicators/Emote Bubbles/Art/bubble_emotes.png" id="2_q0isf"]
+
+[sub_resource type="Animation" id="Animation_xf20v"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(6, 12)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_emkk2"]
+_data = {
+"RESET": SubResource("Animation_xf20v")
+}
+
+[sub_resource type="Animation" id="Animation_20hpw"]
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.09, 0.12, 0.15, 0.18, 0.21, 0.24, 0.27),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(6, 12), Vector2i(5, 12), Vector2i(4, 12), Vector2i(3, 12), Vector2i(2, 12), Vector2i(1, 12), Vector2i(0, 12), Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_x3mx0"]
+resource_name = "deflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.030303, 0.0606061, 0.0909091, 0.121212, 0.151515, 0.181818, 0.212121, 0.242424, 0.272727),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(2, 0), Vector2i(1, 0), Vector2i(0, 0), Vector2i(0, 12), Vector2i(1, 12), Vector2i(2, 12), Vector2i(3, 12), Vector2i(4, 12), Vector2i(5, 12), Vector2i(6, 12)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hmljg"]
+_data = {
+"deflate": SubResource("Animation_x3mx0"),
+"inflate": SubResource("Animation_20hpw")
+}
+
+[sub_resource type="Animation" id="Animation_ow8sh"]
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.09, 0.12, 0.15, 0.18, 0.21, 0.24, 0.27),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(6, 12), Vector2i(5, 12), Vector2i(4, 12), Vector2i(3, 12), Vector2i(2, 12), Vector2i(1, 12), Vector2i(0, 12), Vector2i(3, 0), Vector2i(4, 0), Vector2i(5, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_skrmu"]
+resource_name = "deflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.0909091, 0.121212, 0.151515, 0.181818, 0.212121, 0.242424, 0.272727),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(5, 0), Vector2i(4, 0), Vector2i(3, 0), Vector2i(0, 12), Vector2i(1, 12), Vector2i(2, 12), Vector2i(3, 12), Vector2i(4, 12), Vector2i(5, 12), Vector2i(6, 12)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4vwpw"]
+_data = {
+"deflate": SubResource("Animation_skrmu"),
+"inflate": SubResource("Animation_ow8sh")
+}
+
+[sub_resource type="Animation" id="Animation_7v3qm"]
+resource_name = "deflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.0909091, 0.121212, 0.151515, 0.181818, 0.212121, 0.242424, 0.272727),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(11, 0), Vector2i(10, 0), Vector2i(9, 0), Vector2i(0, 12), Vector2i(1, 12), Vector2i(2, 12), Vector2i(3, 12), Vector2i(4, 12), Vector2i(5, 12), Vector2i(6, 12)]
+}
+
+[sub_resource type="Animation" id="Animation_r4enl"]
+resource_name = "inflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.09, 0.12, 0.15, 0.18, 0.21, 0.24, 0.27),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(6, 12), Vector2i(5, 12), Vector2i(4, 12), Vector2i(3, 12), Vector2i(2, 12), Vector2i(1, 12), Vector2i(0, 12), Vector2i(9, 0), Vector2i(10, 0), Vector2i(11, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_06oac"]
+_data = {
+"deflate": SubResource("Animation_7v3qm"),
+"inflate": SubResource("Animation_r4enl")
+}
+
+[sub_resource type="Animation" id="Animation_r2itd"]
+resource_name = "inflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.09, 0.12, 0.15, 0.18, 0.21, 0.24, 0.27),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(6, 12), Vector2i(5, 12), Vector2i(4, 12), Vector2i(3, 12), Vector2i(2, 12), Vector2i(1, 12), Vector2i(0, 12), Vector2i(3, 10), Vector2i(4, 10), Vector2i(5, 10)]
+}
+
+[sub_resource type="Animation" id="Animation_735t8"]
+resource_name = "deflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.0909091, 0.121212, 0.151515, 0.181818, 0.212121, 0.242424, 0.272727),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(5, 10), Vector2i(4, 10), Vector2i(3, 10), Vector2i(0, 12), Vector2i(1, 12), Vector2i(2, 12), Vector2i(3, 12), Vector2i(4, 12), Vector2i(5, 12), Vector2i(6, 12)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_38lik"]
+_data = {
+"deflate": SubResource("Animation_735t8"),
+"inflate": SubResource("Animation_r2itd")
+}
+
+[sub_resource type="Animation" id="Animation_yl46i"]
+resource_name = "deflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.0909091, 0.121212, 0.151515, 0.181818, 0.212121, 0.242424, 0.272727),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(2, 8), Vector2i(1, 8), Vector2i(0, 8), Vector2i(0, 12), Vector2i(1, 12), Vector2i(2, 12), Vector2i(3, 12), Vector2i(4, 12), Vector2i(5, 12), Vector2i(6, 12)]
+}
+
+[sub_resource type="Animation" id="Animation_xiw51"]
+resource_name = "inflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.09, 0.12, 0.15, 0.18, 0.21, 0.24, 0.27),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(6, 12), Vector2i(5, 12), Vector2i(4, 12), Vector2i(3, 12), Vector2i(2, 12), Vector2i(1, 12), Vector2i(0, 12), Vector2i(0, 8), Vector2i(1, 8), Vector2i(2, 8)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_iaybi"]
+_data = {
+"deflate": SubResource("Animation_yl46i"),
+"inflate": SubResource("Animation_xiw51")
+}
+
+[sub_resource type="Animation" id="Animation_vlc4m"]
+resource_name = "inflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.09, 0.12, 0.15, 0.18, 0.21, 0.24, 0.27),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(6, 12), Vector2i(5, 12), Vector2i(4, 12), Vector2i(3, 12), Vector2i(2, 12), Vector2i(1, 12), Vector2i(0, 12), Vector2i(6, 0), Vector2i(7, 0), Vector2i(8, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_i7dtn"]
+resource_name = "deflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.030303, 0.0606061, 0.0909091, 0.121212, 0.151515, 0.181818, 0.212121, 0.242424, 0.272727),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(8, 0), Vector2i(7, 0), Vector2i(6, 0), Vector2i(0, 12), Vector2i(1, 12), Vector2i(2, 12), Vector2i(3, 12), Vector2i(4, 12), Vector2i(5, 12), Vector2i(6, 12)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mgtrl"]
+_data = {
+"deflate": SubResource("Animation_i7dtn"),
+"inflate": SubResource("Animation_vlc4m")
+}
+
+[sub_resource type="Animation" id="Animation_sg4k1"]
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.09, 0.12, 0.15, 0.18, 0.21, 0.24, 0.27),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(6, 12), Vector2i(5, 12), Vector2i(4, 12), Vector2i(3, 12), Vector2i(2, 12), Vector2i(1, 12), Vector2i(0, 12), Vector2i(9, 2), Vector2i(10, 2), Vector2i(11, 2)]
+}
+
+[sub_resource type="Animation" id="Animation_ge84t"]
+resource_name = "deflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.0909091, 0.121212, 0.151515, 0.181818, 0.212121, 0.242424, 0.272727),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(11, 2), Vector2i(10, 2), Vector2i(9, 2), Vector2i(0, 12), Vector2i(1, 12), Vector2i(2, 12), Vector2i(3, 12), Vector2i(4, 12), Vector2i(5, 12), Vector2i(6, 12)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lsfg4"]
+_data = {
+"deflate": SubResource("Animation_ge84t"),
+"inflate": SubResource("Animation_sg4k1")
+}
+
+[sub_resource type="Animation" id="Animation_oefiy"]
+resource_name = "deflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.0909091, 0.121212, 0.151515, 0.181818, 0.212121, 0.242424, 0.272727),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(2, 10), Vector2i(1, 10), Vector2i(0, 10), Vector2i(0, 12), Vector2i(1, 12), Vector2i(2, 12), Vector2i(3, 12), Vector2i(4, 12), Vector2i(5, 12), Vector2i(6, 12)]
+}
+
+[sub_resource type="Animation" id="Animation_vof7w"]
+resource_name = "inflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.09, 0.12, 0.15, 0.18, 0.21, 0.24, 0.27),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(6, 12), Vector2i(5, 12), Vector2i(4, 12), Vector2i(3, 12), Vector2i(2, 12), Vector2i(1, 12), Vector2i(0, 12), Vector2i(0, 10), Vector2i(1, 10), Vector2i(2, 10)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_wranp"]
+_data = {
+"deflate": SubResource("Animation_oefiy"),
+"inflate": SubResource("Animation_vof7w")
+}
+
+[sub_resource type="Animation" id="Animation_klrfn"]
+resource_name = "inflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.09, 0.12, 0.15, 0.18, 0.21, 0.24, 0.27),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(6, 12), Vector2i(5, 12), Vector2i(4, 12), Vector2i(3, 12), Vector2i(2, 12), Vector2i(1, 12), Vector2i(0, 12), Vector2i(9, 4), Vector2i(10, 4), Vector2i(11, 4)]
+}
+
+[sub_resource type="Animation" id="Animation_31tx5"]
+resource_name = "deflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.030303, 0.0606061, 0.0909091, 0.121212, 0.151515, 0.181818, 0.212121, 0.242424, 0.272727),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(11, 4), Vector2i(10, 4), Vector2i(9, 4), Vector2i(0, 12), Vector2i(1, 12), Vector2i(2, 12), Vector2i(3, 12), Vector2i(4, 12), Vector2i(5, 12), Vector2i(6, 12)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ckeyp"]
+_data = {
+"deflate": SubResource("Animation_31tx5"),
+"inflate": SubResource("Animation_klrfn")
+}
+
+[sub_resource type="Animation" id="Animation_hhieo"]
+resource_name = "deflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.0909091, 0.121212, 0.151515, 0.181818, 0.212121, 0.242424, 0.272727),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(5, 8), Vector2i(4, 8), Vector2i(3, 8), Vector2i(0, 12), Vector2i(1, 12), Vector2i(2, 12), Vector2i(3, 12), Vector2i(4, 12), Vector2i(5, 12), Vector2i(6, 12)]
+}
+
+[sub_resource type="Animation" id="Animation_113jg"]
+resource_name = "inflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.09, 0.12, 0.15, 0.18, 0.21, 0.24, 0.27),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(6, 12), Vector2i(5, 12), Vector2i(4, 12), Vector2i(3, 12), Vector2i(2, 12), Vector2i(1, 12), Vector2i(0, 12), Vector2i(3, 8), Vector2i(4, 8), Vector2i(5, 8)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5t30i"]
+_data = {
+"deflate": SubResource("Animation_hhieo"),
+"inflate": SubResource("Animation_113jg")
+}
+
+[sub_resource type="Animation" id="Animation_rbca0"]
+resource_name = "inflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.06, 0.09, 0.12, 0.15, 0.18, 0.21, 0.24, 0.27),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(6, 12), Vector2i(5, 12), Vector2i(4, 12), Vector2i(3, 12), Vector2i(2, 12), Vector2i(1, 12), Vector2i(0, 12), Vector2i(6, 2), Vector2i(7, 2), Vector2i(8, 2)]
+}
+
+[sub_resource type="Animation" id="Animation_ftsrc"]
+resource_name = "deflate"
+length = 0.3
+step = 0.03
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.030303, 0.0606061, 0.0909091, 0.121212, 0.151515, 0.181818, 0.212121, 0.242424, 0.272727),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(8, 2), Vector2i(7, 2), Vector2i(6, 2), Vector2i(0, 12), Vector2i(1, 12), Vector2i(2, 12), Vector2i(3, 12), Vector2i(4, 12), Vector2i(5, 12), Vector2i(6, 12)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_l2fu6"]
+_data = {
+"deflate": SubResource("Animation_ftsrc"),
+"inflate": SubResource("Animation_rbca0")
+}
 
 [node name="EmoteBubble" type="Node2D"]
 texture_filter = 1
@@ -15,7 +472,20 @@ vframes = 13
 frame = 150
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-autoplay = "exclamation_anim/inflate"
+libraries = {
+"": SubResource("AnimationLibrary_emkk2"),
+"circle": SubResource("AnimationLibrary_hmljg"),
+"cross": SubResource("AnimationLibrary_4vwpw"),
+"dizzy": SubResource("AnimationLibrary_06oac"),
+"ellipsis": SubResource("AnimationLibrary_38lik"),
+"exclaim": SubResource("AnimationLibrary_iaybi"),
+"hum": SubResource("AnimationLibrary_mgtrl"),
+"idea": SubResource("AnimationLibrary_lsfg4"),
+"interrobang": SubResource("AnimationLibrary_wranp"),
+"mark": SubResource("AnimationLibrary_ckeyp"),
+"query": SubResource("AnimationLibrary_5t30i"),
+"sweat": SubResource("AnimationLibrary_l2fu6")
+}
 
 [node name="DurationTimer" type="Timer" parent="."]
 wait_time = 5.0
