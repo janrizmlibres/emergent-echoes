@@ -11,7 +11,7 @@ namespace EmergentEchoes.Entities.UI.Indicators
 
 		public override void _Ready()
 		{
-			_animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+			DebugTool.Assert(_animationPlayer != null, "Animation player is null");
 			_animationPlayer.AnimationFinished += OnAnimationFinished;
 
 			_durationtTimer = GetNode<Timer>("DurationTimer");
@@ -22,7 +22,8 @@ namespace EmergentEchoes.Entities.UI.Indicators
 
 		public void SetAnimationLibrary(AnimationLibrary animLib)
 		{
-			_animationPlayer ??= GetNode<AnimationPlayer>("AnimationPlayer");
+			DebugTool.Assert(_animationPlayer == null, "Animation player already set");
+			_animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
 			_animationPlayer.AddAnimationLibrary("emote", animLib);
 		}
 
