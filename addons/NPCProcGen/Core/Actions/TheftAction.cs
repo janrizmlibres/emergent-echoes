@@ -6,12 +6,14 @@ using NPCProcGen.Core.States;
 
 namespace NPCProcGen.Core.Actions
 {
-    public class TheftAction : NPCAction
+    public class TheftAction : BaseAction
     {
         private readonly ActorTag2D _target;
         private readonly ResourceType _targetResource;
 
         private Vector2 _targetLastPos;
+
+        private MoveState moveState;
         private StealState stealState;
 
         public TheftAction(NPCAgent2D owner, ActorTag2D target, ResourceType type)
@@ -29,22 +31,41 @@ namespace NPCProcGen.Core.Actions
 
         private void InitializeStates()
         {
-            MoveState moveState = new(_owner, _target, _targetLastPos);
+            moveState = new(_owner, _target.Parent, _targetLastPos);
             WanderState wanderState = new(_owner, _target);
             stealState = new(_owner, _target, _targetResource);
             FleeState fleeState = new(_owner);
 
-            moveState.CompleteState += () => TransitionTo(wanderState);
-            wanderState.CompleteState += () => TransitionTo(stealState);
+            moveState.CompleteState += (bool isActorDetected) =>
+            {
+                TransitionTo(isActorDetected ? stealState : wanderState);
+            };
+            wanderState.CompleteState += (bool durationReached) =>
+            {
+                if (durationReached)
+                {
+                    CompleteAction(ActionType.Theft);
+                }
+                else
+                {
+                    TransitionTo(stealState);
+                }
+            };
             stealState.CompleteState += () => TransitionTo(fleeState);
-            fleeState.CompleteState += () => OnActionComplete();
-
-            TransitionTo(moveState);
+            fleeState.CompleteState += () => CompleteAction(ActionType.Theft);
         }
 
         public override void Update(double delta)
         {
             _currentState.Update(delta);
+        }
+
+        public override void Run()
+        {
+            // TODO: Consider moving to owner itself
+            _owner.EmitSignal(NPCAgent2D.SignalName.ExecutionStarted, Variant.From(ActionType.Theft));
+
+            TransitionTo(_owner.IsActorInRange(_target) ? stealState : moveState);
         }
     }
 }
