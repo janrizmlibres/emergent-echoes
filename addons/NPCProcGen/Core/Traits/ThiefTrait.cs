@@ -17,7 +17,7 @@ namespace NPCProcGen.Core.Traits
         public ThiefTrait(NPCAgent2D owner, float weight, Sensor sensor, Memorizer memorizer)
             : base(owner, weight, sensor, memorizer) { }
 
-        public override Tuple<NPCAction, float> EvaluateAction(SocialPractice practice)
+        public override Tuple<BaseAction, float> EvaluateAction(SocialPractice practice)
         {
             if (practice == SocialPractice.Proactive)
             {
@@ -27,7 +27,7 @@ namespace NPCProcGen.Core.Traits
             return null;
         }
 
-        private Tuple<NPCAction, float> EvaluateProactiveAction()
+        private Tuple<BaseAction, float> EvaluateProactiveAction()
         {
             List<ResourceType> unevaluatedTypes = ResourceManager.Instance.TangibleTypes;
             ResourceType? selectedType = null;
@@ -98,7 +98,7 @@ namespace NPCProcGen.Core.Traits
             return result;
         }
 
-        private Tuple<NPCAction, float> CreateTheftAction(ActorTag2D chosenActor, ResourceType selectedType)
+        private Tuple<BaseAction, float> CreateTheftAction(ActorTag2D chosenActor, ResourceType selectedType)
         {
             ResourceStat chosenResource = ResourceManager.Instance.GetResource(_owner, selectedType);
 
@@ -107,7 +107,7 @@ namespace NPCProcGen.Core.Traits
             float weightedScore = unweightedScore * chosenResource.Weight * _weight;
 
             TheftAction action = new(_owner, chosenActor, selectedType);
-            return new Tuple<NPCAction, float>(action, weightedScore);
+            return new Tuple<BaseAction, float>(action, weightedScore);
         }
     }
 }

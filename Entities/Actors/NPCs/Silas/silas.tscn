@@ -83,6 +83,7 @@ parameters/Move/blend_position = 0
 path_postprocessing = 1
 avoidance_enabled = true
 radius = 5.0
+debug_enabled = true
 
 [node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("ActorDetector", "StealMarker")]
 script = ExtResource("3_x7obk")

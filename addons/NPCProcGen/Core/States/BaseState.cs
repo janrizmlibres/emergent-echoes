@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Godot;
 
 namespace NPCProcGen.Core.States
@@ -10,11 +8,11 @@ namespace NPCProcGen.Core.States
         public Vector2 GetTargetPosition();
     }
 
-    public abstract class ActionState
+    public abstract class BaseState
     {
         protected readonly NPCAgent2D _owner;
 
-        public ActionState(NPCAgent2D owner)
+        public BaseState(NPCAgent2D owner)
         {
             _owner = owner;
         }

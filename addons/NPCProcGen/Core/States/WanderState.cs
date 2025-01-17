@@ -1,10 +1,11 @@
 using System;
 using Godot;
+using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
-    public class WanderState : ActionState, INavigationState
+    public class WanderState : BaseState, INavigationState
     {
         private static readonly float _wanderRadius = 100;
         private static readonly int _min = 5;
@@ -19,7 +20,7 @@ namespace NPCProcGen.Core.States
         private float _timer = 0;
         private bool _isWandering = false;
 
-        public event Action CompleteState;
+        public event Action<bool> CompleteState;
 
         public WanderState(NPCAgent2D owner, ActorTag2D target) : base(owner)
         {
@@ -30,16 +31,21 @@ namespace NPCProcGen.Core.States
 
         public override void Enter()
         {
+            GD.Print($"{_owner.Parent.Name} WanderState Enter - Instance: {GetHashCode()}");
+            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Wander));
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
+            _owner.NotifManager.ActorDetected += OnActorDetected;
+        }
+
+        public override void Exit()
+        {
+            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Wander));
+            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
+            _owner.NotifManager.ActorDetected -= OnActorDetected;
         }
 
         public override void Update(double delta)
         {
-            if (_owner.IsActorInRange(_target))
-            {
-                OnCompleteState();
-            }
-
             if (!_isWandering)
             {
                 _timer += (float)delta;
@@ -59,7 +65,7 @@ namespace NPCProcGen.Core.States
 
             if (_maxDuration <= 0)
             {
-                OnCompleteState();
+                OnCompleteState(true);
             }
         }
 
@@ -73,15 +79,22 @@ namespace NPCProcGen.Core.States
             return _targetPosition;
         }
 
+        private void OnActorDetected(ActorTag2D target)
+        {
+            if (target == _target)
+            {
+                OnCompleteState(false);
+            }
+        }
+
         private void OnNavigationComplete()
         {
             _isWandering = false;
         }
 
-        private void OnCompleteState()
+        private void OnCompleteState(bool durationReached)
         {
-            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
-            CompleteState?.Invoke();
+            CompleteState?.Invoke(durationReached);
         }
     }
 }

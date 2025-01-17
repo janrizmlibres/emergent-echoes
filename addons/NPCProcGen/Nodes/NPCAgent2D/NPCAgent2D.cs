@@ -54,11 +54,15 @@ namespace NPCProcGen
         public float Companionship { get; set; } = 0.5f;
 
         [Signal]
-        public delegate void ExecutionStartedEventHandler();
+        public delegate void ExecutionStartedEventHandler(Variant action);
         [Signal]
-        public delegate void ExecutionEndedEventHandler();
+        public delegate void ExecutionEndedEventHandler(Variant action);
 
-        private static readonly float _evaluationInterval = 10;
+        // TODO: Complete signals
+        [Signal]
+        public delegate void ActionStateEnteredEventHandler(Variant state);
+        [Signal]
+        public delegate void ActionStateExitedEventHandler(Variant state);
 
         public Vector2 TargetPosition => Executor.GetTargetPosition();
 
@@ -72,8 +76,7 @@ namespace NPCProcGen
         // TODO: Consider using raycast for detection
         private readonly List<ActorTag2D> _detectedActors = new();
         private Area2D _actorDetector = null;
-
-        private float _evaluationTimer = 0;
+        private Timer _evaluationTimer;
 
         public override void _Ready()
         {
@@ -87,10 +90,19 @@ namespace NPCProcGen
                 return;
             }
 
+            Executor.ExecutionEnded += OnExecutionEnded;
+
             _actorDetector.BodyEntered += OnBodyEntered;
             _actorDetector.BodyExited += OnBodyExited;
 
-            Executor.ExecutionEnded += OnExecutionEnded;
+            _evaluationTimer = new()
+            {
+                WaitTime = 10,
+                OneShot = true,
+                Autostart = true
+            };
+            _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
+            AddChild(_evaluationTimer);
 
             AddTraits();
         }
@@ -126,17 +138,6 @@ namespace NPCProcGen
         {
             if (Engine.IsEditorHint()) return;
 
-            if (!Executor.HasAction())
-            {
-                _evaluationTimer += (float)delta;
-
-                if (_evaluationTimer >= _evaluationInterval)
-                {
-                    _evaluationTimer = 0;
-                    OnEvaluationTimerTimeout();
-                }
-            }
-
             Memorizer.Update(delta);
         }
 
@@ -167,19 +168,9 @@ namespace NPCProcGen
             return Executor.QueryNavigationAction();
         }
 
-        public bool IsStealing()
-        {
-            return Executor.QueryStealState();
-        }
-
         public void CompleteNavigation()
         {
             NotifManager.NotifyNavigationComplete();
-        }
-
-        public void CompleteTheft()
-        {
-            NotifManager.NotifyTheftComplete();
         }
 
         public Tuple<ResourceType, float> GetStolenResource()
@@ -200,14 +191,23 @@ namespace NPCProcGen
 
         private void OnEvaluationTimerTimeout()
         {
-            NPCAction action = Strategizer.EvaluateAction(SocialPractice.Proactive);
+            BaseAction action = Strategizer.EvaluateAction(SocialPractice.Proactive);
 
             if (action != null)
             {
-                GD.Print("Action evaluated: " + action.GetType().Name);
+                GD.Print($"Action evaluated by {Parent.Name}: {action.GetType().Name}");
                 Executor.SetAction(action);
-                EmitSignal(SignalName.ExecutionStarted);
             }
+            else
+            {
+                GD.Print($"No action evaluated by {Parent.Name}");
+                _evaluationTimer.Start();
+            }
+        }
+
+        private void OnExecutionEnded()
+        {
+            _evaluationTimer.Start();
         }
 
         // TODO: Resolve self detection in editor
@@ -220,9 +220,12 @@ namespace NPCProcGen
                 if (child is ActorTag2D actor)
                 {
                     _detectedActors.Add(actor);
+                    NotifManager.NotifyActorDetected(actor);
                 }
             }
         }
+
+        // TODO: Start timer again when evaluation ends
 
         private void OnBodyExited(Node2D body)
         {
@@ -234,11 +237,6 @@ namespace NPCProcGen
                     _detectedActors.Remove(actor);
                 }
             }
-        }
-
-        private void OnExecutionEnded()
-        {
-            EmitSignal(SignalName.ExecutionEnded);
         }
     }
 }

@@ -7,7 +7,7 @@ using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
-    public class StealState : ActionState, INavigationState
+    public class StealState : BaseState, INavigationState
     {
         private readonly ActorTag2D _target;
         private readonly ResourceType _targetResType;
@@ -26,8 +26,15 @@ namespace NPCProcGen.Core.States
 
         public override void Enter()
         {
+            GD.Print($"{_owner.Parent.Name} StealState Enter");
+            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Steal));
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
-            _owner.NotifManager.TheftComplete += OnTheftComplete;
+        }
+
+        public override void Exit()
+        {
+            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Steal));
+            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
         }
 
         public Vector2 GetTargetPosition()
@@ -45,21 +52,10 @@ namespace NPCProcGen.Core.States
             return !_isTargetReached;
         }
 
-        public bool IsStealing()
-        {
-            return _isTargetReached;
-        }
-
         private void OnNavigationComplete()
         {
-            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
             _isTargetReached = true;
             _amountToSteal = ComputeStealAmount();
-        }
-
-        private void OnTheftComplete()
-        {
-            _owner.NotifManager.TheftComplete -= OnTheftComplete;
             ResourceManager.Instance.TranserResources(_target, _owner, _targetResType, _amountToSteal);
             CompleteState?.Invoke();
         }

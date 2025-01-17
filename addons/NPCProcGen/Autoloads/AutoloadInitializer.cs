@@ -12,6 +12,14 @@ namespace NPCProcGen.Autoloads
 
             WorldState.Instance.Initialize(actors);
             ResourceManager.Instance.Initialize(actors);
+
+            // GD.Print("Actors in WorldState:");
+            // foreach (ActorTag2D actor in WorldState.Instance.Actors)
+            // {
+            //     GD.Print(actor.Parent.Name);
+            // }
+
+            // ResourceManager.Instance.PrintActors();
         }
 
         private static void FindActorsInNode(Node node, List<ActorTag2D> Actors)

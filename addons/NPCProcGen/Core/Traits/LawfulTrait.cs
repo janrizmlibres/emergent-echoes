@@ -10,7 +10,7 @@ namespace NPCProcGen.Core.Traits
         public LawfulTrait(NPCAgent2D owner, float weight, Sensor sensor, Memorizer memorizer)
             : base(owner, weight, sensor, memorizer) { }
 
-        public override Tuple<NPCAction, float> EvaluateAction(SocialPractice practice)
+        public override Tuple<BaseAction, float> EvaluateAction(SocialPractice practice)
         {
             return null;
         }

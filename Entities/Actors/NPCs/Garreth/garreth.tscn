@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://blrsgvyqgogoa"]
+[gd_scene load_steps=18 format=3 uid="uid://blrsgvyqgogoa"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/NPC.cs" id="1_e0pu4"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="1_isnnv"]
@@ -10,25 +10,7 @@
 radius = 3.0
 height = 10.0
 
-[sub_resource type="Animation" id="Animation_pl05y"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("StealMarker:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [3.14159]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_bfue1"]
-_data = {
-"RESET": SubResource("Animation_pl05y")
-}
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8poqu"]
 animation = &"npc_anims/idle_left"
@@ -81,7 +63,6 @@ position = Vector2(0, -9)
 texture = ExtResource("1_isnnv")
 hframes = 8
 vframes = 6
-frame = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708

@@ -2,6 +2,8 @@ using Godot;
 using System;
 using Godot.Collections;
 using NPCProcGen;
+using NPCProcGen.Core.Components.Enums;
+using EmergentEchoes.Utilities;
 
 namespace EmergentEchoes.addons.NPC2DNode.Components
 {
@@ -19,7 +21,7 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
         private const int Acceleration = 4;
         private const int Friction = 4;
 
-        private State _state = State.Idle;
+        // private State _state = State.Idle;
         private TileMapLayer _tileMapLayer;
         private readonly Array<Vector2I> _validTilePositions = new();
 
@@ -27,21 +29,23 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
         {
             if (Engine.IsEditorHint()) return;
 
-            _stateTimer = GetNode<Timer>("StateTimer");
+            // _stateTimer = GetNode<Timer>("StateTimer");
             _navigationAgent2d = GetNode<NavigationAgent2D>("NavigationAgent2D");
             _animationTree = GetNode<AnimationTree>("AnimationTree");
             _animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
             _npcAgent2d = GetNode<NPCAgent2D>("NPCAgent2D");
 
-            _stateTimer.Timeout += OnNavigationFinished;
-            _stateTimer.OneShot = true;
-            _stateTimer.Start(GD.RandRange(1.0, 3.0));
+            // _stateTimer.Timeout += OnNavigationFinished;
+            // _stateTimer.OneShot = true;
+            // _stateTimer.Start(GD.RandRange(1.0, 3.0));
 
             _navigationAgent2d.NavigationFinished += OnNavigationFinished;
             _navigationAgent2d.VelocityComputed += OnNavigationAgentVelocityComputed;
 
             _npcAgent2d.ExecutionStarted += OnExecutionStarted;
             _npcAgent2d.ExecutionEnded += OnExecutionEnded;
+            _npcAgent2d.ActionStateEntered += OnActionStateEntered;
+            _npcAgent2d.ActionStateExited += OnActionStateExited;
 
             _tileMapLayer = GetNode<TileMapLayer>("%TileMapLayer");
 
@@ -73,17 +77,17 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
                 return;
             }
 
-            if (_state == State.Idle)
-            {
-                IdleState();
-            }
-            else if (_state == State.Wander)
-            {
-                MoveCharacter();
-            }
+            // if (_state == State.Idle)
+            // {
+            //     IdleState();
+            // }
+            // else if (_state == State.Wander)
+            // {
+            //     MoveCharacter();
+            // }
 
             HandleAnimation();
-            MoveAndSlide();
+            // MoveAndSlide();
         }
 
         private void ExecuteNPCAction()
@@ -96,18 +100,15 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
                 {
                     _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
                 }
-
-                Vector2 destination = _navigationAgent2d.GetNextPathPosition();
-                Vector2 direction = GlobalPosition.DirectionTo(destination);
-                _navigationAgent2d.Velocity = Velocity.MoveToward(direction * MaxSpeed, Acceleration);
+                else
+                {
+                    Vector2 destination = _navigationAgent2d.GetNextPathPosition();
+                    Vector2 direction = GlobalPosition.DirectionTo(destination);
+                    _navigationAgent2d.Velocity = Velocity.MoveToward(direction * MaxSpeed, Acceleration);
+                }
 
                 HandleAnimation();
                 MoveAndSlide();
-            }
-
-            if (_npcAgent2d.IsStealing())
-            {
-                _npcAgent2d.CompleteTheft();
             }
         }
 
@@ -178,29 +179,48 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
 
         private void ChangeState()
         {
-            _state = RandomizeState();
+            // _state = RandomizeState();
 
-            switch (_state)
-            {
-                case State.Idle:
-                    _stateTimer.Start(GD.RandRange(1.0, 3.0));
-                    break;
-                case State.Wander:
-                    Vector2 wanderTarget = PickTargetPosition();
-                    _navigationAgent2d.TargetPosition = wanderTarget;
-                    break;
-            }
+            // switch (_state)
+            // {
+            //     case State.Idle:
+            //         _stateTimer.Start(GD.RandRange(1.0, 3.0));
+            //         break;
+            //     case State.Wander:
+            //         Vector2 wanderTarget = PickTargetPosition();
+            //         _navigationAgent2d.TargetPosition = wanderTarget;
+            //         break;
+            // }
         }
 
-        private void OnExecutionStarted()
+        private void OnExecutionStarted(Variant action)
         {
-            _stateTimer.Stop();
+            ActionType actionType = action.As<ActionType>();
+            // GD.Print($"Action Execution Started: {actionType}");
+
+            // _stateTimer.Stop();
+            EmoteManager.ShowEmoteBubble(this);
         }
 
-        private void OnExecutionEnded()
+        private void OnExecutionEnded(Variant action)
         {
-            _state = State.Idle;
-            _stateTimer.Start(GD.RandRange(1.0, 3.0));
+            ActionType actionType = action.As<ActionType>();
+            // GD.Print($"Action Execution Ended: {actionType}");
+
+            // _state = State.Idle;
+            // _stateTimer.Start(GD.RandRange(1.0, 3.0));
+        }
+
+        private void OnActionStateEntered(Variant state)
+        {
+            ActionState actionState = state.As<ActionState>();
+            // GD.Print($"Action State Entered: {actionState}");
+        }
+
+        private void OnActionStateExited(Variant state)
+        {
+            ActionState actionState = state.As<ActionState>();
+            // GD.Print($"Action State Exited: {actionState}");
         }
     }
 }

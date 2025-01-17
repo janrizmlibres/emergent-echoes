@@ -2,13 +2,14 @@ using System;
 using Godot;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.Internal
 {
     public class Executor
     {
         // TODO: Convert to a stack of actions to handle intercepts in the middle of an action
-        private NPCAction _action = null;
+        private BaseAction _action = null;
 
         public event Action ExecutionEnded;
 
@@ -17,10 +18,14 @@ namespace NPCProcGen.Core.Internal
             _action?.Update(delta);
         }
 
-        public void SetAction(NPCAction action)
+        public void SetAction(BaseAction action)
         {
+            DebugTool.Assert(_action == null, "Action field should be null when assigning a new action");
+            DebugTool.Assert(action != null, "Action to be assigned cannot be null");
+
             _action = action;
             _action.ActionComplete += OnActionComplete;
+            _action.Run();
         }
 
         public Vector2 GetTargetPosition()
@@ -38,11 +43,6 @@ namespace NPCProcGen.Core.Internal
             return _action?.IsNavigating() ?? false;
         }
 
-        public bool QueryStealState()
-        {
-            return _action?.IsStealing() ?? false;
-        }
-
         public Tuple<ResourceType, float> QueryStolenResource()
         {
             return _action?.GetStolenResource() ?? null;
@@ -50,8 +50,11 @@ namespace NPCProcGen.Core.Internal
 
         private void OnActionComplete()
         {
-            ExecutionEnded?.Invoke();
+            DebugTool.Assert(_action != null, "Action field cannot be null when completing an action");
+
+            _action.ActionComplete -= OnActionComplete;
             _action = null;
+            ExecutionEnded?.Invoke();
         }
     }
 }
