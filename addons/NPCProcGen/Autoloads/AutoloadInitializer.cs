@@ -3,8 +3,15 @@ using Godot;
 
 namespace NPCProcGen.Autoloads
 {
+    /// <summary>
+    /// Provides initialization methods for autoloaded singletons.
+    /// </summary>
     public static class AutoloadInitializer
     {
+        /// <summary>
+        /// Initializes the WorldState and ResourceManager with actors found in the current scene.
+        /// </summary>
+        /// <param name="currentScene">The current scene node.</param>
         public static void Init(Node currentScene)
         {
             List<ActorTag2D> actors = new();
@@ -22,6 +29,11 @@ namespace NPCProcGen.Autoloads
             // ResourceManager.Instance.PrintActors();
         }
 
+        /// <summary>
+        /// Recursively finds all ActorTag2D nodes in the given node and its children.
+        /// </summary>
+        /// <param name="node">The node to search.</param>
+        /// <param name="Actors">The list to populate with found ActorTag2D nodes.</param>
         private static void FindActorsInNode(Node node, List<ActorTag2D> Actors)
         {
             foreach (Node child in node.GetChildren())

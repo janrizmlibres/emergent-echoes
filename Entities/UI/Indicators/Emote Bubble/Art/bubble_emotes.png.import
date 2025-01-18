@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bkr5hlk7r2bec"
-path="res://.godot/imported/bubble_emotes.png-628315d8b43ff1d3c3703203f3917d6a.ctex"
+path="res://.godot/imported/bubble_emotes.png-d5f9a0d965c745aa385013ac1d5d81c3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entities/UI/Indicators/Emote Bubbles/Art/bubble_emotes.png"
-dest_files=["res://.godot/imported/bubble_emotes.png-628315d8b43ff1d3c3703203f3917d6a.ctex"]
+source_file="res://Entities/UI/Indicators/Emote Bubble/Art/bubble_emotes.png"
+dest_files=["res://.godot/imported/bubble_emotes.png-d5f9a0d965c745aa385013ac1d5d81c3.ctex"]
 
 [params]
 

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Godot;
 using NPCProcGen.Autoloads;
@@ -12,11 +11,26 @@ using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.Traits
 {
+    /// <summary>
+    /// Represents a trait for stealing resources.
+    /// </summary>
     public class ThiefTrait : Trait
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThiefTrait"/> class.
+        /// </summary>
+        /// <param name="owner">The owner of the trait.</param>
+        /// <param name="weight">The weight of the trait.</param>
+        /// <param name="sensor">The sensor associated with the trait.</param>
+        /// <param name="memorizer">The memorizer associated with the trait.</param>
         public ThiefTrait(NPCAgent2D owner, float weight, Sensor sensor, Memorizer memorizer)
             : base(owner, weight, sensor, memorizer) { }
 
+        /// <summary>
+        /// Evaluates an action based on the given social practice.
+        /// </summary>
+        /// <param name="practice">The social practice to evaluate.</param>
+        /// <returns>A tuple containing the evaluated action and its weight.</returns>
         public override Tuple<BaseAction, float> EvaluateAction(SocialPractice practice)
         {
             if (practice == SocialPractice.Proactive)
@@ -27,6 +41,10 @@ namespace NPCProcGen.Core.Traits
             return null;
         }
 
+        /// <summary>
+        /// Evaluates a proactive action for stealing resources.
+        /// </summary>
+        /// <returns>A tuple containing the evaluated action and its weight.</returns>
         private Tuple<BaseAction, float> EvaluateProactiveAction()
         {
             List<ResourceType> unevaluatedTypes = ResourceManager.Instance.TangibleTypes;
@@ -52,6 +70,11 @@ namespace NPCProcGen.Core.Traits
             return null;
         }
 
+        /// <summary>
+        /// Selects a resource type to steal.
+        /// </summary>
+        /// <param name="unevaluatedTypes">The list of unevaluated resource types.</param>
+        /// <returns>The selected resource type.</returns>
         private ResourceType SelectResourceType(List<ResourceType> unevaluatedTypes)
         {
             ResourceType? type = null;
@@ -69,6 +92,11 @@ namespace NPCProcGen.Core.Traits
             return type ?? unevaluatedTypes[CommonUtils.Rnd.Next(unevaluatedTypes.Count)];
         }
 
+        /// <summary>
+        /// Chooses an actor to steal from.
+        /// </summary>
+        /// <param name="type">The resource type to steal.</param>
+        /// <returns>The chosen actor.</returns>
         private ActorTag2D ChooseActor(ResourceType type)
         {
             ActorTag2D result = null;
@@ -98,6 +126,12 @@ namespace NPCProcGen.Core.Traits
             return result;
         }
 
+        /// <summary>
+        /// Creates a theft action.
+        /// </summary>
+        /// <param name="chosenActor">The actor to steal from.</param>
+        /// <param name="selectedType">The resource type to steal.</param>
+        /// <returns>A tuple containing the theft action and its weight.</returns>
         private Tuple<BaseAction, float> CreateTheftAction(ActorTag2D chosenActor, ResourceType selectedType)
         {
             ResourceStat chosenResource = ResourceManager.Instance.GetResource(_owner, selectedType);

@@ -5,6 +5,9 @@ using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
+    /// <summary>
+    /// Represents a state where the NPC wanders around.
+    /// </summary>
     public class WanderState : BaseState, INavigationState
     {
         private static readonly float _wanderRadius = 100;
@@ -20,8 +23,16 @@ namespace NPCProcGen.Core.States
         private float _timer = 0;
         private bool _isWandering = false;
 
+        /// <summary>
+        /// Event triggered when the state is completed.
+        /// </summary>
         public event Action<bool> CompleteState;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WanderState"/> class.
+        /// </summary>
+        /// <param name="owner">The owner of the state.</param>
+        /// <param name="target">The target actor.</param>
         public WanderState(NPCAgent2D owner, ActorTag2D target) : base(owner)
         {
             _target = target;
@@ -29,6 +40,9 @@ namespace NPCProcGen.Core.States
             _wanderInterval = CommonUtils.Rnd.Next(_min, _max);
         }
 
+        /// <summary>
+        /// Called when the state is entered.
+        /// </summary>
         public override void Enter()
         {
             GD.Print($"{_owner.Parent.Name} WanderState Enter - Instance: {GetHashCode()}");
@@ -37,6 +51,9 @@ namespace NPCProcGen.Core.States
             _owner.NotifManager.ActorDetected += OnActorDetected;
         }
 
+        /// <summary>
+        /// Called when the state is exited.
+        /// </summary>
         public override void Exit()
         {
             _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Wander));
@@ -44,6 +61,10 @@ namespace NPCProcGen.Core.States
             _owner.NotifManager.ActorDetected -= OnActorDetected;
         }
 
+        /// <summary>
+        /// Updates the state.
+        /// </summary>
+        /// <param name="delta">The time elapsed since the last update.</param>
         public override void Update(double delta)
         {
             if (!_isWandering)
@@ -69,16 +90,28 @@ namespace NPCProcGen.Core.States
             }
         }
 
+        /// <summary>
+        /// Checks if the NPC is navigating.
+        /// </summary>
+        /// <returns>True if the NPC is navigating, otherwise false.</returns>
         public bool IsNavigating()
         {
             return _isWandering;
         }
 
+        /// <summary>
+        /// Gets the target position.
+        /// </summary>
+        /// <returns>The target position.</returns>
         public Vector2 GetTargetPosition()
         {
             return _targetPosition;
         }
 
+        /// <summary>
+        /// Handles the detection of an actor.
+        /// </summary>
+        /// <param name="target">The detected actor.</param>
         private void OnActorDetected(ActorTag2D target)
         {
             if (target == _target)
@@ -87,11 +120,18 @@ namespace NPCProcGen.Core.States
             }
         }
 
+        /// <summary>
+        /// Handles the completion of navigation.
+        /// </summary>
         private void OnNavigationComplete()
         {
             _isWandering = false;
         }
 
+        /// <summary>
+        /// Handles the completion of the state.
+        /// </summary>
+        /// <param name="durationReached">Indicates if the maximum duration was reached.</param>
         private void OnCompleteState(bool durationReached)
         {
             CompleteState?.Invoke(durationReached);

@@ -1,7 +1,6 @@
 using Godot;
-using System;
 
-namespace EmergentEchoes
+namespace EmergentEchoes.Entities.Camera
 {
 	public partial class Camera2d : Camera2D
 	{

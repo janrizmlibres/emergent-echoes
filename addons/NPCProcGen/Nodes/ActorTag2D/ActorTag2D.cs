@@ -1,20 +1,33 @@
 using Godot;
-using NPCProcGen.Core.Components;
-using NPCProcGen.Core.Components.Enums;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace NPCProcGen
 {
+    /// <summary>
+    /// Represents a 2D tag for an actor, which includes monetary and food values, and a steal marker.
+    /// </summary>
     [Tool]
     public partial class ActorTag2D : Node
     {
+        /// <summary>
+        /// Gets or sets the monetary value associated with this actor.
+        /// </summary>
+        /// <value>The monetary value as an integer.</value>
         [Export(PropertyHint.Range, "0,1000000,")]
         public int MoneyValue { get; set; } = 10;
+
+        /// <summary>
+        /// Gets or sets the food value associated with this actor.
+        /// </summary>
+        /// <value>The food value as an integer.</value>
         [Export(PropertyHint.Range, "1,100,")]
         public int FoodValue { get; set; } = 100;
 
+        /// <summary>
+        /// Gets or sets the StealMarker, which is a Marker2D instance.
+        /// When the StealMarker is set to a new value, it updates the configuration warnings.
+        /// </summary>
+        /// <value>The Marker2D instance representing the StealMarker.</value>
         [Export]
         public Marker2D StealMarker
         {
@@ -29,10 +42,17 @@ namespace NPCProcGen
             }
         }
 
+        /// <summary>
+        /// Gets the parent node as a Node2D.
+        /// </summary>
         public Node2D Parent { get; protected set; }
 
         private Marker2D _stealMarker;
 
+        /// <summary>
+        /// Called when the node is added to the scene.
+        /// Initializes the parent node and checks for required nodes.
+        /// </summary>
         public override void _Ready()
         {
             if (Engine.IsEditorHint()) return;
@@ -46,6 +66,10 @@ namespace NPCProcGen
             }
         }
 
+        /// <summary>
+        /// Called when the node enters the scene tree.
+        /// Updates the parent node and configuration warnings if in the editor.
+        /// </summary>
         public override void _EnterTree()
         {
             if (Engine.IsEditorHint())
@@ -55,6 +79,10 @@ namespace NPCProcGen
             }
         }
 
+        /// <summary>
+        /// Provides configuration warnings for the node.
+        /// </summary>
+        /// <returns>An array of warning messages.</returns>
         public override string[] _GetConfigurationWarnings()
         {
             List<string> warnings = new();

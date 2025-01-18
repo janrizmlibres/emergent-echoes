@@ -4,8 +4,10 @@ using Godot.Collections;
 using NPCProcGen;
 using NPCProcGen.Core.Components.Enums;
 using EmergentEchoes.Utilities;
+using EmergentEchoes.Utilities.Enums;
+using NPCProcGen.Core.Components.Variants;
 
-namespace EmergentEchoes.addons.NPC2DNode.Components
+namespace EmergentEchoes.Entities.Actors
 {
     public partial class NPC : CharacterBody2D
     {
@@ -46,6 +48,7 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
             _npcAgent2d.ExecutionEnded += OnExecutionEnded;
             _npcAgent2d.ActionStateEntered += OnActionStateEntered;
             _npcAgent2d.ActionStateExited += OnActionStateExited;
+            _npcAgent2d.TheftCompleted += OnTheftCompleted;
 
             _tileMapLayer = GetNode<TileMapLayer>("%TileMapLayer");
 
@@ -199,13 +202,16 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
             // GD.Print($"Action Execution Started: {actionType}");
 
             // _stateTimer.Stop();
-            EmoteManager.ShowEmoteBubble(this);
+
+            if (actionType == ActionType.Theft)
+            {
+                EmoteManager.ShowEmoteBubble(this, Emote.Hum);
+            }
         }
 
         private void OnExecutionEnded(Variant action)
         {
             ActionType actionType = action.As<ActionType>();
-            // GD.Print($"Action Execution Ended: {actionType}");
 
             // _state = State.Idle;
             // _stateTimer.Start(GD.RandRange(1.0, 3.0));
@@ -214,13 +220,21 @@ namespace EmergentEchoes.addons.NPC2DNode.Components
         private void OnActionStateEntered(Variant state)
         {
             ActionState actionState = state.As<ActionState>();
-            // GD.Print($"Action State Entered: {actionState}");
+
+            if (actionState == ActionState.Steal)
+            {
+                EmoteManager.ShowEmoteBubble(this, Emote.Mark);
+            }
         }
 
         private void OnActionStateExited(Variant state)
         {
             ActionState actionState = state.As<ActionState>();
-            // GD.Print($"Action State Exited: {actionState}");
+        }
+
+        private void OnTheftCompleted(TheftData theftData)
+        {
+            FloatTextManager.ShowFloatText(this, theftData.Amount.ToString());
         }
     }
 }

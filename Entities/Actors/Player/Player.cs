@@ -1,6 +1,7 @@
+using EmergentEchoes.Utilities;
 using Godot;
 
-namespace EmergentEchoes
+namespace EmergentEchoes.Entities.Actors
 {
 	public partial class Player : CharacterBody2D
 	{
@@ -11,10 +12,17 @@ namespace EmergentEchoes
 		private AnimationTree _animationTree;
 		private AnimationNodeStateMachinePlayback _animationState;
 
+		// ! Remove after testing
+		private Area2D _floatTextClicker;
+
 		public override void _Ready()
 		{
 			_animationTree = GetNode<AnimationTree>("AnimationTree");
 			_animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
+
+			// ! Remove after testing
+			_floatTextClicker = GetNode<Area2D>("FloatTextClicker");
+			_floatTextClicker.InputEvent += OnFloatTextClickerInputEvent;
 		}
 
 		public override void _PhysicsProcess(double delta)
@@ -44,6 +52,15 @@ namespace EmergentEchoes
 		{
 			_animationState.Travel("Move");
 			Velocity = Velocity.MoveToward(inputVector * MaxSpeed, Acceleration);
+		}
+
+		// ! Remove after testing
+		private void OnFloatTextClickerInputEvent(Node viewport, InputEvent @event, long shapeIdx)
+		{
+			if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed)
+			{
+				FloatTextManager.ShowFloatText(this, "-12");
+			}
 		}
 	}
 }

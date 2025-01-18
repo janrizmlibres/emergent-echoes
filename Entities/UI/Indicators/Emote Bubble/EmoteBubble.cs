@@ -1,11 +1,12 @@
 using Godot;
-using NPCProcGen.Core.Helpers;
 using System;
 
 namespace EmergentEchoes.Entities.UI.Indicators
 {
 	public partial class EmoteBubble : Node2D
 	{
+		public string AnimationName { get; set; }
+
 		private AnimationPlayer _animationPlayer;
 		private Timer _durationtTimer;
 
@@ -17,33 +18,28 @@ namespace EmergentEchoes.Entities.UI.Indicators
 			_durationtTimer = GetNode<Timer>("DurationTimer");
 			_durationtTimer.Timeout += OnDurationTimerTimeout;
 
-			_animationPlayer.Play("emote/inflate");
-		}
-
-		public void SetAnimationLibrary(AnimationLibrary animLib)
-		{
-			_animationPlayer ??= GetNode<AnimationPlayer>("AnimationPlayer");
-			_animationPlayer.AddAnimationLibrary("emote", animLib);
+			_animationPlayer.Play($"{AnimationName}/inflate");
 		}
 
 		private void OnAnimationFinished(StringName animName)
 		{
-			switch (animName)
+			if (animName.ToString().Contains("inflate"))
 			{
-				case "emote/inflate":
-					_durationtTimer.Start();
-					break;
-				case "emote/deflate":
-					QueueFree();
-					break;
-				default:
-					throw new ArgumentException($"Unknown animation name: {animName}");
+				_durationtTimer.Start();
+			}
+			else if (animName.ToString().Contains("deflate"))
+			{
+				QueueFree();
+			}
+			else
+			{
+				throw new ArgumentException("Invalid animation name");
 			}
 		}
 
 		private void OnDurationTimerTimeout()
 		{
-			_animationPlayer.Play("emote/deflate");
+			_animationPlayer.Play($"{AnimationName}/deflate");
 		}
 	}
 }
