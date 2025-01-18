@@ -1,7 +1,7 @@
 using Godot;
 using NPCProcGen.Autoloads;
 
-namespace EmergentEchoes
+namespace EmergentEchoes.Stages.Island
 {
 	public partial class World : Node2D
 	{
