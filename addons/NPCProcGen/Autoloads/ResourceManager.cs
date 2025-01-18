@@ -8,24 +8,43 @@ using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Autoloads
 {
+    /// <summary>
+    /// Manages resources for actors in the game.
+    /// </summary>
     public partial class ResourceManager : Node
     {
         private static readonly Lazy<ResourceManager> _instance = new(() => new ResourceManager());
 
+        /// <summary>
+        /// Gets the singleton instance of the ResourceManager.
+        /// </summary>
         public static ResourceManager Instance { get { return _instance.Value; } }
 
         private ResourceManager() { }
 
+        /// <summary>
+        /// Gets a list of tangible resource types.
+        /// </summary>
         public List<ResourceType> TangibleTypes { get { return _tangibleTypes.ToList(); } }
 
+        /// <summary>
+        /// List of tangible resource types.
+        /// </summary>
         private readonly List<ResourceType> _tangibleTypes = new()
         {
             ResourceType.Money,
             ResourceType.Food
         };
 
+        /// <summary>
+        /// Dictionary to store resources for each actor.
+        /// </summary>
         private readonly Dictionary<ActorTag2D, Dictionary<ResourceType, ResourceStat>> _actorResources = new();
 
+        /// <summary>
+        /// Initializes the resource manager with a list of actors.
+        /// </summary>
+        /// <param name="actors">The list of actors to initialize.</param>
         public void Initialize(List<ActorTag2D> actors)
         {
             foreach (ActorTag2D actor in actors)
@@ -50,19 +69,12 @@ namespace NPCProcGen.Autoloads
             }
         }
 
-        // public void PrintActors()
-        // {
-        //     GD.Print("Actors and Resources in ResourceManager:");
-        //     foreach (ActorTag2D actor in _actorResources.Keys)
-        //     {
-        //         GD.Print(actor.Parent.Name);
-        //         foreach (ResourceStat resource in _actorResources[actor].Values)
-        //         {
-        //             GD.Print(resource.Type.ToString() + ": " + resource.Amount);
-        //         }
-        //     }
-        // }
-
+        /// <summary>
+        /// Gets the resource of a specific type for a given actor.
+        /// </summary>
+        /// <param name="actor">The actor to get the resource for.</param>
+        /// <param name="type">The type of resource to get.</param>
+        /// <returns>The resource stat of the specified type for the actor.</returns>
         public ResourceStat GetResource(ActorTag2D actor, ResourceType type)
         {
             DebugTool.Assert(_actorResources.ContainsKey(actor),
@@ -70,6 +82,12 @@ namespace NPCProcGen.Autoloads
             return _actorResources[actor][type];
         }
 
+        /// <summary>
+        /// Checks if a given actor has a specific resource.
+        /// </summary>
+        /// <param name="actor">The actor to check.</param>
+        /// <param name="type">The type of resource to check for.</param>
+        /// <returns>True if the actor has the resource, otherwise false.</returns>
         public bool HasResource(ActorTag2D actor, ResourceType type)
         {
             DebugTool.Assert(_actorResources.ContainsKey(actor),
@@ -77,6 +95,12 @@ namespace NPCProcGen.Autoloads
             return _actorResources[actor][type].Amount > 0;
         }
 
+        /// <summary>
+        /// Checks if a given actor is deficient in a specific resource.
+        /// </summary>
+        /// <param name="actor">The actor to check.</param>
+        /// <param name="type">The type of resource to check for deficiency.</param>
+        /// <returns>True if the actor is deficient in the resource, otherwise false.</returns>
         public bool IsDeficient(ActorTag2D actor, ResourceType type)
         {
             DebugTool.Assert(_actorResources.ContainsKey(actor),
@@ -84,6 +108,13 @@ namespace NPCProcGen.Autoloads
             return _actorResources[actor][type].IsDeficient();
         }
 
+        /// <summary>
+        /// Transfers resources from one actor to another.
+        /// </summary>
+        /// <param name="from">The actor to transfer resources from.</param>
+        /// <param name="to">The actor to transfer resources to.</param>
+        /// <param name="type">The type of resource to transfer.</param>
+        /// <param name="amount">The amount of resource to transfer.</param>
         public void TranserResources(ActorTag2D from, ActorTag2D to, ResourceType type, float amount)
         {
             ResourceStat fromResource = _actorResources[from][type];
