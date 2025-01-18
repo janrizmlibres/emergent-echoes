@@ -3,10 +3,14 @@ using Godot;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Components.Variants;
 using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
+    /// <summary>
+    /// Represents the state where an NPC agent attempts to steal resources.
+    /// </summary>
     public class StealState : BaseState, INavigationState
     {
         private readonly ActorTag2D _target;
@@ -15,8 +19,17 @@ namespace NPCProcGen.Core.States
         private bool _isTargetReached = false;
         private float _amountToSteal = 0;
 
+        /// <summary>
+        /// Event triggered when the state is completed.
+        /// </summary>
         public event Action CompleteState;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StealState"/> class.
+        /// </summary>
+        /// <param name="owner">The NPC agent owning this state.</param>
+        /// <param name="target">The target actor to steal from.</param>
+        /// <param name="type">The type of resource to steal.</param>
         public StealState(NPCAgent2D owner, ActorTag2D target, ResourceType type)
             : base(owner)
         {
@@ -24,6 +37,9 @@ namespace NPCProcGen.Core.States
             _targetResType = type;
         }
 
+        /// <summary>
+        /// Called when the state is entered.
+        /// </summary>
         public override void Enter()
         {
             GD.Print($"{_owner.Parent.Name} StealState Enter");
@@ -31,22 +47,37 @@ namespace NPCProcGen.Core.States
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
         }
 
+        /// <summary>
+        /// Called when the state is exited.
+        /// </summary>
         public override void Exit()
         {
             _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Steal));
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
         }
 
+        /// <summary>
+        /// Gets the target position for navigation.
+        /// </summary>
+        /// <returns>The global position of the target.</returns>
         public Vector2 GetTargetPosition()
         {
             return _target.Parent.GlobalPosition;
         }
 
+        /// <summary>
+        /// Gets the resource type and amount to steal.
+        /// </summary>
+        /// <returns>A tuple containing the resource type and amount to steal.</returns>
         public Tuple<ResourceType, float> GetResourceToSteal()
         {
             return new(_targetResType, _amountToSteal);
         }
 
+        /// <summary>
+        /// Determines whether the agent is currently navigating.
+        /// </summary>
+        /// <returns>True if the agent is navigating; otherwise, false.</returns>
         public bool IsNavigating()
         {
             return !_isTargetReached;
@@ -55,9 +86,19 @@ namespace NPCProcGen.Core.States
         private void OnNavigationComplete()
         {
             _isTargetReached = true;
+
             _amountToSteal = ComputeStealAmount();
             ResourceManager.Instance.TranserResources(_target, _owner, _targetResType, _amountToSteal);
+
             CompleteState?.Invoke();
+
+            TheftData theftData = new()
+            {
+                ResourceType = _targetResType,
+                Amount = (int)_amountToSteal
+            };
+
+            _owner.EmitSignal(NPCAgent2D.SignalName.TheftCompleted, theftData);
         }
 
         private float ComputeStealAmount()
