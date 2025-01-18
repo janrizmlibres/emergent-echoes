@@ -17,6 +17,7 @@ grow_vertical = 2
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+scale = Vector2(0.4, 0.4)
 theme_override_constants/separation = -1
 
 [node name="HealthBar" parent="VBoxContainer" instance=ExtResource("1_00wiu")]
@@ -30,8 +31,9 @@ layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 205.0
-offset_top = -4.0
-offset_right = 248.0
-offset_bottom = 111.0
+offset_left = 82.0
+offset_top = -2.0
+offset_right = 125.0
+offset_bottom = 113.0
+scale = Vector2(0.4, 0.4)
 texture = ExtResource("4_krf2b")

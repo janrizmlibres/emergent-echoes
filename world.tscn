@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=4 uid="uid://7ju7mpc0by18"]
+[gd_scene load_steps=11 format=4 uid="uid://7ju7mpc0by18"]
 
 [ext_resource type="Script" path="res://World.cs" id="1_1yijo"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://camera_2d.tscn" id="1_pp8dq"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bnmuhsutwyeye" path="res://Actors/Player/player.tscn" id="2_ne4id"]
 [ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Actors/NPCs/Silas/silas.tscn" id="4_gun4a"]
 [ext_resource type="PackedScene" uid="uid://blrsgvyqgogoa" path="res://Actors/NPCs/Garreth/garreth.tscn" id="5_5sidg"]
+[ext_resource type="PackedScene" uid="uid://c6n8kbdjlq0ka" path="res://interface/interface.tscn" id="7_nu6yd"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_d7vs6"]
 vertices = PackedVector2Array(8, 8, -8, 8, -8, -8, 8, -8)
@@ -178,6 +179,12 @@ position = Vector2(272, 162)
 
 [node name="Garreth" parent="." instance=ExtResource("5_5sidg")]
 position = Vector2(229, 260)
+
+[node name="Interface" parent="." instance=ExtResource("7_nu6yd")]
+offset_left = 13.0
+offset_top = 12.0
+offset_right = 13.0
+offset_bottom = 12.0
 
 [editable path="Camera2D"]
 [editable path="Player"]
