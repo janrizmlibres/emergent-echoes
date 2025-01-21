@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://b3h6fxk0bi5lj" path="res://Stages/Island/Areas/Forest/Art/forest.png" id="3_1mwuw"]
 [ext_resource type="PackedScene" uid="uid://cvgiqagi4pexc" path="res://Entities/Objects/Rock/Rock.tscn" id="4_j1rfh"]
 [ext_resource type="PackedScene" uid="uid://boawcqhrg67eg" path="res://Entities/Objects/Tree/tree.tscn" id="5_tgwpt"]
-[ext_resource type="PackedScene" uid="uid://bf75pmpbofcom" path="res://Entities/Objects/House/house.tscn" id="6_eylmk"]
+[ext_resource type="PackedScene" uid="uid://bf75pmpbofcom" path="res://Entities/Objects/House of Gareth/House of Gareth.tscn" id="6_eylmk"]
 [ext_resource type="PackedScene" uid="uid://bnmuhsutwyeye" path="res://Entities/Actors/Player/player.tscn" id="7_mu6ya"]
 [ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/Silas/silas.tscn" id="8_0wj5x"]
 [ext_resource type="PackedScene" uid="uid://blrsgvyqgogoa" path="res://Entities/Actors/NPCs/Garreth/garreth.tscn" id="9_cbx2p"]

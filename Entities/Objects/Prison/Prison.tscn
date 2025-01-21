@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://dxvo5c4oadkvu"]
+
+[node name="Prison" type="StaticBody2D"]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]

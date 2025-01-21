@@ -1,20 +1,20 @@
-[gd_scene load_steps=16 format=4 uid="uid://bf75pmpbofcom"]
+[gd_scene load_steps=16 format=4 uid="uid://c20srq2ylr1s7"]
 
-[ext_resource type="Texture2D" uid="uid://chgvaem56fe0c" path="res://Stages/Island/Areas/Village/Art/Doors.png" id="1_ui4q7"]
-[ext_resource type="Texture2D" uid="uid://bjnpwkra7hidq" path="res://Stages/Island/Areas/Village/Art/Wooden_House_Roof_Tilset.png" id="2_7o3yb"]
-[ext_resource type="Texture2D" uid="uid://bh570b11yu6un" path="res://Stages/Island/Areas/Village/Art/Wooden_House_Walls_Tilset.png" id="3_j2tqy"]
-[ext_resource type="Script" path="res://Entities/Objects/House/Door.cs" id="4_0iuy2"]
-[ext_resource type="Script" path="res://Entities/Objects/House/InteriorArea.cs" id="5_c86oi"]
+[ext_resource type="Texture2D" uid="uid://chgvaem56fe0c" path="res://Stages/Island/Areas/Village/Art/Doors.png" id="1_vaqbt"]
+[ext_resource type="Texture2D" uid="uid://bjnpwkra7hidq" path="res://Stages/Island/Areas/Village/Art/Wooden_House_Roof_Tilset.png" id="2_v1q00"]
+[ext_resource type="Texture2D" uid="uid://bh570b11yu6un" path="res://Stages/Island/Areas/Village/Art/Wooden_House_Walls_Tilset.png" id="3_h0kfv"]
+[ext_resource type="Script" path="res://Utilities/Game Components/Door.cs" id="4_q4cxg"]
+[ext_resource type="Script" path="res://Utilities/Game Components/InteriorArea.cs" id="5_osbif"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jsen2"]
-texture = ExtResource("1_ui4q7")
+texture = ExtResource("1_vaqbt")
 0:0/0 = 0
 0:1/0 = 0
 0:2/0 = 0
 0:3/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nci2s"]
-texture = ExtResource("2_7o3yb")
+texture = ExtResource("2_v1q00")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
@@ -50,7 +50,7 @@ texture = ExtResource("2_7o3yb")
 6:4/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_07ll6"]
-texture = ExtResource("3_j2tqy")
+texture = ExtResource("3_h0kfv")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
@@ -72,18 +72,18 @@ sources/2 = SubResource("TileSetAtlasSource_nci2s")
 sources/3 = SubResource("TileSetAtlasSource_07ll6")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rv1c2"]
-atlas = ExtResource("1_ui4q7")
+atlas = ExtResource("1_vaqbt")
 region = Rect2(0, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d4bl8"]
-atlas = ExtResource("1_ui4q7")
+atlas = ExtResource("1_vaqbt")
 region = Rect2(0, 16, 16, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_a3q5u"]
 size = Vector2(16, 31)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_j1vub"]
-texture = ExtResource("2_7o3yb")
+texture = ExtResource("2_v1q00")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
@@ -133,7 +133,7 @@ tile_set = SubResource("TileSet_df2je")
 
 [node name="Door" type="Area2D" parent="."]
 collision_layer = 0
-script = ExtResource("4_0iuy2")
+script = ExtResource("4_q4cxg")
 
 [node name="OpenDoor" type="Sprite2D" parent="Door"]
 visible = false
@@ -159,7 +159,7 @@ tile_map_data = PackedByteArray("AAD+////AAAAAAQAAAD/////AAABAAQAAAAAAP//AAABAAQ
 tile_set = SubResource("TileSet_t01s4")
 
 [node name="InteriorArea" type="Area2D" parent="."]
-script = ExtResource("5_c86oi")
+script = ExtResource("5_osbif")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteriorArea"]
 position = Vector2(8, -32)

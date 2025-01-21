@@ -6,9 +6,10 @@
 [ext_resource type="PackedScene" uid="uid://bnmuhsutwyeye" path="res://Entities/Actors/Player/player.tscn" id="2_ne4id"]
 [ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/Silas/silas.tscn" id="4_gun4a"]
 [ext_resource type="PackedScene" uid="uid://blrsgvyqgogoa" path="res://Entities/Actors/NPCs/Garreth/garreth.tscn" id="5_5sidg"]
-[ext_resource type="PackedScene" uid="uid://bf75pmpbofcom" path="res://Entities/Objects/House/house.tscn" id="6_12eed"]
+[ext_resource type="PackedScene" uid="uid://bf75pmpbofcom" path="res://Entities/Objects/House of Gareth/House of Gareth.tscn" id="6_12eed"]
 [ext_resource type="PackedScene" uid="uid://boawcqhrg67eg" path="res://Entities/Objects/Tree/tree.tscn" id="7_p7wec"]
 [ext_resource type="PackedScene" uid="uid://bbvfg1jotmlna" path="res://Entities/Objects/Crops/Wheat/Wheat.tscn" id="7_qhmo1"]
+[ext_resource type="PackedScene" uid="uid://c20srq2ylr1s7" path="res://Entities/Objects/House of Silas/House of Silas.tscn" id="8_3pa6v"]
 [ext_resource type="PackedScene" uid="uid://cvgiqagi4pexc" path="res://Entities/Objects/Rock/Rock.tscn" id="8_pvw5h"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_d7vs6"]
@@ -245,6 +246,7 @@ scenes/1/scene = ExtResource("8_pvw5h")
 scenes/2/scene = ExtResource("7_p7wec")
 scenes/3/scene = ExtResource("6_12eed")
 scenes/4/scene = ExtResource("7_qhmo1")
+scenes/5/scene = ExtResource("8_3pa6v")
 
 [sub_resource type="TileSet" id="TileSet_07foc"]
 physics_layer_0/collision_layer = 1
@@ -256,8 +258,6 @@ custom_data_layer_0/name = "isNavigatable"
 custom_data_layer_0/type = 1
 sources/1 = SubResource("TileSetScenesCollectionSource_bvqbq")
 sources/0 = SubResource("TileSetAtlasSource_k42pd")
-
-[sub_resource type="TileSet" id="TileSet_1jo8w"]
 
 [node name="World" type="Node2D"]
 y_sort_enabled = true
@@ -281,10 +281,6 @@ tile_set = SubResource("TileSet_07foc")
 [node name="Objects" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AAALAA8AAQAAAAAAAgAIAA0AAQAAAAAAAQAVAAkAAQAAAAAAAgARAA8AAQAAAAAAAwA=")
 tile_set = SubResource("TileSet_07foc")
-
-[node name="HouseGround" type="TileMapLayer" parent="."]
-position = Vector2(176, 160)
-tile_set = SubResource("TileSet_1jo8w")
 
 [node name="Player" parent="." instance=ExtResource("2_ne4id")]
 position = Vector2(176, 160)
