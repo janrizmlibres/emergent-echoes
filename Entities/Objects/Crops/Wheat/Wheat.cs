@@ -6,7 +6,7 @@ public partial class Wheat : StaticBody2D
 	private Interactable _interactable;
 	private AnimatedSprite2D _wheatSprite;
 	private Timer _regrowTimer;
-	
+
 	private void OnInteract()
 	{
 		_interactable.IsInteractable = false;
@@ -27,14 +27,14 @@ public partial class Wheat : StaticBody2D
 			_regrowTimer.Start();
 		}
 	}
-	
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_interactable = GetNode<Interactable>("Interactable"); 
+		_interactable = GetNode<Interactable>("Interactable");
 		_wheatSprite = GetNode<AnimatedSprite2D>("WheatSprite");
 		_regrowTimer = GetNode<Timer>("RegrowTimer");
-		
+
 		_interactable.Interact = new Callable(this, nameof(OnInteract));
 	}
 
