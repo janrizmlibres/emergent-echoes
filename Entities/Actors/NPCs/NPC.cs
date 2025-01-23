@@ -11,20 +11,23 @@ namespace EmergentEchoes.Entities.Actors
 {
     public partial class NPC : CharacterBody2D
     {
+        [Export]
+        public int MaxSpeed { get; set; } = 60;
+        [Export]
+        public int Acceleration { get; set; } = 4;
+        [Export]
+        public int Friction { get; set; } = 4;
+
+        private enum State { Idle, Wander }
+
         private Timer _stateTimer;
         private NavigationAgent2D _navigationAgent2d;
         private AnimationTree _animationTree;
         private AnimationNodeStateMachinePlayback _animationState;
         private NPCAgent2D _npcAgent2d;
-
-        private enum State { Idle, Wander }
-
-        private const int MaxSpeed = 60;
-        private const int Acceleration = 4;
-        private const int Friction = 4;
+        private TileMapLayer _tileMapLayer;
 
         // private State _state = State.Idle;
-        private TileMapLayer _tileMapLayer;
         private readonly Array<Vector2I> _validTilePositions = new();
 
         public override void _Ready()
@@ -45,14 +48,44 @@ namespace EmergentEchoes.Entities.Actors
             _navigationAgent2d.VelocityComputed += OnNavigationAgentVelocityComputed;
 
             _npcAgent2d.ExecutionStarted += OnExecutionStarted;
-            _npcAgent2d.ExecutionEnded += OnExecutionEnded;
             _npcAgent2d.ActionStateEntered += OnActionStateEntered;
-            _npcAgent2d.ActionStateExited += OnActionStateExited;
             _npcAgent2d.TheftCompleted += OnTheftCompleted;
 
             _tileMapLayer = GetNode<TileMapLayer>("%TileMapLayer");
 
             SetupTilePositions();
+        }
+
+        public override void _PhysicsProcess(double delta)
+        {
+            if (Engine.IsEditorHint()) return;
+
+            if (_npcAgent2d.IsActive())
+            {
+                _navigationAgent2d.TargetPosition = _npcAgent2d.TargetPosition;
+            }
+
+            if (_navigationAgent2d.IsNavigationFinished())
+            {
+                _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
+                return;
+            }
+
+            Vector2 destination = _navigationAgent2d.GetNextPathPosition();
+            Vector2 direction = GlobalPosition.DirectionTo(destination);
+            _navigationAgent2d.Velocity = Velocity.MoveToward(direction * MaxSpeed, Acceleration);
+
+            HandleAnimation();
+            MoveAndSlide();
+
+            // if (_state == State.Idle)
+            // {
+            //     IdleState();
+            // }
+            // else if (_state == State.Wander)
+            // {
+            //     MoveCharacter();
+            // }
         }
 
         private void SetupTilePositions()
@@ -67,51 +100,6 @@ namespace EmergentEchoes.Entities.Actors
                 {
                     _validTilePositions.Add(cell);
                 }
-            }
-        }
-
-        public override void _PhysicsProcess(double delta)
-        {
-            if (Engine.IsEditorHint()) return;
-
-            if (_npcAgent2d.IsActive())
-            {
-                ExecuteNPCAction();
-                return;
-            }
-
-            // if (_state == State.Idle)
-            // {
-            //     IdleState();
-            // }
-            // else if (_state == State.Wander)
-            // {
-            //     MoveCharacter();
-            // }
-
-            HandleAnimation();
-            // MoveAndSlide();
-        }
-
-        private void ExecuteNPCAction()
-        {
-            if (_npcAgent2d.IsNavigationRequired())
-            {
-                _navigationAgent2d.TargetPosition = _npcAgent2d.TargetPosition;
-
-                if (_navigationAgent2d.IsNavigationFinished())
-                {
-                    _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
-                }
-                else
-                {
-                    Vector2 destination = _navigationAgent2d.GetNextPathPosition();
-                    Vector2 direction = GlobalPosition.DirectionTo(destination);
-                    _navigationAgent2d.Velocity = Velocity.MoveToward(direction * MaxSpeed, Acceleration);
-                }
-
-                HandleAnimation();
-                MoveAndSlide();
             }
         }
 
@@ -199,22 +187,11 @@ namespace EmergentEchoes.Entities.Actors
         private void OnExecutionStarted(Variant action)
         {
             ActionType actionType = action.As<ActionType>();
-            // GD.Print($"Action Execution Started: {actionType}");
-
-            // _stateTimer.Stop();
 
             if (actionType == ActionType.Theft)
             {
                 EmoteManager.ShowEmoteBubble(this, Emote.Hum);
             }
-        }
-
-        private void OnExecutionEnded(Variant action)
-        {
-            ActionType actionType = action.As<ActionType>();
-
-            // _state = State.Idle;
-            // _stateTimer.Start(GD.RandRange(1.0, 3.0));
         }
 
         private void OnActionStateEntered(Variant state)
@@ -225,11 +202,6 @@ namespace EmergentEchoes.Entities.Actors
             {
                 EmoteManager.ShowEmoteBubble(this, Emote.Mark);
             }
-        }
-
-        private void OnActionStateExited(Variant state)
-        {
-            ActionState actionState = state.As<ActionState>();
         }
 
         private void OnTheftCompleted(TheftData theftData)

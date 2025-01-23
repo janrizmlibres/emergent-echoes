@@ -14,14 +14,14 @@ namespace NPCProcGen
         /// </summary>
         /// <value>The monetary value as an integer.</value>
         [Export(PropertyHint.Range, "0,1000000,")]
-        public int MoneyValue { get; set; } = 10;
+        public int MoneyValue { get; set; } = 50;
 
         /// <summary>
         /// Gets or sets the food value associated with this actor.
         /// </summary>
         /// <value>The food value as an integer.</value>
-        [Export(PropertyHint.Range, "1,100,")]
-        public int FoodValue { get; set; } = 100;
+        [Export(PropertyHint.Range, "0")]
+        public int FoodValue { get; set; } = 20;
 
         /// <summary>
         /// Gets or sets the StealMarker, which is a Marker2D instance.
