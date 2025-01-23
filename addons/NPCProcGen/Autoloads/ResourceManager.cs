@@ -33,7 +33,7 @@ namespace NPCProcGen.Autoloads
         private readonly List<ResourceType> _tangibleTypes = new()
         {
             ResourceType.Money,
-            ResourceType.Food
+            ResourceType.Satiation
         };
 
         /// <summary>
@@ -53,16 +53,25 @@ namespace NPCProcGen.Autoloads
 
                 if (actor is NPCAgent2D npc)
                 {
-                    resources[ResourceType.Money] = new(ResourceType.Money, npc.MoneyValue, npc.Money);
-                    resources[ResourceType.Food] = new(ResourceType.Food, npc.FoodValue, npc.Food);
-                    resources[ResourceType.Companionship] = new(ResourceType.Companionship,
+                    resources[ResourceType.Money] = new ResourceStat(ResourceType.Money,
+                        npc.MoneyValue, npc.Money);
+
+                    resources[ResourceType.Satiation] = new ResourceStat(ResourceType.Satiation,
+                        npc.SatiationValue, npc.Satiation);
+
+                    resources[ResourceType.Companionship] = new ResourceStat(ResourceType.Companionship,
                         npc.CompanionshipValue, npc.Companionship);
                 }
                 else
                 {
-                    resources[ResourceType.Money] = new ResourceStat(ResourceType.Money, actor.MoneyValue, 1);
-                    resources[ResourceType.Food] = new ResourceStat(ResourceType.Food, actor.FoodValue, 1);
-                    resources[ResourceType.Companionship] = new ResourceStat(ResourceType.Companionship, 100, 1);
+                    resources[ResourceType.Money] = new ResourceStat(
+                        ResourceType.Money, actor.MoneyValue, 1);
+
+                    resources[ResourceType.Satiation] = new ResourceStat(
+                        ResourceType.Satiation, 100, 1);
+
+                    resources[ResourceType.Companionship] = new ResourceStat(
+                        ResourceType.Companionship, 100, 1);
                 }
 
                 _actorResources[actor] = resources;
