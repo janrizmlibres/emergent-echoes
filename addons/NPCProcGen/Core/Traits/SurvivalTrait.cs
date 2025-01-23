@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.Traits
@@ -26,6 +29,16 @@ namespace NPCProcGen.Core.Traits
         /// <param name="practice">The social practice to evaluate.</param>
         /// <returns>A tuple containing the evaluated action and its weight.</returns>
         public override Tuple<BaseAction, float> EvaluateAction(SocialPractice practice)
+        {
+            if (practice == SocialPractice.Proactive)
+            {
+                return EvaluateProactiveAction();
+            }
+
+            return null;
+        }
+
+        private Tuple<BaseAction, float> EvaluateProactiveAction()
         {
             return null;
         }
