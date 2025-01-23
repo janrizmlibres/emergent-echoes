@@ -1,5 +1,6 @@
 using NPCProcGen.Core.Components.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace NPCProcGen.Core.Components
 {
@@ -8,6 +9,13 @@ namespace NPCProcGen.Core.Components
     /// </summary>
     public class ResourceStat
     {
+        private static readonly Dictionary<ResourceType, bool> _isInteger = new()
+        {
+            { ResourceType.Money, true },
+            { ResourceType.Satiation, true },
+            { ResourceType.Companionship, false }
+        };
+
         /// <summary>
         /// Gets the type of resource.
         /// </summary>
@@ -22,7 +30,7 @@ namespace NPCProcGen.Core.Components
             set
             {
                 amount = Math.Clamp(value, 0, Type == ResourceType.Money ? 1000000 : 100);
-                amount = (float)(Type == ResourceType.Money ? Math.Floor(amount) : amount);
+                amount = (float)(_isInteger[Type] ? Math.Floor(amount) : amount);
             }
         }
 

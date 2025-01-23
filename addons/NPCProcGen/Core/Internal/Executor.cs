@@ -14,10 +14,17 @@ namespace NPCProcGen.Core.Internal
         // TODO: Convert to a stack of actions to handle intercepts in the middle of an action
         private BaseAction _action = null;
 
+        private readonly NPCAgent2D _owner;
+
         /// <summary>
         /// Event triggered when the execution of an action ends.
         /// </summary>
         public event Action ExecutionEnded;
+
+        public Executor(NPCAgent2D owner)
+        {
+            _owner = owner;
+        }
 
         /// <summary>
         /// Updates the current action.
@@ -48,7 +55,7 @@ namespace NPCProcGen.Core.Internal
         /// <returns>The target position.</returns>
         public Vector2 GetTargetPosition()
         {
-            return _action.GetTargetPosition();
+            return _action?.GetTargetPosition() ?? _owner.Parent.GlobalPosition;
         }
 
         /// <summary>
@@ -67,15 +74,6 @@ namespace NPCProcGen.Core.Internal
         public bool QueryNavigationAction()
         {
             return _action?.IsNavigating() ?? false;
-        }
-
-        /// <summary>
-        /// Queries the resource stolen by the current action.
-        /// </summary>
-        /// <returns>A tuple containing the resource type and amount stolen.</returns>
-        public Tuple<ResourceType, float> QueryStolenResource()
-        {
-            return _action?.GetStolenResource() ?? null;
         }
 
         /// <summary>

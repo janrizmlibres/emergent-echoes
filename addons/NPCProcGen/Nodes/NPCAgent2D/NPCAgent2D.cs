@@ -17,6 +17,9 @@ namespace NPCProcGen
     [Tool]
     public partial class NPCAgent2D : ActorTag2D
     {
+        [Export(PropertyHint.Range, "1,100,")]
+        public int SatiationValue { get; set; } = 100;
+
         /// <summary>
         /// Gets or sets the companionship value associated with this NPC.
         /// </summary>
@@ -63,7 +66,7 @@ namespace NPCProcGen
         [Export(PropertyHint.Range, "0,1,0.01")]
         public float Money { get; set; } = 0.5f;
         [Export(PropertyHint.Range, "0,1,0.01")]
-        public float Food { get; set; } = 0.5f;
+        public float Satiation { get; set; } = 0.5f;
         [Export(PropertyHint.Range, "0,1,0.01")]
         public float Companionship { get; set; } = 0.5f;
 
@@ -105,7 +108,7 @@ namespace NPCProcGen
         /// <summary>
         /// Gets the executor component of the NPC.
         /// </summary>
-        public Executor Executor { get; private set; } = new();
+        public Executor Executor { get; private set; }
 
         /// <summary>
         /// Gets the notification manager of the NPC.
@@ -133,6 +136,7 @@ namespace NPCProcGen
                 return;
             }
 
+            Executor = new(this);
             Executor.ExecutionEnded += OnExecutionEnded;
 
             _actorDetector.BodyEntered += OnBodyEntered;
@@ -240,15 +244,6 @@ namespace NPCProcGen
         public void CompleteNavigation()
         {
             NotifManager.NotifyNavigationComplete();
-        }
-
-        /// <summary>
-        /// Gets the stolen resource by the NPC.
-        /// </summary>
-        /// <returns>A tuple containing the resource type and amount.</returns>
-        public Tuple<ResourceType, float> GetStolenResource()
-        {
-            return Executor.QueryStolenResource();
         }
 
         /// <summary>

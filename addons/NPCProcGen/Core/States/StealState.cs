@@ -66,15 +66,6 @@ namespace NPCProcGen.Core.States
         }
 
         /// <summary>
-        /// Gets the resource type and amount to steal.
-        /// </summary>
-        /// <returns>A tuple containing the resource type and amount to steal.</returns>
-        public Tuple<ResourceType, float> GetResourceToSteal()
-        {
-            return new(_targetResType, _amountToSteal);
-        }
-
-        /// <summary>
         /// Determines whether the agent is currently navigating.
         /// </summary>
         /// <returns>True if the agent is navigating; otherwise, false.</returns>
@@ -83,6 +74,11 @@ namespace NPCProcGen.Core.States
             return !_isTargetReached;
         }
 
+        /// <summary>
+        /// Called when the agent has reached the target's position from behind.
+        /// A <see cref="Marker2D"/> is used to determine the target's back.
+        /// Refer to <see cref="ActorTag2D"/> for more information.
+        /// </summary>
         private void OnNavigationComplete()
         {
             _isTargetReached = true;
@@ -101,6 +97,10 @@ namespace NPCProcGen.Core.States
             _owner.EmitSignal(NPCAgent2D.SignalName.TheftCompleted, theftData);
         }
 
+        /// <summary>
+        /// Computes the amount of resources to steal based on thief's need, resource weight, and thresholds.
+        /// </summary>
+        /// <returns>The amount of resources to steal.</returns>
         private float ComputeStealAmount()
         {
             ResourceStat thiefResource = ResourceManager.Instance.GetResource(_owner, _targetResType);

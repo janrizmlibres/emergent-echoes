@@ -277,11 +277,15 @@ tile_set = SubResource("TileSet_07foc")
 [node name="Player" parent="." instance=ExtResource("7_mu6ya")]
 position = Vector2(176, 160)
 
+[node name="ActorTag2D" parent="Player" index="5"]
+MoneyValue = 10
+FoodValue = 100
+
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
 remote_path = NodePath("../../Camera2D")
 
 [node name="Silas" parent="." instance=ExtResource("8_0wj5x")]
-position = Vector2(272, 162)
+position = Vector2(320, 172)
 
 [node name="Garreth" parent="." instance=ExtResource("9_cbx2p")]
 position = Vector2(229, 260)

@@ -13,7 +13,7 @@ namespace NPCProcGen.Core.Components.Enums
         /// <summary>
         /// Represents food as a resource.
         /// </summary>
-        Food,
+        Satiation,
 
         /// <summary>
         /// Represents companionship as a resource.

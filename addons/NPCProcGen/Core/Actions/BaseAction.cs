@@ -75,23 +75,14 @@ namespace NPCProcGen.Core.Actions
         }
 
         /// <summary>
-        /// Gets the resource that is being stolen, if any.
+        /// Updates the action.
         /// </summary>
-        /// <returns>A tuple containing the resource type and amount, or <c>null</c> if no resource is being stolen.</returns>
-        public Tuple<ResourceType, float> GetStolenResource()
-        {
-            return (_currentState as StealState)?.GetResourceToSteal() ?? null;
-        }
+        /// <param name="delta">The time elapsed since the last update.</param>
+        public abstract void Update(double delta);
 
         /// <summary>
         /// Runs the action.
         /// </summary>
         public abstract void Run();
-
-        /// <summary>
-        /// Updates the action.
-        /// </summary>
-        /// <param name="delta">The time elapsed since the last update.</param>
-        public abstract void Update(double delta);
     }
 }
