@@ -268,16 +268,16 @@ script = ExtResource("1_1yijo")
 [node name="Camera2D" parent="." instance=ExtResource("1_pp8dq")]
 position = Vector2(176, 160)
 
-[node name="TopLeft" parent="Camera2D" index="0"]
+[node name="Interface" parent="Camera2D" instance=ExtResource("3_gex63")]
+offset_left = -141.0
+offset_top = -72.0
+offset_right = -141.0
+offset_bottom = -72.0
+
+[node name="TopLeft" parent="Camera2D" index="1"]
 position = Vector2(-176, -160)
 
-[node name="Interface" parent="Camera2D/TopLeft" index="0" instance=ExtResource("3_gex63")]
-offset_left = 35.0
-offset_top = 88.0
-offset_right = 35.0
-offset_bottom = 88.0
-
-[node name="BottomRight" parent="Camera2D" index="1"]
+[node name="BottomRight" parent="Camera2D" index="2"]
 position = Vector2(560, 464)
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
