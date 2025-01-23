@@ -1,0 +1,58 @@
+[gd_scene load_steps=3 format=3 uid="uid://d3ue675djrwaj"]
+
+[ext_resource type="Script" path="res://Entities/UI/HUD/Inventory/InventoryPanel.cs" id="1_gnyvc"]
+[ext_resource type="PackedScene" uid="uid://bdi42qxpk10c5" path="res://Entities/UI/Inventory/Slot/inventory_slot.tscn" id="2_hqt16"]
+
+[node name="InventoryPanel" type="Panel"]
+texture_filter = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -90.0
+offset_right = 480.0
+offset_bottom = 270.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_gnyvc")
+
+[node name="SlotContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="InventorySlot" parent="SlotContainer" instance=ExtResource("2_hqt16")]
+layout_mode = 2
+
+[node name="InventorySlot2" parent="SlotContainer" instance=ExtResource("2_hqt16")]
+layout_mode = 2
+
+[node name="InventorySlot3" parent="SlotContainer" instance=ExtResource("2_hqt16")]
+layout_mode = 2
+
+[node name="InventorySlot4" parent="SlotContainer" instance=ExtResource("2_hqt16")]
+layout_mode = 2
+
+[node name="InventorySlot5" parent="SlotContainer" instance=ExtResource("2_hqt16")]
+layout_mode = 2
+
+[node name="InventorySlot6" parent="SlotContainer" instance=ExtResource("2_hqt16")]
+layout_mode = 2
+
+[node name="InventorySlot7" parent="SlotContainer" instance=ExtResource("2_hqt16")]
+layout_mode = 2
+
+[node name="InventorySlot8" parent="SlotContainer" instance=ExtResource("2_hqt16")]
+layout_mode = 2
+
+[node name="InventorySlot9" parent="SlotContainer" instance=ExtResource("2_hqt16")]
+layout_mode = 2
