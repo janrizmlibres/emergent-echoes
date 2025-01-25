@@ -1,0 +1,44 @@
+[gd_scene load_steps=9 format=3 uid="uid://yaeul8xeirkq"]
+
+[ext_resource type="Script" path="res://Entities/Objects/Chest/Chest.cs" id="1_k4i5w"]
+[ext_resource type="Texture2D" uid="uid://dek1ghcu58x00" path="res://Entities/Objects/Chest/Art/cave_ [resources].png" id="2_y0ji4"]
+[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Game Components/interactable.tscn" id="3_6mav2"]
+[ext_resource type="Script" path="res://Entities/Objects/Chest/ChestManager.cs" id="4_el1pq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_00jr5"]
+atlas = ExtResource("2_y0ji4")
+region = Rect2(17, 94, 14, 15)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_quya2"]
+size = Vector2(14, 11)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_beu4v"]
+radius = 18.0278
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xh2vt"]
+radius = 18.0
+
+[node name="Chest" type="StaticBody2D"]
+script = ExtResource("1_k4i5w")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = SubResource("AtlasTexture_00jr5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2.5)
+shape = SubResource("RectangleShape2D_quya2")
+
+[node name="Interactable" parent="." instance=ExtResource("3_6mav2")]
+ActionDescription = "Steal"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
+shape = SubResource("CircleShape2D_beu4v")
+
+[node name="ChestManager" type="Area2D" parent="."]
+script = ExtResource("4_el1pq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChestManager"]
+shape = SubResource("CircleShape2D_xh2vt")
+
+[connection signal="body_entered" from="ChestManager" to="." method="_on_chest_manager_body_entered"]
