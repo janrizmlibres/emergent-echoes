@@ -1,5 +1,6 @@
 using EmergentEchoes.Utilities;
 using Godot;
+using NPCProcGen;
 
 namespace EmergentEchoes.Entities.Actors
 {
@@ -11,6 +12,7 @@ namespace EmergentEchoes.Entities.Actors
 
 		private AnimationTree _animationTree;
 		private AnimationNodeStateMachinePlayback _animationState;
+		private ActorTag2D _actorTag2D;
 
 		// ! Remove after testing
 		private Area2D _floatTextClicker;
@@ -19,6 +21,9 @@ namespace EmergentEchoes.Entities.Actors
 		{
 			_animationTree = GetNode<AnimationTree>("AnimationTree");
 			_animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
+
+			_actorTag2D = GetNode<ActorTag2D>("ActorTag2D");
+			_actorTag2D.PetitionRequested += OnPetitionRequested;
 
 			// ! Remove after testing
 			_floatTextClicker = GetNode<Area2D>("FloatTextClicker");
@@ -52,6 +57,11 @@ namespace EmergentEchoes.Entities.Actors
 		{
 			_animationState.Travel("Move");
 			Velocity = Velocity.MoveToward(inputVector * MaxSpeed, Acceleration);
+		}
+
+		private void OnPetitionRequested(Variant resourceType, float amount)
+		{
+			// TODO: Popup dialog for petition
 		}
 
 		// ! Remove after testing

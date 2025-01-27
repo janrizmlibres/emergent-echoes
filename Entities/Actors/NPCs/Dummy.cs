@@ -1,17 +1,12 @@
 using Godot;
 using System;
 using Godot.Collections;
-using NPCProcGen;
-using NPCProcGen.Core.Components.Enums;
-using EmergentEchoes.Utilities;
-using EmergentEchoes.Utilities.Enums;
-using NPCProcGen.Core.Components.Variants;
-using System.Collections.Generic;
 using System.Linq;
+using NPCProcGen;
 
 namespace EmergentEchoes.Entities.Actors
 {
-    public partial class NPC : CharacterBody2D
+    public partial class Dummy : CharacterBody2D
     {
         [Export]
         public int MaxSpeed { get; set; } = 60;
@@ -26,70 +21,58 @@ namespace EmergentEchoes.Entities.Actors
         private NavigationAgent2D _navigationAgent2d;
         private AnimationTree _animationTree;
         private AnimationNodeStateMachinePlayback _animationState;
-        private NPCAgent2D _npcAgent2d;
         private TileMapLayer _tileMapLayer;
+        private NPCAgent2D _npcAgent2D; // ! Remove after testing
 
-        // private State _state = State.Idle;
+        private State _state = State.Idle;
+
         private readonly Array<Vector2I> _validTilePositions = new();
 
         public override void _Ready()
         {
             if (Engine.IsEditorHint()) return;
 
-            // _stateTimer = GetNode<Timer>("StateTimer");
+            _stateTimer = GetNode<Timer>("StateTimer");
             _navigationAgent2d = GetNode<NavigationAgent2D>("NavigationAgent2D");
             _animationTree = GetNode<AnimationTree>("AnimationTree");
             _animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
-            _npcAgent2d = GetNode<NPCAgent2D>("NPCAgent2D");
 
-            // _stateTimer.Timeout += OnNavigationFinished;
-            // _stateTimer.OneShot = true;
-            // _stateTimer.Start(GD.RandRange(1.0, 3.0));
+            _stateTimer.Timeout += OnNavigationFinished;
+            _stateTimer.OneShot = true;
+            _stateTimer.Start(GetRandRange());
 
             _navigationAgent2d.NavigationFinished += OnNavigationFinished;
             _navigationAgent2d.VelocityComputed += OnNavigationAgentVelocityComputed;
 
-            _npcAgent2d.ExecutionStarted += OnExecutionStarted;
-            _npcAgent2d.ExecutionEnded += OnExecutionEnded;
-            _npcAgent2d.ActionStateEntered += OnActionStateEntered;
-            _npcAgent2d.TheftCompleted += OnTheftCompleted;
+            // ! Remove after testing
+            _npcAgent2D = GetNode<NPCAgent2D>("NPCAgent2D");
+            _npcAgent2D.PetitionStarted += OnPetitionStarted;
+            _npcAgent2D.InteractionEnded += () => SetPhysicsProcess(true);
 
             _tileMapLayer = GetNode<TileMapLayer>("%TileMapLayer");
-
             SetupTilePositions();
+        }
+
+        private static int GetRandRange()
+        {
+            return GD.RandRange(1, 3);
         }
 
         public override void _PhysicsProcess(double delta)
         {
             if (Engine.IsEditorHint()) return;
 
-            if (_npcAgent2d.IsNavigationRequired())
+            if (_state == State.Idle)
             {
-                _navigationAgent2d.TargetPosition = _npcAgent2d.TargetPosition;
+                IdleState();
             }
-
-            if (_navigationAgent2d.IsNavigationFinished())
+            else if (_state == State.Wander)
             {
-                _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
-            }
-            else
-            {
-                Vector2 destination = _navigationAgent2d.GetNextPathPosition();
-                Vector2 direction = GlobalPosition.DirectionTo(destination);
-                _navigationAgent2d.Velocity = Velocity.MoveToward(direction * MaxSpeed, Acceleration);
+                MoveCharacter();
             }
 
             HandleAnimation();
             MoveAndSlide();
-
-            // if (_state == State.Idle)
-            // {
-            //     IdleState();
-            // }
-            // else if (_state == State.Wander)
-            // {
-            //     MoveCharacter();
-            // }
         }
 
         private void SetupTilePositions()
@@ -168,71 +151,7 @@ namespace EmergentEchoes.Entities.Actors
 
         private void OnNavigationFinished()
         {
-            _npcAgent2d.CompleteNavigation();
             ChangeState();
-        }
-
-        private void ChangeState()
-        {
-            // _state = RandomizeState();
-
-            // switch (_state)
-            // {
-            //     case State.Idle:
-            //         _stateTimer.Start(GD.RandRange(1.0, 3.0));
-            //         break;
-            //     case State.Wander:
-            //         Vector2 wanderTarget = PickTargetPosition();
-            //         _navigationAgent2d.TargetPosition = wanderTarget;
-            //         break;
-            // }
-        }
-
-        private void OnExecutionStarted(Variant action)
-        {
-            ActionType actionType = action.As<ActionType>();
-
-            if (actionType == ActionType.Theft)
-            {
-                EmoteManager.ShowEmoteBubble(this, Emote.Hum);
-            }
-        }
-
-        private void OnExecutionEnded(Variant action)
-        {
-            ActionType actionType = action.As<ActionType>();
-
-            if (actionType == ActionType.Petition)
-            {
-                GD.Print("Petition action execution ended");
-            }
-        }
-
-        private void OnActionStateEntered(Variant state)
-        {
-            ActionState actionState = state.As<ActionState>();
-
-            if (actionState == ActionState.Steal)
-            {
-                EmoteManager.ShowEmoteBubble(this, Emote.Mark);
-            }
-            else if (actionState == ActionState.Eat)
-            {
-                GD.Print($"Food left: {_npcAgent2d.GetFoodAmount()}");
-                if (_npcAgent2d.GetFoodAmount() >= 5)
-                {
-                    _npcAgent2d.CompleteConsumption(5);
-                }
-                else
-                {
-                    _npcAgent2d.CompleteConsumption();
-                }
-            }
-        }
-
-        private void OnTheftCompleted(TheftData theftData)
-        {
-            FloatTextManager.ShowFloatText(this, theftData.Amount.ToString());
         }
 
         // ! Remove after testing
@@ -240,6 +159,23 @@ namespace EmergentEchoes.Entities.Actors
         {
             _animationTree.Set("parameters/Idle/blend_position", directionToFace.X);
             _animationState.Travel("Idle");
+            SetPhysicsProcess(false);
+        }
+
+        private void ChangeState()
+        {
+            _state = RandomizeState();
+
+            switch (_state)
+            {
+                case State.Idle:
+                    _stateTimer.Start(GetRandRange());
+                    break;
+                case State.Wander:
+                    Vector2 wanderTarget = PickTargetPosition();
+                    _navigationAgent2d.TargetPosition = wanderTarget;
+                    break;
+            }
         }
     }
 }
