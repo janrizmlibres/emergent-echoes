@@ -28,12 +28,12 @@ namespace NPCProcGen.Core.Actions
         /// <summary>
         /// The state for moving towards the target.
         /// </summary>
-        private MoveState moveState;
+        private MoveState _moveState;
 
         /// <summary>
         /// The state for stealing from the target.
         /// </summary>
-        private StealState stealState;
+        private StealState _stealState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TheftAction"/> class.
@@ -44,12 +44,12 @@ namespace NPCProcGen.Core.Actions
         public TheftAction(NPCAgent2D owner, ActorTag2D target, ResourceType type)
             : base(owner)
         {
-            DebugTool.Assert(_owner.Memorizer.GetActorLocation(target).HasValue,
+            DebugTool.Assert(_owner.Memorizer.GetLastActorLocation(target).HasValue,
                 "Target must have a location");
 
             _target = target;
             _targetResource = type;
-            _targetLastPos = _owner.Memorizer.GetActorLocation(target).Value;
+            _targetLastPos = _owner.Memorizer.GetLastActorLocation(target).Value;
 
             InitializeStates();
         }
@@ -59,14 +59,14 @@ namespace NPCProcGen.Core.Actions
         /// </summary>
         private void InitializeStates()
         {
-            moveState = new(_owner, _target.Parent, _targetLastPos);
+            _moveState = new(_owner, _target.Parent, _targetLastPos);
             WanderState wanderState = new(_owner, _target);
-            stealState = new(_owner, _target, _targetResource);
+            _stealState = new(_owner, _target, _targetResource);
             FleeState fleeState = new(_owner);
 
-            moveState.CompleteState += (bool isActorDetected) =>
+            _moveState.CompleteState += (bool isActorDetected) =>
             {
-                TransitionTo(isActorDetected ? stealState : wanderState);
+                TransitionTo(isActorDetected ? _stealState : wanderState);
             };
             wanderState.CompleteState += (bool durationReached) =>
             {
@@ -76,10 +76,10 @@ namespace NPCProcGen.Core.Actions
                 }
                 else
                 {
-                    TransitionTo(stealState);
+                    TransitionTo(_stealState);
                 }
             };
-            stealState.CompleteState += () => TransitionTo(fleeState);
+            _stealState.CompleteState += () => TransitionTo(fleeState);
             fleeState.CompleteState += () => CompleteAction(ActionType.Theft);
         }
 
@@ -98,7 +98,7 @@ namespace NPCProcGen.Core.Actions
         public override void Run()
         {
             _owner.EmitSignal(NPCAgent2D.SignalName.ExecutionStarted, Variant.From(ActionType.Theft));
-            TransitionTo(_owner.IsActorInRange(_target) ? stealState : moveState);
+            TransitionTo(_owner.IsActorInRange(_target) ? _stealState : _moveState);
         }
     }
 }
