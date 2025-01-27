@@ -13,6 +13,12 @@ namespace NPCProcGen.Core.Helpers
         /// </summary>
         public event Action NavigationComplete;
 
+        public event Action RandomActorRequested;
+
+        public event Action<int> ConsumptionComplete;
+
+        public event Action<bool> PetitionAnswered;
+
         /// <summary>
         /// Event triggered when an actor is detected.
         /// </summary>
@@ -24,6 +30,21 @@ namespace NPCProcGen.Core.Helpers
         public void NotifyNavigationComplete()
         {
             NavigationComplete?.Invoke();
+        }
+
+        public void NotifyRandomActorRequested()
+        {
+            RandomActorRequested?.Invoke();
+        }
+
+        public void NotifyConsumptionComplete(int? foodValue)
+        {
+            ConsumptionComplete?.Invoke(foodValue != null ? foodValue.Value : 0);
+        }
+
+        public void NotifyPetitionAnswered(bool isAccepted)
+        {
+            PetitionAnswered?.Invoke(isAccepted);
         }
 
         /// <summary>
