@@ -1,6 +1,7 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
+using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Components.Variants;
@@ -66,11 +67,11 @@ namespace NPCProcGen
         [Export(PropertyHint.Range, "0,1,0.01")]
         public float Money { get; set; } = 0.5f;
         [Export(PropertyHint.Range, "0,1,0.01")]
+        public float Food { get; set; } = 0.5f;
+        [Export(PropertyHint.Range, "0,1,0.01")]
         public float Satiation { get; set; } = 0.5f;
         [Export(PropertyHint.Range, "0,1,0.01")]
         public float Companionship { get; set; } = 0.5f;
-
-        // TODO: Derive event handler parameters from GodotObject
 
         [Signal]
         public delegate void ExecutionStartedEventHandler(Variant action);
@@ -84,6 +85,9 @@ namespace NPCProcGen
 
         [Signal]
         public delegate void TheftCompletedEventHandler(TheftData theftData);
+
+        [Signal]
+        public delegate void PetitionStartedEventHandler(Vector2 direction);
 
         /// <summary>
         /// Gets the target position for the NPC.
@@ -109,11 +113,6 @@ namespace NPCProcGen
         /// Gets the executor component of the NPC.
         /// </summary>
         public Executor Executor { get; private set; }
-
-        /// <summary>
-        /// Gets the notification manager of the NPC.
-        /// </summary>
-        public NotifManager NotifManager { get; private set; } = new();
 
         // TODO: Consider using raycast for detection
         private readonly List<ActorTag2D> _detectedActors = new();
@@ -150,6 +149,8 @@ namespace NPCProcGen
             };
             _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
             AddChild(_evaluationTimer);
+
+            NotifManager.RandomActorRequested += OnRandomActorRequested;
 
             AddTraits();
         }
@@ -197,6 +198,8 @@ namespace NPCProcGen
         {
             if (Engine.IsEditorHint()) return;
 
+            ResourceManager.Instance.Update(delta);
+
             Memorizer.Update(delta);
             Executor.Update(delta);
         }
@@ -218,6 +221,11 @@ namespace NPCProcGen
         public bool IsActorInRange(ActorTag2D actor)
         {
             return _detectedActors.Contains(actor);
+        }
+
+        public bool IsAnyActorInRange()
+        {
+            return _detectedActors.Where(actor => actor is NPCAgent2D).Any();
         }
 
         /// <summary>
@@ -246,6 +254,11 @@ namespace NPCProcGen
             NotifManager.NotifyNavigationComplete();
         }
 
+        public void CompleteConsumption(int? foodConsumed = null)
+        {
+            NotifManager.NotifyConsumptionComplete(foodConsumed);
+        }
+
         /// <summary>
         /// Adds traits to the NPC's strategizer.
         /// </summary>
@@ -266,10 +279,40 @@ namespace NPCProcGen
         /// </summary>
         private void OnEvaluationTimerTimeout()
         {
-            BaseAction action = Strategizer.EvaluateAction(SocialPractice.Proactive);
+            if (Parent.Name == "Garreth") return;
+            TestSocializeAction();
 
-            if (action != null)
+            // BaseAction action = Strategizer.EvaluateAction(SocialPractice.Proactive);
+
+            // if (action != null)
+            // {
+            //     GD.Print($"Action evaluated by {Parent.Name}: {action.GetType().Name}");
+            //     Executor.SetAction(action);
+            // }
+            // else
+            // {
+            //     GD.Print($"No action evaluated by {Parent.Name}");
+            //     _evaluationTimer.Start();
+            // }
+        }
+
+        // ! Remove in production
+        private void TestSocializeAction()
+        {
+            BaseAction action = new SocializeAction(this);
+            GD.Print($"Action evaluated by {Parent.Name}: {action.GetType().Name}");
+            Executor.SetAction(action);
+        }
+
+        // ! Remove in production
+        private void TestPetitionAction()
+        {
+            ActorTag2D actor = Sensor.GetActors().Where(actor => actor != this && actor is NPCAgent2D).First();
+
+
+            if (Memorizer.GetLastActorLocation(actor) != null)
             {
+                BaseAction action = new PetitionAction(this, actor, ResourceType.Money);
                 GD.Print($"Action evaluated by {Parent.Name}: {action.GetType().Name}");
                 Executor.SetAction(action);
             }
@@ -278,6 +321,12 @@ namespace NPCProcGen
                 GD.Print($"No action evaluated by {Parent.Name}");
                 _evaluationTimer.Start();
             }
+        }
+
+        private void OnRandomActorRequested()
+        {
+            ActorTag2D actor = _detectedActors.Where(actor => actor is NPCAgent2D).FirstOrDefault();
+            Executor.AssignActor(actor as NPCAgent2D);
         }
 
         /// <summary>

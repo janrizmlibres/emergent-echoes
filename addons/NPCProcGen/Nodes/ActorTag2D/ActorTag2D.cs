@@ -1,4 +1,8 @@
 using Godot;
+using NPCProcGen.Autoloads;
+using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
+using System;
 using System.Collections.Generic;
 
 namespace NPCProcGen
@@ -20,8 +24,8 @@ namespace NPCProcGen
         /// Gets or sets the food value associated with this actor.
         /// </summary>
         /// <value>The food value as an integer.</value>
-        [Export(PropertyHint.Range, "0")]
-        public int FoodValue { get; set; } = 20;
+        [Export]
+        public int FoodValue { get; set; }
 
         /// <summary>
         /// Gets or sets the StealMarker, which is a Marker2D instance.
@@ -42,10 +46,22 @@ namespace NPCProcGen
             }
         }
 
+        // TODO: Add exported property for character dimensions
+
+        [Signal]
+        public delegate void PetitionRequestedEventHandler(Variant resourceType, float amount);
+        [Signal]
+        public delegate void InteractionEndedEventHandler();
+
         /// <summary>
         /// Gets the parent node as a Node2D.
         /// </summary>
         public Node2D Parent { get; protected set; }
+
+        /// <summary>
+        /// Gets the notification manager of the NPC.
+        /// </summary>
+        public NotifManager NotifManager { get; private set; } = new();
 
         private Marker2D _stealMarker;
 
@@ -98,6 +114,25 @@ namespace NPCProcGen
             }
 
             return warnings.ToArray();
+        }
+
+        public void AnswerPetition(bool isAccepted)
+        {
+            NotifManager.NotifyPetitionAnswered(isAccepted);
+        }
+
+        public int GetFoodAmount()
+        {
+            return (int)ResourceManager.Instance.GetResource(this, ResourceType.Food).Amount;
+        }
+
+        public void ConsumeFood(int amount)
+        {
+            if (amount > GetFoodAmount())
+            {
+                throw new ArgumentOutOfRangeException(nameof(amount), "The amount to consume exceeds the food value.");
+            }
+            ResourceManager.Instance.SubtractFood(this, amount);
         }
     }
 }
