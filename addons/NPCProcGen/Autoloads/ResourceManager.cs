@@ -18,19 +18,19 @@ namespace NPCProcGen.Autoloads
         /// <summary>
         /// Gets the singleton instance of the ResourceManager.
         /// </summary>
-        public static ResourceManager Instance { get { return _instance.Value; } }
+        public static ResourceManager Instance => _instance.Value;
 
         private ResourceManager() { }
 
         /// <summary>
         /// Gets a list of tangible resource types.
         /// </summary>
-        public List<ResourceType> TangibleTypes { get { return _tangibleTypes.ToList(); } }
+        public List<ResourceType> TangibleTypes => _tangibleTypes.ToList();
 
         /// <summary>
         /// List of tangible resource types.
         /// </summary>
-        private readonly List<ResourceType> _tangibleTypes = new()
+        private readonly ResourceType[] _tangibleTypes = new[]
         {
             ResourceType.Money,
             ResourceType.Satiation
@@ -55,10 +55,10 @@ namespace NPCProcGen.Autoloads
                 {
                     resources[ResourceType.Money] = new ResourceStat(ResourceType.Money,
                         npc.MoneyValue, npc.Money);
-
+                    resources[ResourceType.Food] = new ResourceStat(ResourceType.Food,
+                        npc.FoodValue, npc.Food);
                     resources[ResourceType.Satiation] = new ResourceStat(ResourceType.Satiation,
                         npc.SatiationValue, npc.Satiation);
-
                     resources[ResourceType.Companionship] = new ResourceStat(ResourceType.Companionship,
                         npc.CompanionshipValue, npc.Companionship);
                 }
@@ -66,15 +66,27 @@ namespace NPCProcGen.Autoloads
                 {
                     resources[ResourceType.Money] = new ResourceStat(
                         ResourceType.Money, actor.MoneyValue, 1);
-
+                    resources[ResourceType.Food] = new ResourceStat(
+                        ResourceType.Food, actor.FoodValue, 1);
                     resources[ResourceType.Satiation] = new ResourceStat(
                         ResourceType.Satiation, 100, 1);
-
                     resources[ResourceType.Companionship] = new ResourceStat(
                         ResourceType.Companionship, 100, 1);
                 }
 
                 _actorResources[actor] = resources;
+            }
+        }
+
+        public void Update(double delta)
+        {
+            foreach (ActorTag2D actor in _actorResources.Keys)
+            {
+                foreach (ResourceType type in _actorResources[actor].Keys)
+                {
+                    ResourceStat resource = _actorResources[actor][type];
+                    resource.Update(delta);
+                }
             }
         }
 
@@ -89,6 +101,13 @@ namespace NPCProcGen.Autoloads
             DebugTool.Assert(_actorResources.ContainsKey(actor),
                 $"Actor {actor.Parent.Name} not found in resource manager.");
             return _actorResources[actor][type];
+        }
+
+        public float GetResourceAmount(ActorTag2D actor, ResourceType type)
+        {
+            DebugTool.Assert(_actorResources.ContainsKey(actor),
+                $"Actor {actor.Parent.Name} not found in resource manager.");
+            return _actorResources[actor][type].Amount;
         }
 
         /// <summary>
@@ -139,6 +158,19 @@ namespace NPCProcGen.Autoloads
 
             GD.Print("Transferred " + amount + " " + type.ToString() + " from " + from.Parent.Name
                 + " to " + to.Parent.Name);
+        }
+
+        public void IncreaseCompanionship(ActorTag2D actor, float amount)
+        {
+            GD.Print("Increased companionship for " + actor.Parent.Name + " by " + amount);
+            ResourceStat companionship = _actorResources[actor][ResourceType.Companionship];
+            companionship.Amount += amount;
+        }
+
+        public void SubtractFood(ActorTag2D actor, int amount)
+        {
+            ResourceStat food = _actorResources[actor][ResourceType.Food];
+            food.Amount -= amount;
         }
     }
 }
