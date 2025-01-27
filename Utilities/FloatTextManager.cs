@@ -5,12 +5,13 @@ namespace EmergentEchoes.Utilities
 {
 	public static class FloatTextManager
 	{
+		private const float Duration = 2;
+		private const float Spread = Mathf.Pi / 2;
+
 		private readonly static PackedScene _floatingTextScene =
 			GD.Load<PackedScene>("res://Entities/UI/Indicators/Floating Text/floating_text.tscn");
 
 		private static Vector2 _travel = new(0, -10);
-		private static readonly float _duration = 2;
-		private static readonly float _spread = Mathf.Pi / 2;
 
 		public static void ShowFloatText(Node2D character, string value)
 		{
@@ -22,7 +23,7 @@ namespace EmergentEchoes.Utilities
 			floatingText.GlobalPosition = newPosition;
 
 			character.AddChild(floatingText);
-			floatingText.ShowValue(value, _travel, _duration, _spread);
+			floatingText.ShowValue(value, _travel, Duration, Spread);
 		}
 	}
 }
