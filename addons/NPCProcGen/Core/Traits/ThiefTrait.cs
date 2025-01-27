@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Godot;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components;
@@ -52,78 +50,33 @@ namespace NPCProcGen.Core.Traits
 
             while (unevaluatedTypes.Count > 0 && selectedType == null)
             {
-                selectedType = SelectResourceType(unevaluatedTypes);
+                selectedType = SelectDeficientResource(unevaluatedTypes);
                 DebugTool.Assert(selectedType != null, "Resource type must not be null");
 
-                ActorTag2D chosenActor = ChooseActor(selectedType.Value);
+                if (selectedType == ResourceType.Satiation && _owner.FoodValue > 0)
+                {
+                    ClearSelection(ref selectedType, unevaluatedTypes);
+                    continue;
+                }
+
+                ActorTag2D chosenActor = ChooseActor(selectedType.Value, actor => !_memorizer.IsTrusted(actor));
 
                 if (chosenActor != null)
                 {
                     return CreateTheftAction(chosenActor, selectedType.Value);
                 }
 
-                bool result = unevaluatedTypes.Remove(selectedType.Value);
-                DebugTool.Assert(result, "Resource type must be removed from unevaluated types");
-                selectedType = null;
+                ClearSelection(ref selectedType, unevaluatedTypes);
             }
 
             return null;
         }
 
-        /// <summary>
-        /// Selects a resource type to steal.
-        /// </summary>
-        /// <param name="unevaluatedTypes">The list of unevaluated resource types.</param>
-        /// <returns>The selected resource type.</returns>
-        private ResourceType SelectResourceType(List<ResourceType> unevaluatedTypes)
+        private static void ClearSelection(ref ResourceType? selectedType, List<ResourceType> unevaluatedTypes)
         {
-            ResourceType? type = null;
-
-            foreach (var resource in unevaluatedTypes)
-            {
-                if (ResourceManager.Instance.IsDeficient(_owner, resource))
-                {
-                    type = resource;
-                    break;
-                }
-            }
-
-            // TODO: If random type is chosen, the final weight of the action should be reduced
-            return type ?? unevaluatedTypes[CommonUtils.Rnd.Next(unevaluatedTypes.Count)];
-        }
-
-        /// <summary>
-        /// Chooses an actor to steal from.
-        /// </summary>
-        /// <param name="type">The resource type to steal.</param>
-        /// <returns>The chosen actor.</returns>
-        private ActorTag2D ChooseActor(ResourceType type)
-        {
-            ActorTag2D result = null;
-
-            List<ActorTag2D> otherActors = _sensor.GetActors()
-                .Where(actor => actor != _owner)
-                .OrderBy(_ => CommonUtils.Rnd.Next())
-                .ToList();
-
-            Vector2? actorLastPos = null;
-
-            foreach (ActorTag2D actor in otherActors)
-            {
-                actorLastPos = _owner.Memorizer.GetActorLocation(actor);
-
-                // TODO: Add check if actor workplace is known
-                // TODO: Check also if imbalance is not too severe
-                if (actorLastPos != null
-                    && ResourceManager.Instance.HasResource(actor, type)
-                    && !_memorizer.IsTrusted(actor))
-                {
-                    result = actor;
-                    break;
-                }
-            }
-
-            return result;
+            bool result = unevaluatedTypes.Remove(selectedType.Value);
+            DebugTool.Assert(result, "Resource type must be removed from unevaluated types");
+            selectedType = null;
         }
 
         /// <summary>
@@ -134,12 +87,7 @@ namespace NPCProcGen.Core.Traits
         /// <returns>A tuple containing the theft action and its weight.</returns>
         private Tuple<BaseAction, float> CreateTheftAction(ActorTag2D chosenActor, ResourceType selectedType)
         {
-            ResourceStat chosenResource = ResourceManager.Instance.GetResource(_owner, selectedType);
-
-            float imbalance = chosenResource.LowerThreshold - chosenResource.Amount;
-            float unweightedScore = Math.Max(0, imbalance) / chosenResource.LowerThreshold;
-            float weightedScore = unweightedScore * chosenResource.Weight * _weight;
-
+            float weightedScore = CalculateWeight(selectedType);
             TheftAction action = new(_owner, chosenActor, selectedType);
             return new Tuple<BaseAction, float>(action, weightedScore);
         }

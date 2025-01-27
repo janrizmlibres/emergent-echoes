@@ -1,6 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Godot;
+using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
+using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.Traits
@@ -28,6 +34,65 @@ namespace NPCProcGen.Core.Traits
             _weight = weight;
             _sensor = sensor;
             _memorizer = memorizer;
+        }
+
+        protected ResourceType SelectDeficientResource(List<ResourceType> types)
+        {
+            ResourceType? type = null;
+
+            foreach (ResourceType resource in types)
+            {
+                if (ResourceManager.Instance.IsDeficient(_owner, resource))
+                {
+                    type = resource;
+                    break;
+                }
+            }
+
+            // TODO: If random type is chosen, the final weight of the action should be reduced
+            return type ?? types[CommonUtils.Rnd.Next(types.Count)];
+        }
+
+        /// <summary>
+        /// Chooses an actor to steal from.
+        /// </summary>
+        /// <param name="type">The resource type to steal.</param>
+        /// <returns>The chosen actor.</returns>
+        protected ActorTag2D ChooseActor(ResourceType type, Func<ActorTag2D, bool> trustCheck)
+        {
+            ActorTag2D result = null;
+
+            List<ActorTag2D> otherActors = _sensor.GetActors()
+                .Where(actor => actor != _owner)
+                .OrderBy(_ => CommonUtils.Rnd.Next())
+                .ToList();
+
+            Vector2? actorLastPos = null;
+
+            foreach (ActorTag2D actor in otherActors)
+            {
+                actorLastPos = _owner.Memorizer.GetLastActorLocation(actor);
+
+                // TODO: Add check if actor workplace is known
+                // TODO: Check also if imbalance is not too severe
+                if (actorLastPos != null
+                    && ResourceManager.Instance.HasResource(actor, type)
+                    && trustCheck(actor))
+                {
+                    result = actor;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        protected float CalculateWeight(ResourceType type)
+        {
+            ResourceStat chosenResource = ResourceManager.Instance.GetResource(_owner, type);
+            float imbalance = chosenResource.LowerThreshold - chosenResource.Amount;
+            float unweightedScore = Math.Max(0, imbalance) / chosenResource.LowerThreshold;
+            return unweightedScore * chosenResource.Weight * _weight;
         }
 
         /// <summary>
