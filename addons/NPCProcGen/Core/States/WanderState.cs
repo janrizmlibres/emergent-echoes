@@ -10,9 +10,9 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public class WanderState : BaseState, INavigationState
     {
-        private static readonly float _wanderRadius = 100;
-        private static readonly int _min = 5;
-        private static readonly int _max = 10;
+        private const float WanderRadius = 100;
+        private const int Min = 5;
+        private const int Max = 10;
 
         private readonly ActorTag2D _target;
         private Vector2 _targetPosition;
@@ -37,7 +37,7 @@ namespace NPCProcGen.Core.States
         {
             _target = target;
             _targetPosition = owner.Parent.GlobalPosition;
-            _wanderInterval = CommonUtils.Rnd.Next(_min, _max);
+            _wanderInterval = CommonUtils.Rnd.Next(Min, Max);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Enter()
         {
-            GD.Print($"{_owner.Parent.Name} WanderState Enter - Instance: {GetHashCode()}");
+            GD.Print($"{_owner.Parent.Name} WanderState Enter");
             _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Wander));
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
             _owner.NotifManager.ActorDetected += OnActorDetected;
@@ -74,9 +74,9 @@ namespace NPCProcGen.Core.States
                 if (_timer >= _wanderInterval)
                 {
                     _timer = 0;
-                    _wanderInterval = CommonUtils.Rnd.Next(_min, _max);
+                    _wanderInterval = CommonUtils.Rnd.Next(Min, Max);
                     _targetPosition = CommonUtils.GetRandomPosInCircularArea(
-                        _owner.Parent.GlobalPosition, _wanderRadius
+                        _owner.Parent.GlobalPosition, WanderRadius
                     );
                     _isWandering = true;
                 }

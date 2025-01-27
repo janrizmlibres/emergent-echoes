@@ -46,7 +46,7 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Enter()
         {
-            GD.Print($"{_owner.Parent.Name} MoveState Enter - Instance: {GetHashCode()}");
+            GD.Print($"{_owner.Parent.Name} MoveState Enter");
             _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Move));
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
             _owner.NotifManager.ActorDetected += OnActorDetected;

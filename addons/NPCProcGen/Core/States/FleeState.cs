@@ -10,8 +10,8 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public class FleeState : BaseState, INavigationState
     {
-        private static readonly float _minDistance = 200;
-        private static readonly float _maxDistance = 400;
+        private const float _minDistance = 200;
+        private const float _maxDistance = 400;
 
         private Vector2 _target;
 

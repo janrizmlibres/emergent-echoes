@@ -16,7 +16,6 @@ namespace NPCProcGen.Core.States
         private readonly ActorTag2D _target;
         private readonly ResourceType _targetResType;
 
-        private bool _isTargetReached = false;
         private float _amountToSteal = 0;
 
         /// <summary>
@@ -62,7 +61,8 @@ namespace NPCProcGen.Core.States
         /// <returns>The global position of the target.</returns>
         public Vector2 GetTargetPosition()
         {
-            return _target.Parent.GlobalPosition;
+            Vector2 rearDirection = _target.Parent.GlobalPosition.DirectionTo(_target.StealMarker.GlobalPosition);
+            return _target.Parent.GlobalPosition + rearDirection * 10;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace NPCProcGen.Core.States
         /// <returns>True if the agent is navigating; otherwise, false.</returns>
         public bool IsNavigating()
         {
-            return !_isTargetReached;
+            return true;
         }
 
         /// <summary>
@@ -81,8 +81,6 @@ namespace NPCProcGen.Core.States
         /// </summary>
         private void OnNavigationComplete()
         {
-            _isTargetReached = true;
-
             _amountToSteal = ComputeStealAmount();
             ResourceManager.Instance.TranserResources(_target, _owner, _targetResType, _amountToSteal);
 
@@ -107,9 +105,6 @@ namespace NPCProcGen.Core.States
 
             float thiefNeed = 1 - thiefResource.Amount / thiefResource.LowerThreshold;
             thiefNeed = Math.Max(0, thiefNeed);
-
-            DebugTool.Assert(thiefNeed >= 0 && thiefNeed <= 1, @"Thief need must be greater than 0 
-                and less than or equal to 1");
 
             float maxStealAmount = thiefResource.UpperThreshold - thiefResource.Amount - 1;
             float minStealAmount = 15;
