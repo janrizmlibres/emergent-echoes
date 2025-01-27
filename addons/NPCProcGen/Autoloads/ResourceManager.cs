@@ -140,5 +140,49 @@ namespace NPCProcGen.Autoloads
             GD.Print("Transferred " + amount + " " + type.ToString() + " from " + from.Parent.Name
                 + " to " + to.Parent.Name);
         }
+        
+        /// <summary>
+        /// Adds money to the specified actor.
+        /// </summary>
+        /// <param name="actor">The actor to add money to.</param>
+        /// <param name="amount">The amount of money to add.</param>
+        public void AddMoney(ActorTag2D actor, float amount)
+        {
+            if (_actorResources.TryGetValue(actor, out var resources))
+            {
+                resources[ResourceType.Money].Amount += amount;
+            }
+            else
+            {
+                GD.PrintErr($"Actor {actor.Parent.Name} not found in resource manager.");
+            }
+        }
+        
+        /// <summary>
+        /// Deducts money from the specified actor.
+        /// </summary>
+        /// <param name="actor">The actor to deduct money from.</param>
+        /// <param name="amount">The amount of money to deduct.</param>
+        public bool DeductMoney(ActorTag2D actor, float amount)
+        {
+            if (_actorResources.TryGetValue(actor, out var resources))
+            {
+                if (resources[ResourceType.Money].Amount > 0)
+                {
+                    resources[ResourceType.Money].Amount -= amount;
+                    return true;
+                }
+                else
+                {
+                    GD.PrintErr($"Actor {actor.Parent.Name} has no money to deduct.");
+                    return false;
+                }
+            }
+            else
+            {
+                GD.PrintErr($"Actor {actor.Parent.Name} not found in resource manager.");
+                return false;
+            }
+        }
     }
 }

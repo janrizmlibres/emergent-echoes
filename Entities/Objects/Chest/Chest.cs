@@ -1,43 +1,65 @@
 using Godot;
-using System;
+using NPCProcGen;
+using NPCProcGen.Autoloads;
 
 public partial class Chest : StaticBody2D
 {
 	[Export] public int Gold = 100;
 	[Export] public int GoldAmount = 10;
+	[Export] public string ChestOwner = "Garreth";
 	
 	private Interactable _interactable;
-	private ChestManager _chestManager;
-	private CharacterBody2D _character;
+	private ActorTag2D _actorTag;
+	private Label _label;
+	private InteractingComponent _interactingComponent;
 
-	private void OnInteract()
+	private void OnDeductGold()
 	{
-		// check if _character is not empty
-		if (_character != null)
-		{
-			
-		}
+		if (_actorTag == null) return;
+		if (Gold <= 0) return;
+		
+		ResourceManager.Instance.AddMoney(_actorTag, GoldAmount);
+		Gold -= GoldAmount;
+		_label.Text = "Gold: " + Gold;
+	}
+	
+	private void OnAddGold()
+	{
+		if (_actorTag == null) return;
+		if (!ResourceManager.Instance.DeductMoney(_actorTag, GoldAmount)) return;
+		
+		ResourceManager.Instance.DeductMoney(_actorTag, GoldAmount);
+		Gold += GoldAmount;
+		_label.Text = "Gold: " + Gold;
 	}
 
-	private void _on_chest_manager_body_entered(Node2D node)
+	private void _on_chest_area_area_entered(Area2D area)
 	{
-		if (node is CharacterBody2D character)
-		{
-			_character = character;
-		}
+		if (area.Name != "InteractRange") return;
+		
+		_interactingComponent = area.GetParent<InteractingComponent>();
+		
+		_label.Text = "Gold: " + Gold;
+		_label.Show();
+		_actorTag = _interactingComponent.GetParent().GetNode<ActorTag2D>("ActorTag2D");
+	}
+
+	private void _on_chest_area_area_exited(Area2D area)
+	{
+		if (area.Name != "InteractRange") return;
+		
+		_interactingComponent = area.GetParent<InteractingComponent>();
+		
+		_label.Hide();
 	}
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_chestManager = GetNode<ChestManager>("ChestManager");
 		_interactable = GetNode<Interactable>("Interactable");
+		_label = GetNode<Label>("Label");
 		
-		_interactable.Interact = new Callable(this, nameof(OnInteract));
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
+		_interactable.PrimaryInteract = new Callable(this, nameof(OnDeductGold));
+		_interactable.SecondaryInteract = new Callable(this, nameof(OnAddGold));
 	}
 }
