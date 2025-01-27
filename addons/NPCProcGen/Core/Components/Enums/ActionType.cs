@@ -8,6 +8,9 @@ namespace NPCProcGen.Core.Components.Enums
         /// <summary>
         /// Represents the action of theft.
         /// </summary>
-        Theft
+        Theft,
+        Eat,
+        Petition,
+        Socialize,
     }
 }

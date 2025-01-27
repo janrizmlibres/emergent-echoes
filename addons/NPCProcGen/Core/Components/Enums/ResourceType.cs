@@ -18,6 +18,7 @@ namespace NPCProcGen.Core.Components.Enums
         /// <summary>
         /// Represents companionship as a resource.
         /// </summary>
-        Companionship
+        Companionship,
+        Food,
     }
 }

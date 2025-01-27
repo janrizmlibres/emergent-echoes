@@ -20,6 +20,10 @@ namespace NPCProcGen.Core.Components.Enums
         /// <summary>
         /// The entity is fleeing.
         /// </summary>
-        Flee
+        Flee,
+        Eat,
+        Petition,
+        Seek,
+        Talk,
     }
 }
