@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace NPCProcGen.Core.Components
@@ -7,7 +8,7 @@ namespace NPCProcGen.Core.Components
     /// </summary>
     public class ActorData
     {
-        private static readonly float _decayDuration = 60;
+        private const float DecayDuration = 60;
 
         /// <summary>
         /// Gets or sets the last known position of the actor.
@@ -25,13 +26,17 @@ namespace NPCProcGen.Core.Components
         /// <summary>
         /// Gets the relationship value of the actor.
         /// </summary>
-        public float Relationship { get; private set; } = 0;
+        public float Relationship
+        {
+            get => _relationship;
+            set => _relationship = Math.Clamp(value, -35, 35);
+        }
 
         private Vector2? _lastKnownPosition = null;
+        private float _relationship = 0;
+        private float _decayTimer = 0;
 
         private readonly ActorTag2D _actor;
-
-        private float _decayTimer = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActorData"/> class.
@@ -52,8 +57,9 @@ namespace NPCProcGen.Core.Components
 
             _decayTimer += (float)delta;
 
-            if (_decayTimer >= _decayDuration)
+            if (_decayTimer >= DecayDuration)
             {
+                GD.Print($"{_actor.Parent.Name}'s last known position has decayed.");
                 LastKnownPosition = null;
             }
         }

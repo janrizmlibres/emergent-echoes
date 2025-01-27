@@ -1,3 +1,4 @@
+using Godot;
 using NPCProcGen.Core.Components.Enums;
 using System;
 using System.Collections.Generic;
@@ -9,11 +10,18 @@ namespace NPCProcGen.Core.Components
     /// </summary>
     public class ResourceStat
     {
-        private static readonly Dictionary<ResourceType, bool> _isInteger = new()
+        // * Decay rate per second
+        private const float DecayRate = 0.1f;
+
+        private static readonly Dictionary<
+            ResourceType,
+            (float MinLow, float MaxLow, float MinHigh, float MaxHigh)
+        > _thresholdValues = new()
         {
-            { ResourceType.Money, true },
-            { ResourceType.Satiation, true },
-            { ResourceType.Companionship, false }
+            { ResourceType.Money, (100, 500, 2000, 10000) },
+            { ResourceType.Food, (2, 8, 20, 50) },
+            { ResourceType.Satiation, (15, 25, 70, 90) },
+            { ResourceType.Companionship, (10, 20, 60, 80) },
         };
 
         /// <summary>
@@ -26,11 +34,11 @@ namespace NPCProcGen.Core.Components
         /// </summary>
         public float Amount
         {
-            get => amount;
+            get => _amount;
             set
             {
-                amount = Math.Clamp(value, 0, Type == ResourceType.Money ? 1000000 : 100);
-                amount = (float)(_isInteger[Type] ? Math.Floor(amount) : amount);
+                _amount = Math.Clamp(value, 0, GetMaxValue());
+                _amount = (float)(IsInteger() ? Math.Floor(_amount) : _amount);
             }
         }
 
@@ -42,14 +50,14 @@ namespace NPCProcGen.Core.Components
         /// <summary>
         /// Gets the lower threshold for the resource amount.
         /// </summary>
-        public float LowerThreshold { get; private set; }
+        public int LowerThreshold { get; private set; }
 
         /// <summary>
         /// Gets the upper threshold for the resource amount.
         /// </summary>
-        public float UpperThreshold { get; private set; }
+        public int UpperThreshold { get; private set; }
 
-        private float amount;
+        private float _amount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceStat"/> class.
@@ -63,9 +71,45 @@ namespace NPCProcGen.Core.Components
             Amount = value;
             Weight = weight;
 
-            // TODO: Implement thresholds for each resource type
-            LowerThreshold = 30;
-            UpperThreshold = 80;
+            // * Determine threshold values with linear interpolation
+            (float MinLow, float MaxLow, float MinHigh, float MaxHigh) = _thresholdValues[type];
+            LowerThreshold = (int)(MinLow + Weight * (MaxLow - MinLow));
+            UpperThreshold = (int)(MinHigh + Weight * (MaxHigh - MinHigh));
+        }
+
+        public void Update(double delta)
+        {
+            if (CanDecay())
+            {
+                Amount -= (float)(DecayRate * delta);
+            }
+        }
+
+        public int GetMinRaise()
+        {
+            return Type == ResourceType.Money ? 10 : 1;
+        }
+
+        private float GetMaxValue()
+        {
+            return Type switch
+            {
+                ResourceType.Money => 1000000,
+                ResourceType.Food => 1000,
+                ResourceType.Satiation => 100,
+                ResourceType.Companionship => 100,
+                _ => throw new ArgumentOutOfRangeException(),
+            };
+        }
+
+        private bool CanDecay()
+        {
+            return Type == ResourceType.Satiation || Type == ResourceType.Companionship;
+        }
+
+        private bool IsInteger()
+        {
+            return Type == ResourceType.Money || Type == ResourceType.Food;
         }
 
         /// <summary>
@@ -74,7 +118,7 @@ namespace NPCProcGen.Core.Components
         /// <returns><c>true</c> if the resource amount is imbalanced; otherwise, <c>false</c>.</returns>
         public bool IsImbalanced()
         {
-            return IsDeficient() || IsSaturated();
+            return IsDeficient() || IsSurplus();
         }
 
         /// <summary>
@@ -83,16 +127,16 @@ namespace NPCProcGen.Core.Components
         /// <returns><c>true</c> if the resource amount is deficient; otherwise, <c>false</c>.</returns>
         public bool IsDeficient()
         {
-            return amount < LowerThreshold;
+            return _amount < LowerThreshold;
         }
 
         /// <summary>
         /// Determines whether the resource amount is saturated.
         /// </summary>
         /// <returns><c>true</c> if the resource amount is saturated; otherwise, <c>false</c>.</returns>
-        public bool IsSaturated()
+        public bool IsSurplus()
         {
-            return amount > UpperThreshold;
+            return _amount > UpperThreshold;
         }
     }
 }
