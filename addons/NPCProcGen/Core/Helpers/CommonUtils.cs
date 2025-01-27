@@ -31,5 +31,26 @@ namespace NPCProcGen.Core.Helpers
                 Mathf.Sin(angle) * random_radius
             );
         }
+
+        public static void SetFacingDirectionsAndNotify(ActorTag2D _owner, ActorTag2D _target)
+        {
+            Vector2 directionToFace = _owner.Parent.GlobalPosition.DirectionTo(_target.Parent.GlobalPosition);
+            _owner.EmitSignal(NPCAgent2D.SignalName.PetitionStarted, directionToFace);
+            _target.EmitSignal(NPCAgent2D.SignalName.PetitionStarted, directionToFace * -1);
+        }
+
+        public static Vector2 GetInteractionPosition(ActorTag2D _owner, ActorTag2D _target)
+        {
+            Vector2 offset1 = new(15, 0);
+            Vector2 adjustedPosition1 = _target.Parent.GlobalPosition + offset1;
+            float distance1 = _owner.Parent.GlobalPosition.DistanceTo(adjustedPosition1);
+
+            Vector2 offset2 = new(-15, 0);
+            Vector2 adjustedPosition2 = _target.Parent.GlobalPosition + offset2;
+            float distance2 = _owner.Parent.GlobalPosition.DistanceTo(adjustedPosition2);
+
+            // Return the target's position adjusted by the best offset
+            return distance1 < distance2 ? adjustedPosition1 : adjustedPosition2;
+        }
     }
 }
