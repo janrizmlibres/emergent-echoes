@@ -267,7 +267,7 @@ position = Vector2(176, 160)
 position = Vector2(-176, -160)
 
 [node name="BottomRight" parent="Camera2D" index="1"]
-position = Vector2(560, 464)
+position = Vector2(304, 224)
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 unique_name_in_owner = true
