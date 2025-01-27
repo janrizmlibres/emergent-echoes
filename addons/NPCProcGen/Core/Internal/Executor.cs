@@ -76,6 +76,11 @@ namespace NPCProcGen.Core.Internal
             return _action?.IsNavigating() ?? false;
         }
 
+        public void AssignActor(NPCAgent2D actor)
+        {
+            _action?.AssignActor(actor);
+        }
+
         /// <summary>
         /// Handles the completion of the current action.
         /// </summary>

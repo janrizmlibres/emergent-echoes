@@ -50,7 +50,6 @@ namespace NPCProcGen.Core.Internal
             }
         }
 
-        // TODO: Fix existing bug
         /// <summary>
         /// Updates the location of the specified actor.
         /// </summary>
@@ -62,14 +61,26 @@ namespace NPCProcGen.Core.Internal
             _actorData[actor].LastKnownPosition = location;
         }
 
+        public void ModifyRelationship(ActorTag2D actor, float amount)
+        {
+            DebugTool.Assert(_actorData.ContainsKey(actor), $"Actor {actor.Parent.Name} not found in memorizer.");
+            _actorData[actor].Relationship += amount;
+            GD.Print($"Altered relationship with {actor.Parent.Name} by {amount}. New relationship: {_actorData[actor].Relationship}");
+        }
+
         /// <summary>
         /// Gets the last known location of the specified actor.
         /// </summary>
         /// <param name="actor">The actor to get the location for.</param>
         /// <returns>The last known location of the actor, or null if not found.</returns>
-        public Vector2? GetActorLocation(ActorTag2D actor)
+        public Vector2? GetLastActorLocation(ActorTag2D actor)
         {
             return _actorData[actor].LastKnownPosition;
+        }
+
+        public float GetActorRelationship(ActorTag2D actor)
+        {
+            return _actorData[actor].Relationship;
         }
 
         /// <summary>
@@ -79,7 +90,7 @@ namespace NPCProcGen.Core.Internal
         /// <returns>True if the actor is friendly, otherwise false.</returns>
         public bool IsFriendly(ActorTag2D actor)
         {
-            return _actorData[actor].Relationship > 5;
+            return _actorData[actor].Relationship >= 5;
         }
 
         /// <summary>
@@ -89,7 +100,7 @@ namespace NPCProcGen.Core.Internal
         /// <returns>True if the actor is trusted, otherwise false.</returns>
         public bool IsTrusted(ActorTag2D actor)
         {
-            return _actorData[actor].Relationship > 10;
+            return _actorData[actor].Relationship >= 15;
         }
 
         /// <summary>
@@ -99,15 +110,15 @@ namespace NPCProcGen.Core.Internal
         /// <returns>True if the actor is close, otherwise false.</returns>
         public bool IsClose(ActorTag2D actor)
         {
-            return _actorData[actor].Relationship > 15;
+            return _actorData[actor].Relationship >= 25;
         }
     }
 }
 
-// * Hostile: -15 to -11
-// * Distrusted: -10 to -6
-// * Unfriendly: -5 to -1
-// * Neutral: 0 to 5
-// * Friendly: 6 to 10
-// * Trusted: 11 to 15
-// * Close: 16 to 20
+// * Hostile: -35 to -26
+// * Distrusted: -25 to -16
+// * Unfriendly: -15 to -6
+// * Neutral: -5 to 4
+// * Friendly: 5 to 14
+// * Trusted: 15 to 24
+// * Close: 25 to 35

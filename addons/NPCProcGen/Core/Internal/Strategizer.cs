@@ -33,11 +33,10 @@ namespace NPCProcGen.Core.Internal
         /// <returns>The best action based on the traits, or null if no action is suitable.</returns>
         public BaseAction EvaluateAction(SocialPractice practice)
         {
-            List<Tuple<BaseAction, float>> actions = _traits
+            IEnumerable<Tuple<BaseAction, float>> actions = _traits
                 .Select(trait => trait.EvaluateAction(practice))
                 .Where(action => action != null)
-                .OrderByDescending(action => action.Item2)
-                .ToList();
+                .OrderByDescending(action => action.Item2);
 
             return actions.Any() ? actions.First().Item1 : null;
         }
