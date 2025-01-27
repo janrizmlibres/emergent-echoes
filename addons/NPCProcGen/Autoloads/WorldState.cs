@@ -51,8 +51,8 @@ namespace NPCProcGen.Autoloads
 		/// </summary>
 		private readonly List<Event> _taskRecords = new();
 
-		// Workplaces and who they belong to (Possibly _structures)
-		// Current date (?)
+		// ? Workplaces and who they belong to (Possibly _structures)
+		// ? Current date (?)
 
 		// TODO: Consider limiting access to data
 
