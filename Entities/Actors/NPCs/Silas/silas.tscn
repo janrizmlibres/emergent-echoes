@@ -62,7 +62,7 @@ position = Vector2(0, -9)
 texture = ExtResource("2_5inc2")
 hframes = 8
 vframes = 6
-frame = 7
+frame = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -90,6 +90,8 @@ script = ExtResource("3_x7obk")
 ActorDetector = NodePath("../ActorDetector")
 Survival = 0.52
 Thief = 0.73
+MoneyValue = 10
+FoodValue = 100
 StealMarker = NodePath("../StealMarker/Marker2D")
 
 [node name="StealMarker" type="Node2D" parent="."]
