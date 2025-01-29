@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 namespace NPCProcGen.Core.Helpers
@@ -51,6 +53,11 @@ namespace NPCProcGen.Core.Helpers
 
             // Return the target's position adjusted by the best offset
             return distance1 < distance2 ? adjustedPosition1 : adjustedPosition2;
+        }
+
+        public static List<T> Shuffle<T>(List<T> list)
+        {
+            return list.OrderBy(_ => Rnd.Next()).ToList();
         }
     }
 }
