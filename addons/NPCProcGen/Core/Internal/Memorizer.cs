@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Events;
 using NPCProcGen.Core.Helpers;
+using System.Linq;
 
 namespace NPCProcGen.Core.Internal
 {
@@ -48,6 +49,11 @@ namespace NPCProcGen.Core.Internal
             {
                 actorData.Update(delta);
             }
+        }
+
+        public List<ActorTag2D> GetPeerActors()
+        {
+            return _actorData.Keys.ToList();
         }
 
         /// <summary>
