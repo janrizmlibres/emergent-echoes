@@ -33,8 +33,18 @@ namespace NPCProcGen.Autoloads
         private readonly ResourceType[] _tangibleTypes = new[]
         {
             ResourceType.Money,
-            ResourceType.Satiation
+            ResourceType.Food
         };
+
+        public static List<ResourceType> GetResourceTypes()
+        {
+            return Enum.GetValues(typeof(ResourceType)).Cast<ResourceType>().ToList();
+        }
+
+        public static bool IsTangible(ResourceType type)
+        {
+            return type == ResourceType.Money || type == ResourceType.Food;
+        }
 
         /// <summary>
         /// Dictionary to store resources for each actor.
