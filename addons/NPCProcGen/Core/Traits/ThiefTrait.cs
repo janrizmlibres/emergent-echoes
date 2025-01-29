@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
-using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
-using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.Traits
@@ -45,51 +44,23 @@ namespace NPCProcGen.Core.Traits
         /// <returns>A tuple containing the evaluated action and its weight.</returns>
         private Tuple<BaseAction, float> EvaluateProactiveAction()
         {
-            List<ResourceType> unevaluatedTypes = ResourceManager.Instance.TangibleTypes;
-            ResourceType? selectedType = null;
+            ResourceManager resourceMgr = ResourceManager.Instance;
+            List<Tuple<BaseAction, float>> actionCandidates = new();
 
-            while (unevaluatedTypes.Count > 0 && selectedType == null)
+            foreach (ResourceType type in resourceMgr.TangibleTypes)
             {
-                selectedType = SelectDeficientResource(unevaluatedTypes);
-                DebugTool.Assert(selectedType != null, "Resource type must not be null");
-
-                if (selectedType == ResourceType.Satiation && _owner.FoodValue > 0)
+                if (resourceMgr.IsDeficient(_owner, type))
                 {
-                    ClearSelection(ref selectedType, unevaluatedTypes);
-                    continue;
+                    EvaluateInteraction(
+                        actionCandidates, type,
+                        actor => !_memorizer.IsTrusted(actor),
+                        (_) => null,
+                        (chosenActor) => () => new TheftAction(_owner, chosenActor, type)
+                    );
                 }
-
-                ActorTag2D chosenActor = ChooseActor(selectedType.Value, actor => !_memorizer.IsTrusted(actor));
-
-                if (chosenActor != null)
-                {
-                    return CreateTheftAction(chosenActor, selectedType.Value);
-                }
-
-                ClearSelection(ref selectedType, unevaluatedTypes);
             }
 
-            return null;
-        }
-
-        private static void ClearSelection(ref ResourceType? selectedType, List<ResourceType> unevaluatedTypes)
-        {
-            bool result = unevaluatedTypes.Remove(selectedType.Value);
-            DebugTool.Assert(result, "Resource type must be removed from unevaluated types");
-            selectedType = null;
-        }
-
-        /// <summary>
-        /// Creates a theft action.
-        /// </summary>
-        /// <param name="chosenActor">The actor to steal from.</param>
-        /// <param name="selectedType">The resource type to steal.</param>
-        /// <returns>A tuple containing the theft action and its weight.</returns>
-        private Tuple<BaseAction, float> CreateTheftAction(ActorTag2D chosenActor, ResourceType selectedType)
-        {
-            float weightedScore = CalculateWeight(selectedType);
-            TheftAction action = new(_owner, chosenActor, selectedType);
-            return new Tuple<BaseAction, float>(action, weightedScore);
+            return actionCandidates.OrderByDescending(tuple => tuple.Item2).FirstOrDefault();
         }
     }
 }

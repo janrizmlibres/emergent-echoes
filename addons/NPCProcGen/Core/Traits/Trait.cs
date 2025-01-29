@@ -36,21 +36,23 @@ namespace NPCProcGen.Core.Traits
             _memorizer = memorizer;
         }
 
-        protected ResourceType SelectDeficientResource(List<ResourceType> types)
+        protected void EvaluateInteraction(List<Tuple<BaseAction, float>> actionCandidates, ResourceType type,
+            Func<ActorTag2D, bool> bondChecker, Func<List<ActorTag2D>, ActorTag2D> alternator,
+            Func<ActorTag2D, Func<BaseAction>> actionCreator)
         {
-            ResourceType? type = null;
+            ActorTag2D chosenActor = ChooseActor(type, bondChecker, alternator);
 
-            foreach (ResourceType resource in types)
+            if (chosenActor != null)
             {
-                if (ResourceManager.Instance.IsDeficient(_owner, resource))
-                {
-                    type = resource;
-                    break;
-                }
+                AddAction(actionCandidates, type, actionCreator(chosenActor));
             }
+        }
 
-            // TODO: If random type is chosen, the final weight of the action should be reduced
-            return type ?? types[CommonUtils.Rnd.Next(types.Count)];
+        protected void AddAction(List<Tuple<BaseAction, float>> actionCandidates,
+            ResourceType selectedType, Func<BaseAction> actionCreator)
+        {
+            float weightedScore = CalculateWeight(selectedType);
+            actionCandidates.Add(new Tuple<BaseAction, float>(actionCreator(), weightedScore));
         }
 
         /// <summary>
@@ -58,40 +60,34 @@ namespace NPCProcGen.Core.Traits
         /// </summary>
         /// <param name="type">The resource type to steal.</param>
         /// <returns>The chosen actor.</returns>
-        protected ActorTag2D ChooseActor(ResourceType type, Func<ActorTag2D, bool> trustCheck)
+        private ActorTag2D ChooseActor(ResourceType type, Func<ActorTag2D, bool> assessor,
+            Func<List<ActorTag2D>, ActorTag2D> alternator)
         {
-            ActorTag2D result = null;
+            List<ActorTag2D> peerActors = CommonUtils.Shuffle(_owner.Memorizer.GetPeerActors());
 
-            List<ActorTag2D> otherActors = _sensor.GetActors()
-                .Where(actor => actor != _owner)
-                .OrderBy(_ => CommonUtils.Rnd.Next())
-                .ToList();
-
-            Vector2? actorLastPos = null;
-
-            foreach (ActorTag2D actor in otherActors)
+            foreach (ActorTag2D actor in peerActors)
             {
-                actorLastPos = _owner.Memorizer.GetLastActorLocation(actor);
+                Vector2? actorLastPos = _owner.Memorizer.GetLastActorLocation(actor);
+
+                if (actorLastPos == null) continue;
 
                 // TODO: Add check if actor workplace is known
-                // TODO: Check also if imbalance is not too severe
-                if (actorLastPos != null
-                    && ResourceManager.Instance.HasResource(actor, type)
-                    && trustCheck(actor))
+                if (!ResourceManager.Instance.IsDeficient(actor, type) && assessor(actor))
                 {
-                    result = actor;
-                    break;
+                    return actor;
                 }
             }
 
-            return result;
+            return alternator(peerActors);
         }
 
-        protected float CalculateWeight(ResourceType type)
+        private float CalculateWeight(ResourceType type)
         {
             ResourceStat chosenResource = ResourceManager.Instance.GetResource(_owner, type);
+
             float imbalance = chosenResource.LowerThreshold - chosenResource.Amount;
             float unweightedScore = Math.Max(0, imbalance) / chosenResource.LowerThreshold;
+
             return unweightedScore * chosenResource.Weight * _weight;
         }
 

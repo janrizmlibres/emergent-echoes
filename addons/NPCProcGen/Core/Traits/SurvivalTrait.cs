@@ -4,7 +4,6 @@ using System.Linq;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
-using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.Traits
@@ -41,55 +40,70 @@ namespace NPCProcGen.Core.Traits
 
         private Tuple<BaseAction, float> EvaluateProactiveAction()
         {
+            ResourceManager resourceMgr = ResourceManager.Instance;
             List<Tuple<BaseAction, float>> actionCandidates = new();
 
-            List<ResourceType> unevaluatedTypes = ResourceManager.Instance.TangibleTypes;
-            ResourceType? selectedType = null;
-
-            while (unevaluatedTypes.Count > 0 && selectedType == null)
+            foreach (ResourceType type in resourceMgr.TangibleTypes)
             {
-                selectedType = SelectDeficientResource(unevaluatedTypes);
-                DebugTool.Assert(selectedType != null, "Resource type must not be null");
-
-                float weightedScore = CalculateWeight(selectedType.Value);
-
-                bool hasFood = ResourceManager.Instance.HasResource(_owner, ResourceType.Food);
-
-                if (selectedType == ResourceType.Satiation && hasFood)
+                if (resourceMgr.IsDeficient(_owner, type))
                 {
-                    EatAction eatAction = new(_owner);
-                    actionCandidates.Add(new(eatAction, weightedScore));
-
-                    ClearSelection(ref selectedType, unevaluatedTypes);
-                    continue;
+                    EvaluateInteraction(
+                        actionCandidates, type,
+                        actor => _memorizer.IsFriendly(actor),
+                        (peerActors) => FindActorWithoutBond(peerActors, type),
+                        (chosenActor) => () => new PetitionAction(_owner, chosenActor, type)
+                    );
                 }
-
-                ActorTag2D chosenActor = ChooseActor(selectedType.Value, actor => _memorizer.IsFriendly(actor));
-
-                if (chosenActor != null)
-                {
-                    PetitionAction petitionAction = new(_owner, chosenActor, selectedType.Value);
-                    actionCandidates.Add(new(petitionAction, weightedScore));
-                }
-
-                ClearSelection(ref selectedType, unevaluatedTypes);
             }
 
-            if (ResourceManager.Instance.IsDeficient(_owner, ResourceType.Companionship))
+            if (resourceMgr.IsDeficient(_owner, ResourceType.Satiation)
+                && resourceMgr.HasResource(_owner, ResourceType.Food))
             {
-                float weightedScore = CalculateWeight(ResourceType.Companionship);
-                SocializeAction socializeAction = new(_owner);
-                actionCandidates.Add(new(socializeAction, weightedScore));
+                AddAction(actionCandidates, ResourceType.Satiation, () => new EatAction(_owner));
+            }
+
+            if (resourceMgr.IsDeficient(_owner, ResourceType.Companionship))
+            {
+                AddAction(
+                    actionCandidates,
+                    ResourceType.Companionship,
+                    () => new SocializeAction(_owner)
+                );
             }
 
             return actionCandidates.OrderByDescending(action => action.Item2).FirstOrDefault();
         }
 
-        private static void ClearSelection(ref ResourceType? selectedType, List<ResourceType> unevaluatedTypes)
+        private static ActorTag2D FindActorWithoutBond(List<ActorTag2D> peerActors, ResourceType type)
         {
-            bool result = unevaluatedTypes.Remove(selectedType.Value);
-            DebugTool.Assert(result, "Resource type must be removed from unevaluated types");
-            selectedType = null;
+            return FindActorWithoutDeficiency(peerActors, type)
+                ?? FindActorWithResource(peerActors, type) ?? null;
+        }
+
+        private static ActorTag2D FindActorWithoutDeficiency(List<ActorTag2D> peerActors, ResourceType type)
+        {
+            foreach (ActorTag2D actor in peerActors)
+            {
+                if (!ResourceManager.Instance.IsDeficient(actor, type))
+                {
+                    return actor;
+                }
+            }
+
+            return null;
+        }
+
+        private static ActorTag2D FindActorWithResource(List<ActorTag2D> peerActors, ResourceType type)
+        {
+            foreach (ActorTag2D actor in peerActors)
+            {
+                if (ResourceManager.Instance.HasResource(actor, type))
+                {
+                    return actor;
+                }
+            }
+
+            return null;
         }
     }
 }
