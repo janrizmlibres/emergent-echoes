@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_hdw1b"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="3_3716a"]
-[ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Game Components/NPCAltDetector.tscn" id="4_b51it"]
+[ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Game Components/NPC_Alt_Detector.tscn" id="4_b51it"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30oj8"]
 radius = 3.0

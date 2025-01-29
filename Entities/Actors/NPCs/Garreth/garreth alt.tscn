@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_ykyr2"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="3_ddblb"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_s0dao"]
-[ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Game Components/NPCAltDetector.tscn" id="4_t4ib7"]
+[ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Game Components/NPC_Alt_Detector.tscn" id="4_t4ib7"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="5_x35se"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_6gfsl"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/leaves/action.gd" id="7_xtqt0"]
