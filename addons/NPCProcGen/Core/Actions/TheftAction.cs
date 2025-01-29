@@ -44,12 +44,12 @@ namespace NPCProcGen.Core.Actions
         public TheftAction(NPCAgent2D owner, ActorTag2D target, ResourceType type)
             : base(owner)
         {
-            DebugTool.Assert(_owner.Memorizer.GetLastActorLocation(target).HasValue,
-                "Target must have a location");
+            Vector2? targetLastPos = _owner.Memorizer.GetLastActorLocation(target);
+            DebugTool.Assert(targetLastPos != null, "Target must have a location");
 
             _target = target;
             _targetResource = type;
-            _targetLastPos = _owner.Memorizer.GetLastActorLocation(target).Value;
+            _targetLastPos = targetLastPos.Value;
 
             InitializeStates();
         }
