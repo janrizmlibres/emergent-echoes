@@ -25,7 +25,7 @@ public partial class GarrethPrompt : CanvasLayer
 
         if (_interactable != null)
         {
-            _interactable.Interact = new Callable(this, nameof(OnInteract));
+            _interactable.PrimaryInteract = new Callable(this, nameof(OnInteract));
         }
         else
         {

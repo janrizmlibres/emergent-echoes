@@ -23,7 +23,7 @@ public partial class SilasPrompt : CanvasLayer
         _npcDescription = FindNpcDescriptionNode(GetParent());
         _npcTraits = FindNpcTraitsNode(GetParent());
 
-        _interactable.Interact = new Callable(this, nameof(OnInteract));
+        _interactable.PrimaryInteract = new Callable(this, nameof(OnInteract));
     }
 
     private NpcName FindNpcNameNode(Node parent)

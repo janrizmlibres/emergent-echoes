@@ -69,7 +69,7 @@ position = Vector2(0, -9)
 texture = ExtResource("1_isnnv")
 hframes = 8
 vframes = 6
-frame = 6
+frame = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -110,7 +110,7 @@ position = Vector2(-10, -2.53518e-05)
 [node name="StateTimer" type="Timer" parent="."]
 
 [node name="Interactable" parent="." instance=ExtResource("6_1m8iu")]
-ActionDescription = "View NPC"
+PrimaryActionDescription = "View NPC"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
 shape = SubResource("CircleShape2D_7ee3u")
