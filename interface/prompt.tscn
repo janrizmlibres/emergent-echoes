@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://c3s3r5aucrjod"]
+[gd_scene load_steps=7 format=3 uid="uid://c3s3r5aucrjod"]
 
 [ext_resource type="Texture2D" uid="uid://n3fp5jjp8t6" path="res://interface/Prompt BG.png" id="1_7ruhv"]
 [ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://interface/PressStart2P-Regular.ttf" id="2_jkvan"]
 [ext_resource type="Script" path="res://interface/NpcName.cs" id="3_ibojn"]
 [ext_resource type="FontFile" uid="uid://brdooo1e25vgt" path="res://interface/PixelifySans-VariableFont_wght.ttf" id="3_tt8x5"]
+[ext_resource type="Script" path="res://interface/NpcDescription.cs" id="5_ax7q8"]
+[ext_resource type="Script" path="res://interface/Traits.cs" id="6_dplg3"]
 
 [node name="DescriptionPrompt" type="CanvasLayer"]
 layer = 10
@@ -61,6 +63,7 @@ theme_override_font_sizes/font_size = 10
 text = " Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum "
 horizontal_alignment = 1
 autowrap_mode = 3
+script = ExtResource("5_ax7q8")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Prompt/VBoxContainer"]
 layout_mode = 2
@@ -81,3 +84,4 @@ theme_override_fonts/font = ExtResource("3_tt8x5")
 theme_override_font_sizes/font_size = 12
 text = "Lorem Ipsum, Lorem Ipsum"
 horizontal_alignment = 1
+script = ExtResource("6_dplg3")
