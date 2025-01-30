@@ -18,8 +18,8 @@ namespace NPCProcGen.Core.Components
             (float MinLow, float MaxLow, float MinHigh, float MaxHigh)
         > _thresholdValues = new()
         {
-            { ResourceType.Money, (100, 500, 2000, 10000) },
-            { ResourceType.Food, (2, 8, 20, 50) },
+            { ResourceType.Money, (100, 500, 1000, 5000) },
+            { ResourceType.Food, (5, 10, 50, 100) },
             { ResourceType.Satiation, (15, 25, 70, 90) },
             { ResourceType.Companionship, (10, 20, 60, 80) },
         };
