@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Prompt : CanvasLayer
+public partial class SilasPrompt : CanvasLayer
 {
     private Interactable _interactable;
     private NpcName _npcName;
@@ -90,7 +90,7 @@ public partial class Prompt : CanvasLayer
     {
         UpdateNpcName("Silas");
         UpdateNpcDescription("This is Silas, a villager. He is always ready to steal, so be careful. He is a known theif.");
-        UpdateNpcTraits("Brave, Loyal, Strong");
+        UpdateNpcTraits("Theif, Survival");
         DisplayDescription();
     }
 

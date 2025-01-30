@@ -1,10 +1,13 @@
-[gd_scene load_steps=18 format=3 uid="uid://blrsgvyqgogoa"]
+[gd_scene load_steps=22 format=3 uid="uid://blrsgvyqgogoa"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/NPC.cs" id="1_e0pu4"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="1_isnnv"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="2_or5th"]
 [ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_attte"]
 [ext_resource type="PackedScene" uid="uid://2wpeggmgbrmi" path="res://Entities/Actors/actor_detector.tscn" id="3_c743w"]
+[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Game Components/interactable.tscn" id="6_1m8iu"]
+[ext_resource type="PackedScene" uid="uid://c3s3r5aucrjod" path="res://interface/prompt.tscn" id="7_5f5py"]
+[ext_resource type="Script" path="res://interface/GarrethPrompt.cs" id="8_jpvt0"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0
@@ -53,6 +56,9 @@ states/Move/position = Vector2(335, 0)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_y4d7w"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_1snfb"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_ap3hn")]
 graph_offset = Vector2(0, -75.9467)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_7ee3u"]
+radius = 25.0
+
 [node name="Garreth" type="CharacterBody2D"]
 texture_filter = 1
 script = ExtResource("1_e0pu4")
@@ -63,7 +69,7 @@ position = Vector2(0, -9)
 texture = ExtResource("1_isnnv")
 hframes = 8
 vframes = 6
-frame = 7
+frame = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -102,3 +108,13 @@ position = Vector2(-10, -2.53518e-05)
 [node name="ActorDetector" parent="." instance=ExtResource("3_c743w")]
 
 [node name="StateTimer" type="Timer" parent="."]
+
+[node name="Interactable" parent="." instance=ExtResource("6_1m8iu")]
+ActionDescription = "View NPC"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
+shape = SubResource("CircleShape2D_7ee3u")
+
+[node name="DescriptionPrompt" parent="." instance=ExtResource("7_5f5py")]
+visible = false
+script = ExtResource("8_jpvt0")
