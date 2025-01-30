@@ -1,5 +1,4 @@
 using System;
-using Godot;
 
 namespace NPCProcGen.Core.Helpers
 {
@@ -12,10 +11,6 @@ namespace NPCProcGen.Core.Helpers
         /// Event triggered when navigation is complete.
         /// </summary>
         public event Action NavigationComplete;
-
-        public event Action RandomActorRequested;
-
-        public event Action<int> ConsumptionComplete;
 
         public event Action<bool> PetitionAnswered;
 
@@ -30,16 +25,6 @@ namespace NPCProcGen.Core.Helpers
         public void NotifyNavigationComplete()
         {
             NavigationComplete?.Invoke();
-        }
-
-        public void NotifyRandomActorRequested()
-        {
-            RandomActorRequested?.Invoke();
-        }
-
-        public void NotifyConsumptionComplete(int? foodValue)
-        {
-            ConsumptionComplete?.Invoke(foodValue != null ? foodValue.Value : 0);
         }
 
         public void NotifyPetitionAnswered(bool isAccepted)

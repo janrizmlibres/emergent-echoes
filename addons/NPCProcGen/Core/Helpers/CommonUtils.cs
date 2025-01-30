@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Godot.Collections;
+using NPCProcGen.Core.Components;
 
 namespace NPCProcGen.Core.Helpers
 {
@@ -34,13 +36,6 @@ namespace NPCProcGen.Core.Helpers
             );
         }
 
-        public static void SetFacingDirectionsAndNotify(ActorTag2D _owner, ActorTag2D _target)
-        {
-            Vector2 directionToFace = _owner.Parent.GlobalPosition.DirectionTo(_target.Parent.GlobalPosition);
-            _owner.EmitSignal(NPCAgent2D.SignalName.PetitionStarted, directionToFace);
-            _target.EmitSignal(NPCAgent2D.SignalName.PetitionStarted, directionToFace * -1);
-        }
-
         public static Vector2 GetInteractionPosition(ActorTag2D _owner, ActorTag2D _target)
         {
             Vector2 offset1 = new(15, 0);
@@ -53,6 +48,28 @@ namespace NPCProcGen.Core.Helpers
 
             // Return the target's position adjusted by the best offset
             return distance1 < distance2 ? adjustedPosition1 : adjustedPosition2;
+        }
+
+        public static int CalculateSkewedAmount(ResourceStat resource, float minRange, float maxRange,
+            float maxPossible)
+        {
+            // Calculate the deficiency for the NPC
+            float deficiency = resource.LowerThreshold - resource.Amount;
+            int minRaise = resource.GetMinRaise();
+
+            // Introduce variability by adding a random factor
+            double rndWeight = GD.Randf();
+            double exponent = 1 + 5 * (1 - resource.Weight);
+            float skewValue = (float)Math.Pow(rndWeight, exponent);
+
+            float petitionMultiplier = minRange + (maxRange - minRange) * skewValue;
+            float baseValue = Math.Max(deficiency, minRaise);
+
+            float petitionAmount = baseValue * petitionMultiplier;
+            // Ensure petition amount does not exceed the target's current resource amount
+            petitionAmount = Math.Clamp(petitionAmount, minRaise, maxPossible);
+
+            return (int)Math.Floor(petitionAmount);
         }
 
         public static List<T> Shuffle<T>(List<T> list)
