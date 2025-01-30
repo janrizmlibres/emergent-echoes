@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NPCProcGen.Autoloads;
+using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.Internal
 {
@@ -26,9 +27,14 @@ namespace NPCProcGen.Core.Internal
         /// Retrieves the list of actors from the world state.
         /// </summary>
         /// <returns>A read-only list of actors.</returns>
-        public IReadOnlyList<ActorTag2D> GetActors()
+        public List<ActorTag2D> GetActors()
         {
             return _worldState.Actors;
+        }
+
+        public List<ActorTag2D> GetShuffledActors()
+        {
+            return CommonUtils.Shuffle(_worldState.Actors);
         }
     }
 }
