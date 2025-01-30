@@ -9,8 +9,6 @@ namespace NPCProcGen.Core.Actions
     /// </summary>
     public class SocializeAction : BaseAction
     {
-        // TODO: Make this socialize action include the player actor in the future
-
         private SeekState _seekState;
 
         /// <summary>
@@ -19,16 +17,15 @@ namespace NPCProcGen.Core.Actions
         /// <param name="owner">The owner of the action.</param>
         public SocializeAction(NPCAgent2D owner) : base(owner)
         {
-            InitializeActions();
+            InitializeStates();
         }
 
-        private void InitializeActions()
+        private void InitializeStates()
         {
             _seekState = new SeekState(_owner);
-
-            _seekState.CompleteState += (NPCAgent2D npc) =>
+            _seekState.CompleteState += (ActorTag2D partner) =>
             {
-                TalkState _talkState = new(_owner, npc);
+                TalkState _talkState = new(_owner, partner);
                 _talkState.CompleteState += () => CompleteAction(ActionType.Socialize);
                 TransitionTo(_talkState);
             };
@@ -45,7 +42,7 @@ namespace NPCProcGen.Core.Actions
 
             if (_owner.IsAnyActorInRange())
             {
-                TalkState _talkState = new(_owner);
+                TalkState _talkState = new(_owner, _owner.GetRandomActorInRange());
                 _talkState.CompleteState += () => CompleteAction(ActionType.Socialize);
                 TransitionTo(_talkState);
             }

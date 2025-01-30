@@ -35,12 +35,12 @@ namespace NPCProcGen.Core.Actions
         public PetitionAction(NPCAgent2D owner, ActorTag2D target, ResourceType type)
             : base(owner)
         {
-            DebugTool.Assert(_owner.Memorizer.GetLastActorLocation(target).HasValue,
+            DebugTool.Assert(_owner.Memorizer.GetLastKnownPosition(target).HasValue,
                 "Target must have a location");
 
             _target = target;
             _targetResource = type;
-            _targetLastPos = _owner.Memorizer.GetLastActorLocation(target).Value;
+            _targetLastPos = _owner.Memorizer.GetLastKnownPosition(target).Value;
 
             InitializeStates();
         }
@@ -49,6 +49,7 @@ namespace NPCProcGen.Core.Actions
         {
             _moveState = new MoveState(_owner, _target.Parent, _targetLastPos);
             WanderState wanderState = new(_owner, _target);
+            MoveState moveState = new(_owner, _target.Parent);
             _petitionState = new PetitionState(_owner, _target, _targetResource);
 
             _moveState.CompleteState += (bool isActorDetected) =>
@@ -63,9 +64,10 @@ namespace NPCProcGen.Core.Actions
                 }
                 else
                 {
-                    TransitionTo(_petitionState);
+                    TransitionTo(_moveState);
                 }
             };
+            _moveState.CompleteState += (_) => TransitionTo(moveState);
             _petitionState.CompleteState += () => CompleteAction(ActionType.Petition);
         }
 

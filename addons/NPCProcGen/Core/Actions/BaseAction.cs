@@ -74,14 +74,6 @@ namespace NPCProcGen.Core.Actions
             return _currentState is INavigationState state && state.IsNavigating();
         }
 
-        public void AssignActor(NPCAgent2D actor)
-        {
-            if (_currentState is TalkState talkState)
-            {
-                talkState.Partner = actor;
-            }
-        }
-
         /// <summary>
         /// Updates the action.
         /// </summary>

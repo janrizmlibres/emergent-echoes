@@ -9,7 +9,7 @@ namespace NPCProcGen.Core.Actions
     /// </summary>
     public class EatAction : BaseAction
     {
-        private readonly EatState _eatState;
+        private EatState _eatState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EatAction"/> class.
@@ -17,7 +17,12 @@ namespace NPCProcGen.Core.Actions
         /// <param name="owner">The NPC agent performing the action.</param>
         public EatAction(NPCAgent2D owner) : base(owner)
         {
-            _eatState = new EatState(owner);
+            InitializeStates();
+        }
+
+        private void InitializeStates()
+        {
+            _eatState = new EatState(_owner);
             _eatState.CompleteState += () => CompleteAction(ActionType.Eat);
         }
 
