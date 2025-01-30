@@ -1,7 +1,9 @@
 using Godot;
+using Godot.Collections;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 using System;
 using System.Collections.Generic;
 
@@ -18,29 +20,29 @@ namespace NPCProcGen
         /// </summary>
         /// <value>The monetary value as an integer.</value>
         [Export(PropertyHint.Range, "0,1000000,")]
-        public int MoneyValue { get; set; } = 50;
+        public int MoneyAmount { get; set; } = 50;
 
         /// <summary>
         /// Gets or sets the food value associated with this actor.
         /// </summary>
         /// <value>The food value as an integer.</value>
-        [Export]
-        public int FoodValue { get; set; }
+        [Export(PropertyHint.Range, "0,1000,")]
+        public int FoodAmount { get; set; } = 2;
 
         /// <summary>
-        /// Gets or sets the StealMarker, which is a Marker2D instance.
-        /// When the StealMarker is set to a new value, it updates the configuration warnings.
+        /// Gets or sets the RearMarker, which is a Marker2D instance.
+        /// When the RearMarker is set to a new value, it updates the configuration warnings.
         /// </summary>
-        /// <value>The Marker2D instance representing the StealMarker.</value>
+        /// <value>The Marker2D instance representing the RearMarker.</value>
         [Export]
-        public Marker2D StealMarker
+        public Marker2D RearMarker
         {
-            get => _stealMarker;
+            get => _rearMarker;
             set
             {
-                if (value != _stealMarker)
+                if (value != _rearMarker)
                 {
-                    _stealMarker = value;
+                    _rearMarker = value;
                     UpdateConfigurationWarnings();
                 }
             }
@@ -49,7 +51,7 @@ namespace NPCProcGen
         // TODO: Add exported property for character dimensions
 
         [Signal]
-        public delegate void PetitionRequestedEventHandler(Variant resourceType, float amount);
+        public delegate void InteractionStartedEventHandler(Variant state, Array<Variant> data);
         [Signal]
         public delegate void InteractionEndedEventHandler();
 
@@ -59,11 +61,16 @@ namespace NPCProcGen
         public Node2D Parent { get; protected set; }
 
         /// <summary>
-        /// Gets the notification manager of the NPC.
+        /// Gets the notification manager of the Actor.
         /// </summary>
         public NotifManager NotifManager { get; private set; } = new();
 
-        private Marker2D _stealMarker;
+        /// <summary>
+        /// Gets the memorizer component of the Actor.
+        /// </summary>
+        public Memorizer Memorizer { get; protected set; }
+
+        private Marker2D _rearMarker;
 
         /// <summary>
         /// Called when the node is added to the scene.
@@ -74,8 +81,9 @@ namespace NPCProcGen
             if (Engine.IsEditorHint()) return;
 
             Parent = GetParent() as Node2D;
+            Memorizer = new Memorizer();
 
-            if (Parent == null || _stealMarker == null)
+            if (Parent == null || _rearMarker == null)
             {
                 QueueFree();
                 return;
@@ -108,7 +116,7 @@ namespace NPCProcGen
                 warnings.Add("The ActorTag2D can be used only under a Node2D inheriting parent node.");
             }
 
-            if (_stealMarker == null)
+            if (_rearMarker == null)
             {
                 warnings.Add("The ActorTag2D requires a Marker2D node for use in actions such as stealing.");
             }
@@ -126,13 +134,14 @@ namespace NPCProcGen
             return (int)ResourceManager.Instance.GetResource(this, ResourceType.Food).Amount;
         }
 
-        public void ConsumeFood(int amount)
+        public void AddFood(int amount)
         {
-            if (amount > GetFoodAmount())
-            {
-                throw new ArgumentOutOfRangeException(nameof(amount), "The amount to consume exceeds the food value.");
-            }
-            ResourceManager.Instance.SubtractFood(this, amount);
+            ResourceManager.Instance.ModifyResource(this, ResourceType.Food, amount);
+        }
+
+        public void DeductFood(int amount)
+        {
+            ResourceManager.Instance.ModifyResource(this, ResourceType.Food, -amount);
         }
     }
 }

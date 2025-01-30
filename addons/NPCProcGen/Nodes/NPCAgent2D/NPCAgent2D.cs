@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Godot.Collections;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
@@ -19,33 +20,17 @@ namespace NPCProcGen
     public partial class NPCAgent2D : ActorTag2D
     {
         [Export(PropertyHint.Range, "1,100,")]
-        public int SatiationValue { get; set; } = 100;
+        public int SatiationAmount { get; set; } = 100;
 
         /// <summary>
         /// Gets or sets the companionship value associated with this NPC.
         /// </summary>
         /// <value>The companionship value as an integer.</value>
         [Export(PropertyHint.Range, "1,100,")]
-        public int CompanionshipValue { get; set; } = 100;
+        public int CompanionshipAmount { get; set; } = 100;
 
-        /// <summary>
-        /// Gets or sets the actor detector, which is an Area2D instance.
-        /// When the actor detector is set to a new value, it updates the configuration warnings.
-        /// </summary>
-        /// <value>The Area2D instance representing the actor detector.</value>
-        [Export]
-        public Area2D ActorDetector
-        {
-            get => _actorDetector;
-            set
-            {
-                if (value != _actorDetector)
-                {
-                    _actorDetector = value;
-                    UpdateConfigurationWarnings();
-                }
-            }
-        }
+        [Export(PropertyHint.Range, "1,500,")]
+        public int ActorDetectionRange { get; set; } = 70;
 
         [ExportGroup("Traits")]
 
@@ -79,15 +64,9 @@ namespace NPCProcGen
         public delegate void ExecutionEndedEventHandler(Variant action);
 
         [Signal]
-        public delegate void ActionStateEnteredEventHandler(Variant state);
+        public delegate void ActionStateEnteredEventHandler(Variant state, Array<Variant> data);
         [Signal]
-        public delegate void ActionStateExitedEventHandler(Variant state);
-
-        [Signal]
-        public delegate void TheftCompletedEventHandler(TheftData theftData);
-
-        [Signal]
-        public delegate void PetitionStartedEventHandler(Vector2 direction);
+        public delegate void ActionStateExitedEventHandler(Variant state, Array<Variant> data);
 
         /// <summary>
         /// Gets the target position for the NPC.
@@ -98,11 +77,6 @@ namespace NPCProcGen
         /// Gets the sensor component of the NPC.
         /// </summary>
         public Sensor Sensor { get; private set; } = new();
-
-        /// <summary>
-        /// Gets the memorizer component of the NPC.
-        /// </summary>
-        public Memorizer Memorizer { get; private set; } = new();
 
         /// <summary>
         /// Gets the strategizer component of the NPC.
@@ -116,7 +90,8 @@ namespace NPCProcGen
 
         // TODO: Consider using raycast for detection
         private readonly List<ActorTag2D> _detectedActors = new();
-        private Area2D _actorDetector = null;
+
+        private Area2D _actorDetector;
         private Timer _evaluationTimer;
 
         /// <summary>
@@ -128,8 +103,9 @@ namespace NPCProcGen
             if (Engine.IsEditorHint()) return;
 
             Parent = GetParent() as Node2D;
+            Memorizer = new NPCMemorizer();
 
-            if (Parent == null || _actorDetector == null || StealMarker == null)
+            if (Parent == null || RearMarker == null)
             {
                 QueueFree();
                 return;
@@ -137,6 +113,18 @@ namespace NPCProcGen
 
             Executor = new(this);
             Executor.ExecutionEnded += OnExecutionEnded;
+
+            _actorDetector = new Area2D();
+            CollisionShape2D collisionShape2D = new();
+            CircleShape2D circleShape2D = new()
+            {
+                Radius = ActorDetectionRange
+            };
+
+            collisionShape2D.Shape = circleShape2D;
+
+            _actorDetector.AddChild(collisionShape2D);
+            Parent.AddChild(_actorDetector);
 
             _actorDetector.BodyEntered += OnBodyEntered;
             _actorDetector.BodyExited += OnBodyExited;
@@ -149,9 +137,6 @@ namespace NPCProcGen
             };
             _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
             AddChild(_evaluationTimer);
-
-            NotifManager.RandomActorRequested += OnRandomActorRequested;
-
             AddTraits();
         }
 
@@ -182,7 +167,7 @@ namespace NPCProcGen
                 warnings.Add("The NPCAgent2D requires an Area2D to detect other actors.");
             }
 
-            if (StealMarker == null)
+            if (RearMarker == null)
             {
                 warnings.Add("The NPCAgent2D requires a Marker2D node to make stealing possible.");
             }
@@ -228,6 +213,11 @@ namespace NPCProcGen
             return _detectedActors.Where(actor => actor is NPCAgent2D).Any();
         }
 
+        public ActorTag2D GetRandomActorInRange()
+        {
+            return CommonUtils.Shuffle(_detectedActors).FirstOrDefault();
+        }
+
         /// <summary>
         /// Checks if the NPC is currently active.
         /// </summary>
@@ -254,23 +244,21 @@ namespace NPCProcGen
             NotifManager.NotifyNavigationComplete();
         }
 
-        public void CompleteConsumption(int? foodConsumed = null)
-        {
-            NotifManager.NotifyConsumptionComplete(foodConsumed);
-        }
-
         /// <summary>
         /// Adds traits to the NPC's strategizer.
         /// </summary>
         private void AddTraits()
         {
-            Strategizer.AddTrait(new SurvivalTrait(this, Survival, Sensor, Memorizer));
+            DebugTool.Assert(Memorizer is NPCMemorizer, "Memorizer is not of type NPCMemorizer");
+            NPCMemorizer npcMemorizer = Memorizer as NPCMemorizer;
+
+            Strategizer.AddTrait(new SurvivalTrait(this, Survival, Sensor, npcMemorizer));
 
             if (Thief > 0)
-                Strategizer.AddTrait(new ThiefTrait(this, Thief, Sensor, Memorizer));
+                Strategizer.AddTrait(new ThiefTrait(this, Thief, Sensor, npcMemorizer));
 
             if (Lawful > 0)
-                Strategizer.AddTrait(new LawfulTrait(this, Lawful, Sensor, Memorizer));
+                Strategizer.AddTrait(new LawfulTrait(this, Lawful, Sensor, npcMemorizer));
         }
 
         /// <summary>
@@ -280,7 +268,7 @@ namespace NPCProcGen
         private void OnEvaluationTimerTimeout()
         {
             if (Parent.Name == "Garreth") return;
-            TestSocializeAction();
+            TestTheftAction();
 
             // BaseAction action = Strategizer.EvaluateAction(SocialPractice.Proactive);
 
@@ -294,6 +282,27 @@ namespace NPCProcGen
             //     GD.Print($"No action evaluated by {Parent.Name}");
             //     _evaluationTimer.Start();
             // }
+        }
+
+        private void TestTheftAction()
+        {
+            ActorTag2D actor = Sensor.GetShuffledActors().Where(actor =>
+            {
+                return actor != this && ResourceManager.Instance.HasResource(actor, ResourceType.Money)
+                    && Memorizer.GetLastKnownPosition(actor) != null;
+            }).FirstOrDefault();
+
+            if (actor != null)
+            {
+                BaseAction action = new TheftAction(this, actor, ResourceType.Money);
+                GD.Print($"Action evaluated by {Parent.Name}: {action.GetType().Name}");
+                Executor.SetAction(action);
+            }
+            else
+            {
+                GD.Print($"No action evaluated by {Parent.Name}");
+                _evaluationTimer.Start();
+            }
         }
 
         // ! Remove in production
@@ -310,7 +319,7 @@ namespace NPCProcGen
             ActorTag2D actor = Sensor.GetActors().Where(actor => actor != this && actor is NPCAgent2D).First();
 
 
-            if (Memorizer.GetLastActorLocation(actor) != null)
+            if (Memorizer.GetLastKnownPosition(actor) != null)
             {
                 BaseAction action = new PetitionAction(this, actor, ResourceType.Money);
                 GD.Print($"Action evaluated by {Parent.Name}: {action.GetType().Name}");
@@ -321,12 +330,6 @@ namespace NPCProcGen
                 GD.Print($"No action evaluated by {Parent.Name}");
                 _evaluationTimer.Start();
             }
-        }
-
-        private void OnRandomActorRequested()
-        {
-            ActorTag2D actor = _detectedActors.Where(actor => actor is NPCAgent2D).FirstOrDefault();
-            Executor.AssignActor(actor as NPCAgent2D);
         }
 
         /// <summary>
@@ -364,7 +367,7 @@ namespace NPCProcGen
             {
                 if (child is ActorTag2D actor)
                 {
-                    Memorizer.UpdateActorLocation(actor, actor.Parent.GlobalPosition);
+                    Memorizer.UpdateLastKnownPosition(actor, actor.Parent.GlobalPosition);
                     _detectedActors.Remove(actor);
                 }
             }
