@@ -36,7 +36,7 @@ position = Vector2(0, -1)
 shape = SubResource("RectangleShape2D_gt5dx")
 
 [node name="Interactable" parent="." instance=ExtResource("2_tpp7v")]
-ActionDescription = "Chop tree"
+PrimaryActionDescription = "Chop"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
 position = Vector2(0, -3)

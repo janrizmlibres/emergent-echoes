@@ -10,7 +10,6 @@ script = ExtResource("1_c5heb")
 
 [node name="InteractRange" type="Area2D" parent="."]
 z_index = 10
-collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractRange"]
@@ -28,7 +27,8 @@ offset_right = 52.5
 offset_bottom = -27.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "[E] to Interact"
+text = "[E] to Interact
+[F] to Interact"
 horizontal_alignment = 1
 vertical_alignment = 1
 

@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 
 public partial class InteractingComponent : Node2D
 {
-	[Signal] public delegate void OnTreeChoppedEventHandler(CharacterBody2D character);
-	
 	private Label _interactLabel;
 	
 	private readonly List<Interactable> _currentInteractions = new List<Interactable>();
@@ -43,7 +41,17 @@ public partial class InteractingComponent : Node2D
 			_currentInteractions.Sort(SortByNearest);
 			
 			if (!_currentInteractions[0].IsInteractable) { return; }
-			_interactLabel.Text = "[E] to " + _currentInteractions[0].ActionDescription;
+
+			if (_currentInteractions[0].HasSecondaryAction)
+			{
+				// Label for primary and secondary interactions
+				_interactLabel.Text = "[E] to " + _currentInteractions[0].PrimaryActionDescription + "\n[F] to " + _currentInteractions[0].SecondaryActionDescription;
+			}
+			else
+			{
+				_interactLabel.Text = "[E] to " + _currentInteractions[0].PrimaryActionDescription;
+			}
+			
 			_interactLabel.Show();
 		}
 		else
@@ -54,21 +62,20 @@ public partial class InteractingComponent : Node2D
 	
 	public override async void _Input(InputEvent @event)
 	{
-		if (!@event.IsActionPressed("interact") || !_canInteract)
+		if (@event.IsActionPressed("primary interact") && _canInteract)
 		{
-			return;
-		}
-
-		if (_currentInteractions.Count == 0)
+			await Task.FromResult(_currentInteractions[0].PrimaryInteract.Call());
+		} else if (@event.IsActionPressed("secondary interact") && _canInteract)
 		{
-			return;
+			await Task.FromResult(_currentInteractions[0].SecondaryInteract.Call());
 		}
+		
+		if (_currentInteractions.Count == 0) return;
 	
 		_canInteract = false;
 		_interactLabel.Hide();
 		
-		EmitSignal(SignalName.OnTreeChopped, GetParent());
-		await Task.FromResult(_currentInteractions[0].Interact.Call());
+		
 
 		_canInteract = true;
 	}
