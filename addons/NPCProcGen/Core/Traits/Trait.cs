@@ -19,7 +19,7 @@ namespace NPCProcGen.Core.Traits
         protected readonly NPCAgent2D _owner;
         protected readonly float _weight;
         protected readonly Sensor _sensor;
-        protected readonly Memorizer _memorizer;
+        protected readonly NPCMemorizer _memorizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Trait"/> class.
@@ -28,7 +28,7 @@ namespace NPCProcGen.Core.Traits
         /// <param name="weight">The weight of the trait.</param>
         /// <param name="sensor">The sensor associated with the trait.</param>
         /// <param name="memorizer">The memorizer associated with the trait.</param>
-        public Trait(NPCAgent2D owner, float weight, Sensor sensor, Memorizer memorizer)
+        public Trait(NPCAgent2D owner, float weight, Sensor sensor, NPCMemorizer memorizer)
         {
             _owner = owner;
             _weight = weight;
@@ -67,7 +67,7 @@ namespace NPCProcGen.Core.Traits
 
             foreach (ActorTag2D actor in peerActors)
             {
-                Vector2? actorLastPos = _owner.Memorizer.GetLastActorLocation(actor);
+                Vector2? actorLastPos = _owner.Memorizer.GetLastKnownPosition(actor);
 
                 if (actorLastPos == null) continue;
 

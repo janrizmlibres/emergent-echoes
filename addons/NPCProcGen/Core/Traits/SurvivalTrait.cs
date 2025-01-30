@@ -20,7 +20,7 @@ namespace NPCProcGen.Core.Traits
         /// <param name="weight">The weight of the trait.</param>
         /// <param name="sensor">The sensor associated with the trait.</param>
         /// <param name="memorizer">The memorizer associated with the trait.</param>
-        public SurvivalTrait(NPCAgent2D owner, float weight, Sensor sensor, Memorizer memorizer)
+        public SurvivalTrait(NPCAgent2D owner, float weight, Sensor sensor, NPCMemorizer memorizer)
             : base(owner, weight, sensor, memorizer) { }
 
         /// <summary>
