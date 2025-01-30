@@ -64,24 +64,20 @@ namespace NPCProcGen.Autoloads
                 if (actor is NPCAgent2D npc)
                 {
                     resources[ResourceType.Money] = new ResourceStat(ResourceType.Money,
-                        npc.MoneyValue, npc.Money);
+                        npc.MoneyAmount, npc.Money);
                     resources[ResourceType.Food] = new ResourceStat(ResourceType.Food,
-                        npc.FoodValue, npc.Food);
+                        npc.FoodAmount, npc.Food);
                     resources[ResourceType.Satiation] = new ResourceStat(ResourceType.Satiation,
-                        npc.SatiationValue, npc.Satiation);
+                        npc.SatiationAmount, npc.Satiation);
                     resources[ResourceType.Companionship] = new ResourceStat(ResourceType.Companionship,
-                        npc.CompanionshipValue, npc.Companionship);
+                        npc.CompanionshipAmount, npc.Companionship);
                 }
                 else
                 {
                     resources[ResourceType.Money] = new ResourceStat(
-                        ResourceType.Money, actor.MoneyValue, 1);
+                        ResourceType.Money, actor.MoneyAmount, 1);
                     resources[ResourceType.Food] = new ResourceStat(
-                        ResourceType.Food, actor.FoodValue, 1);
-                    resources[ResourceType.Satiation] = new ResourceStat(
-                        ResourceType.Satiation, 100, 1);
-                    resources[ResourceType.Companionship] = new ResourceStat(
-                        ResourceType.Companionship, 100, 1);
+                        ResourceType.Food, actor.FoodAmount, 1);
                 }
 
                 _actorResources[actor] = resources;
@@ -110,14 +106,14 @@ namespace NPCProcGen.Autoloads
         {
             DebugTool.Assert(_actorResources.ContainsKey(actor),
                 $"Actor {actor.Parent.Name} not found in resource manager.");
-            return _actorResources[actor][type];
+            return _actorResources[actor].GetValueOrDefault(type);
         }
 
         public float GetResourceAmount(ActorTag2D actor, ResourceType type)
         {
             DebugTool.Assert(_actorResources.ContainsKey(actor),
                 $"Actor {actor.Parent.Name} not found in resource manager.");
-            return _actorResources[actor][type].Amount;
+            return _actorResources[actor].GetValueOrDefault(type)?.Amount ?? 0;
         }
 
         /// <summary>
@@ -128,9 +124,11 @@ namespace NPCProcGen.Autoloads
         /// <returns>True if the actor has the resource, otherwise false.</returns>
         public bool HasResource(ActorTag2D actor, ResourceType type)
         {
-            DebugTool.Assert(_actorResources.ContainsKey(actor),
-                $"Actor {actor.Parent.Name} not found in resource manager.");
-            return _actorResources[actor][type].Amount > 0;
+            DebugTool.Assert(
+                _actorResources.ContainsKey(actor),
+                $"Actor {actor.Parent.Name} not found in resource manager."
+            );
+            return _actorResources[actor].GetValueOrDefault(type)?.Amount > 0;
         }
 
         /// <summary>
@@ -141,9 +139,11 @@ namespace NPCProcGen.Autoloads
         /// <returns>True if the actor is deficient in the resource, otherwise false.</returns>
         public bool IsDeficient(ActorTag2D actor, ResourceType type)
         {
-            DebugTool.Assert(_actorResources.ContainsKey(actor),
-                $"Actor {actor.Parent.Name} not found in resource manager.");
-            return _actorResources[actor][type].IsDeficient();
+            DebugTool.Assert(
+                _actorResources.ContainsKey(actor),
+                $"Actor {actor.Parent.Name} not found in resource manager."
+            );
+            return _actorResources[actor].GetValueOrDefault(type)?.IsDeficient() ?? false;
         }
 
         /// <summary>
@@ -155,8 +155,10 @@ namespace NPCProcGen.Autoloads
         /// <param name="amount">The amount of resource to transfer.</param>
         public void TranserResources(ActorTag2D from, ActorTag2D to, ResourceType type, float amount)
         {
-            ResourceStat fromResource = _actorResources[from][type];
-            ResourceStat toResource = _actorResources[to][type];
+            ResourceStat fromResource = _actorResources[from].GetValueOrDefault(type);
+            ResourceStat toResource = _actorResources[to].GetValueOrDefault(type);
+
+            if (fromResource == null || toResource == null) return;
 
             if (fromResource.Amount < amount)
             {
@@ -170,17 +172,12 @@ namespace NPCProcGen.Autoloads
                 + " to " + to.Parent.Name);
         }
 
-        public void IncreaseCompanionship(ActorTag2D actor, float amount)
+        public void ModifyResource(ActorTag2D actor, ResourceType type, float amount)
         {
-            GD.Print("Increased companionship for " + actor.Parent.Name + " by " + amount);
-            ResourceStat companionship = _actorResources[actor][ResourceType.Companionship];
-            companionship.Amount += amount;
-        }
-
-        public void SubtractFood(ActorTag2D actor, int amount)
-        {
-            ResourceStat food = _actorResources[actor][ResourceType.Food];
-            food.Amount -= amount;
+            if (_actorResources[actor].TryGetValue(type, out ResourceStat resource))
+            {
+                resource.Amount += amount;
+            }
         }
     }
 }

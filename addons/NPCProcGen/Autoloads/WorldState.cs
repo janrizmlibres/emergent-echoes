@@ -24,7 +24,9 @@ namespace NPCProcGen.Autoloads
 		/// <summary>
 		/// Gets the list of actors in the world.
 		/// </summary>
-		public IReadOnlyList<ActorTag2D> Actors { get; private set; }
+		public List<ActorTag2D> Actors => _actors.ToList();
+
+		private List<ActorTag2D> _actors = new();
 
 		/// <summary>
 		/// List of structures in the world.
@@ -62,7 +64,7 @@ namespace NPCProcGen.Autoloads
 		/// <param name="actors">The list of actors to initialize.</param>
 		public void Initialize(List<ActorTag2D> actors)
 		{
-			Actors = actors;
+			_actors = actors;
 
 			foreach (ActorTag2D actor in actors)
 			{
