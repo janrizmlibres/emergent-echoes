@@ -1,6 +1,9 @@
 using EmergentEchoes.Utilities;
 using Godot;
+using Godot.Collections;
 using NPCProcGen;
+using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.States;
 
 namespace EmergentEchoes.Entities.Actors
 {
@@ -10,12 +13,13 @@ namespace EmergentEchoes.Entities.Actors
 		[Export] private int Acceleration { get; set; } = 10;
 		[Export] private int Friction { get; set; } = 10;
 
+		public enum State { Active, Dormant }
+
+		private State _state = State.Active;
+
 		private AnimationTree _animationTree;
 		private AnimationNodeStateMachinePlayback _animationState;
 		private ActorTag2D _actorTag2D;
-
-		// ! Remove after testing
-		private Area2D _floatTextClicker;
 
 		public override void _Ready()
 		{
@@ -23,14 +27,22 @@ namespace EmergentEchoes.Entities.Actors
 			_animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
 
 			_actorTag2D = GetNode<ActorTag2D>("ActorTag2D");
-			_actorTag2D.PetitionRequested += OnPetitionRequested;
-
-			// ! Remove after testing
-			_floatTextClicker = GetNode<Area2D>("FloatTextClicker");
-			_floatTextClicker.InputEvent += OnFloatTextClickerInputEvent;
+			_actorTag2D.InteractionStarted += OnInteractionStarted;
+			_actorTag2D.InteractionEnded += OnInteractionEnded;
 		}
 
 		public override void _PhysicsProcess(double delta)
+		{
+			switch (_state)
+			{
+				case State.Active:
+					MovePlayer();
+					break;
+			}
+
+		}
+
+		private void MovePlayer()
 		{
 			Vector2 inputVector = Input.GetVector("left", "right", "up", "down");
 
@@ -59,18 +71,25 @@ namespace EmergentEchoes.Entities.Actors
 			Velocity = Velocity.MoveToward(inputVector * MaxSpeed, Acceleration);
 		}
 
-		private void OnPetitionRequested(Variant resourceType, float amount)
+		private void OnInteractionStarted(Variant state, Array<Variant> data)
 		{
-			// TODO: Popup dialog for petition
+			ActionState actionState = state.As<ActionState>();
+
+			if (actionState is ActionState.Talk)
+			{
+				Node2D partner = data[0].As<Node2D>();
+				Vector2 directionToFace = GlobalPosition.DirectionTo(partner.GlobalPosition);
+
+				_animationTree.Set("parameters/Idle/blend_position", directionToFace.X);
+				_animationState.Travel("Idle");
+
+				_state = State.Dormant;
+			}
 		}
 
-		// ! Remove after testing
-		private void OnFloatTextClickerInputEvent(Node viewport, InputEvent @event, long shapeIdx)
+		private void OnInteractionEnded()
 		{
-			if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed)
-			{
-				FloatTextManager.ShowFloatText(this, "-12");
-			}
+			_state = State.Active;
 		}
 	}
 }

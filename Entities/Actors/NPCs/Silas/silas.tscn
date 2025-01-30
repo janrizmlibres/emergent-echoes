@@ -1,8 +1,7 @@
-[gd_scene load_steps=17 format=3 uid="uid://diiesf6ffioa7"]
+[gd_scene load_steps=16 format=3 uid="uid://diiesf6ffioa7"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/NPC.cs" id="1_scutl"]
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_5inc2"]
-[ext_resource type="PackedScene" uid="uid://2wpeggmgbrmi" path="res://Entities/Actors/actor_detector.tscn" id="3_dft6w"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="3_ttgx4"]
 [ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_x7obk"]
 
@@ -61,7 +60,7 @@ position = Vector2(0, -9)
 texture = ExtResource("2_5inc2")
 hframes = 8
 vframes = 6
-frame = 5
+frame = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -88,7 +87,7 @@ debug_enabled = true
 
 [node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("ActorDetector", "StealMarker")]
 script = ExtResource("3_x7obk")
-ActorDetector = NodePath("../ActorDetector")
+ActorDetector = NodePath("")
 Survival = 0.52
 Thief = 0.73
 FoodValue = 10
@@ -99,7 +98,5 @@ rotation = 3.14159
 
 [node name="Marker2D" type="Marker2D" parent="StealMarker"]
 position = Vector2(-10, -2.53518e-05)
-
-[node name="ActorDetector" parent="." instance=ExtResource("3_dft6w")]
 
 [node name="StateTimer" type="Timer" parent="."]

@@ -1,10 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://blrsgvyqgogoa"]
+[gd_scene load_steps=17 format=3 uid="uid://blrsgvyqgogoa"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Dummy.cs" id="1_4ri2h"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="1_isnnv"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="2_or5th"]
 [ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_attte"]
-[ext_resource type="PackedScene" uid="uid://2wpeggmgbrmi" path="res://Entities/Actors/actor_detector.tscn" id="3_c743w"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0
@@ -63,7 +62,7 @@ position = Vector2(0, -9)
 texture = ExtResource("1_isnnv")
 hframes = 8
 vframes = 6
-frame = 7
+frame = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -90,7 +89,7 @@ radius = 5.0
 
 [node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("ActorDetector", "StealMarker")]
 script = ExtResource("3_attte")
-ActorDetector = NodePath("../ActorDetector")
+ActorDetector = NodePath("")
 Survival = 0.4
 Lawful = 0.65
 MoneyValue = 500
@@ -102,7 +101,5 @@ rotation = 3.14159
 
 [node name="Marker2D" type="Marker2D" parent="StealMarker"]
 position = Vector2(-10, -2.53518e-05)
-
-[node name="ActorDetector" parent="." instance=ExtResource("3_c743w")]
 
 [node name="StateTimer" type="Timer" parent="."]
