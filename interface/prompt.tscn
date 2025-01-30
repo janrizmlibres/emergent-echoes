@@ -1,11 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://c3s3r5aucrjod"]
+[gd_scene load_steps=5 format=3 uid="uid://c3s3r5aucrjod"]
 
 [ext_resource type="Texture2D" uid="uid://n3fp5jjp8t6" path="res://interface/Prompt BG.png" id="1_7ruhv"]
 [ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://interface/PressStart2P-Regular.ttf" id="2_jkvan"]
+[ext_resource type="Script" path="res://interface/NpcName.cs" id="3_ibojn"]
 [ext_resource type="FontFile" uid="uid://brdooo1e25vgt" path="res://interface/PixelifySans-VariableFont_wght.ttf" id="3_tt8x5"]
 
-[node name="PromptCanvasLayer" type="CanvasLayer"]
+[node name="DescriptionPrompt" type="CanvasLayer"]
 layer = 10
+scale = Vector2(0.67, 0.55)
+transform = Transform2D(0.67, 0, 0, 0.55, 0, 0)
 
 [node name="Prompt" type="Control" parent="."]
 layout_mode = 3
@@ -25,9 +28,9 @@ color = Color(0, 0, 0, 0.392157)
 [node name="TextureRect" type="TextureRect" parent="Prompt"]
 layout_mode = 0
 offset_left = 56.0
-offset_top = 53.0
+offset_top = 31.1818
 offset_right = 993.0
-offset_bottom = 708.0
+offset_bottom = 686.182
 scale = Vector2(0.4, 0.4)
 size_flags_vertical = 4
 texture = ExtResource("1_7ruhv")
@@ -35,9 +38,9 @@ texture = ExtResource("1_7ruhv")
 [node name="VBoxContainer" type="VBoxContainer" parent="Prompt"]
 layout_mode = 0
 offset_left = 92.0
-offset_top = 77.0
+offset_top = 55.1818
 offset_right = 395.0
-offset_bottom = 291.0
+offset_bottom = 269.182
 theme_override_constants/separation = 14
 
 [node name="NPCName" type="Label" parent="Prompt/VBoxContainer"]
@@ -47,6 +50,7 @@ theme_override_fonts/font = ExtResource("2_jkvan")
 theme_override_font_sizes/font_size = 12
 text = "LOREM IPSUM"
 horizontal_alignment = 1
+script = ExtResource("3_ibojn")
 
 [node name="NPCDescription" type="Label" parent="Prompt/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)

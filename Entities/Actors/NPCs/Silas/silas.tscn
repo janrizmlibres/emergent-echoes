@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://diiesf6ffioa7"]
+[gd_scene load_steps=21 format=3 uid="uid://diiesf6ffioa7"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/NPC.cs" id="1_scutl"]
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_5inc2"]
@@ -6,6 +6,8 @@
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="3_ttgx4"]
 [ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_x7obk"]
 [ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Game Components/interactable.tscn" id="6_tu70y"]
+[ext_resource type="PackedScene" uid="uid://c3s3r5aucrjod" path="res://interface/prompt.tscn" id="7_y47oe"]
+[ext_resource type="Script" path="res://interface/Prompt.cs" id="8_wrtkk"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30oj8"]
 radius = 3.0
@@ -111,3 +113,7 @@ ActionDescription = "View NPC"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
 shape = SubResource("CircleShape2D_qex8a")
+
+[node name="DescriptionPrompt" parent="." instance=ExtResource("7_y47oe")]
+visible = false
+script = ExtResource("8_wrtkk")
