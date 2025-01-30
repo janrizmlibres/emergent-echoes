@@ -9,8 +9,8 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public class MoveState : BaseState, INavigationState
     {
-        private readonly Node2D _target = null;
-        private Vector2? _targetPosition = null;
+        private readonly Node2D _targetNode;
+        private Vector2? _movePosition;
 
         /// <summary>
         /// Event triggered when the state is completed.
@@ -22,12 +22,12 @@ namespace NPCProcGen.Core.States
         /// </summary>
         /// <param name="owner">The NPC agent owning this state.</param>
         /// <param name="target">The target node to move to.</param>
-        /// <param name="lastPos">The last known position of the target.</param>
-        public MoveState(NPCAgent2D owner, Node2D target, Vector2? lastPos = null)
+        /// <param name="lastPosition">The last known position of the target.</param>
+        public MoveState(NPCAgent2D owner, Node2D target, Vector2? lastPosition = null)
             : base(owner)
         {
-            _target = target;
-            _targetPosition = lastPos;
+            _targetNode = target;
+            _movePosition = lastPosition;
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace NPCProcGen.Core.States
         public MoveState(NPCAgent2D owner, Vector2 targetPosition)
             : base(owner)
         {
-            _targetPosition = targetPosition;
+            _movePosition = targetPosition;
         }
 
         /// <summary>
@@ -47,9 +47,9 @@ namespace NPCProcGen.Core.States
         public override void Enter()
         {
             GD.Print($"{_owner.Parent.Name} MoveState Enter");
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Move));
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
             _owner.NotifManager.ActorDetected += OnActorDetected;
+            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Move));
         }
 
         /// <summary>
@@ -57,9 +57,9 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Exit()
         {
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Move));
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
             _owner.NotifManager.ActorDetected -= OnActorDetected;
+            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Move));
         }
 
         /// <summary>
@@ -77,7 +77,12 @@ namespace NPCProcGen.Core.States
         /// <returns>The global position of the target.</returns>
         public Vector2 GetTargetPosition()
         {
-            return _targetPosition ?? _target.GlobalPosition;
+            return _movePosition ?? _targetNode.GlobalPosition;
+        }
+
+        private bool IsSeeking()
+        {
+            return _movePosition != null;
         }
 
         private void OnNavigationComplete()
@@ -87,15 +92,15 @@ namespace NPCProcGen.Core.States
 
         private void OnActorDetected(ActorTag2D target)
         {
-            if (target.Parent == _target)
+            if (target.Parent == _targetNode && IsSeeking())
             {
                 OnCompleteState(true);
             }
         }
 
-        private void OnCompleteState(bool isActorDetected)
+        private void OnCompleteState(bool isTargetDetected)
         {
-            CompleteState?.Invoke(isActorDetected);
+            CompleteState?.Invoke(isTargetDetected);
         }
     }
 }

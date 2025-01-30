@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using Godot.Collections;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
@@ -7,17 +8,16 @@ using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
-    public class PetitionState : BaseState, INavigationState
+    public class PetitionState : BaseState
     {
         private const float NegotiationDuration = 15;
 
         private readonly ActorTag2D _target;
         private readonly ResourceType _resourceType;
-        private readonly int _amount;
         private readonly bool _isTargetPlayer;
+        private readonly int _amount;
 
-        private bool _isTargetReached = false;
-        private float _negotiationTimer = 0;
+        private float _negotiationTimer = NegotiationDuration;
 
         public event Action CompleteState;
 
@@ -35,19 +35,31 @@ namespace NPCProcGen.Core.States
             GD.Print($"{_owner.Parent.Name} PetitionState Enter");
             GD.Print($"Amount to petition: {_amount}");
 
-            _owner.NotifManager.NavigationComplete += OnNavigationComplete;
+            Array<Variant> ownerData = new() { _target.Parent };
+            Array<Variant> targetData = new() { _owner.Parent };
+
+            Array<Variant> playerData = new()
+            {
+                targetData[0], // Direciton to face
+                Variant.From(_resourceType),
+                _amount,
+            };
+
             _owner.NotifManager.PetitionAnswered += OnPetitionAnswered;
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Petition));
+
+            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Petition), ownerData);
+            (_target as NPCAgent2D)?.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Petition), targetData);
+            _target.EmitSignal(ActorTag2D.SignalName.InteractionStarted, Variant.From(ActionState.Petition), playerData);
         }
 
         public override void Update(double delta)
         {
-            // * Negotation only occurs when the target is an NPC and not the player
-            if (!_isTargetReached && _isTargetPlayer) return;
+            // Negotation only occurs when the target is an NPC and not the player
+            if (_isTargetPlayer) return;
 
-            _negotiationTimer += (float)delta;
+            _negotiationTimer -= (float)delta;
 
-            if (_negotiationTimer >= NegotiationDuration)
+            if (_negotiationTimer <= 0)
             {
                 DetermineOutcome();
             }
@@ -55,26 +67,17 @@ namespace NPCProcGen.Core.States
 
         public override void Exit()
         {
-            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
             _owner.NotifManager.PetitionAnswered -= OnPetitionAnswered;
             _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Petition));
-        }
-
-        public Vector2 GetTargetPosition()
-        {
-            return CommonUtils.GetInteractionPosition(_owner, _target);
-        }
-
-        public bool IsNavigating()
-        {
-            return !_isTargetReached;
+            (_target as NPCAgent2D)?.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Petition));
+            _target.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
         }
 
         private void DetermineOutcome()
         {
             ResourceStat targetResource = ResourceManager.Instance.GetResource(_target, _resourceType);
             float relationshipLevel = _owner.Memorizer.GetActorRelationship(_target);
-            float baseProbability = GetBasePetitionProbability(relationshipLevel);
+            float baseProbability = ActorData.GetBasePetitionProbability(relationshipLevel);
 
             float excess = targetResource.Amount - targetResource.LowerThreshold;
             float normalRange = targetResource.UpperThreshold - targetResource.LowerThreshold;
@@ -94,53 +97,11 @@ namespace NPCProcGen.Core.States
             OnPetitionAnswered(isAccepted);
         }
 
-        private static float GetBasePetitionProbability(float relationshipLevel)
-        {
-            return relationshipLevel switch
-            {
-                <= -26 => 0.05f,
-                <= -16 => 0.20f,
-                <= -6 => 0.30f,
-                <= 4 => 0.40f,
-                <= 14 => 0.60f,
-                <= 24 => 0.80f,
-                _ => 0.95f,
-            };
-        }
-
         private int CalculateAmount()
         {
-            ResourceStat npcResource = ResourceManager.Instance.GetResource(_owner, _resourceType);
+            ResourceStat ownerResource = ResourceManager.Instance.GetResource(_owner, _resourceType);
             ResourceStat targetResource = ResourceManager.Instance.GetResource(_target, _resourceType);
-
-            // Calculate the deficiency for the NPC
-            float deficiency = npcResource.LowerThreshold - npcResource.Amount;
-            // Ensure deficiency is not below the minimum raise
-            deficiency = Math.Max(npcResource.GetMinRaise(), deficiency);
-
-            // Calculate a potential petition amount based on the weight
-            float petitionAmount = deficiency * (1 + npcResource.Weight);
-
-            // Ensure petition amount does not exceed the target's current resource amount
-            petitionAmount = Math.Min(petitionAmount, targetResource.Amount);
-
-            return (int)Math.Floor(petitionAmount);
-        }
-
-        private void OnNavigationComplete()
-        {
-            if (_isTargetReached) return;
-
-            _isTargetReached = true;
-
-            if (_isTargetPlayer)
-            {
-                _target.EmitSignal(ActorTag2D.SignalName.PetitionRequested, Variant.From(_resourceType), _amount);
-                return;
-            }
-
-            GD.Print($"{_owner.Parent.Name} and {_target.Parent.Name} started negotiation");
-            CommonUtils.SetFacingDirectionsAndNotify(_owner, _target);
+            return CommonUtils.CalculateSkewedAmount(ownerResource, 0.8f, 2, targetResource.Amount);
         }
 
         private void OnPetitionAnswered(bool isAccepted)
@@ -153,8 +114,7 @@ namespace NPCProcGen.Core.States
                 GD.Print($"Remaining resource: {ResourceManager.Instance.GetResource(_target, _resourceType).Amount}");
             }
 
-            _target.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
-            _owner.Memorizer.ModifyRelationship(_target, isAccepted ? 3 : -1);
+            _owner.Memorizer.UpdateRelationship(_target, isAccepted ? 3 : -1);
             CompleteState?.Invoke();
         }
     }

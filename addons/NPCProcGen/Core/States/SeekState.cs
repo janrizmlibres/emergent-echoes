@@ -10,11 +10,15 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public class SeekState : BaseState, INavigationState
     {
-        private const float SeekRadius = 400;
+        private const float SeekRadius = 150;
+        private const float IdleDuration = 10;
 
-        private Vector2 _targetPosition;
+        private Vector2 _seekPosition;
 
-        public event Action<NPCAgent2D> CompleteState;
+        private bool _isMoving = false;
+        private float _idleTimer = IdleDuration;
+
+        public event Action<ActorTag2D> CompleteState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SeekState"/> class.
@@ -22,40 +26,56 @@ namespace NPCProcGen.Core.States
         /// <param name="owner">The owner of the state.</param>
         public SeekState(NPCAgent2D owner) : base(owner)
         {
-            _targetPosition = CommonUtils.GetRandomPosInCircularArea(
-                _owner.Parent.GlobalPosition, SeekRadius);
+            _seekPosition = owner.Parent.GlobalPosition;
         }
 
         public override void Enter()
         {
             GD.Print($"{_owner.Parent.Name} SeekState Enter");
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Seek));
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
             _owner.NotifManager.ActorDetected += OnActorDetected;
+            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Seek));
+        }
+
+        public override void Update(double delta)
+        {
+            if (_isMoving) return;
+
+            _idleTimer -= (float)delta;
+
+            if (_idleTimer <= 0)
+            {
+                _seekPosition = CommonUtils.GetRandomPosInCircularArea(_owner.Parent.GlobalPosition, SeekRadius);
+                _idleTimer = IdleDuration;
+                _isMoving = true;
+            }
+        }
+
+        public override void Exit()
+        {
+            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
+            _owner.NotifManager.ActorDetected -= OnActorDetected;
+            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Seek));
         }
 
         public bool IsNavigating()
         {
-            return true;
+            return _isMoving;
         }
 
         public Vector2 GetTargetPosition()
         {
-            return _targetPosition;
+            return _seekPosition;
         }
 
         private void OnNavigationComplete()
         {
-            _targetPosition = CommonUtils.GetRandomPosInCircularArea(
-                _owner.Parent.GlobalPosition, SeekRadius);
+            _isMoving = false;
         }
 
         private void OnActorDetected(ActorTag2D actor)
         {
-            if (actor is NPCAgent2D npc)
-            {
-                CompleteState?.Invoke(npc);
-            }
+            CompleteState?.Invoke(actor);
         }
     }
 }

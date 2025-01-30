@@ -15,9 +15,9 @@ namespace NPCProcGen.Core.States
         private const int MaxInterval = 10;
         private const int MaxDuration = 30;
 
-        private readonly ActorTag2D _target;
+        private readonly ActorTag2D _targetActor;
+        private Vector2 _wanderPosition;
         private Vector2 _origin;
-        private Vector2 _targetPosition;
 
         private bool _isWandering = false;
 
@@ -36,8 +36,8 @@ namespace NPCProcGen.Core.States
         /// <param name="target">The target actor.</param>
         public WanderState(NPCAgent2D owner, ActorTag2D target) : base(owner)
         {
-            _target = target;
-            _targetPosition = owner.Parent.GlobalPosition;
+            _targetActor = target;
+            _wanderPosition = owner.Parent.GlobalPosition;
             _idleTimer = CommonUtils.Rnd.Next(MinInterval, MaxInterval);
         }
 
@@ -71,23 +71,22 @@ namespace NPCProcGen.Core.States
         /// <param name="delta">The time elapsed since the last update.</param>
         public override void Update(double delta)
         {
-            if (!_isWandering)
-            {
-                _idleTimer -= (float)delta;
-
-                if (_idleTimer <= 0)
-                {
-                    _targetPosition = CommonUtils.GetRandomPosInCircularArea(_origin, WanderRadius);
-                    _idleTimer = CommonUtils.Rnd.Next(MinInterval, MaxInterval);
-                    _isWandering = true;
-                }
-            }
-
             _durationTimer -= (float)delta;
 
             if (_durationTimer <= 0)
             {
                 OnCompleteState(true);
+            }
+
+            if (_isWandering) return;
+
+            _idleTimer -= (float)delta;
+
+            if (_idleTimer <= 0)
+            {
+                _wanderPosition = CommonUtils.GetRandomPosInCircularArea(_origin, WanderRadius);
+                _idleTimer = CommonUtils.Rnd.Next(MinInterval, MaxInterval);
+                _isWandering = true;
             }
         }
 
@@ -106,7 +105,7 @@ namespace NPCProcGen.Core.States
         /// <returns>The target position.</returns>
         public Vector2 GetTargetPosition()
         {
-            return _targetPosition;
+            return _wanderPosition;
         }
 
         /// <summary>
@@ -115,7 +114,7 @@ namespace NPCProcGen.Core.States
         /// <param name="target">The detected actor.</param>
         private void OnActorDetected(ActorTag2D target)
         {
-            if (target == _target)
+            if (target == _targetActor)
             {
                 OnCompleteState(false);
             }
