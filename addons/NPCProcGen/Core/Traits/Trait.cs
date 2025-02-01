@@ -60,10 +60,11 @@ namespace NPCProcGen.Core.Traits
         /// </summary>
         /// <param name="type">The resource type to steal.</param>
         /// <returns>The chosen actor.</returns>
-        private ActorTag2D ChooseActor(ResourceType type, Func<ActorTag2D, bool> assessor,
+        private ActorTag2D ChooseActor(ResourceType type, Func<ActorTag2D, bool> bondChecker,
             Func<List<ActorTag2D>, ActorTag2D> alternator)
         {
             List<ActorTag2D> peerActors = CommonUtils.Shuffle(_owner.Memorizer.GetPeerActors());
+            List<ActorTag2D> actorsWithLastPositions = new();
 
             foreach (ActorTag2D actor in peerActors)
             {
@@ -71,14 +72,16 @@ namespace NPCProcGen.Core.Traits
 
                 if (actorLastPos == null) continue;
 
+                actorsWithLastPositions.Add(actor);
+
                 // TODO: Add check if actor workplace is known
-                if (!ResourceManager.Instance.IsDeficient(actor, type) && assessor(actor))
+                if (!ResourceManager.Instance.IsDeficient(actor, type) && bondChecker(actor))
                 {
                     return actor;
                 }
             }
 
-            return alternator(peerActors);
+            return alternator(actorsWithLastPositions);
         }
 
         private float CalculateWeight(ResourceType type)
