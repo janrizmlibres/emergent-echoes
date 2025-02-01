@@ -13,7 +13,7 @@ namespace NPCProcGen.Core.Actions
         private readonly ActorTag2D _targetActor;
         private readonly ResourceType _targetResource;
 
-        private MoveState _moveState;
+        private MoveState _initialMoveState;
         private StealState _stealState;
 
         /// <summary>
@@ -38,15 +38,15 @@ namespace NPCProcGen.Core.Actions
             Vector2? targetLastPosition = _owner.Memorizer.GetLastKnownPosition(_targetActor);
             DebugTool.Assert(targetLastPosition != null, "Target must have a location");
 
-            _moveState = new(_owner, _targetActor.Parent, targetLastPosition.Value);
+            _initialMoveState = new(_owner, _targetActor.Parent, targetLastPosition.Value, true);
             WanderState wanderState = new(_owner, _targetActor);
-            MoveState moveState = new(_owner, _targetActor.Parent);
+            MoveState moveState = new(_owner, _targetActor.Parent, isStealing: true);
             _stealState = new(_owner, _targetActor, _targetResource);
             FleeState fleeState = new(_owner);
 
-            _moveState.CompleteState += (bool isTargetDetected) =>
+            _initialMoveState.CompleteState += (bool isTargetFound) =>
             {
-                TransitionTo(isTargetDetected ? _stealState : wanderState);
+                TransitionTo(isTargetFound ? _stealState : wanderState);
             };
             wanderState.CompleteState += (bool durationReached) =>
             {
@@ -56,7 +56,7 @@ namespace NPCProcGen.Core.Actions
                 }
                 else
                 {
-                    TransitionTo(_moveState);
+                    TransitionTo(moveState);
                 }
             };
             moveState.CompleteState += (_) => TransitionTo(_stealState);
@@ -79,7 +79,7 @@ namespace NPCProcGen.Core.Actions
         public override void Run()
         {
             _owner.EmitSignal(NPCAgent2D.SignalName.ExecutionStarted, Variant.From(ActionType.Theft));
-            TransitionTo(_owner.IsActorInRange(_targetActor) ? _stealState : _moveState);
+            TransitionTo(_owner.IsActorInRange(_targetActor) ? _stealState : _initialMoveState);
         }
     }
 }

@@ -52,22 +52,22 @@ namespace NPCProcGen.Core.Actions
             MoveState moveState = new(_owner, _target.Parent);
             _petitionState = new PetitionState(_owner, _target, _targetResource);
 
-            _moveState.CompleteState += (bool isActorDetected) =>
+            _moveState.CompleteState += (bool isTargetFound) =>
             {
-                TransitionTo(isActorDetected ? _petitionState : wanderState);
+                TransitionTo(isTargetFound ? _petitionState : wanderState);
             };
             wanderState.CompleteState += (bool durationReached) =>
             {
                 if (durationReached)
                 {
-                    CompleteAction(ActionType.Theft);
+                    CompleteAction(ActionType.Petition);
                 }
                 else
                 {
-                    TransitionTo(_moveState);
+                    TransitionTo(moveState);
                 }
             };
-            _moveState.CompleteState += (_) => TransitionTo(moveState);
+            moveState.CompleteState += (_) => TransitionTo(_petitionState);
             _petitionState.CompleteState += () => CompleteAction(ActionType.Petition);
         }
 
@@ -79,7 +79,6 @@ namespace NPCProcGen.Core.Actions
         public override void Run()
         {
             _owner.EmitSignal(NPCAgent2D.SignalName.ExecutionStarted, Variant.From(ActionType.Petition));
-            GD.Print($"Petitioning {_target.Parent.Name} for {_targetResource}");
             TransitionTo(_owner.IsActorInRange(_target) ? _petitionState : _moveState);
         }
     }
