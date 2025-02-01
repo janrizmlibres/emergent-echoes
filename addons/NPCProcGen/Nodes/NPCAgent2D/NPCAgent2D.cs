@@ -5,7 +5,6 @@ using Godot.Collections;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
-using NPCProcGen.Core.Components.Variants;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 using NPCProcGen.Core.Traits;
@@ -19,6 +18,16 @@ namespace NPCProcGen
     [Tool]
     public partial class NPCAgent2D : ActorTag2D
     {
+        [Signal]
+        public delegate void ExecutionStartedEventHandler(Variant action);
+        [Signal]
+        public delegate void ExecutionEndedEventHandler(Variant action);
+
+        [Signal]
+        public delegate void ActionStateEnteredEventHandler(Variant state, Array<Variant> data);
+        [Signal]
+        public delegate void ActionStateExitedEventHandler(Variant state, Array<Variant> data);
+
         [Export(PropertyHint.Range, "1,100,")]
         public int SatiationAmount { get; set; } = 100;
 
@@ -58,16 +67,6 @@ namespace NPCProcGen
         [Export(PropertyHint.Range, "0,1,0.01")]
         public float Companionship { get; set; } = 0.5f;
 
-        [Signal]
-        public delegate void ExecutionStartedEventHandler(Variant action);
-        [Signal]
-        public delegate void ExecutionEndedEventHandler(Variant action);
-
-        [Signal]
-        public delegate void ActionStateEnteredEventHandler(Variant state, Array<Variant> data);
-        [Signal]
-        public delegate void ActionStateExitedEventHandler(Variant state, Array<Variant> data);
-
         /// <summary>
         /// Gets the target position for the NPC.
         /// </summary>
@@ -93,6 +92,15 @@ namespace NPCProcGen
 
         private Area2D _actorDetector;
         private Timer _evaluationTimer;
+
+        /// <summary>
+        /// Called when the node enters the scene tree.
+        /// Updates the parent node and configuration warnings if in the editor.
+        /// </summary>
+        public override void _EnterTree()
+        {
+            base._EnterTree();
+        }
 
         /// <summary>
         /// Called when the node is added to the scene.
@@ -124,12 +132,12 @@ namespace NPCProcGen
             collisionShape2D.Shape = circleShape2D;
 
             _actorDetector.AddChild(collisionShape2D);
-            Parent.AddChild(_actorDetector);
+            CallDeferred(MethodName.SetActorDetector, _actorDetector);
 
             _actorDetector.BodyEntered += OnBodyEntered;
             _actorDetector.BodyExited += OnBodyExited;
 
-            _evaluationTimer = new()
+            _evaluationTimer = new Timer()
             {
                 WaitTime = 10,
                 OneShot = true,
@@ -138,15 +146,6 @@ namespace NPCProcGen
             _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
             AddChild(_evaluationTimer);
             AddTraits();
-        }
-
-        /// <summary>
-        /// Called when the node enters the scene tree.
-        /// Updates the parent node and configuration warnings if in the editor.
-        /// </summary>
-        public override void _EnterTree()
-        {
-            base._EnterTree();
         }
 
         /// <summary>
@@ -162,14 +161,9 @@ namespace NPCProcGen
                 warnings.Add("The NPCAgent2D can be used only under a Node2D inheriting parent node.");
             }
 
-            if (_actorDetector == null)
-            {
-                warnings.Add("The NPCAgent2D requires an Area2D to detect other actors.");
-            }
-
             if (RearMarker == null)
             {
-                warnings.Add("The NPCAgent2D requires a Marker2D node to make stealing possible.");
+                warnings.Add("The NPCAgent2D requires a Marker2D node to identify the rear side of the actor.");
             }
 
             return warnings.ToArray();
@@ -261,73 +255,26 @@ namespace NPCProcGen
                 Strategizer.AddTrait(new LawfulTrait(this, Lawful, Sensor, npcMemorizer));
         }
 
+        private void SetActorDetector(Area2D actorDetector)
+        {
+            Parent.AddChild(actorDetector);
+        }
+
         /// <summary>
         /// Handles the evaluation timer timeout event.
         /// Evaluates an action for the NPC.
         /// </summary>
         private void OnEvaluationTimerTimeout()
         {
-            if (Parent.Name == "Garreth") return;
-            TestTheftAction();
+            BaseAction action = Strategizer.EvaluateAction(SocialPractice.Proactive);
 
-            // BaseAction action = Strategizer.EvaluateAction(SocialPractice.Proactive);
-
-            // if (action != null)
-            // {
-            //     GD.Print($"Action evaluated by {Parent.Name}: {action.GetType().Name}");
-            //     Executor.SetAction(action);
-            // }
-            // else
-            // {
-            //     GD.Print($"No action evaluated by {Parent.Name}");
-            //     _evaluationTimer.Start();
-            // }
-        }
-
-        private void TestTheftAction()
-        {
-            ActorTag2D actor = Sensor.GetShuffledActors().Where(actor =>
+            if (action != null)
             {
-                return actor != this && ResourceManager.Instance.HasResource(actor, ResourceType.Money)
-                    && Memorizer.GetLastKnownPosition(actor) != null;
-            }).FirstOrDefault();
-
-            if (actor != null)
-            {
-                BaseAction action = new TheftAction(this, actor, ResourceType.Money);
                 GD.Print($"Action evaluated by {Parent.Name}: {action.GetType().Name}");
                 Executor.SetAction(action);
             }
             else
             {
-                GD.Print($"No action evaluated by {Parent.Name}");
-                _evaluationTimer.Start();
-            }
-        }
-
-        // ! Remove in production
-        private void TestSocializeAction()
-        {
-            BaseAction action = new SocializeAction(this);
-            GD.Print($"Action evaluated by {Parent.Name}: {action.GetType().Name}");
-            Executor.SetAction(action);
-        }
-
-        // ! Remove in production
-        private void TestPetitionAction()
-        {
-            ActorTag2D actor = Sensor.GetActors().Where(actor => actor != this && actor is NPCAgent2D).First();
-
-
-            if (Memorizer.GetLastKnownPosition(actor) != null)
-            {
-                BaseAction action = new PetitionAction(this, actor, ResourceType.Money);
-                GD.Print($"Action evaluated by {Parent.Name}: {action.GetType().Name}");
-                Executor.SetAction(action);
-            }
-            else
-            {
-                GD.Print($"No action evaluated by {Parent.Name}");
                 _evaluationTimer.Start();
             }
         }
@@ -346,13 +293,12 @@ namespace NPCProcGen
         {
             if (Parent == body) return;
 
-            foreach (Node child in body.GetChildren())
+            ActorTag2D actor = body.GetChildren().OfType<ActorTag2D>().FirstOrDefault();
+
+            if (actor != null)
             {
-                if (child is ActorTag2D actor)
-                {
-                    _detectedActors.Add(actor);
-                    NotifManager.NotifyActorDetected(actor);
-                }
+                _detectedActors.Add(actor);
+                NotifManager.NotifyActorDetected(actor);
             }
         }
 
@@ -363,13 +309,12 @@ namespace NPCProcGen
         /// <param name="body">The body that exited the actor detector.</param>
         private void OnBodyExited(Node2D body)
         {
-            foreach (Node child in body.GetChildren())
+            ActorTag2D actor = body.GetChildren().OfType<ActorTag2D>().FirstOrDefault();
+
+            if (actor != null)
             {
-                if (child is ActorTag2D actor)
-                {
-                    Memorizer.UpdateLastKnownPosition(actor, actor.Parent.GlobalPosition);
-                    _detectedActors.Remove(actor);
-                }
+                Memorizer.UpdateLastKnownPosition(actor, actor.Parent.GlobalPosition);
+                _detectedActors.Remove(actor);
             }
         }
     }

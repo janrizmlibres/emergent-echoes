@@ -4,7 +4,6 @@ using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
-using System;
 using System.Collections.Generic;
 
 namespace NPCProcGen
@@ -15,6 +14,11 @@ namespace NPCProcGen
     [Tool]
     public partial class ActorTag2D : Node
     {
+        [Signal]
+        public delegate void InteractionStartedEventHandler(Variant state, Array<Variant> data);
+        [Signal]
+        public delegate void InteractionEndedEventHandler();
+
         /// <summary>
         /// Gets or sets the monetary value associated with this actor.
         /// </summary>
@@ -50,16 +54,6 @@ namespace NPCProcGen
 
         // TODO: Add exported property for character dimensions
 
-        [Signal]
-        public delegate void InteractionStartedEventHandler(Variant state, Array<Variant> data);
-        [Signal]
-        public delegate void InteractionEndedEventHandler();
-
-        /// <summary>
-        /// Gets the parent node as a Node2D.
-        /// </summary>
-        public Node2D Parent { get; protected set; }
-
         /// <summary>
         /// Gets the notification manager of the Actor.
         /// </summary>
@@ -70,7 +64,25 @@ namespace NPCProcGen
         /// </summary>
         public Memorizer Memorizer { get; protected set; }
 
+        /// <summary>
+        /// Gets the parent node as a Node2D.
+        /// </summary>
+        public Node2D Parent { get; protected set; }
+
         private Marker2D _rearMarker;
+
+        /// <summary>
+        /// Called when the node enters the scene tree.
+        /// Updates the parent node and configuration warnings if in the editor.
+        /// </summary>
+        public override void _EnterTree()
+        {
+            if (Engine.IsEditorHint())
+            {
+                Parent = GetParent() as Node2D;
+                UpdateConfigurationWarnings();
+            }
+        }
 
         /// <summary>
         /// Called when the node is added to the scene.
@@ -91,19 +103,6 @@ namespace NPCProcGen
         }
 
         /// <summary>
-        /// Called when the node enters the scene tree.
-        /// Updates the parent node and configuration warnings if in the editor.
-        /// </summary>
-        public override void _EnterTree()
-        {
-            if (Engine.IsEditorHint())
-            {
-                Parent = GetParent() as Node2D;
-                UpdateConfigurationWarnings();
-            }
-        }
-
-        /// <summary>
         /// Provides configuration warnings for the node.
         /// </summary>
         /// <returns>An array of warning messages.</returns>
@@ -118,7 +117,7 @@ namespace NPCProcGen
 
             if (_rearMarker == null)
             {
-                warnings.Add("The ActorTag2D requires a Marker2D node for use in actions such as stealing.");
+                warnings.Add("The ActorTag2D requires a Marker2D node to identify the rear side of the actor.");
             }
 
             return warnings.ToArray();
