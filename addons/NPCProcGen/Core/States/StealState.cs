@@ -53,13 +53,13 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Exit()
         {
-            Array<Variant> theftData = new()
+            Array<Variant> data = new()
             {
                 Variant.From(_targetResource),
                 _amountToSteal
             };
 
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Steal), theftData);
+            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Steal), data);
         }
 
         /// <summary>
