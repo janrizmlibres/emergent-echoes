@@ -1,0 +1,49 @@
+[gd_scene load_steps=8 format=3 uid="uid://boawcqhrg67eg"]
+
+[ext_resource type="Texture2D" uid="uid://cfb2no4xxnn2l" path="res://Entities/Objects/Tree/Art/forest_resources.png" id="1_1wpv6"]
+[ext_resource type="Script" path="res://Entities/Objects/Tree/Tree.cs" id="1_wpbbf"]
+[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Game Components/interactable.tscn" id="2_tpp7v"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_02270"]
+atlas = ExtResource("1_1wpv6")
+region = Rect2(16, 16, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5y27k"]
+atlas = ExtResource("1_1wpv6")
+region = Rect2(16, 48, 16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gt5dx"]
+size = Vector2(10, 10)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hwgqm"]
+radius = 28.0
+
+[node name="Tree" type="StaticBody2D"]
+script = ExtResource("1_wpbbf")
+
+[node name="TreeSprite" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -9)
+texture = SubResource("AtlasTexture_02270")
+
+[node name="SaplingSprite" type="Sprite2D" parent="."]
+visible = false
+texture_filter = 1
+texture = SubResource("AtlasTexture_5y27k")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_gt5dx")
+
+[node name="Interactable" parent="." instance=ExtResource("2_tpp7v")]
+PrimaryActionDescription = "Chop"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
+position = Vector2(0, -3)
+shape = SubResource("CircleShape2D_hwgqm")
+
+[node name="RegrowTimer" type="Timer" parent="."]
+wait_time = 300.0
+one_shot = true
+
+[connection signal="timeout" from="RegrowTimer" to="." method="OnRegrowTimerTimeout"]

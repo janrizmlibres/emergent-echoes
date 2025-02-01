@@ -10,11 +10,10 @@ config_version=5
 
 [application]
 
-config/name="Emergent Echoes"
-run/main_scene="res://world.tscn"
+config/name="test1"
 config/features=PackedStringArray("4.3", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [dotnet]
 
-project/assembly_name="Emergent Echoes"
+project/assembly_name="test1"

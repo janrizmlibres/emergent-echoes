@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=3 uid="uid://cvgiqagi4pexc"]
+
+[ext_resource type="Script" path="res://Entities/Objects/Rock/Rock.cs" id="1_aa0db"]
+[ext_resource type="Texture2D" uid="uid://mqkuvhifdtkt" path="res://Entities/Objects/Rock/Art/forest_resources.png" id="1_rrllk"]
+[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Game Components/interactable.tscn" id="2_hfwux"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_038nm"]
+atlas = ExtResource("1_rrllk")
+region = Rect2(32, 48, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oa30b"]
+atlas = ExtResource("1_rrllk")
+region = Rect2(64, 64, 16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o2lg7"]
+size = Vector2(12, 14)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_skj64"]
+radius = 26.0
+
+[node name="Rock" type="StaticBody2D"]
+script = ExtResource("1_aa0db")
+
+[node name="FullRock" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = SubResource("AtlasTexture_038nm")
+
+[node name="BrokenRock" type="Sprite2D" parent="."]
+visible = false
+texture_filter = 1
+position = Vector2(0, 5)
+texture = SubResource("AtlasTexture_oa30b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = SubResource("RectangleShape2D_o2lg7")
+
+[node name="Interactable" parent="." instance=ExtResource("2_hfwux")]
+PrimaryActionDescription = "Mine"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
+shape = SubResource("CircleShape2D_skj64")
+
+[node name="RegrowTimer" type="Timer" parent="."]
+wait_time = 300.0
+one_shot = true
+
+[connection signal="timeout" from="RegrowTimer" to="." method="OnRegrowTimerTimeout"]

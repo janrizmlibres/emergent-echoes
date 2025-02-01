@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dk8dy8gtvfcd4"
-path="res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex"
+uid="uid://cld0h2h4jfq4"
+path="res://.godot/imported/repeater.svg-be2d3a7f1a46d7ba1d1939553725f598.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://icon.svg"
-dest_files=["res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex"]
+source_file="res://addons/beehave/icons/repeater.svg"
+dest_files=["res://.godot/imported/repeater.svg-be2d3a7f1a46d7ba1d1939553725f598.ctex"]
 
 [params]
 
