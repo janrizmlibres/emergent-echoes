@@ -1,7 +1,7 @@
 using EmergentEchoes.Entities.UI.Indicators;
 using Godot;
 
-namespace EmergentEchoes.Utilities
+namespace EmergentEchoes.Utilities.Game
 {
 	public static class FloatTextManager
 	{

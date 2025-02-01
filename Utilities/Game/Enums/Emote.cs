@@ -1,4 +1,4 @@
-namespace EmergentEchoes.Utilities.Enums
+namespace EmergentEchoes.Utilities.Game.Enums
 {
     public enum Emote
     {

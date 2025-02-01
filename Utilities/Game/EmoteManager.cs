@@ -1,8 +1,8 @@
 using EmergentEchoes.Entities.UI.Indicators;
-using EmergentEchoes.Utilities.Enums;
+using EmergentEchoes.Utilities.Game.Enums;
 using Godot;
 
-namespace EmergentEchoes.Utilities
+namespace EmergentEchoes.Utilities.Game
 {
     public static class EmoteManager
     {
