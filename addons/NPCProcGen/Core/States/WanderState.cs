@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 
@@ -62,7 +63,6 @@ namespace NPCProcGen.Core.States
         {
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
             _owner.NotifManager.ActorDetected -= OnActorDetected;
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Wander));
         }
 
         /// <summary>
@@ -135,6 +135,8 @@ namespace NPCProcGen.Core.States
         private void OnCompleteState(bool durationReached)
         {
             CompleteState?.Invoke(durationReached);
+            Array<Variant> data = new() { durationReached };
+            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Wander), data);
         }
     }
 }

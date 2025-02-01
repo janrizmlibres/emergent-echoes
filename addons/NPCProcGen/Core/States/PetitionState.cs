@@ -33,7 +33,6 @@ namespace NPCProcGen.Core.States
         public override void Enter()
         {
             GD.Print($"{_owner.Parent.Name} PetitionState Enter");
-            GD.Print($"Amount to petition: {_amount}");
 
             Array<Variant> ownerData = new() { _target.Parent };
             Array<Variant> targetData = new() { _owner.Parent };
@@ -55,7 +54,7 @@ namespace NPCProcGen.Core.States
         public override void Update(double delta)
         {
             // Negotation only occurs when the target is an NPC and not the player
-            if (_isTargetPlayer) return;
+            // if (_isTargetPlayer) return;
 
             _negotiationTimer -= (float)delta;
 
@@ -91,8 +90,6 @@ namespace NPCProcGen.Core.States
             // * The higher the weight, the lower the additional probability
             float adjustedProbability = baseProbability + (1 - baseProbability) * (1 - targetResource.Weight) * resourceFactor;
 
-            GD.Print($"Petition success rate: {adjustedProbability}");
-            GD.Print($"Lower threshold: {targetResource.LowerThreshold}");
             bool isAccepted = GD.Randf() < adjustedProbability;
             OnPetitionAnswered(isAccepted);
         }
@@ -106,12 +103,9 @@ namespace NPCProcGen.Core.States
 
         private void OnPetitionAnswered(bool isAccepted)
         {
-            GD.Print($"{_target.Parent.Name} {(isAccepted ? "accepted" : "rejected")} the petition from {_owner.Parent.Name}");
-
             if (isAccepted)
             {
                 ResourceManager.Instance.TranserResources(_target, _owner, _resourceType, _amount);
-                GD.Print($"Remaining resource: {ResourceManager.Instance.GetResource(_target, _resourceType).Amount}");
             }
 
             _owner.Memorizer.UpdateRelationship(_target, isAccepted ? 3 : -1);

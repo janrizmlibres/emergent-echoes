@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using Godot;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
@@ -12,6 +14,11 @@ namespace NPCProcGen.Core.States
         private readonly Node2D _targetNode;
         private Vector2? _movePosition;
 
+        private readonly bool _isStealing;
+        private bool _targetFound = false;
+
+        private readonly ActorTag2D _targetActor;
+
         /// <summary>
         /// Event triggered when the state is completed.
         /// </summary>
@@ -22,12 +29,15 @@ namespace NPCProcGen.Core.States
         /// </summary>
         /// <param name="owner">The NPC agent owning this state.</param>
         /// <param name="target">The target node to move to.</param>
-        /// <param name="lastPosition">The last known position of the target.</param>
-        public MoveState(NPCAgent2D owner, Node2D target, Vector2? lastPosition = null)
+        /// <param name="lastKnownPosition">The last known position of the target.</param>
+        public MoveState(NPCAgent2D owner, Node2D target, Vector2? lastKnownPosition = null, bool isStealing = false)
             : base(owner)
         {
             _targetNode = target;
-            _movePosition = lastPosition;
+            _isStealing = isStealing;
+            _movePosition = lastKnownPosition;
+
+            _targetActor = target.GetChildren().OfType<ActorTag2D>().FirstOrDefault();
         }
 
         /// <summary>
@@ -77,7 +87,14 @@ namespace NPCProcGen.Core.States
         /// <returns>The global position of the target.</returns>
         public Vector2 GetTargetPosition()
         {
-            return _movePosition ?? _targetNode.GlobalPosition;
+            // If only move position is set OR both move position and target node are set but target is not found, return move position
+            if (_targetNode == null || _movePosition != null && !_targetFound) return _movePosition.Value;
+
+            // If target node is not an actor, return exact node position
+            if (_targetActor == null) return _targetNode.GlobalPosition;
+
+            // If owner is stealing, return rear marker position of target actor, otherwise return offset position
+            return _isStealing ? _targetActor.RearMarker.GlobalPosition : CommonUtils.GetInteractionPosition(_owner, _targetActor);
         }
 
         private bool IsSeeking()
@@ -87,20 +104,15 @@ namespace NPCProcGen.Core.States
 
         private void OnNavigationComplete()
         {
-            OnCompleteState(false);
+            CompleteState?.Invoke(_targetFound);
         }
 
         private void OnActorDetected(ActorTag2D target)
         {
             if (target.Parent == _targetNode && IsSeeking())
             {
-                OnCompleteState(true);
+                _targetFound = true;
             }
-        }
-
-        private void OnCompleteState(bool isTargetDetected)
-        {
-            CompleteState?.Invoke(isTargetDetected);
         }
     }
 }
