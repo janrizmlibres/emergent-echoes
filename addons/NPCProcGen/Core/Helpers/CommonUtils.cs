@@ -12,6 +12,8 @@ namespace NPCProcGen.Core.Helpers
     /// </summary>
     public static class CommonUtils
     {
+        private const float PositionOffset = 15;
+
         /// <summary>
         /// Gets a shared instance of the random number generator.
         /// </summary>
@@ -38,11 +40,11 @@ namespace NPCProcGen.Core.Helpers
 
         public static Vector2 GetInteractionPosition(ActorTag2D _owner, ActorTag2D _target)
         {
-            Vector2 offset1 = new(15, 0);
+            Vector2 offset1 = new(PositionOffset, 0);
             Vector2 adjustedPosition1 = _target.Parent.GlobalPosition + offset1;
             float distance1 = _owner.Parent.GlobalPosition.DistanceTo(adjustedPosition1);
 
-            Vector2 offset2 = new(-15, 0);
+            Vector2 offset2 = new(-PositionOffset, 0);
             Vector2 adjustedPosition2 = _target.Parent.GlobalPosition + offset2;
             float distance2 = _owner.Parent.GlobalPosition.DistanceTo(adjustedPosition2);
 
