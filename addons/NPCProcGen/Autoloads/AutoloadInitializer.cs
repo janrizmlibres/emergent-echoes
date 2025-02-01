@@ -20,6 +20,7 @@ namespace NPCProcGen.Autoloads
             WorldState.Instance.Initialize(actors);
             ResourceManager.Instance.Initialize(actors);
 
+            // ! Remove temporary debug code in production
             // GD.Print("Actors in WorldState:");
             // foreach (ActorTag2D actor in WorldState.Instance.Actors)
             // {
