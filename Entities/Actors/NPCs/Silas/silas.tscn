@@ -60,7 +60,7 @@ position = Vector2(0, -9)
 texture = ExtResource("2_5inc2")
 hframes = 8
 vframes = 6
-frame = 6
+frame = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -85,18 +85,14 @@ avoidance_enabled = true
 radius = 5.0
 debug_enabled = true
 
-[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("ActorDetector", "StealMarker")]
+[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("RearMarker")]
 script = ExtResource("3_x7obk")
-ActorDetector = NodePath("")
 Survival = 0.52
 Thief = 0.73
-FoodValue = 10
-StealMarker = NodePath("../StealMarker/Marker2D")
+RearMarker = NodePath("../RearMarker/Marker2D")
 
-[node name="StealMarker" type="Node2D" parent="."]
+[node name="RearMarker" type="Node2D" parent="."]
 rotation = 3.14159
 
-[node name="Marker2D" type="Marker2D" parent="StealMarker"]
+[node name="Marker2D" type="Marker2D" parent="RearMarker"]
 position = Vector2(-10, -2.53518e-05)
-
-[node name="StateTimer" type="Timer" parent="."]

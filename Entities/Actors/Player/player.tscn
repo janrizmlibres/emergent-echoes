@@ -1,9 +1,9 @@
-[gd_scene load_steps=23 format=3 uid="uid://bnmuhsutwyeye"]
+[gd_scene load_steps=22 format=3 uid="uid://bnmuhsutwyeye"]
 
 [ext_resource type="Script" path="res://Entities/Actors/Player/Player.cs" id="1_idj2s"]
 [ext_resource type="Texture2D" uid="uid://pdwuu8j1am22" path="res://Entities/Actors/Player/Art/player_elf.png" id="1_w44yq"]
 [ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/ActorTag2D/ActorTag2D.cs" id="3_tiunm"]
-[ext_resource type="PackedScene" uid="uid://ddv2dvtqnrekh" path="res://Utilities/Game Components/interacting_component.tscn" id="4_y61k5"]
+[ext_resource type="PackedScene" uid="uid://ddv2dvtqnrekh" path="res://Utilities/Interactions/interacting_component.tscn" id="4_y61k5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6wwjl"]
 radius = 3.0
@@ -266,10 +266,6 @@ states/Move/position = Vector2(360, 8)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_icw2r"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_tb18j"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_3y2ex")]
 graph_offset = Vector2(0, -67.0082)
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ptiuy"]
-radius = 6.0
-height = 16.0
-
 [node name="Player" type="CharacterBody2D"]
 texture_filter = 1
 position = Vector2(158, 92)
@@ -304,9 +300,9 @@ parameters/Move/blend_position = 1.0
 position = Vector2(0, -1)
 radius = 2.0
 
-[node name="ActorTag2D" type="Node" parent="." node_paths=PackedStringArray("StealMarker")]
+[node name="ActorTag2D" type="Node" parent="." node_paths=PackedStringArray("RearMarker")]
 script = ExtResource("3_tiunm")
-StealMarker = NodePath("../StealMarker/Marker2D")
+RearMarker = NodePath("../StealMarker/Marker2D")
 
 [node name="StealMarker" type="Node2D" parent="."]
 position = Vector2(0, -1)
@@ -316,9 +312,3 @@ rotation = 3.14159
 position = Vector2(-10, 0)
 
 [node name="InteractingComponent" parent="." instance=ExtResource("4_y61k5")]
-
-[node name="FloatTextClicker" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="FloatTextClicker"]
-position = Vector2(0, -6)
-shape = SubResource("CapsuleShape2D_ptiuy")

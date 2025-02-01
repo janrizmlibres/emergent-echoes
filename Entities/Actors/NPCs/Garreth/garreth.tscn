@@ -1,7 +1,7 @@
 [gd_scene load_steps=17 format=3 uid="uid://blrsgvyqgogoa"]
 
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Dummy.cs" id="1_4ri2h"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="1_isnnv"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/NPC.cs" id="1_smq2w"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="2_or5th"]
 [ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_attte"]
 
@@ -54,7 +54,7 @@ graph_offset = Vector2(0, -75.9467)
 
 [node name="Garreth" type="CharacterBody2D"]
 texture_filter = 1
-script = ExtResource("1_4ri2h")
+script = ExtResource("1_smq2w")
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -62,7 +62,7 @@ position = Vector2(0, -9)
 texture = ExtResource("1_isnnv")
 hframes = 8
 vframes = 6
-frame = 6
+frame = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -87,19 +87,14 @@ path_postprocessing = 1
 avoidance_enabled = true
 radius = 5.0
 
-[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("ActorDetector", "StealMarker")]
+[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("RearMarker")]
 script = ExtResource("3_attte")
-ActorDetector = NodePath("")
 Survival = 0.4
 Lawful = 0.65
-MoneyValue = 500
-FoodValue = 100
-StealMarker = NodePath("../StealMarker/Marker2D")
+RearMarker = NodePath("../RearMarker/Marker2D")
 
-[node name="StealMarker" type="Node2D" parent="."]
+[node name="RearMarker" type="Node2D" parent="."]
 rotation = 3.14159
 
-[node name="Marker2D" type="Marker2D" parent="StealMarker"]
+[node name="Marker2D" type="Marker2D" parent="RearMarker"]
 position = Vector2(-10, -2.53518e-05)
-
-[node name="StateTimer" type="Timer" parent="."]
