@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c3s3r5aucrjod"]
+[gd_scene load_steps=8 format=3 uid="uid://c3s3r5aucrjod"]
 
 [ext_resource type="Texture2D" uid="uid://n3fp5jjp8t6" path="res://interface/Prompt BG.png" id="1_7ruhv"]
 [ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://interface/PressStart2P-Regular.ttf" id="2_jkvan"]
@@ -6,6 +6,7 @@
 [ext_resource type="FontFile" uid="uid://brdooo1e25vgt" path="res://interface/PixelifySans-VariableFont_wght.ttf" id="3_tt8x5"]
 [ext_resource type="Script" path="res://interface/NpcDescription.cs" id="5_ax7q8"]
 [ext_resource type="Script" path="res://interface/Traits.cs" id="6_dplg3"]
+[ext_resource type="PackedScene" uid="uid://c0ee67a3a37o5" path="res://interface/bar/heart_bar/heart_bar.tscn" id="7_qdw11"]
 
 [node name="DescriptionPrompt" type="CanvasLayer"]
 layer = 10
@@ -85,3 +86,24 @@ theme_override_font_sizes/font_size = 12
 text = "Lorem Ipsum, Lorem Ipsum"
 horizontal_alignment = 1
 script = ExtResource("6_dplg3")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Prompt"]
+layout_mode = 0
+offset_left = 101.493
+offset_top = 192.727
+offset_right = 341.493
+offset_bottom = 232.727
+theme_override_constants/separation = 70
+alignment = 1
+
+[node name="HeartBar1" parent="Prompt/HBoxContainer" instance=ExtResource("7_qdw11")]
+layout_mode = 2
+
+[node name="HeartBar2" parent="Prompt/HBoxContainer" instance=ExtResource("7_qdw11")]
+layout_mode = 2
+
+[node name="HeartBar3" parent="Prompt/HBoxContainer" instance=ExtResource("7_qdw11")]
+layout_mode = 2
+
+[node name="HeartBar4" parent="Prompt/HBoxContainer" instance=ExtResource("7_qdw11")]
+layout_mode = 2

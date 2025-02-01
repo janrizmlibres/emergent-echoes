@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=3 uid="uid://c0ee67a3a37o5"]
+
+[ext_resource type="Texture2D" uid="uid://dpvlt8y6ncbpv" path="res://interface/bar/heart_bar/emptyHeart.png" id="1_k56vi"]
+
+[node name="HeartBar" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 154.0
+offset_bottom = 40.0
+scale = Vector2(0.3, 0.3)
+theme_override_constants/separation = 5
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_k56vi")
+
+[node name="TextureRect2" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_k56vi")
+
+[node name="TextureRect3" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_k56vi")
