@@ -1,12 +1,12 @@
 [gd_scene load_steps=8 format=3 uid="uid://c3s3r5aucrjod"]
 
 [ext_resource type="Texture2D" uid="uid://n3fp5jjp8t6" path="res://interface/Prompt BG.png" id="1_7ruhv"]
-[ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://interface/PressStart2P-Regular.ttf" id="2_jkvan"]
+[ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/PressStart2P-Regular.ttf" id="2_jkvan"]
 [ext_resource type="Script" path="res://interface/NpcName.cs" id="3_ibojn"]
-[ext_resource type="FontFile" uid="uid://brdooo1e25vgt" path="res://interface/PixelifySans-VariableFont_wght.ttf" id="3_tt8x5"]
+[ext_resource type="FontFile" uid="uid://brdooo1e25vgt" path="res://Assets/Fonts/PixelifySans-VariableFont_wght.ttf" id="3_tt8x5"]
 [ext_resource type="Script" path="res://interface/NpcDescription.cs" id="5_ax7q8"]
 [ext_resource type="Script" path="res://interface/Traits.cs" id="6_dplg3"]
-[ext_resource type="PackedScene" uid="uid://c0ee67a3a37o5" path="res://interface/bar/heart_bar/heart_bar.tscn" id="7_qdw11"]
+[ext_resource type="PackedScene" uid="uid://c0ee67a3a37o5" path="res://Entities/UI/HUD/Status Bar/heart_bar/heart_bar.tscn" id="7_qdw11"]
 
 [node name="DescriptionPrompt" type="CanvasLayer"]
 layer = 10

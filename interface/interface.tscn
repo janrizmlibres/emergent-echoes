@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://c6n8kbdjlq0ka"]
 
-[ext_resource type="PackedScene" uid="uid://6li2ci8s3tqh" path="res://interface/bar/life_bar/health_bar.tscn" id="1_00wiu"]
-[ext_resource type="PackedScene" uid="uid://d0qk3oxnfvim8" path="res://interface/bar/thirst_bar/thirst_bar.tscn" id="2_oruph"]
-[ext_resource type="PackedScene" uid="uid://jvn4mcn3jeji" path="res://interface/bar/hunger_bar/hunger_bar.tscn" id="3_7apao"]
-[ext_resource type="Texture2D" uid="uid://tbp6vgrjcl6k" path="res://interface/bar/Stamina.png" id="4_krf2b"]
+[ext_resource type="PackedScene" uid="uid://6li2ci8s3tqh" path="res://Entities/UI/HUD/Status Bar/life_bar/health_bar.tscn" id="1_00wiu"]
+[ext_resource type="PackedScene" uid="uid://d0qk3oxnfvim8" path="res://Entities/UI/HUD/Status Bar/thirst_bar/thirst_bar.tscn" id="2_oruph"]
+[ext_resource type="PackedScene" uid="uid://jvn4mcn3jeji" path="res://Entities/UI/HUD/Status Bar/hunger_bar/hunger_bar.tscn" id="3_7apao"]
+[ext_resource type="Texture2D" uid="uid://tbp6vgrjcl6k" path="res://Entities/UI/HUD/Status Bar/BarTexture.png" id="4_krf2b"]
 
 [node name="Interface" type="Control"]
 layout_mode = 3

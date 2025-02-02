@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://0y0awv8ovic7"]
 
 [ext_resource type="Texture2D" uid="uid://n3fp5jjp8t6" path="res://interface/Prompt BG.png" id="1_8wkta"]
-[ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://interface/PressStart2P-Regular.ttf" id="2_ontac"]
-[ext_resource type="FontFile" uid="uid://brdooo1e25vgt" path="res://interface/PixelifySans-VariableFont_wght.ttf" id="3_6qcap"]
+[ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/PressStart2P-Regular.ttf" id="2_ontac"]
+[ext_resource type="FontFile" uid="uid://brdooo1e25vgt" path="res://Assets/Fonts/PixelifySans-VariableFont_wght.ttf" id="3_6qcap"]
 
 [node name="Prompt" type="Control"]
 layout_mode = 3
