@@ -6,8 +6,8 @@
 [ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_attte"]
 [ext_resource type="PackedScene" uid="uid://2wpeggmgbrmi" path="res://Entities/Actors/actor_detector.tscn" id="3_c743w"]
 [ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Game Components/interactable.tscn" id="6_1m8iu"]
-[ext_resource type="PackedScene" uid="uid://c3s3r5aucrjod" path="res://interface/prompt.tscn" id="7_5f5py"]
-[ext_resource type="Script" path="res://interface/GarrethPrompt.cs" id="8_jpvt0"]
+[ext_resource type="PackedScene" uid="uid://c3s3r5aucrjod" path="res://Entities/UI/HUD/Prompt/prompt.tscn" id="7_5f5py"]
+[ext_resource type="Script" path="res://Entities/UI/HUD/Prompt/Scripts/GarrethPrompt.cs" id="8_jpvt0"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0

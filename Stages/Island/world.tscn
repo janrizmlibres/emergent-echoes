@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="1_pp8dq"]
 [ext_resource type="Texture2D" uid="uid://b3h6fxk0bi5lj" path="res://Stages/Island/Areas/Forest/Art/forest.png" id="1_tpvnw"]
 [ext_resource type="PackedScene" uid="uid://bnmuhsutwyeye" path="res://Entities/Actors/Player/player.tscn" id="2_ne4id"]
-[ext_resource type="PackedScene" uid="uid://c6n8kbdjlq0ka" path="res://interface/interface.tscn" id="3_gex63"]
+[ext_resource type="PackedScene" uid="uid://c6n8kbdjlq0ka" path="res://Entities/UI/HUD/Status Bar/interface.tscn" id="3_gex63"]
 [ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/Silas/silas.tscn" id="4_gun4a"]
 [ext_resource type="PackedScene" uid="uid://blrsgvyqgogoa" path="res://Entities/Actors/NPCs/Garreth/garreth.tscn" id="5_5sidg"]
 [ext_resource type="PackedScene" uid="uid://bf75pmpbofcom" path="res://Entities/Objects/House/house.tscn" id="6_12eed"]

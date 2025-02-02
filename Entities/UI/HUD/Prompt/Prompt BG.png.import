@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://n3fp5jjp8t6"
-path="res://.godot/imported/Prompt BG.png-1d85f5f0e6b3e949af5c8da9a6b492a7.ctex"
+path="res://.godot/imported/Prompt BG.png-e8e2927dd655ba7791520617b6ea7118.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://interface/Prompt BG.png"
-dest_files=["res://.godot/imported/Prompt BG.png-1d85f5f0e6b3e949af5c8da9a6b492a7.ctex"]
+source_file="res://Entities/UI/HUD/Prompt/Prompt BG.png"
+dest_files=["res://.godot/imported/Prompt BG.png-e8e2927dd655ba7791520617b6ea7118.ctex"]
 
 [params]
 

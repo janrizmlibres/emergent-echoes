@@ -6,8 +6,8 @@
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="3_ttgx4"]
 [ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_x7obk"]
 [ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Game Components/interactable.tscn" id="6_tu70y"]
-[ext_resource type="PackedScene" uid="uid://c3s3r5aucrjod" path="res://interface/prompt.tscn" id="7_y47oe"]
-[ext_resource type="Script" path="res://interface/SilasPrompt.cs" id="8_eja77"]
+[ext_resource type="PackedScene" uid="uid://c3s3r5aucrjod" path="res://Entities/UI/HUD/Prompt/prompt.tscn" id="7_y47oe"]
+[ext_resource type="Script" path="res://Entities/UI/HUD/Prompt/Scripts/SilasPrompt.cs" id="8_eja77"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30oj8"]
 radius = 3.0
