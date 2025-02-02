@@ -1,4 +1,4 @@
-public interface IInteractable
+public interface InteractableObject
 {
 	bool IsInteractable { get; set; }
 	string ActionDescription { get; set; }
