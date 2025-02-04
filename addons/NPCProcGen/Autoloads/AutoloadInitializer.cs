@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Godot;
+using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Autoloads
 {
@@ -17,7 +18,7 @@ namespace NPCProcGen.Autoloads
             List<ActorTag2D> actors = new();
             FindActorsInNode(currentScene, actors);
 
-            WorldState.Instance.Initialize(actors);
+            Sensor.InitializeWorldState(actors);
             ResourceManager.Instance.Initialize(actors);
 
             // ! Remove temporary debug code in production
