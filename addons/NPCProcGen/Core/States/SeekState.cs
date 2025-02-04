@@ -10,6 +10,8 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public class SeekState : BaseState, INavigationState
     {
+        public const ActionState ActionStateValue = ActionState.Seek;
+
         private const float SeekRadius = 150;
         private const float IdleDuration = 10;
 
@@ -24,7 +26,7 @@ namespace NPCProcGen.Core.States
         /// Initializes a new instance of the <see cref="SeekState"/> class.
         /// </summary>
         /// <param name="owner">The owner of the state.</param>
-        public SeekState(NPCAgent2D owner) : base(owner)
+        public SeekState(NPCAgent2D owner, ActionType action) : base(owner, action)
         {
             _seekPosition = owner.Parent.GlobalPosition;
         }
@@ -34,7 +36,12 @@ namespace NPCProcGen.Core.States
             GD.Print($"{_owner.Parent.Name} SeekState Enter");
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
             _owner.NotifManager.ActorDetected += OnActorDetected;
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Seek));
+            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateEntered,
+                Variant.From(ActionStateValue)
+            );
         }
 
         public override void Update(double delta)
@@ -45,7 +52,10 @@ namespace NPCProcGen.Core.States
 
             if (_idleTimer <= 0)
             {
-                _seekPosition = CommonUtils.GetRandomPosInCircularArea(_owner.Parent.GlobalPosition, SeekRadius);
+                _seekPosition = CommonUtils.GetRandomPosInCircularArea(
+                    _owner.Parent.GlobalPosition,
+                    SeekRadius
+                );
                 _idleTimer = IdleDuration;
                 _isMoving = true;
             }
@@ -55,7 +65,11 @@ namespace NPCProcGen.Core.States
         {
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
             _owner.NotifManager.ActorDetected -= OnActorDetected;
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Seek));
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateExited,
+                Variant.From(ActionStateValue)
+            );
         }
 
         public bool IsNavigating()

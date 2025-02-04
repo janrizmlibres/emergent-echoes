@@ -10,23 +10,23 @@ namespace NPCProcGen.Core.States
 {
     public class PetitionState : BaseState
     {
+        public const ActionState ActionStateValue = ActionState.Petition;
+
         private const float NegotiationDuration = 15;
 
         private readonly ActorTag2D _target;
         private readonly ResourceType _resourceType;
-        private readonly bool _isTargetPlayer;
         private readonly int _amount;
 
         private float _negotiationTimer = NegotiationDuration;
 
         public event Action CompleteState;
 
-        public PetitionState(NPCAgent2D owner, ActorTag2D target, ResourceType type)
-            : base(owner)
+        public PetitionState(NPCAgent2D owner, ActionType action, ActorTag2D target, ResourceType type)
+            : base(owner, action)
         {
             _target = target;
             _resourceType = type;
-            _isTargetPlayer = target is not NPCAgent2D;
             _amount = CalculateAmount();
         }
 
@@ -35,27 +35,34 @@ namespace NPCProcGen.Core.States
             GD.Print($"{_owner.Parent.Name} PetitionState Enter");
 
             Array<Variant> ownerData = new() { _target.Parent };
-            Array<Variant> targetData = new() { _owner.Parent };
-
-            Array<Variant> playerData = new()
+            Array<Variant> targetData = new()
             {
-                targetData[0], // Direciton to face
+                _owner.Parent,
                 Variant.From(_resourceType),
                 _amount,
             };
 
             _owner.NotifManager.PetitionAnswered += OnPetitionAnswered;
+            _target.NotifManager.NotifyInteractionStarted();
+            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
+            _target.Sensor.SetTaskRecord(_target, _actionType, ActionStateValue);
 
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Petition), ownerData);
-            (_target as NPCAgent2D)?.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Petition), targetData);
-            _target.EmitSignal(ActorTag2D.SignalName.InteractionStarted, Variant.From(ActionState.Petition), playerData);
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateEntered,
+                Variant.From(ActionStateValue),
+                ownerData
+            );
+            CommonUtils.EmitSignal(
+                _target,
+                ActorTag2D.SignalName.InteractionStarted,
+                Variant.From(ActionStateValue),
+                targetData
+            );
         }
 
         public override void Update(double delta)
         {
-            // Negotation only occurs when the target is an NPC and not the player
-            // if (_isTargetPlayer) return;
-
             _negotiationTimer -= (float)delta;
 
             if (_negotiationTimer <= 0)
@@ -66,10 +73,21 @@ namespace NPCProcGen.Core.States
 
         public override void Exit()
         {
+            GD.Print($"{_owner.Parent.Name} PetitionState Exit");
             _owner.NotifManager.PetitionAnswered -= OnPetitionAnswered;
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Petition));
-            (_target as NPCAgent2D)?.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Petition));
-            _target.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
+            _target.NotifManager.NotifyInteractionEnded();
+            _owner.Sensor.ResetTaskRecord(_target);
+
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateExited,
+                Variant.From(ActionStateValue),
+                new Array<Variant>()
+            );
+            CommonUtils.EmitSignal(
+                _target,
+                ActorTag2D.SignalName.InteractionEnded
+            );
         }
 
         private void DetermineOutcome()
@@ -88,7 +106,8 @@ namespace NPCProcGen.Core.States
             // * Base probability is the minimum probability
             // * It can be increased according to the resource weight and factor
             // * The higher the weight, the lower the additional probability
-            float adjustedProbability = baseProbability + (1 - baseProbability) * (1 - targetResource.Weight) * resourceFactor;
+            float adjustedProbability = baseProbability + (1 - baseProbability) *
+                (1 - targetResource.Weight) * resourceFactor;
 
             bool isAccepted = GD.Randf() < adjustedProbability;
             OnPetitionAnswered(isAccepted);

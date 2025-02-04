@@ -12,10 +12,12 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public class TalkState : BaseState
     {
+        public const ActionState ActionStateValue = ActionState.Talk;
+
         private const int MinDuration = 10;
-        private const int MaxDuration = 50;
-        private const int MinCompanionshipIncrease = 5;
-        private const int MaxCompanionshipIncrease = 20;
+        private const int MaxDuration = 20;
+        private const int MinCompanionshipIncrease = 20;
+        private const int MaxCompanionshipIncrease = 40;
 
         private readonly ActorTag2D _partner;
 
@@ -27,7 +29,8 @@ namespace NPCProcGen.Core.States
         /// Initializes a new instance of the <see cref="TalkState"/> class.
         /// </summary>
         /// <param name="owner">The owner of the state.</param>
-        public TalkState(NPCAgent2D owner, ActorTag2D partner) : base(owner)
+        public TalkState(NPCAgent2D owner, ActionType action, ActorTag2D partner)
+            : base(owner, action)
         {
             _partner = partner;
             _duration = CommonUtils.Rnd.Next(MinDuration, MaxDuration);
@@ -40,9 +43,22 @@ namespace NPCProcGen.Core.States
             Array<Variant> ownerData = new() { _partner.Parent };
             Array<Variant> partnerData = new() { _owner.Parent };
 
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Talk), ownerData);
-            (_partner as NPCAgent2D)?.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Talk), partnerData);
-            _partner.EmitSignal(ActorTag2D.SignalName.InteractionStarted, Variant.From(ActionState.Talk), partnerData);
+            _partner.NotifManager.NotifyInteractionStarted();
+            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
+            _partner.Sensor.SetTaskRecord(_partner, _actionType, ActionStateValue);
+
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateEntered,
+                Variant.From(ActionStateValue),
+                ownerData
+            );
+            CommonUtils.EmitSignal(
+                _partner,
+                ActorTag2D.SignalName.InteractionStarted,
+                Variant.From((InteractState)ActionStateValue),
+                partnerData
+            );
         }
 
         public override void Update(double delta)
@@ -57,14 +73,22 @@ namespace NPCProcGen.Core.States
 
         public override void Exit()
         {
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Talk));
-            (_partner as NPCAgent2D)?.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Talk));
-            _partner.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
+            _partner.NotifManager.NotifyInteractionEnded();
+            _partner.Sensor.ResetTaskRecord(_partner);
+
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateExited,
+                Variant.From(ActionStateValue),
+                new Array<Variant>()
+            );
+            CommonUtils.EmitSignal(_partner, ActorTag2D.SignalName.InteractionEnded);
         }
 
         private void EndInteraction()
         {
-            // * Calculate the amount of companionship to increase based on duration using linear interpolation
+            // Calculate the amount of companionship to increase based on duration using
+            // linear interpolation
             float scaler = (_duration - MinDuration) / (MaxDuration - MinDuration);
             float increaseRange = MaxCompanionshipIncrease - MinCompanionshipIncrease;
             float amount = MinCompanionshipIncrease + scaler * increaseRange;

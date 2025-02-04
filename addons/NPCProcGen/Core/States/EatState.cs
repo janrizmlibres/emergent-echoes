@@ -4,16 +4,19 @@ using Godot.Collections;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
     public class EatState : BaseState
     {
+        public const ActionState ActionStateValue = ActionState.Eat;
+
         private readonly int _amountToEat;
 
         public event Action CompleteState;
 
-        public EatState(NPCAgent2D owner) : base(owner)
+        public EatState(NPCAgent2D owner, ActionType action) : base(owner, action)
         {
             _amountToEat = ComputeFoodAmount();
         }
@@ -23,7 +26,14 @@ namespace NPCProcGen.Core.States
             GD.Print($"{_owner.Parent.Name} EatState Enter");
 
             Array<Variant> data = new() { _amountToEat };
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Eat), data);
+            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
+
+            Error result = _owner.EmitSignal(
+                NPCAgent2D.SignalName.ActionStateEntered,
+                Variant.From(ActionStateValue),
+                data
+            );
+            DebugTool.Assert(result != Error.Unavailable, "Signal parameters are invalid");
 
             _owner.DeductFood(_amountToEat);
             // TODO: Move constant 10 elsewhere
@@ -33,7 +43,12 @@ namespace NPCProcGen.Core.States
 
         public override void Exit()
         {
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Eat));
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateExited,
+                Variant.From(ActionStateValue),
+                new Array<Variant>()
+            );
         }
 
         private int ComputeFoodAmount()

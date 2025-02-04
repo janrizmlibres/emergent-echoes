@@ -13,6 +13,8 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public class StealState : BaseState
     {
+        public const ActionState ActionStateValue = ActionState.Steal;
+
         private readonly ActorTag2D _targetActor;
         private readonly ResourceType _targetResource;
         private readonly float _amountToSteal;
@@ -28,8 +30,8 @@ namespace NPCProcGen.Core.States
         /// <param name="owner">The NPC agent owning this state.</param>
         /// <param name="target">The target actor to steal from.</param>
         /// <param name="type">The type of resource to steal.</param>
-        public StealState(NPCAgent2D owner, ActorTag2D target, ResourceType type)
-            : base(owner)
+        public StealState(NPCAgent2D owner, ActionType action, ActorTag2D target, ResourceType type)
+            : base(owner, action)
         {
             _targetActor = target;
             _targetResource = type;
@@ -42,9 +44,19 @@ namespace NPCProcGen.Core.States
         public override void Enter()
         {
             GD.Print($"{_owner.Parent.Name} StealState Enter");
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Steal));
+            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateEntered,
+                Variant.From(ActionStateValue)
+            );
 
-            ResourceManager.Instance.TranserResources(_targetActor, _owner, _targetResource, _amountToSteal);
+            ResourceManager.Instance.TranserResources(
+                _targetActor,
+                _owner,
+                _targetResource,
+                _amountToSteal
+            );
             CompleteState?.Invoke();
         }
 
@@ -59,7 +71,12 @@ namespace NPCProcGen.Core.States
                 _amountToSteal
             };
 
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Steal), data);
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateExited,
+                Variant.From(ActionStateValue),
+                data
+            );
         }
 
         /// <summary>
@@ -68,8 +85,9 @@ namespace NPCProcGen.Core.States
         /// <returns>The amount of resources to steal.</returns>
         private float ComputeStealAmount()
         {
-            ResourceStat ownerResource = ResourceManager.Instance.GetResource(_owner, _targetResource);
-            ResourceStat targetResource = ResourceManager.Instance.GetResource(_targetActor, _targetResource);
+            ResourceManager resMgr = ResourceManager.Instance;
+            ResourceStat ownerResource = resMgr.GetResource(_owner, _targetResource);
+            ResourceStat targetResource = resMgr.GetResource(_targetActor, _targetResource);
             return CommonUtils.CalculateSkewedAmount(ownerResource, 0.5f, 2, targetResource.Amount);
         }
     }

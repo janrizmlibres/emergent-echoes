@@ -10,6 +10,8 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public class FleeState : BaseState, INavigationState
     {
+        public const ActionState ActionStateValue = ActionState.Flee;
+
         private const float MinDistance = 200;
         private const float MaxDistance = 400;
 
@@ -24,7 +26,7 @@ namespace NPCProcGen.Core.States
         /// Initializes a new instance of the <see cref="FleeState"/> class.
         /// </summary>
         /// <param name="owner">The NPC agent owning this state.</param>
-        public FleeState(NPCAgent2D owner) : base(owner) { }
+        public FleeState(NPCAgent2D owner, ActionType action) : base(owner, action) { }
 
         /// <summary>
         /// Called when the state is entered.
@@ -32,9 +34,20 @@ namespace NPCProcGen.Core.States
         public override void Enter()
         {
             GD.Print($"{_owner.Parent.Name} FleeState Enter");
-            _fleePosition = CommonUtils.GetRandomPosInCircularArea(_owner.Parent.GlobalPosition, MaxDistance, MinDistance);
+            _fleePosition = CommonUtils.GetRandomPosInCircularArea(
+                _owner.Parent.GlobalPosition,
+                MaxDistance,
+                MinDistance
+            );
+
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Flee));
+            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
+
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateEntered,
+                Variant.From(ActionStateValue)
+            );
         }
 
         /// <summary>
@@ -43,7 +56,11 @@ namespace NPCProcGen.Core.States
         public override void Exit()
         {
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Flee));
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateExited,
+                Variant.From(ActionStateValue)
+            );
         }
 
         /// <summary>

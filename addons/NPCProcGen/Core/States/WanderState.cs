@@ -11,6 +11,8 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public class WanderState : BaseState, INavigationState
     {
+        public const ActionState ActionStateValue = ActionState.Wander;
+
         private const float WanderRadius = 100;
         private const int MinInterval = 5;
         private const int MaxInterval = 10;
@@ -35,7 +37,8 @@ namespace NPCProcGen.Core.States
         /// </summary>
         /// <param name="owner">The owner of the state.</param>
         /// <param name="target">The target actor.</param>
-        public WanderState(NPCAgent2D owner, ActorTag2D target) : base(owner)
+        public WanderState(NPCAgent2D owner, ActionType action, ActorTag2D target)
+            : base(owner, action)
         {
             _targetActor = target;
             _wanderPosition = owner.Parent.GlobalPosition;
@@ -53,7 +56,12 @@ namespace NPCProcGen.Core.States
 
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
             _owner.NotifManager.ActorDetected += OnActorDetected;
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Wander));
+            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateEntered,
+                Variant.From(ActionStateValue)
+            );
         }
 
         /// <summary>
@@ -63,6 +71,7 @@ namespace NPCProcGen.Core.States
         {
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
             _owner.NotifManager.ActorDetected -= OnActorDetected;
+            // Bring back emit signal in refactor
         }
 
         /// <summary>
@@ -136,7 +145,12 @@ namespace NPCProcGen.Core.States
         {
             CompleteState?.Invoke(durationReached);
             Array<Variant> data = new() { durationReached };
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Wander), data);
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateExited,
+                Variant.From(ActionStateValue),
+                data
+            );
         }
     }
 }
