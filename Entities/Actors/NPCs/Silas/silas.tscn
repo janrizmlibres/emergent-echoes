@@ -83,7 +83,6 @@ target_desired_distance = 2.0
 path_postprocessing = 1
 avoidance_enabled = true
 radius = 5.0
-debug_enabled = true
 
 [node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("RearMarker")]
 script = ExtResource("3_x7obk")

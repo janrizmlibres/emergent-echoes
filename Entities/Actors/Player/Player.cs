@@ -99,24 +99,21 @@ namespace EmergentEchoes.Entities.Actors
 
 		private void OnInteractionStarted(Variant state, Array<Variant> data)
 		{
-			ActionState actionState = state.As<ActionState>();
+			InteractState actionState = state.As<InteractState>();
 
-			if (actionState == ActionState.Talk || actionState == ActionState.Petition)
-			{
-				Node2D partner = data[0].As<Node2D>();
-				Vector2 directionToFace = GlobalPosition.DirectionTo(partner.GlobalPosition);
-
-				_animationTree.Set("parameters/Idle/blend_position", directionToFace.X);
-				_animationState.Travel("Idle");
-
-				_state = State.Dormant;
-				_talkBubbleTimer.Start();
-			}
-
-			if (actionState == ActionState.Petition)
+			if (actionState == InteractState.Petition)
 			{
 				_actorTag2D.AnswerPetition(true);
 			}
+
+			Node2D partner = data[0].As<Node2D>();
+			Vector2 directionToFace = GlobalPosition.DirectionTo(partner.GlobalPosition);
+
+			_animationTree.Set("parameters/Idle/blend_position", directionToFace.X);
+			_animationState.Travel("Idle");
+
+			_state = State.Dormant;
+			_talkBubbleTimer.Start();
 		}
 
 		private void OnInteractionEnded()

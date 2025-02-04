@@ -268,7 +268,6 @@ graph_offset = Vector2(0, -67.0082)
 
 [node name="Player" type="CharacterBody2D"]
 texture_filter = 1
-position = Vector2(158, 92)
 motion_mode = 1
 script = ExtResource("1_idj2s")
 metadata/_edit_group_ = true
@@ -302,6 +301,7 @@ radius = 2.0
 
 [node name="ActorTag2D" type="Node" parent="." node_paths=PackedStringArray("RearMarker")]
 script = ExtResource("3_tiunm")
+MoneyAmount = 500
 RearMarker = NodePath("../StealMarker/Marker2D")
 
 [node name="StealMarker" type="Node2D" parent="."]
