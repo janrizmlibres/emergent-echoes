@@ -40,5 +40,17 @@ namespace NPCProcGen.Core.Internal
 
             return actions.Any() ? actions.First().Item1 : null;
         }
+
+        public BaseAction EvaluateActionStub(Type traitType, Type actionType, ResourceType resType)
+        {
+            foreach (Trait trait in _traits)
+            {
+                if (trait.GetType() == traitType)
+                {
+                    return trait.EvaluateActionStub(actionType, resType);
+                }
+            }
+            return null;
+        }
     }
 }
