@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
@@ -21,7 +22,7 @@ namespace NPCProcGen
         [Signal]
         public delegate void ExecutionStartedEventHandler(Variant action);
         [Signal]
-        public delegate void ExecutionEndedEventHandler(Variant action);
+        public delegate void ExecutionEndedEventHandler();
 
         [Signal]
         public delegate void ActionStateEnteredEventHandler(Variant state, Array<Variant> data);
@@ -29,14 +30,14 @@ namespace NPCProcGen
         public delegate void ActionStateExitedEventHandler(Variant state, Array<Variant> data);
 
         [Export(PropertyHint.Range, "1,100,")]
-        public int SatiationAmount { get; set; } = 100;
+        public int SatiationAmount { get; set; } = 15;
 
         /// <summary>
         /// Gets or sets the companionship value associated with this NPC.
         /// </summary>
         /// <value>The companionship value as an integer.</value>
         [Export(PropertyHint.Range, "1,100,")]
-        public int CompanionshipAmount { get; set; } = 100;
+        public int CompanionshipAmount { get; set; } = 10;
 
         [Export(PropertyHint.Range, "1,500,")]
         public int ActorDetectionRange { get; set; } = 70;
@@ -71,11 +72,6 @@ namespace NPCProcGen
         /// Gets the target position for the NPC.
         /// </summary>
         public Vector2 TargetPosition => Executor.GetTargetPosition();
-
-        /// <summary>
-        /// Gets the sensor component of the NPC.
-        /// </summary>
-        public Sensor Sensor { get; private set; } = new();
 
         /// <summary>
         /// Gets the strategizer component of the NPC.
@@ -118,6 +114,21 @@ namespace NPCProcGen
                 QueueFree();
                 return;
             }
+
+            NotifManager.InteractionStarted += () =>
+            {
+                GD.Print($"Evaluation timer stopped for {Parent.Name}");
+                _evaluationTimer.Stop();
+            };
+            NotifManager.InteractionEnded += () =>
+            {
+                // Do not start evaluation timer if the NPC is still executing an action
+                if (!IsActive())
+                {
+                    GD.Print($"Evaluation timer started for {Parent.Name}");
+                    _evaluationTimer.Start();
+                }
+            };
 
             Executor = new(this);
             Executor.ExecutionEnded += OnExecutionEnded;
@@ -163,7 +174,8 @@ namespace NPCProcGen
 
             if (RearMarker == null)
             {
-                warnings.Add("The NPCAgent2D requires a Marker2D node to identify the rear side of the actor.");
+                warnings.Add(@"The NPCAgent2D requires a Marker2D node to identify the rear side 
+                    of the actor.");
             }
 
             return warnings.ToArray();
@@ -181,15 +193,6 @@ namespace NPCProcGen
 
             Memorizer.Update(delta);
             Executor.Update(delta);
-        }
-
-        /// <summary>
-        /// Initializes the NPC with a list of actors.
-        /// </summary>
-        /// <param name="actors">The list of actors to initialize with.</param>
-        public void Initialize(List<ActorTag2D> actors)
-        {
-            Memorizer.Initialize(actors);
         }
 
         /// <summary>
@@ -230,6 +233,11 @@ namespace NPCProcGen
             return Executor.QueryNavigationAction();
         }
 
+        public Tuple<ActionType, ActionState> GetAction()
+        {
+            return Sensor.GetTaskRecord(this);
+        }
+
         /// <summary>
         /// Completes the navigation for the NPC.
         /// </summary>
@@ -266,7 +274,11 @@ namespace NPCProcGen
         /// </summary>
         private void OnEvaluationTimerTimeout()
         {
-            BaseAction action = Strategizer.EvaluateAction(SocialPractice.Proactive);
+            BaseAction action = Strategizer.EvaluateActionStub(
+                typeof(SurvivalTrait),
+                typeof(PetitionAction),
+                ResourceType.Money
+            );
 
             if (action != null)
             {
@@ -275,6 +287,7 @@ namespace NPCProcGen
             }
             else
             {
+                GD.Print($"No action evaluated by {Parent.Name}");
                 _evaluationTimer.Start();
             }
         }
@@ -285,6 +298,7 @@ namespace NPCProcGen
         /// </summary>
         private void OnExecutionEnded()
         {
+            Sensor.ResetTaskRecord(this);
             _evaluationTimer.Start();
         }
 

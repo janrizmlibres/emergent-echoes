@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using Godot.Collections;
 using NPCProcGen;
 using NPCProcGen.Core.Components.Enums;
@@ -13,7 +12,6 @@ namespace EmergentEchoes.Entities.Actors
     public partial class NPC : CharacterBody2D
     {
         private enum MainState { Idle, Wander, Procedural }
-        private enum ProceduralState { Moving, Dormant }
 
         private const float MinInterval = 1;
         private const float MaxInterval = 3;
@@ -21,14 +19,13 @@ namespace EmergentEchoes.Entities.Actors
         private const float MaxBubbleInterval = 5;
 
         [Export]
-        public int MaxSpeed { get; set; } = 60;
+        public int MaxSpeed { get; set; } = 40;
         [Export]
-        public int Acceleration { get; set; } = 4;
+        public int Acceleration { get; set; } = 8;
         [Export]
         public int Friction { get; set; } = 4;
 
         private MainState _mainState = MainState.Idle;
-        private ProceduralState _proceduralState = ProceduralState.Moving;
 
         private readonly Array<Vector2I> _validTilePositions = new();
 
@@ -73,6 +70,8 @@ namespace EmergentEchoes.Entities.Actors
 
             _npcAgent2d.ExecutionStarted += OnExecutionStarted;
             _npcAgent2d.ExecutionEnded += OnExecutionEnded;
+            _npcAgent2d.InteractionStarted += OnInteractionStarted;
+            _npcAgent2d.InteractionEnded += OnInteractionEnded;
             _npcAgent2d.ActionStateEntered += OnActionStateEntered;
             _npcAgent2d.ActionStateExited += OnActionStateExited;
 
@@ -95,12 +94,15 @@ namespace EmergentEchoes.Entities.Actors
                     HandleProceduralState();
                     break;
             }
+
+            MoveAndSlide();
         }
 
         private void HandleWanderState()
         {
             if (_navigationAgent2d.IsNavigationFinished())
             {
+                GD.Print($"{Name} is done wandering. Randomizing main state.");
                 RandomizeMainState();
                 return;
             }
@@ -110,24 +112,12 @@ namespace EmergentEchoes.Entities.Actors
 
         private void HandleProceduralState()
         {
-            switch (_proceduralState)
-            {
-                case ProceduralState.Moving:
-                    MoveNavigationAgent();
-                    break;
-                case ProceduralState.Dormant:
-                    StopMoving();
-                    break;
-            }
-        }
-
-        private void MoveNavigationAgent()
-        {
             _navigationAgent2d.TargetPosition = _npcAgent2d.TargetPosition;
 
             if (_navigationAgent2d.IsNavigationFinished())
             {
                 _npcAgent2d.CompleteNavigation();
+                StopMoving();
                 return;
             }
 
@@ -137,6 +127,7 @@ namespace EmergentEchoes.Entities.Actors
         private void StopMoving()
         {
             _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
+            _animationState.Travel("Idle");
         }
 
         private void MoveCharacter()
@@ -146,7 +137,6 @@ namespace EmergentEchoes.Entities.Actors
             _navigationAgent2d.Velocity = Velocity.MoveToward(direction * MaxSpeed, Acceleration);
 
             HandleAnimation();
-            MoveAndSlide();
         }
 
         private void HandleAnimation()
@@ -155,29 +145,23 @@ namespace EmergentEchoes.Entities.Actors
             {
                 _animationTree.Set("parameters/Idle/blend_position", Velocity.X);
                 _animationTree.Set("parameters/Move/blend_position", Velocity.X);
-                _animationState.Travel("Move");
             }
-            else if (Velocity.Y != 0)
-            {
-                _animationState.Travel("Move");
-            }
-            else
-            {
-                _animationState.Travel("Idle");
-            }
+
+            _animationState.Travel("Move");
         }
 
         private void RandomizeMainState()
         {
             _mainState = CoreHelpers.ShuffleEnum<MainState>().Where(x => x != MainState.Procedural).First();
-            _proceduralState = ProceduralState.Moving;
 
             switch (_mainState)
             {
                 case MainState.Idle:
+                    GD.Print($"{Name} is idling.");
                     _mainStateTimer.Start(GD.RandRange(MinInterval, MaxInterval));
                     break;
                 case MainState.Wander:
+                    GD.Print($"{Name} is wandering.");
                     Vector2 wanderTarget = PickTargetPosition();
                     _navigationAgent2d.TargetPosition = wanderTarget;
                     break;
@@ -240,26 +224,39 @@ namespace EmergentEchoes.Entities.Actors
             }
         }
 
-        private void OnExecutionEnded(Variant action)
+        private void OnExecutionEnded()
         {
+            GD.Print($"{Name} is done executing. Randomizing main state.");
             RandomizeMainState();
+        }
+
+        private void OnInteractionStarted(Variant state, Array<Variant> data)
+        {
+            _mainStateTimer.Stop();
+            FacePartner(data[0].As<Node2D>());
+        }
+
+        private void OnInteractionEnded()
+        {
+            if (_npcAgent2d.IsActive())
+            {
+                _mainState = MainState.Procedural;
+            }
+            else
+            {
+                RandomizeMainState();
+            }
+
+            _talkBubbleTimer.Stop();
         }
 
         private void OnActionStateEntered(Variant state, Array<Variant> data)
         {
             ActionState actionState = state.As<ActionState>();
 
-            if ((actionState == ActionState.Talk || actionState == ActionState.Petition)
-                && _proceduralState != ProceduralState.Dormant)
+            if (actionState == ActionState.Talk || actionState == ActionState.Petition)
             {
-                Node2D partner = data[0].As<Node2D>();
-                Vector2 directionToFace = GlobalPosition.DirectionTo(partner.GlobalPosition);
-
-                _animationTree.Set("parameters/Idle/blend_position", directionToFace.X);
-                _animationState.Travel("Idle");
-
-                _proceduralState = ProceduralState.Dormant;
-                _talkBubbleTimer.Start(GD.RandRange(MinBubbleInterval, MaxBubbleInterval));
+                FacePartner(data[0].As<Node2D>());
             }
         }
 
@@ -274,7 +271,8 @@ namespace EmergentEchoes.Entities.Actors
             }
             else if (actionState == ActionState.Talk || actionState == ActionState.Petition)
             {
-                _proceduralState = ProceduralState.Moving;
+                GD.Print($"{Name} is done interacting.");
+                _mainState = MainState.Procedural;
                 _talkBubbleTimer.Stop();
             }
             else if (actionState == ActionState.Wander)
@@ -286,6 +284,18 @@ namespace EmergentEchoes.Entities.Actors
                     EmoteManager.ShowEmoteBubble(this, Emote.Ellipsis);
                 }
             }
+        }
+
+        private void FacePartner(Node2D partner)
+        {
+            Vector2 directionToFace = GlobalPosition.DirectionTo(partner.GlobalPosition);
+
+            _animationTree.Set("parameters/Idle/blend_position", directionToFace.X);
+            _animationState.Travel("Idle");
+
+            _mainState = MainState.Idle;
+            _talkBubbleTimer.Start(GD.RandRange(MinBubbleInterval, MaxBubbleInterval));
+            GD.Print($"{Name} is interacting with {partner.Name}");
         }
     }
 }

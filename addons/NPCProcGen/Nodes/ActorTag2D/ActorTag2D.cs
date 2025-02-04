@@ -24,14 +24,14 @@ namespace NPCProcGen
         /// </summary>
         /// <value>The monetary value as an integer.</value>
         [Export(PropertyHint.Range, "0,1000000,")]
-        public int MoneyAmount { get; set; } = 50;
+        public int MoneyAmount { get; set; } = 100;
 
         /// <summary>
         /// Gets or sets the food value associated with this actor.
         /// </summary>
         /// <value>The food value as an integer.</value>
         [Export(PropertyHint.Range, "0,1000,")]
-        public int FoodAmount { get; set; } = 2;
+        public int FoodAmount { get; set; } = 5;
 
         /// <summary>
         /// Gets or sets the RearMarker, which is a Marker2D instance.
@@ -58,6 +58,11 @@ namespace NPCProcGen
         /// Gets the notification manager of the Actor.
         /// </summary>
         public NotifManager NotifManager { get; private set; } = new();
+
+        /// <summary>
+        /// Gets the sensor component of the NPC.
+        /// </summary>
+        public Sensor Sensor { get; private set; } = new();
 
         /// <summary>
         /// Gets the memorizer component of the Actor.
@@ -121,6 +126,20 @@ namespace NPCProcGen
             }
 
             return warnings.ToArray();
+        }
+
+        /// <summary>
+        /// Initializes the NPC with a list of actors.
+        /// </summary>
+        /// <param name="actors">The list of actors to initialize with.</param>
+        public void Initialize(List<ActorTag2D> actors)
+        {
+            Memorizer.Initialize(actors);
+        }
+
+        public Vector2 GetRearPosition()
+        {
+            return Parent.GlobalPosition + RearMarker.Position.Normalized() * CommonUtils.PositionOffset;
         }
 
         public void AnswerPetition(bool isAccepted)
