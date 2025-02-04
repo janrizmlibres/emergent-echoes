@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
@@ -72,6 +73,26 @@ namespace NPCProcGen.Core.Traits
             }
 
             return actionCandidates.OrderByDescending(action => action.Item2).FirstOrDefault();
+        }
+
+        // ! Remove in production
+        public override BaseAction EvaluateActionStub(Type actionType, ResourceType resType)
+        {
+            if (actionType == typeof(PetitionAction))
+            {
+                List<Tuple<BaseAction, float>> actionCandidates = new();
+
+                EvaluateInteraction(
+                    actionCandidates, resType,
+                    actor => _memorizer.IsFriendly(actor),
+                    (peerActors) => FindActorWithoutBond(peerActors, resType),
+                    (chosenActor) => () => new PetitionAction(_owner, chosenActor, resType)
+                );
+
+                return actionCandidates.FirstOrDefault()?.Item1;
+            }
+
+            return null;
         }
 
         private static ActorTag2D FindActorWithoutBond(List<ActorTag2D> peerActors, ResourceType type)

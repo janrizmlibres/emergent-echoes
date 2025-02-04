@@ -100,5 +100,11 @@ namespace NPCProcGen.Core.Traits
         /// <param name="practice">The social practice to evaluate.</param>
         /// <returns>A tuple containing the evaluated action and its weight.</returns>
         public abstract Tuple<BaseAction, float> EvaluateAction(SocialPractice practice);
+
+        // ! Remove in production
+        public virtual BaseAction EvaluateActionStub(Type actionType, ResourceType resType)
+        {
+            return null;
+        }
     }
 }
