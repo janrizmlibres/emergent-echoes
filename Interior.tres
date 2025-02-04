@@ -1,9 +1,9 @@
-[gd_resource type="TileSet" load_steps=9 format=3 uid="uid://bjgf032o3einj"]
+[gd_resource type="TileSet" load_steps=9 format=3 uid="uid://c73rp2734t5j4"]
 
-[ext_resource type="Texture2D" uid="uid://dpjeot743bhec" path="res://forestVillage_ [version 2.0]/interior_/books_.png" id="1_0d4s1"]
-[ext_resource type="Texture2D" uid="uid://ck70cmdei4o4d" path="res://forestVillage_ [version 2.0]/interior_/interiorObjects_.png" id="2_2uql1"]
-[ext_resource type="Texture2D" uid="uid://dmmgji8teauiu" path="res://forestVillage_ [version 2.0]/interior_/interior_.png" id="3_8cidf"]
-[ext_resource type="Texture2D" uid="uid://dod17n1luddv" path="res://forestVillage_ [version 2.0]/interior_/tableObjects_.png" id="4_iu815"]
+[ext_resource type="Texture2D" uid="uid://dpjeot743bhec" path="res://Stages/Island/Areas/Village/Art/KMH/interior_/books_.png" id="1_0d4s1"]
+[ext_resource type="Texture2D" uid="uid://ck70cmdei4o4d" path="res://Stages/Island/Areas/Village/Art/KMH/interior_/interiorObjects_.png" id="2_2uql1"]
+[ext_resource type="Texture2D" uid="uid://dmmgji8teauiu" path="res://Stages/Island/Areas/Village/Art/KMH/interior_/interior_.png" id="3_8cidf"]
+[ext_resource type="Texture2D" uid="uid://dod17n1luddv" path="res://Stages/Island/Areas/Village/Art/KMH/interior_/tableObjects_.png" id="4_iu815"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2y3qw"]
 texture = ExtResource("1_0d4s1")
