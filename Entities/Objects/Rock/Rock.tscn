@@ -36,7 +36,7 @@ position = Vector2(0, 4)
 shape = SubResource("RectangleShape2D_o2lg7")
 
 [node name="Interactable" parent="." instance=ExtResource("2_hfwux")]
-ActionDescription = "Mine Rock"
+PrimaryActionDescription = "Mine"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
 shape = SubResource("CircleShape2D_skj64")

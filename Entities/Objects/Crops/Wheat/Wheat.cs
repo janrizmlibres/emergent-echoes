@@ -35,7 +35,7 @@ public partial class Wheat : StaticBody2D
 		_wheatSprite = GetNode<AnimatedSprite2D>("WheatSprite");
 		_regrowTimer = GetNode<Timer>("RegrowTimer");
 
-		_interactable.Interact = new Callable(this, nameof(OnInteract));
+		_interactable.PrimaryInteract = new Callable(this, nameof(OnInteract));
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
