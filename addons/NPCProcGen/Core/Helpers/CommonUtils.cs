@@ -12,7 +12,7 @@ namespace NPCProcGen.Core.Helpers
     /// </summary>
     public static class CommonUtils
     {
-        private const float PositionOffset = 15;
+        public const float PositionOffset = 12;
 
         /// <summary>
         /// Gets a shared instance of the random number generator.
@@ -26,10 +26,12 @@ namespace NPCProcGen.Core.Helpers
         /// <param name="radius">The radius of the circular area.</param>
         /// <param name="minRadius">The optional minimum radius.</param>
         /// <returns>A random position within the circular area.</returns>
-        public static Vector2 GetRandomPosInCircularArea(Vector2 center, float radius, float? minRadius = null)
+        public static Vector2 GetRandomPosInCircularArea(Vector2 center, float radius,
+            float? minRadius = null)
         {
             float angle = GD.Randf() * 2 * Mathf.Pi;
-            float random_radius = minRadius != null ? Mathf.Lerp(minRadius.Value, radius, Mathf.Sqrt(GD.Randf()))
+            float random_radius = minRadius != null
+                ? Mathf.Lerp(minRadius.Value, radius, Mathf.Sqrt(GD.Randf()))
                 : Mathf.Sqrt(GD.Randf()) * radius;
 
             return center + new Vector2(
@@ -72,6 +74,30 @@ namespace NPCProcGen.Core.Helpers
             petitionAmount = Math.Clamp(petitionAmount, minRaise, maxPossible);
 
             return (int)Math.Floor(petitionAmount);
+        }
+
+        public static void EmitSignal(ActorTag2D actor, StringName signalName, Variant? type = null,
+            Array<Variant> data = null)
+        {
+            Error result = DelegateEmit();
+
+            Error DelegateEmit()
+            {
+                if (data != null)
+                {
+                    DebugTool.Assert(type != null, "Variant parameter must not be null");
+                    return actor.EmitSignal(signalName, type.Value, data);
+                }
+
+                if (type != null)
+                {
+                    return actor.EmitSignal(signalName, type.Value);
+                }
+
+                return actor.EmitSignal(signalName);
+            }
+
+            DebugTool.Assert(result != Error.Unavailable, "Signal parameters are invalid");
         }
 
         public static List<T> Shuffle<T>(List<T> list)

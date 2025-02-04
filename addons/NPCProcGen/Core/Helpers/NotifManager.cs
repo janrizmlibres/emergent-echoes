@@ -12,6 +12,9 @@ namespace NPCProcGen.Core.Helpers
         /// </summary>
         public event Action NavigationComplete;
 
+        public event Action InteractionStarted;
+        public event Action InteractionEnded;
+
         public event Action<bool> PetitionAnswered;
 
         /// <summary>
@@ -25,6 +28,16 @@ namespace NPCProcGen.Core.Helpers
         public void NotifyNavigationComplete()
         {
             NavigationComplete?.Invoke();
+        }
+
+        public void NotifyInteractionStarted()
+        {
+            InteractionStarted?.Invoke();
+        }
+
+        public void NotifyInteractionEnded()
+        {
+            InteractionEnded?.Invoke();
         }
 
         public void NotifyPetitionAnswered(bool isAccepted)
