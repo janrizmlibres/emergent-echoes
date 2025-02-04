@@ -52,6 +52,9 @@ states/Move/position = Vector2(335, 0)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_y4d7w"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_1snfb"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_ap3hn")]
 graph_offset = Vector2(0, -75.9467)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_7ee3u"]
+radius = 25.0
+
 [node name="Garreth" type="CharacterBody2D"]
 texture_filter = 1
 script = ExtResource("1_smq2w")

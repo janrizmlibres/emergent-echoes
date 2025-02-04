@@ -32,6 +32,6 @@ public partial class Tree : StaticBody2D
 		_treeSprite = GetNode<Sprite2D>("TreeSprite");
 		_regrowTimer = GetNode<Timer>("RegrowTimer");
 
-		_interactable.Interact = new Callable(this, nameof(OnInteract));
+		_interactable.PrimaryInteract = new Callable(this, nameof(OnInteract));
 	}
 }

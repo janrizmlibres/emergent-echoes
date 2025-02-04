@@ -125,6 +125,7 @@ sources/0 = SubResource("TileSetAtlasSource_j1vub")
 size = Vector2(48, 32)
 
 [node name="House" type="StaticBody2D"]
+position = Vector2(-8.40896, 32.2102)
 
 [node name="Interior" type="TileMapLayer" parent="."]
 texture_filter = 1

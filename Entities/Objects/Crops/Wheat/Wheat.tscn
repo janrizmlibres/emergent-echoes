@@ -59,7 +59,7 @@ position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_ha1vo")
 
 [node name="Interactable" parent="." instance=ExtResource("2_3lbrb")]
-ActionDescription = "Harvest"
+PrimaryActionDescription = "Farm"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
 shape = SubResource("CircleShape2D_ttvvd")

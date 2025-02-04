@@ -16,4 +16,3 @@ namespace EmergentEchoes.Entities.Camera
 		}
 	}
 }
-

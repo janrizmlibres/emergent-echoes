@@ -32,6 +32,6 @@ public partial class Rock : StaticBody2D
 		_fullRock = GetNode<Sprite2D>("FullRock");
 		_regrowTimer = GetNode<Timer>("RegrowTimer");
 
-		_interactable.Interact = new Callable(this, nameof(OnInteract));
+		_interactable.PrimaryInteract = new Callable(this, nameof(OnInteract));
 	}
 }
