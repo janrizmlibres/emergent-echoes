@@ -1,5 +1,6 @@
 using Godot;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.States;
 
 namespace NPCProcGen.Core.Actions
@@ -9,6 +10,8 @@ namespace NPCProcGen.Core.Actions
     /// </summary>
     public class SocializeAction : BaseAction
     {
+        public const ActionType ActionTypeValue = ActionType.Socialize;
+
         private SeekState _seekState;
 
         /// <summary>
@@ -22,12 +25,16 @@ namespace NPCProcGen.Core.Actions
 
         private void InitializeStates()
         {
-            _seekState = new SeekState(_owner);
+            _seekState = new SeekState(_owner, ActionTypeValue);
             _seekState.CompleteState += (ActorTag2D partner) =>
             {
-                TalkState _talkState = new(_owner, partner);
-                _talkState.CompleteState += () => CompleteAction(ActionType.Socialize);
-                TransitionTo(_talkState);
+                MoveState moveState = new(_owner, ActionTypeValue, partner.Parent);
+                TalkState talkState = new(_owner, ActionTypeValue, partner);
+
+                moveState.CompleteState += (_) => TransitionTo(talkState);
+                talkState.CompleteState += () => CompleteAction();
+
+                TransitionTo(moveState);
             };
         }
 
@@ -38,13 +45,23 @@ namespace NPCProcGen.Core.Actions
 
         public override void Run()
         {
-            _owner.EmitSignal(NPCAgent2D.SignalName.ExecutionStarted, Variant.From(ActionType.Socialize));
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ExecutionStarted,
+                Variant.From(ActionTypeValue)
+            );
 
             if (_owner.IsAnyActorInRange())
             {
-                TalkState _talkState = new(_owner, _owner.GetRandomActorInRange());
-                _talkState.CompleteState += () => CompleteAction(ActionType.Socialize);
-                TransitionTo(_talkState);
+                ActorTag2D actor = _owner.GetRandomActorInRange();
+
+                MoveState moveState = new(_owner, ActionTypeValue, actor.Parent);
+                TalkState talkState = new(_owner, ActionTypeValue, actor);
+
+                moveState.CompleteState += (_) => TransitionTo(talkState);
+                talkState.CompleteState += () => CompleteAction();
+
+                TransitionTo(moveState);
             }
             else
             {

@@ -1,5 +1,7 @@
 using Godot;
+using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.States;
 
 namespace NPCProcGen.Core.Actions
@@ -9,6 +11,8 @@ namespace NPCProcGen.Core.Actions
     /// </summary>
     public class EatAction : BaseAction
     {
+        public const ActionType ActionTypeValue = ActionType.Eat;
+
         private EatState _eatState;
 
         /// <summary>
@@ -22,8 +26,8 @@ namespace NPCProcGen.Core.Actions
 
         private void InitializeStates()
         {
-            _eatState = new EatState(_owner);
-            _eatState.CompleteState += () => CompleteAction(ActionType.Eat);
+            _eatState = new EatState(_owner, ActionTypeValue);
+            _eatState.CompleteState += () => CompleteAction();
         }
 
         public override void Update(double delta)
@@ -33,7 +37,11 @@ namespace NPCProcGen.Core.Actions
 
         public override void Run()
         {
-            _owner.EmitSignal(NPCAgent2D.SignalName.ExecutionStarted, Variant.From(ActionType.Eat));
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ExecutionStarted,
+                Variant.From(ActionTypeValue)
+            );
             TransitionTo(_eatState);
         }
     }

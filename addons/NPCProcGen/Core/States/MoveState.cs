@@ -11,6 +11,8 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public class MoveState : BaseState, INavigationState
     {
+        public const ActionState ActionStateValue = ActionState.Move;
+
         private readonly Node2D _targetNode;
         private Vector2? _movePosition;
 
@@ -30,8 +32,13 @@ namespace NPCProcGen.Core.States
         /// <param name="owner">The NPC agent owning this state.</param>
         /// <param name="target">The target node to move to.</param>
         /// <param name="lastKnownPosition">The last known position of the target.</param>
-        public MoveState(NPCAgent2D owner, Node2D target, Vector2? lastKnownPosition = null, bool isStealing = false)
-            : base(owner)
+        public MoveState(
+            NPCAgent2D owner,
+            ActionType action,
+            Node2D target,
+            Vector2? lastKnownPosition = null,
+            bool isStealing = false)
+            : base(owner, action)
         {
             _targetNode = target;
             _isStealing = isStealing;
@@ -45,8 +52,8 @@ namespace NPCProcGen.Core.States
         /// </summary>
         /// <param name="owner">The NPC agent owning this state.</param>
         /// <param name="targetPosition">The target position to move to.</param>
-        public MoveState(NPCAgent2D owner, Vector2 targetPosition)
-            : base(owner)
+        public MoveState(NPCAgent2D owner, ActionType action, Vector2 targetPosition)
+            : base(owner, action)
         {
             _movePosition = targetPosition;
         }
@@ -59,7 +66,12 @@ namespace NPCProcGen.Core.States
             GD.Print($"{_owner.Parent.Name} MoveState Enter");
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
             _owner.NotifManager.ActorDetected += OnActorDetected;
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Move));
+            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateEntered,
+                Variant.From(ActionStateValue)
+            );
         }
 
         /// <summary>
@@ -69,7 +81,11 @@ namespace NPCProcGen.Core.States
         {
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
             _owner.NotifManager.ActorDetected -= OnActorDetected;
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Move));
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateExited,
+                Variant.From(ActionStateValue)
+            );
         }
 
         /// <summary>
@@ -87,14 +103,18 @@ namespace NPCProcGen.Core.States
         /// <returns>The global position of the target.</returns>
         public Vector2 GetTargetPosition()
         {
-            // If only move position is set OR both move position and target node are set but target is not found, return move position
-            if (_targetNode == null || _movePosition != null && !_targetFound) return _movePosition.Value;
+            // If only move position is set OR both move position and target node are set but target
+            // is not found, return move position
+            if (_targetNode == null || _movePosition != null && !_targetFound)
+                return _movePosition.Value;
 
             // If target node is not an actor, return exact node position
             if (_targetActor == null) return _targetNode.GlobalPosition;
 
-            // If owner is stealing, return rear marker position of target actor, otherwise return offset position
-            return _isStealing ? _targetActor.RearMarker.GlobalPosition : CommonUtils.GetInteractionPosition(_owner, _targetActor);
+            // If owner is stealing, return rear marker position of target actor,
+            // otherwise return offset position
+            return _isStealing ? _targetActor.GetRearPosition() :
+                CommonUtils.GetInteractionPosition(_owner, _targetActor);
         }
 
         private bool IsSeeking()
@@ -104,7 +124,10 @@ namespace NPCProcGen.Core.States
 
         private void OnNavigationComplete()
         {
-            CompleteState?.Invoke(_targetFound);
+            if (!IsActionSocial() || !_owner.Sensor.IsActorBusy(_targetActor))
+            {
+                CompleteState?.Invoke(_targetFound);
+            }
         }
 
         private void OnActorDetected(ActorTag2D target)

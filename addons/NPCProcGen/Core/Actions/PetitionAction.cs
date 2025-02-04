@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.States;
@@ -10,6 +11,8 @@ namespace NPCProcGen.Core.Actions
     /// </summary>
     public class PetitionAction : BaseAction
     {
+        public const ActionType ActionTypeValue = ActionType.Petition;
+
         /// <summary>
         /// The target actor from which to steal.
         /// </summary>
@@ -25,8 +28,8 @@ namespace NPCProcGen.Core.Actions
         /// </summary>
         private Vector2 _targetLastPos;
 
+        private MoveState _initialMoveState;
         private MoveState _moveState;
-        private PetitionState _petitionState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PetitionAction"/> class.
@@ -47,28 +50,28 @@ namespace NPCProcGen.Core.Actions
 
         private void InitializeStates()
         {
-            _moveState = new MoveState(_owner, _target.Parent, _targetLastPos);
-            WanderState wanderState = new(_owner, _target);
-            MoveState moveState = new(_owner, _target.Parent);
-            _petitionState = new PetitionState(_owner, _target, _targetResource);
+            _initialMoveState = new MoveState(_owner, ActionTypeValue, _target.Parent, _targetLastPos);
+            WanderState wanderState = new(_owner, ActionTypeValue, _target);
+            _moveState = new(_owner, ActionTypeValue, _target.Parent);
+            PetitionState petitionState = new(_owner, ActionTypeValue, _target, _targetResource);
 
-            _moveState.CompleteState += (bool isTargetFound) =>
+            _initialMoveState.CompleteState += (bool isTargetFound) =>
             {
-                TransitionTo(isTargetFound ? _petitionState : wanderState);
+                TransitionTo(isTargetFound ? petitionState : wanderState);
             };
             wanderState.CompleteState += (bool durationReached) =>
             {
                 if (durationReached)
                 {
-                    CompleteAction(ActionType.Petition);
+                    CompleteAction();
                 }
                 else
                 {
-                    TransitionTo(moveState);
+                    TransitionTo(_moveState);
                 }
             };
-            moveState.CompleteState += (_) => TransitionTo(_petitionState);
-            _petitionState.CompleteState += () => CompleteAction(ActionType.Petition);
+            _moveState.CompleteState += (_) => TransitionTo(petitionState);
+            petitionState.CompleteState += () => CompleteAction();
         }
 
         public override void Update(double delta)
@@ -78,8 +81,12 @@ namespace NPCProcGen.Core.Actions
 
         public override void Run()
         {
-            _owner.EmitSignal(NPCAgent2D.SignalName.ExecutionStarted, Variant.From(ActionType.Petition));
-            TransitionTo(_owner.IsActorInRange(_target) ? _petitionState : _moveState);
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ExecutionStarted,
+                Variant.From(ActionTypeValue)
+            );
+            TransitionTo(_owner.IsActorInRange(_target) ? _moveState : _initialMoveState);
         }
     }
 }
