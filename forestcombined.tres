@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=26 format=3 uid="uid://kmbdo8s7eos"]
+[gd_resource type="TileSet" load_steps=25 format=3 uid="uid://kmbdo8s7eos"]
 
 [ext_resource type="Texture2D" uid="uid://b48g1mtrqdo7a" path="res://Stages/Island/Areas/Forest/Art/forest_.png" id="1_iudv6"]
 [ext_resource type="Texture2D" uid="uid://qt1p5td3mrie" path="res://Stages/Island/Areas/Forest/Art/forest_ [resources].png" id="2_y5ii8"]
@@ -619,9 +619,6 @@ texture = ExtResource("3_7f3tr")
 4:2/0 = 0
 4:3/0 = 0
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_upqf6"]
-1:2/0 = 0
-
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_h4qwl"]
 texture = ExtResource("5_s3qsb")
 2:2/size_in_atlas = Vector2i(6, 5)
@@ -1079,7 +1076,6 @@ terrain_set_0/terrain_4/color = Color(0.759881, 0.185831, 0.315283, 1)
 sources/0 = SubResource("TileSetAtlasSource_gh7xb")
 sources/1 = SubResource("TileSetAtlasSource_fc5tl")
 sources/2 = SubResource("TileSetAtlasSource_8hog0")
-sources/3 = SubResource("TileSetAtlasSource_upqf6")
 sources/4 = SubResource("TileSetAtlasSource_h4qwl")
 sources/5 = SubResource("TileSetAtlasSource_wppjb")
 sources/6 = SubResource("TileSetAtlasSource_abaco")
