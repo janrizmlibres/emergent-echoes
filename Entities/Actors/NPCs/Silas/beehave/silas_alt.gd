@@ -7,12 +7,12 @@ extends CharacterBody2D
 @export var FRICTION: int = 4
 @export var movement_speed: int = 60
 
-const npc_name: String = "Garreth"
+const npc_name: String = "Silas"
 
 var npc_active: bool = false
 var current_location: Vector2
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if npc_active and current_location:
 		navigation_agent_2d.target_position = current_location
 		
@@ -41,8 +41,8 @@ func handle_animation() -> void:
 		animation_state.travel("Move")
 	else:
 		animation_state.travel("Idle")
-
-func _on_patrol(patrol_location: Variant) -> void:
+		
+func move_player(patrol_location: Vector2):
 	current_location = patrol_location
 	npc_active = true
 	pass # Replace with function body.

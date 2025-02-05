@@ -1,8 +1,21 @@
-[gd_scene load_steps=16 format=3 uid="uid://etlq2q1jbury"]
+[gd_scene load_steps=30 format=3 uid="uid://etlq2q1jbury"]
 
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/silas_alt.gd" id="1_17b4c"]
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_hdw1b"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="3_3716a"]
 [ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Game Components/NPC_Alt_Detector.tscn" id="4_b51it"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_vmoef"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="5_a23i0"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_1ro2l"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/has_the_player_arrived.gd" id="8_4ytb8"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/delayer.gd" id="8_mrkiu"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/patrol_action.gd" id="9_58j85"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="11_enow8"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/is_player_present.gd" id="11_kxjq6"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/chase_player.gd" id="12_q20m7"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/steal_money_from_player.gd" id="13_q0u1v"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/go_to_house.gd" id="15_yth3l"]
+[ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="16_8orm2"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30oj8"]
 radius = 3.0
@@ -50,11 +63,15 @@ transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition
 graph_offset = Vector2(0, -75.9467)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c2uc3"]
-radius = 22.0
+radius = 48.0104
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eyjh3"]
+size = Vector2(24, 30)
 
 [node name="SilasAlt" type="CharacterBody2D"]
 texture_filter = 1
-position = Vector2(80, 3)
+position = Vector2(148, 18)
+script = ExtResource("1_17b4c")
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -95,3 +112,58 @@ position = Vector2(-10, -2.53518e-05)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NpcAltDetector"]
 shape = SubResource("CircleShape2D_c2uc3")
+
+[node name="StealArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StealArea"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_eyjh3")
+
+[node name="SilasBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("4_vmoef")
+blackboard = NodePath("../Blackboard")
+actor = NodePath("..")
+
+[node name="SelectorComposite" type="Node" parent="SilasBehaviour"]
+script = ExtResource("5_a23i0")
+
+[node name="On Patrol" type="Node" parent="SilasBehaviour/SelectorComposite"]
+script = ExtResource("6_1ro2l")
+
+[node name="Has The Player Arrived" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol"]
+script = ExtResource("8_4ytb8")
+
+[node name="DelayDecorator" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol"]
+script = ExtResource("8_mrkiu")
+wait_time = 5.0
+
+[node name="Patrol Action" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol/DelayDecorator"]
+script = ExtResource("9_58j85")
+
+[node name="On Steal" type="Node" parent="SilasBehaviour/SelectorComposite"]
+script = ExtResource("11_enow8")
+
+[node name="Is Player Present" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
+script = ExtResource("11_kxjq6")
+
+[node name="Chase Player" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
+script = ExtResource("12_q20m7")
+
+[node name="Steal Money From Player" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
+script = ExtResource("13_q0u1v")
+
+[node name="Go To House" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
+script = ExtResource("15_yth3l")
+
+[node name="Blackboard" type="Node" parent="."]
+script = ExtResource("16_8orm2")
+blackboard = {
+"is_idle": true
+}
+
+[connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
+[connection signal="body_entered" from="NpcAltDetector" to="SilasBehaviour/SelectorComposite/On Steal/Is Player Present" method="_on_npc_alt_detector_body_entered"]
+[connection signal="body_entered" from="StealArea" to="SilasBehaviour/SelectorComposite/On Steal/Chase Player" method="_on_steal_area_body_entered"]
+[connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Patrol/DelayDecorator/Patrol Action" to="." method="move_player"]
+[connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Steal/Chase Player" to="." method="move_player"]
+[connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Steal/Go To House" to="." method="move_player"]
