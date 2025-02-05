@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 
@@ -10,18 +11,21 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public class WanderState : BaseState, INavigationState
     {
-        private static readonly float _wanderRadius = 100;
-        private static readonly int _min = 5;
-        private static readonly int _max = 10;
+        public const ActionState ActionStateValue = ActionState.Wander;
 
-        private readonly ActorTag2D _target;
-        private Vector2 _targetPosition;
+        private const float WanderRadius = 100;
+        private const int MinInterval = 5;
+        private const int MaxInterval = 10;
+        private const int MaxDuration = 30;
 
-        // TODO: Should be higher in final implementation
-        private float _maxDuration = 30;
-        private float _wanderInterval;
-        private float _timer = 0;
+        private readonly ActorTag2D _targetActor;
+        private Vector2 _wanderPosition;
+        private Vector2 _origin;
+
         private bool _isWandering = false;
+
+        private float _durationTimer = MaxDuration;
+        private float _idleTimer;
 
         /// <summary>
         /// Event triggered when the state is completed.
@@ -33,11 +37,12 @@ namespace NPCProcGen.Core.States
         /// </summary>
         /// <param name="owner">The owner of the state.</param>
         /// <param name="target">The target actor.</param>
-        public WanderState(NPCAgent2D owner, ActorTag2D target) : base(owner)
+        public WanderState(NPCAgent2D owner, ActionType action, ActorTag2D target)
+            : base(owner, action)
         {
-            _target = target;
-            _targetPosition = owner.Parent.GlobalPosition;
-            _wanderInterval = CommonUtils.Rnd.Next(_min, _max);
+            _targetActor = target;
+            _wanderPosition = owner.Parent.GlobalPosition;
+            _idleTimer = GD.RandRange(MinInterval, MaxInterval);
         }
 
         /// <summary>
@@ -45,10 +50,18 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Enter()
         {
-            GD.Print($"{_owner.Parent.Name} WanderState Enter - Instance: {GetHashCode()}");
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Wander));
+            GD.Print($"{_owner.Parent.Name} WanderState Enter");
+
+            _origin = _owner.Parent.GlobalPosition;
+
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
             _owner.NotifManager.ActorDetected += OnActorDetected;
+            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateEntered,
+                Variant.From(ActionStateValue)
+            );
         }
 
         /// <summary>
@@ -56,9 +69,9 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Exit()
         {
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Wander));
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
             _owner.NotifManager.ActorDetected -= OnActorDetected;
+            // Bring back emit signal in refactor
         }
 
         /// <summary>
@@ -67,26 +80,22 @@ namespace NPCProcGen.Core.States
         /// <param name="delta">The time elapsed since the last update.</param>
         public override void Update(double delta)
         {
-            if (!_isWandering)
-            {
-                _timer += (float)delta;
+            _durationTimer -= (float)delta;
 
-                if (_timer >= _wanderInterval)
-                {
-                    _timer = 0;
-                    _wanderInterval = CommonUtils.Rnd.Next(_min, _max);
-                    _targetPosition = CommonUtils.GetRandomPosInCircularArea(
-                        _owner.Parent.GlobalPosition, _wanderRadius
-                    );
-                    _isWandering = true;
-                }
-            }
-
-            _maxDuration -= (float)delta;
-
-            if (_maxDuration <= 0)
+            if (_durationTimer <= 0)
             {
                 OnCompleteState(true);
+            }
+
+            if (_isWandering) return;
+
+            _idleTimer -= (float)delta;
+
+            if (_idleTimer <= 0)
+            {
+                _wanderPosition = CommonUtils.GetRandomPosInCircularArea(_origin, WanderRadius);
+                _idleTimer = GD.RandRange(MinInterval, MaxInterval);
+                _isWandering = true;
             }
         }
 
@@ -105,7 +114,7 @@ namespace NPCProcGen.Core.States
         /// <returns>The target position.</returns>
         public Vector2 GetTargetPosition()
         {
-            return _targetPosition;
+            return _wanderPosition;
         }
 
         /// <summary>
@@ -114,7 +123,7 @@ namespace NPCProcGen.Core.States
         /// <param name="target">The detected actor.</param>
         private void OnActorDetected(ActorTag2D target)
         {
-            if (target == _target)
+            if (target == _targetActor)
             {
                 OnCompleteState(false);
             }
@@ -135,6 +144,13 @@ namespace NPCProcGen.Core.States
         private void OnCompleteState(bool durationReached)
         {
             CompleteState?.Invoke(durationReached);
+            Array<Variant> data = new() { durationReached };
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateExited,
+                Variant.From(ActionStateValue),
+                data
+            );
         }
     }
 }

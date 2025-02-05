@@ -1,69 +1,41 @@
-[gd_scene load_steps=18 format=3 uid="uid://blrsgvyqgogoa"]
+[gd_scene load_steps=10 format=3 uid="uid://blrsgvyqgogoa"]
 
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/NPC.cs" id="1_e0pu4"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="1_isnnv"]
-[ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="2_or5th"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/NPC.cs" id="1_smq2w"]
 [ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_attte"]
-[ext_resource type="PackedScene" uid="uid://2wpeggmgbrmi" path="res://Entities/Actors/actor_detector.tscn" id="3_c743w"]
+[ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Objects/Crops/Wheat/Art/Basic_Plants.png" id="3_w0ghd"]
+[ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="4_vdl4c"]
+[ext_resource type="AnimationNodeStateMachine" uid="uid://cw72ka7tmedn0" path="res://Entities/Actors/actor_anim_sm.tres" id="5_cujqc"]
+[ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="5_w7dbl"]
+[ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="8_jv7bn"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0
 height = 10.0
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_bfue1"]
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8poqu"]
-animation = &"npc_anims/idle_left"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_0c0yc"]
-animation = &"npc_anims/idle_right"
-
-[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_u5glx"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_8poqu")
-blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_0c0yc")
-blend_point_1/pos = 1.0
-blend_mode = 1
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ne5tr"]
-animation = &"npc_anims/move_left"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3hi50"]
-animation = &"npc_anims/move_right"
-
-[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_egro6"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_ne5tr")
-blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_3hi50")
-blend_point_1/pos = 1.0
-blend_mode = 1
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_y4d7w"]
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1snfb"]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ap3hn"]
-
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_epujy"]
-states/Idle/node = SubResource("AnimationNodeBlendSpace1D_u5glx")
-states/Idle/position = Vector2(335, 100)
-states/Move/node = SubResource("AnimationNodeBlendSpace1D_egro6")
-states/Move/position = Vector2(335, 0)
-transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_y4d7w"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_1snfb"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_ap3hn")]
-graph_offset = Vector2(0, -75.9467)
-
 [node name="Garreth" type="CharacterBody2D"]
 texture_filter = 1
-script = ExtResource("1_e0pu4")
+script = ExtResource("1_smq2w")
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -9)
+position = Vector2(0, -10)
 texture = ExtResource("1_isnnv")
 hframes = 8
 vframes = 6
-frame = 7
+frame = 8
+
+[node name="FoodAnchor" type="Marker2D" parent="."]
+visible = false
+position = Vector2(0, -5)
+
+[node name="FoodSprite" type="Sprite2D" parent="FoodAnchor"]
+position = Vector2(9, 0)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("3_w0ghd")
+hframes = 6
+vframes = 2
+frame = 11
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -71,34 +43,35 @@ shape = SubResource("CapsuleShape2D_tfsnf")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_bfue1"),
-"npc_anims": ExtResource("2_or5th")
+"": ExtResource("4_vdl4c")
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource("AnimationNodeStateMachine_epujy")
+tree_root = ExtResource("5_cujqc")
 anim_player = NodePath("../AnimationPlayer")
+parameters/Eat/blend_position = 0
 parameters/Idle/blend_position = 0
 parameters/Move/blend_position = 0
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 10.0
+target_desired_distance = 2.0
 path_postprocessing = 1
 avoidance_enabled = true
 radius = 5.0
 
-[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("ActorDetector", "StealMarker")]
+[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("RearMarker")]
 script = ExtResource("3_attte")
-ActorDetector = NodePath("../ActorDetector")
 Survival = 0.4
 Lawful = 0.65
-StealMarker = NodePath("../StealMarker/Marker2D")
+RearMarker = NodePath("../RearMarker/Marker2D")
 
-[node name="StealMarker" type="Node2D" parent="."]
+[node name="RearMarker" type="Node2D" parent="."]
 rotation = 3.14159
 
-[node name="Marker2D" type="Marker2D" parent="StealMarker"]
+[node name="Marker2D" type="Marker2D" parent="RearMarker"]
 position = Vector2(-10, -2.53518e-05)
 
-[node name="ActorDetector" parent="." instance=ExtResource("3_c743w")]
+[node name="EmoteController" parent="." instance=ExtResource("5_w7dbl")]
 
-[node name="StateTimer" type="Timer" parent="."]
+[node name="FloatTextController" parent="." instance=ExtResource("8_jv7bn")]
