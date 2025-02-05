@@ -265,6 +265,14 @@ y_sort_enabled = true
 texture_filter = 1
 script = ExtResource("1_1yijo")
 
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Interface" parent="CanvasLayer" instance=ExtResource("3_gex63")]
+offset_left = 10.0
+offset_top = 9.0
+offset_right = 10.0
+offset_bottom = 9.0
+
 [node name="Camera2D" parent="." instance=ExtResource("1_pp8dq")]
 position = Vector2(176, 160)
 
@@ -273,12 +281,6 @@ position = Vector2(-176, -160)
 
 [node name="BottomRight" parent="Camera2D" index="1"]
 position = Vector2(560, 464)
-
-[node name="Interface" parent="Camera2D" instance=ExtResource("3_gex63")]
-offset_left = -141.0
-offset_top = -72.0
-offset_right = -141.0
-offset_bottom = -72.0
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 unique_name_in_owner = true
