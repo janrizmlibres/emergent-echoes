@@ -6,6 +6,8 @@ extends CharacterBody2D
 
 @export var FRICTION: int = 4
 @export var movement_speed: int = 60
+@export var money = 100
+@export var food = 5
 
 const npc_name: String = "Garreth"
 
