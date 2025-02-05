@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://7ju7mpc0by18"]
+[gd_scene load_steps=18 format=4 uid="uid://7ju7mpc0by18"]
 
 [ext_resource type="Script" path="res://Stages/Island/World.cs" id="1_1yijo"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="1_pp8dq"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://boawcqhrg67eg" path="res://Entities/Objects/Tree/tree.tscn" id="7_p7wec"]
 [ext_resource type="PackedScene" uid="uid://bbvfg1jotmlna" path="res://Entities/Objects/Crops/Wheat/Wheat.tscn" id="7_qhmo1"]
 [ext_resource type="PackedScene" uid="uid://cvgiqagi4pexc" path="res://Entities/Objects/Rock/Rock.tscn" id="8_pvw5h"]
+[ext_resource type="PackedScene" uid="uid://dl04joan3y8xu" path="res://Entities/UI/HUD/Petition/petition_prompt.tscn" id="12_5qavy"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_d7vs6"]
 vertices = PackedVector2Array(8, 8, -8, 8, -8, -8, 8, -8)
@@ -298,6 +299,10 @@ tile_set = SubResource("TileSet_1jo8w")
 [node name="Player" parent="." instance=ExtResource("2_ne4id")]
 position = Vector2(176, 160)
 
+[node name="ActorTag2D" parent="Player" index="5"]
+MoneyValue = 50
+FoodValue = 20
+
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
 remote_path = NodePath("../../Camera2D")
 
@@ -306,6 +311,8 @@ position = Vector2(272, 162)
 
 [node name="Garreth" parent="." instance=ExtResource("5_5sidg")]
 position = Vector2(229, 260)
+
+[node name="PetitionPrompt" parent="." instance=ExtResource("12_5qavy")]
 
 [editable path="Camera2D"]
 [editable path="Player"]
