@@ -70,7 +70,8 @@ namespace NPCProcGen.Core.Traits
             {
                 Vector2? actorLastPos = _owner.Memorizer.GetLastKnownPosition(actor);
 
-                if (actorLastPos == null) continue;
+                if (actorLastPos == null || !_owner.IsActorInRange(actor)) continue;
+                if (actor.IsPlayer() && GD.Randf() > 0.2) continue;
 
                 actorsWithLastPositions.Add(actor);
 

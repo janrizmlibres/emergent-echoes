@@ -42,7 +42,7 @@ namespace NPCProcGen.Core.States
         {
             _targetActor = target;
             _wanderPosition = owner.Parent.GlobalPosition;
-            _idleTimer = CommonUtils.Rnd.Next(MinInterval, MaxInterval);
+            _idleTimer = GD.RandRange(MinInterval, MaxInterval);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace NPCProcGen.Core.States
             if (_idleTimer <= 0)
             {
                 _wanderPosition = CommonUtils.GetRandomPosInCircularArea(_origin, WanderRadius);
-                _idleTimer = CommonUtils.Rnd.Next(MinInterval, MaxInterval);
+                _idleTimer = GD.RandRange(MinInterval, MaxInterval);
                 _isWandering = true;
             }
         }

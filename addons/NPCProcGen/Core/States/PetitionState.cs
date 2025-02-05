@@ -56,7 +56,7 @@ namespace NPCProcGen.Core.States
             CommonUtils.EmitSignal(
                 _target,
                 ActorTag2D.SignalName.InteractionStarted,
-                Variant.From(ActionStateValue),
+                Variant.From((InteractState)ActionStateValue),
                 targetData
             );
         }
@@ -76,13 +76,20 @@ namespace NPCProcGen.Core.States
             GD.Print($"{_owner.Parent.Name} PetitionState Exit");
             _owner.NotifManager.PetitionAnswered -= OnPetitionAnswered;
             _target.NotifManager.NotifyInteractionEnded();
-            _owner.Sensor.ResetTaskRecord(_target);
+            _target.Sensor.ResetTaskRecord(_target);
+
+            Array<Variant> data = new()
+            {
+                _target.Parent,
+                Variant.From(_resourceType),
+                _amount,
+            };
 
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateExited,
                 Variant.From(ActionStateValue),
-                new Array<Variant>()
+                data
             );
             CommonUtils.EmitSignal(
                 _target,

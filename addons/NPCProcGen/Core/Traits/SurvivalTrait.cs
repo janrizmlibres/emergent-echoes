@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
@@ -78,15 +77,33 @@ namespace NPCProcGen.Core.Traits
         // ! Remove in production
         public override BaseAction EvaluateActionStub(Type actionType, ResourceType resType)
         {
+            List<Tuple<BaseAction, float>> actionCandidates = new();
+
             if (actionType == typeof(PetitionAction))
             {
-                List<Tuple<BaseAction, float>> actionCandidates = new();
-
                 EvaluateInteraction(
                     actionCandidates, resType,
                     actor => _memorizer.IsFriendly(actor),
                     (peerActors) => FindActorWithoutBond(peerActors, resType),
                     (chosenActor) => () => new PetitionAction(_owner, chosenActor, resType)
+                );
+
+                return actionCandidates.FirstOrDefault()?.Item1;
+            }
+
+            if (actionType == typeof(EatAction) &&
+                ResourceManager.Instance.HasResource(_owner, ResourceType.Food))
+            {
+                AddAction(actionCandidates, ResourceType.Satiation, () => new EatAction(_owner));
+                return actionCandidates.FirstOrDefault()?.Item1;
+            }
+
+            if (actionType == typeof(SocializeAction))
+            {
+                AddAction(
+                    actionCandidates,
+                    ResourceType.Companionship,
+                    () => new SocializeAction(_owner)
                 );
 
                 return actionCandidates.FirstOrDefault()?.Item1;

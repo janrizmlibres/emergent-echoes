@@ -19,26 +19,17 @@ namespace EmergentEchoes.Entities.Actors
 
 		private State _state = State.Active;
 
-		private Timer _talkBubbleTimer;
-
 		private AnimationTree _animationTree;
 		private AnimationNodeStateMachinePlayback _animationState;
 		private ActorTag2D _actorTag2D;
+		private EmoteController _emoteController;
 
 		public override void _Ready()
 		{
-			_talkBubbleTimer = new Timer()
-			{
-				WaitTime = GD.RandRange(10, 15),
-				OneShot = false,
-				Autostart = false
-			};
-			_talkBubbleTimer.Timeout += ShowNextBubble;
-			AddChild(_talkBubbleTimer);
-
 			_animationTree = GetNode<AnimationTree>("AnimationTree");
 			_animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
 			_actorTag2D = GetNode<ActorTag2D>("ActorTag2D");
+			_emoteController = GetNode<EmoteController>("EmoteController");
 
 			_actorTag2D.InteractionStarted += OnInteractionStarted;
 			_actorTag2D.InteractionEnded += OnInteractionEnded;
@@ -91,12 +82,6 @@ namespace EmergentEchoes.Entities.Actors
 			Velocity = Velocity.MoveToward(inputVector * MaxSpeed, Acceleration);
 		}
 
-		private void ShowNextBubble()
-		{
-			Emote emoteValue = CoreHelpers.ShuffleEnum<Emote>().First();
-			EmoteManager.ShowEmoteBubble(this, emoteValue);
-		}
-
 		private void OnInteractionStarted(Variant state, Array<Variant> data)
 		{
 			InteractState actionState = state.As<InteractState>();
@@ -113,13 +98,13 @@ namespace EmergentEchoes.Entities.Actors
 			_animationState.Travel("Idle");
 
 			_state = State.Dormant;
-			_talkBubbleTimer.Start();
+			_emoteController.Activate();
 		}
 
 		private void OnInteractionEnded()
 		{
 			_state = State.Active;
-			_talkBubbleTimer.Stop();
+			_emoteController.Deactivate();
 		}
 	}
 }

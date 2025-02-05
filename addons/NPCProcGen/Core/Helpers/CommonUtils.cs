@@ -15,11 +15,6 @@ namespace NPCProcGen.Core.Helpers
         public const float PositionOffset = 12;
 
         /// <summary>
-        /// Gets a shared instance of the random number generator.
-        /// </summary>
-        public static Random Rnd { get; private set; } = new Random();
-
-        /// <summary>
         /// Gets a random position within a circular area.
         /// </summary>
         /// <param name="center">The center of the circular area.</param>
@@ -71,6 +66,7 @@ namespace NPCProcGen.Core.Helpers
 
             float petitionAmount = baseValue * petitionMultiplier;
             // Ensure petition amount does not exceed the target's current resource amount
+            // ! Error when minRaise is greater than maxPossible
             petitionAmount = Math.Clamp(petitionAmount, minRaise, maxPossible);
 
             return (int)Math.Floor(petitionAmount);
@@ -102,7 +98,7 @@ namespace NPCProcGen.Core.Helpers
 
         public static List<T> Shuffle<T>(List<T> list)
         {
-            return list.OrderBy(_ => Rnd.Next()).ToList();
+            return list.OrderBy(_ => GD.Randi()).ToList();
         }
     }
 }

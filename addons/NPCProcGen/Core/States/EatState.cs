@@ -28,27 +28,38 @@ namespace NPCProcGen.Core.States
             Array<Variant> data = new() { _amountToEat };
             _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
 
-            Error result = _owner.EmitSignal(
+            _owner.NotifManager.ConsumptionComplete += OnConsumptionComplete;
+            CommonUtils.EmitSignal(
+                _owner,
                 NPCAgent2D.SignalName.ActionStateEntered,
                 Variant.From(ActionStateValue),
                 data
             );
-            DebugTool.Assert(result != Error.Unavailable, "Signal parameters are invalid");
-
-            _owner.DeductFood(_amountToEat);
-            // TODO: Move constant 10 elsewhere
-            ResourceManager.Instance.ModifyResource(_owner, ResourceType.Satiation, _amountToEat * 10);
-            CompleteState?.Invoke();
         }
 
         public override void Exit()
         {
+            GD.Print($"{_owner.Parent.Name} EatState Exit");
+            _owner.NotifManager.ConsumptionComplete -= OnConsumptionComplete;
+
+            // ! Magic number 10
+            int satiationIncrease = _amountToEat * 10;
+            Array<Variant> data = new() { satiationIncrease };
+
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateExited,
                 Variant.From(ActionStateValue),
-                new Array<Variant>()
+                data
             );
+        }
+
+        private void OnConsumptionComplete()
+        {
+            _owner.DeductFood(_amountToEat);
+            // TODO: Move constant 10 elsewhere
+            ResourceManager.Instance.ModifyResource(_owner, ResourceType.Satiation, _amountToEat * 10);
+            CompleteState?.Invoke();
         }
 
         private int ComputeFoodAmount()
@@ -56,6 +67,8 @@ namespace NPCProcGen.Core.States
             ResourceStat resource = ResourceManager.Instance.GetResource(_owner, ResourceType.Satiation);
             float foodAmount = ResourceManager.Instance.GetResourceAmount(_owner, ResourceType.Food);
             float deficiency = resource.LowerThreshold - resource.Amount;
+
+            DebugTool.Assert(foodAmount > 0, "Food amount must be greater than 0.");
             return (int)Math.Min(Math.Ceiling(deficiency / 10), foodAmount);
         }
     }
