@@ -1,4 +1,9 @@
 using Godot;
+using Godot.Collections;
+using NPCProcGen.Autoloads;
+using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 using System.Collections.Generic;
 
 namespace NPCProcGen
@@ -9,62 +14,67 @@ namespace NPCProcGen
     [Tool]
     public partial class ActorTag2D : Node
     {
+        [Signal]
+        public delegate void InteractionStartedEventHandler(Variant state, Array<Variant> data);
+        [Signal]
+        public delegate void InteractionEndedEventHandler();
+
         /// <summary>
         /// Gets or sets the monetary value associated with this actor.
         /// </summary>
         /// <value>The monetary value as an integer.</value>
         [Export(PropertyHint.Range, "0,1000000,")]
-        public int MoneyValue { get; set; } = 50;
+        public int MoneyAmount { get; set; } = 100;
 
         /// <summary>
         /// Gets or sets the food value associated with this actor.
         /// </summary>
         /// <value>The food value as an integer.</value>
-        [Export(PropertyHint.Range, "0")]
-        public int FoodValue { get; set; } = 20;
+        [Export(PropertyHint.Range, "0,1000,")]
+        public int FoodAmount { get; set; } = 5;
 
         /// <summary>
-        /// Gets or sets the StealMarker, which is a Marker2D instance.
-        /// When the StealMarker is set to a new value, it updates the configuration warnings.
+        /// Gets or sets the RearMarker, which is a Marker2D instance.
+        /// When the RearMarker is set to a new value, it updates the configuration warnings.
         /// </summary>
-        /// <value>The Marker2D instance representing the StealMarker.</value>
+        /// <value>The Marker2D instance representing the RearMarker.</value>
         [Export]
-        public Marker2D StealMarker
+        public Marker2D RearMarker
         {
-            get => _stealMarker;
+            get => _rearMarker;
             set
             {
-                if (value != _stealMarker)
+                if (value != _rearMarker)
                 {
-                    _stealMarker = value;
+                    _rearMarker = value;
                     UpdateConfigurationWarnings();
                 }
             }
         }
+
+        // TODO: Add exported property for character dimensions
+
+        /// <summary>
+        /// Gets the notification manager of the Actor.
+        /// </summary>
+        public NotifManager NotifManager { get; private set; } = new();
+
+        /// <summary>
+        /// Gets the sensor component of the NPC.
+        /// </summary>
+        public Sensor Sensor { get; private set; } = new();
+
+        /// <summary>
+        /// Gets the memorizer component of the Actor.
+        /// </summary>
+        public Memorizer Memorizer { get; protected set; }
 
         /// <summary>
         /// Gets the parent node as a Node2D.
         /// </summary>
         public Node2D Parent { get; protected set; }
 
-        private Marker2D _stealMarker;
-
-        /// <summary>
-        /// Called when the node is added to the scene.
-        /// Initializes the parent node and checks for required nodes.
-        /// </summary>
-        public override void _Ready()
-        {
-            if (Engine.IsEditorHint()) return;
-
-            Parent = GetParent() as Node2D;
-
-            if (Parent == null || _stealMarker == null)
-            {
-                QueueFree();
-                return;
-            }
-        }
+        private Marker2D _rearMarker;
 
         /// <summary>
         /// Called when the node enters the scene tree.
@@ -76,6 +86,24 @@ namespace NPCProcGen
             {
                 Parent = GetParent() as Node2D;
                 UpdateConfigurationWarnings();
+            }
+        }
+
+        /// <summary>
+        /// Called when the node is added to the scene.
+        /// Initializes the parent node and checks for required nodes.
+        /// </summary>
+        public override void _Ready()
+        {
+            if (Engine.IsEditorHint()) return;
+
+            Parent = GetParent() as Node2D;
+            Memorizer = new Memorizer();
+
+            if (Parent == null || _rearMarker == null)
+            {
+                QueueFree();
+                return;
             }
         }
 
@@ -92,12 +120,46 @@ namespace NPCProcGen
                 warnings.Add("The ActorTag2D can be used only under a Node2D inheriting parent node.");
             }
 
-            if (_stealMarker == null)
+            if (_rearMarker == null)
             {
-                warnings.Add("The ActorTag2D requires a Marker2D node for use in actions such as stealing.");
+                warnings.Add("The ActorTag2D requires a Marker2D node to identify the rear side of the actor.");
             }
 
             return warnings.ToArray();
+        }
+
+        /// <summary>
+        /// Initializes the NPC with a list of actors.
+        /// </summary>
+        /// <param name="actors">The list of actors to initialize with.</param>
+        public void Initialize(List<ActorTag2D> actors)
+        {
+            Memorizer.Initialize(actors);
+        }
+
+        public Vector2 GetRearPosition()
+        {
+            return Parent.GlobalPosition + RearMarker.Position.Normalized() * CommonUtils.PositionOffset;
+        }
+
+        public void AnswerPetition(bool isAccepted)
+        {
+            NotifManager.NotifyPetitionAnswered(isAccepted);
+        }
+
+        public int GetFoodAmount()
+        {
+            return (int)ResourceManager.Instance.GetResource(this, ResourceType.Food).Amount;
+        }
+
+        public void AddFood(int amount)
+        {
+            ResourceManager.Instance.ModifyResource(this, ResourceType.Food, amount);
+        }
+
+        public void DeductFood(int amount)
+        {
+            ResourceManager.Instance.ModifyResource(this, ResourceType.Food, -amount);
         }
     }
 }

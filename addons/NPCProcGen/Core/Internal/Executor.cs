@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 using NPCProcGen.Core.Actions;
-using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.Internal
@@ -11,8 +11,7 @@ namespace NPCProcGen.Core.Internal
     /// </summary>
     public class Executor
     {
-        // TODO: Convert to a stack of actions to handle intercepts in the middle of an action
-        private BaseAction _action = null;
+        private readonly Stack<BaseAction> _actions = new();
 
         private readonly NPCAgent2D _owner;
 
@@ -32,7 +31,10 @@ namespace NPCProcGen.Core.Internal
         /// <param name="delta">The time elapsed since the last update.</param>
         public void Update(double delta)
         {
-            _action?.Update(delta);
+            if (_actions.TryPeek(out BaseAction action))
+            {
+                action.Update(delta);
+            }
         }
 
         /// <summary>
@@ -41,12 +43,12 @@ namespace NPCProcGen.Core.Internal
         /// <param name="action">The action to be executed.</param>
         public void SetAction(BaseAction action)
         {
-            DebugTool.Assert(_action == null, "Action field should be null when assigning a new action");
+            DebugTool.Assert(_actions.Count == 0, "Actions should be null when assigning a new action");
             DebugTool.Assert(action != null, "Action to be assigned cannot be null");
 
-            _action = action;
-            _action.ActionComplete += OnActionComplete;
-            _action.Run();
+            _actions.Push(action);
+            action.ActionComplete += OnActionComplete;
+            action.Run();
         }
 
         /// <summary>
@@ -55,7 +57,14 @@ namespace NPCProcGen.Core.Internal
         /// <returns>The target position.</returns>
         public Vector2 GetTargetPosition()
         {
-            return _action?.GetTargetPosition() ?? _owner.Parent.GlobalPosition;
+            if (_actions.TryPeek(out BaseAction action))
+            {
+                return action.GetTargetPosition();
+            }
+            else
+            {
+                return _owner.Parent.GlobalPosition;
+            }
         }
 
         /// <summary>
@@ -64,7 +73,7 @@ namespace NPCProcGen.Core.Internal
         /// <returns>True if an action is being executed, otherwise false.</returns>
         public bool HasAction()
         {
-            return _action != null;
+            return _actions.Count > 0;
         }
 
         /// <summary>
@@ -73,7 +82,14 @@ namespace NPCProcGen.Core.Internal
         /// <returns>True if the action involves navigation, otherwise false.</returns>
         public bool QueryNavigationAction()
         {
-            return _action?.IsNavigating() ?? false;
+            if (_actions.TryPeek(out BaseAction action))
+            {
+                return action.IsNavigating();
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -81,10 +97,8 @@ namespace NPCProcGen.Core.Internal
         /// </summary>
         private void OnActionComplete()
         {
-            DebugTool.Assert(_action != null, "Action field cannot be null when completing an action");
-
-            _action.ActionComplete -= OnActionComplete;
-            _action = null;
+            DebugTool.Assert(_actions.Count > 0, "Actions cannot be null when completing an action");
+            _actions.Pop().ActionComplete -= OnActionComplete;
             ExecutionEnded?.Invoke();
         }
     }

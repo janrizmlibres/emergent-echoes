@@ -14,10 +14,5 @@ namespace NPCProcGen.Core.Components.Enums
         /// Represents a refused petition social practice.
         /// </summary>
         RefusedPetition,
-
-        /// <summary>
-        /// Represents a failed petition social practice.
-        /// </summary>
-        FailedPetition,
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using Godot;
 
 namespace NPCProcGen.Core.Helpers
 {
@@ -13,6 +12,11 @@ namespace NPCProcGen.Core.Helpers
         /// </summary>
         public event Action NavigationComplete;
 
+        public event Action InteractionStarted;
+        public event Action InteractionEnded;
+
+        public event Action<bool> PetitionAnswered;
+
         /// <summary>
         /// Event triggered when an actor is detected.
         /// </summary>
@@ -24,6 +28,21 @@ namespace NPCProcGen.Core.Helpers
         public void NotifyNavigationComplete()
         {
             NavigationComplete?.Invoke();
+        }
+
+        public void NotifyInteractionStarted()
+        {
+            InteractionStarted?.Invoke();
+        }
+
+        public void NotifyInteractionEnded()
+        {
+            InteractionEnded?.Invoke();
+        }
+
+        public void NotifyPetitionAnswered(bool isAccepted)
+        {
+            PetitionAnswered?.Invoke(isAccepted);
         }
 
         /// <summary>

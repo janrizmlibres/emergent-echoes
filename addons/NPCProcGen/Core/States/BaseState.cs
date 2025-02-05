@@ -1,4 +1,5 @@
 using Godot;
+using NPCProcGen.Core.Components.Enums;
 
 namespace NPCProcGen.Core.States
 {
@@ -29,14 +30,16 @@ namespace NPCProcGen.Core.States
         /// The owner NPC agent.
         /// </summary>
         protected readonly NPCAgent2D _owner;
+        protected readonly ActionType _actionType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseState"/> class.
         /// </summary>
         /// <param name="owner">The owner NPC agent.</param>
-        public BaseState(NPCAgent2D owner)
+        public BaseState(NPCAgent2D owner, ActionType action)
         {
             _owner = owner;
+            _actionType = action;
         }
 
         /// <summary>
@@ -54,5 +57,10 @@ namespace NPCProcGen.Core.States
         /// Called when the state is exited.
         /// </summary>
         public virtual void Exit() { }
+
+        protected bool IsActionSocial()
+        {
+            return _actionType == ActionType.Petition || _actionType == ActionType.Socialize;
+        }
     }
 }
