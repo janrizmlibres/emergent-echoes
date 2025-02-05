@@ -246,6 +246,11 @@ namespace NPCProcGen
             NotifManager.NotifyNavigationComplete();
         }
 
+        public void CompleteConsumption()
+        {
+            NotifManager.NotifyConsumptionComplete();
+        }
+
         /// <summary>
         /// Adds traits to the NPC's strategizer.
         /// </summary>

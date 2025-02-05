@@ -161,5 +161,10 @@ namespace NPCProcGen
         {
             ResourceManager.Instance.ModifyResource(this, ResourceType.Food, -amount);
         }
+
+        public bool IsPlayer()
+        {
+            return GetType() != typeof(NPCAgent2D);
+        }
     }
 }
