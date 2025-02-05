@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=11 format=3 uid="uid://bkc116dgwvju8"]
+[gd_resource type="TileSet" load_steps=12 format=3 uid="uid://bkc116dgwvju8"]
 
 [ext_resource type="Texture2D" uid="uid://cfpqdbj0kpb4m" path="res://cave_/cave_ [bridgeAnimatedTiles].png" id="1_y8i7t"]
 [ext_resource type="Texture2D" uid="uid://dkyucpqfgka0w" path="res://cave_/cave_ [fencesAndWalls].png" id="2_syc6k"]
@@ -73,6 +73,12 @@ texture = ExtResource("3_tn74t")
 1:1/size_in_atlas = Vector2i(1, 2)
 1:1/0 = 0
 1:1/0/texture_origin = Vector2i(0, 8)
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_mgr6c"]
+vertices = PackedVector2Array(8, 8, -8, 8, -8, -8, 8, -8)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)])
+agent_radius = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_chy6d"]
 texture = ExtResource("4_7r7ut")
@@ -190,6 +196,7 @@ texture = ExtResource("4_7r7ut")
 2:9/0/terrains_peering_bit/top_left_corner = 0
 2:9/0/terrains_peering_bit/top_side = 0
 2:9/0/terrains_peering_bit/top_right_corner = 0
+2:9/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mgr6c")
 5:8/animation_columns = 4
 5:8/animation_separation = Vector2i(4, 0)
 5:8/animation_speed = 3.0
@@ -345,6 +352,7 @@ terrain_set_0/terrain_0/name = "GroundTerrain"
 terrain_set_0/terrain_0/color = Color(0.660845, 0.15668, 0.357337, 1)
 terrain_set_0/terrain_1/name = "Ground2Layer"
 terrain_set_0/terrain_1/color = Color(0.5, 0.4375, 0.25, 1)
+navigation_layer_0/layers = 1
 sources/0 = SubResource("TileSetAtlasSource_yra2v")
 sources/1 = SubResource("TileSetAtlasSource_sh8rn")
 sources/2 = SubResource("TileSetAtlasSource_7j2d8")
