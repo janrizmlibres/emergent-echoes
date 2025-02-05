@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_ykyr2"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="3_ddblb"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_s0dao"]
-[ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Game Components/NPC_Alt_Detector.tscn" id="4_t4ib7"]
+[ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Interactions/npc_alt_detector.tscn" id="4_t4ib7"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="5_x35se"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_6gfsl"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/is_patrol_done.gd" id="8_sd1jt"]
@@ -71,7 +71,7 @@ position = Vector2(0, -9)
 texture = ExtResource("2_ykyr2")
 hframes = 8
 vframes = 6
-frame = 5
+frame = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -94,10 +94,10 @@ path_postprocessing = 1
 avoidance_enabled = true
 debug_enabled = true
 
-[node name="StealMarker" type="Node2D" parent="."]
+[node name="RearMarker" type="Node2D" parent="."]
 rotation = 3.14159
 
-[node name="Marker2D" type="Marker2D" parent="StealMarker"]
+[node name="Marker2D" type="Marker2D" parent="RearMarker"]
 position = Vector2(-10, -2.53518e-05)
 
 [node name="NpcAltDetector" parent="." instance=ExtResource("4_t4ib7")]
@@ -108,7 +108,7 @@ shape = SubResource("CircleShape2D_ajai6")
 
 [node name="GarrethBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("4_s0dao")
-blackboard = NodePath("@Node@17352")
+blackboard = NodePath("@Node@32246")
 actor = NodePath("..")
 
 [node name="SelectorComposite" type="Node" parent="GarrethBehaviour"]

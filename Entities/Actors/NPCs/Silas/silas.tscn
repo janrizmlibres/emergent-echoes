@@ -4,9 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_5inc2"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="3_ttgx4"]
 [ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_x7obk"]
-[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Game Components/interactable.tscn" id="6_tu70y"]
-[ext_resource type="PackedScene" uid="uid://c3s3r5aucrjod" path="res://Entities/UI/HUD/Prompt/prompt.tscn" id="7_y47oe"]
-[ext_resource type="Script" path="res://Entities/UI/HUD/Prompt/Scripts/SilasPrompt.cs" id="8_eja77"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30oj8"]
 radius = 3.0
@@ -53,9 +50,6 @@ states/Move/position = Vector2(335, 0)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_y4d7w"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_1snfb"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_ap3hn")]
 graph_offset = Vector2(0, -75.9467)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_qex8a"]
-radius = 25.0
-
 [node name="Silas" type="CharacterBody2D"]
 texture_filter = 1
 script = ExtResource("1_scutl")
@@ -66,7 +60,6 @@ position = Vector2(0, -9)
 texture = ExtResource("2_5inc2")
 hframes = 8
 vframes = 6
-frame = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708

@@ -301,7 +301,6 @@ radius = 2.0
 
 [node name="ActorTag2D" type="Node" parent="." node_paths=PackedStringArray("RearMarker")]
 script = ExtResource("3_tiunm")
-MoneyAmount = 500
 RearMarker = NodePath("../StealMarker/Marker2D")
 
 [node name="StealMarker" type="Node2D" parent="."]

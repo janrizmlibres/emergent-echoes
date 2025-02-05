@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/silas_alt.gd" id="1_17b4c"]
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_hdw1b"]
 [ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="3_3716a"]
-[ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Game Components/NPC_Alt_Detector.tscn" id="4_b51it"]
+[ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Interactions/npc_alt_detector.tscn" id="4_acgvc"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_vmoef"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="5_a23i0"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_1ro2l"]
@@ -62,11 +62,11 @@ states/Move/position = Vector2(335, 0)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_y4d7w"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_1snfb"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_ap3hn")]
 graph_offset = Vector2(0, -75.9467)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_c2uc3"]
-radius = 48.0104
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_eyjh3"]
 size = Vector2(24, 30)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5724d"]
+radius = 44.0454
 
 [node name="SilasAlt" type="CharacterBody2D"]
 texture_filter = 1
@@ -79,7 +79,7 @@ position = Vector2(0, -9)
 texture = ExtResource("2_hdw1b")
 hframes = 8
 vframes = 6
-frame = 7
+frame = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -102,22 +102,22 @@ avoidance_enabled = true
 radius = 5.0
 debug_enabled = true
 
-[node name="StealMarker" type="Node2D" parent="."]
+[node name="RearMarker" type="Node2D" parent="."]
 rotation = 3.14159
 
-[node name="Marker2D" type="Marker2D" parent="StealMarker"]
+[node name="Marker2D" type="Marker2D" parent="RearMarker"]
 position = Vector2(-10, -2.53518e-05)
-
-[node name="NpcAltDetector" parent="." instance=ExtResource("4_b51it")]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="NpcAltDetector"]
-shape = SubResource("CircleShape2D_c2uc3")
 
 [node name="StealArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StealArea"]
 position = Vector2(0, -4)
 shape = SubResource("RectangleShape2D_eyjh3")
+
+[node name="NpcAltDetector" parent="." instance=ExtResource("4_acgvc")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NpcAltDetector"]
+shape = SubResource("CircleShape2D_5724d")
 
 [node name="SilasBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("4_vmoef")
@@ -162,8 +162,8 @@ blackboard = {
 }
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
-[connection signal="body_entered" from="NpcAltDetector" to="SilasBehaviour/SelectorComposite/On Steal/Is Player Present" method="_on_npc_alt_detector_body_entered"]
 [connection signal="body_entered" from="StealArea" to="SilasBehaviour/SelectorComposite/On Steal/Chase Player" method="_on_steal_area_body_entered"]
+[connection signal="body_entered" from="NpcAltDetector" to="SilasBehaviour/SelectorComposite/On Steal/Is Player Present" method="_on_npc_alt_detector_body_entered"]
 [connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Patrol/DelayDecorator/Patrol Action" to="." method="move_player"]
 [connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Steal/Chase Player" to="." method="move_player"]
 [connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Steal/Go To House" to="." method="move_player"]
