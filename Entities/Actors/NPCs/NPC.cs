@@ -11,12 +11,10 @@ namespace EmergentEchoes.Entities.Actors
 {
     public partial class NPC : CharacterBody2D
     {
-        private enum MainState { Idle, Wander, Procedural }
+        private enum MainState { Idle, Wander, Procedural, Eat }
 
         private const float MinInterval = 1;
         private const float MaxInterval = 3;
-        private const float MinBubbleInterval = 2;
-        private const float MaxBubbleInterval = 5;
 
         [Export]
         public int MaxSpeed { get; set; } = 40;
@@ -29,8 +27,7 @@ namespace EmergentEchoes.Entities.Actors
 
         private readonly Array<Vector2I> _validTilePositions = new();
 
-        private Timer _mainStateTimer;
-        private Timer _talkBubbleTimer;
+        private Timer _stateTimer;
 
         private TileMapLayer _tileMapLayer;
         private AnimationTree _animationTree;
@@ -38,26 +35,22 @@ namespace EmergentEchoes.Entities.Actors
         private NavigationAgent2D _navigationAgent2d;
         private NPCAgent2D _npcAgent2d;
 
+        private EmoteController _emoteController;
+        private FloatTextController _floatTextController;
+
         public override void _Ready()
         {
             if (Engine.IsEditorHint()) return;
 
-            _mainStateTimer = new Timer()
+            _stateTimer = new Timer()
             {
                 WaitTime = GD.RandRange(MinInterval, MaxInterval),
                 OneShot = true,
                 Autostart = true
             };
 
-            _talkBubbleTimer = new Timer()
-            {
-                OneShot = true,
-            };
-
-            _mainStateTimer.Timeout += RandomizeMainState;
-            _talkBubbleTimer.Timeout += ShowNextBubble;
-            AddChild(_mainStateTimer);
-            AddChild(_talkBubbleTimer);
+            _stateTimer.Timeout += RandomizeMainState;
+            AddChild(_stateTimer);
 
             _tileMapLayer = GetNode<TileMapLayer>("%TileMapLayer");
 
@@ -66,6 +59,10 @@ namespace EmergentEchoes.Entities.Actors
             _navigationAgent2d = GetNode<NavigationAgent2D>("NavigationAgent2D");
             _npcAgent2d = GetNode<NPCAgent2D>("NPCAgent2D");
 
+            _emoteController = GetNode<EmoteController>("EmoteController");
+            _floatTextController = GetNode<FloatTextController>("FloatTextController");
+
+            _animationTree.AnimationFinished += OnAnimationFinished;
             _navigationAgent2d.VelocityComputed += OnNavigationAgentVelocityComputed;
 
             _npcAgent2d.ExecutionStarted += OnExecutionStarted;
@@ -92,6 +89,10 @@ namespace EmergentEchoes.Entities.Actors
                     break;
                 case MainState.Procedural:
                     HandleProceduralState();
+                    break;
+                case MainState.Eat:
+                    _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
+                    _animationState.Travel("Eat");
                     break;
             }
 
@@ -152,13 +153,15 @@ namespace EmergentEchoes.Entities.Actors
 
         private void RandomizeMainState()
         {
-            _mainState = CoreHelpers.ShuffleEnum<MainState>().Where(x => x != MainState.Procedural).First();
+            _mainState = CoreHelpers.ShuffleEnum<MainState>().Where((x) =>
+                x != MainState.Procedural && x != MainState.Eat
+            ).First();
 
             switch (_mainState)
             {
                 case MainState.Idle:
                     GD.Print($"{Name} is idling.");
-                    _mainStateTimer.Start(GD.RandRange(MinInterval, MaxInterval));
+                    _stateTimer.Start(GD.RandRange(MinInterval, MaxInterval));
                     break;
                 case MainState.Wander:
                     GD.Print($"{Name} is wandering.");
@@ -166,13 +169,6 @@ namespace EmergentEchoes.Entities.Actors
                     _navigationAgent2d.TargetPosition = wanderTarget;
                     break;
             }
-        }
-
-        private void ShowNextBubble()
-        {
-            Emote emoteValue = CoreHelpers.ShuffleEnum<Emote>().First();
-            EmoteManager.ShowEmoteBubble(this, emoteValue);
-            _talkBubbleTimer.Start(GD.RandRange(MinBubbleInterval, MaxBubbleInterval));
         }
 
         private void SetupTilePositions()
@@ -202,6 +198,15 @@ namespace EmergentEchoes.Entities.Actors
             return Vector2.Zero;
         }
 
+        private void OnAnimationFinished(StringName animName)
+        {
+            if (animName.ToString().Contains("eat"))
+            {
+                GD.Print($"{Name} is done eating.");
+                _npcAgent2d.CompleteConsumption();
+            }
+        }
+
         private void OnNavigationAgentVelocityComputed(Vector2 safeVelocity)
         {
             Velocity = safeVelocity;
@@ -212,15 +217,15 @@ namespace EmergentEchoes.Entities.Actors
             ActionType actionType = action.As<ActionType>();
 
             _mainState = MainState.Procedural;
-            _mainStateTimer.Stop();
+            _stateTimer.Stop();
 
             if (actionType == ActionType.Theft)
             {
-                EmoteManager.ShowEmoteBubble(this, Emote.Hum);
+                _emoteController.ShowEmoteBubble(Emote.Hum);
             }
             else if (actionType == ActionType.Eat)
             {
-                EmoteManager.ShowEmoteBubble(this, Emote.Sweat);
+                _mainState = MainState.Eat;
             }
         }
 
@@ -232,7 +237,7 @@ namespace EmergentEchoes.Entities.Actors
 
         private void OnInteractionStarted(Variant state, Array<Variant> data)
         {
-            _mainStateTimer.Stop();
+            _stateTimer.Stop();
             FacePartner(data[0].As<Node2D>());
         }
 
@@ -247,7 +252,7 @@ namespace EmergentEchoes.Entities.Actors
                 RandomizeMainState();
             }
 
-            _talkBubbleTimer.Stop();
+            _emoteController.Deactivate();
         }
 
         private void OnActionStateEntered(Variant state, Array<Variant> data)
@@ -267,13 +272,13 @@ namespace EmergentEchoes.Entities.Actors
             if (actionState == ActionState.Steal)
             {
                 float amountStolen = data[1].As<float>();
-                FloatTextManager.ShowFloatText(this, amountStolen.ToString());
+                _floatTextController.ShowFloatText(amountStolen.ToString());
             }
             else if (actionState == ActionState.Talk || actionState == ActionState.Petition)
             {
                 GD.Print($"{Name} is done interacting.");
                 _mainState = MainState.Procedural;
-                _talkBubbleTimer.Stop();
+                _emoteController.Deactivate();
             }
             else if (actionState == ActionState.Wander)
             {
@@ -281,8 +286,19 @@ namespace EmergentEchoes.Entities.Actors
 
                 if (durationReached)
                 {
-                    EmoteManager.ShowEmoteBubble(this, Emote.Ellipsis);
+                    _emoteController.ShowEmoteBubble(Emote.Ellipsis);
                 }
+            }
+            else if (actionState == ActionState.Eat)
+            {
+                int satiationIncrease = data[0].As<int>();
+                _floatTextController.ShowFloatText(satiationIncrease.ToString());
+            }
+
+            if (actionState == ActionState.Petition)
+            {
+                int amountPetitioned = data[2].As<int>();
+                _floatTextController.ShowFloatText(amountPetitioned.ToString());
             }
         }
 
@@ -294,7 +310,7 @@ namespace EmergentEchoes.Entities.Actors
             _animationState.Travel("Idle");
 
             _mainState = MainState.Idle;
-            _talkBubbleTimer.Start(GD.RandRange(MinBubbleInterval, MaxBubbleInterval));
+            _emoteController.Activate();
             GD.Print($"{Name} is interacting with {partner.Name}");
         }
     }
