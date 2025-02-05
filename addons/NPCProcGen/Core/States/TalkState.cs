@@ -33,7 +33,7 @@ namespace NPCProcGen.Core.States
             : base(owner, action)
         {
             _partner = partner;
-            _duration = CommonUtils.Rnd.Next(MinDuration, MaxDuration);
+            _duration = GD.RandRange(MinDuration, MaxDuration);
         }
 
         public override void Enter()
