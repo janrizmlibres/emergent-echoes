@@ -27,7 +27,7 @@ namespace NPCProcGen.Core.Actions
         private void InitializeStates()
         {
             _seekState = new SeekState(_owner, ActionTypeValue);
-            _seekState.CompleteState += (ActorTag2D partner) => InitializeInteractStates(partner);
+            _seekState.CompleteState += partner => InitializeInteractStates(partner);
         }
 
         public override void Update(double delta)
@@ -61,7 +61,7 @@ namespace NPCProcGen.Core.Actions
             WaitState waitState = new(_owner, ActionTypeValue, partner);
             TalkState talkState = new(_owner, ActionTypeValue, partner);
 
-            _engageState.CompleteState += (bool isTargetBusy) =>
+            _engageState.CompleteState += isTargetBusy =>
             {
                 TransitionTo(isTargetBusy ? waitState : talkState);
             };
