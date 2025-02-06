@@ -80,6 +80,8 @@ namespace NPCProcGen.Core.States
         {
             _owner.NotifManager.NotifyInteractionEnded();
             _partner.NotifManager.NotifyInteractionEnded();
+
+            _owner.Sensor.ClearTaskRecord();
             _partner.Sensor.ClearTaskRecord();
 
             Array<Variant> data = new()

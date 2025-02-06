@@ -82,6 +82,8 @@ namespace NPCProcGen.Core.States
             _owner.NotifManager.PetitionAnswered -= OnPetitionAnswered;
             _owner.NotifManager.NotifyInteractionEnded();
             _target.NotifManager.NotifyInteractionEnded();
+
+            _owner.Sensor.ClearTaskRecord();
             _target.Sensor.ClearTaskRecord();
 
             Array<Variant> data = new()

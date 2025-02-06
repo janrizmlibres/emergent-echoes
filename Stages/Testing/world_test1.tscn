@@ -289,10 +289,16 @@ position = Vector2(320, 172)
 position = Vector2(229, 260)
 
 [node name="Silas2" parent="." instance=ExtResource("8_0wj5x")]
-position = Vector2(362, 275)
+position = Vector2(361, 273)
 
 [node name="Garreth2" parent="." instance=ExtResource("9_cbx2p")]
-position = Vector2(126, 273)
+position = Vector2(128, 271)
+
+[node name="Silas3" parent="." instance=ExtResource("8_0wj5x")]
+position = Vector2(241, 310)
+
+[node name="Garreth3" parent="." instance=ExtResource("9_cbx2p")]
+position = Vector2(268, 149)
 
 [editable path="Camera2D"]
 [editable path="Player"]

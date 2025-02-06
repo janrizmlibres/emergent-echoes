@@ -13,7 +13,6 @@ namespace NPCProcGen.Core.Actions
         public const ActionType ActionTypeValue = ActionType.Socialize;
 
         private SeekState _seekState;
-        private EngageState _engageState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SocializeAction"/> class.
@@ -47,7 +46,6 @@ namespace NPCProcGen.Core.Actions
             {
                 ActorTag2D target = _owner.GetRandomActorInRange();
                 InitializeInteractStates(target);
-                TransitionTo(_engageState);
             }
             else
             {
@@ -57,16 +55,18 @@ namespace NPCProcGen.Core.Actions
 
         private void InitializeInteractStates(ActorTag2D partner)
         {
-            _engageState = new(_owner, ActionTypeValue, partner, Waypoint.Lateral);
+            EngageState engageState = new(_owner, ActionTypeValue, partner, Waypoint.Lateral);
             WaitState waitState = new(_owner, ActionTypeValue, partner);
             TalkState talkState = new(_owner, ActionTypeValue, partner);
 
-            _engageState.CompleteState += isTargetBusy =>
+            engageState.CompleteState += isTargetBusy =>
             {
                 TransitionTo(isTargetBusy ? waitState : talkState);
             };
-            waitState.CompleteState += () => TransitionTo(_engageState);
+            waitState.CompleteState += () => TransitionTo(engageState);
             talkState.CompleteState += () => CompleteAction();
+
+            TransitionTo(partner.Sensor.IsActorBusy() ? waitState : engageState);
         }
     }
 }

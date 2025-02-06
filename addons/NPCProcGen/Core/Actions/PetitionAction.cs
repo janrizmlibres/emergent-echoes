@@ -58,7 +58,7 @@ namespace NPCProcGen.Core.Actions
             WaitState waitState = new(_owner, ActionTypeValue, _targetActor);
             PetitionState petitionState = new(_owner, ActionTypeValue, _targetActor, _targetResource);
 
-            wanderState.CompleteState += (bool durationReached) =>
+            wanderState.CompleteState += durationReached =>
             {
                 if (durationReached)
                 {
@@ -69,7 +69,7 @@ namespace NPCProcGen.Core.Actions
                     TransitionTo(_targetActor.Sensor.IsActorBusy() ? waitState : _engageState);
                 }
             };
-            _engageState.CompleteState += (bool isTargetBusy) =>
+            _engageState.CompleteState += isTargetBusy =>
             {
                 TransitionTo(isTargetBusy ? waitState : petitionState);
             };

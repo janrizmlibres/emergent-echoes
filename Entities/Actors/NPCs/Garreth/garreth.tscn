@@ -40,9 +40,9 @@ libraries = {
 [node name="AnimationTree" type="AnimationTree" parent="."]
 tree_root = ExtResource("5_cujqc")
 anim_player = NodePath("../AnimationPlayer")
-parameters/Eat/blend_position = 0
-parameters/Idle/blend_position = 0
-parameters/Move/blend_position = 0
+parameters/Eat/blend_position = 1.0
+parameters/Idle/blend_position = 1.0
+parameters/Move/blend_position = 1.0
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_desired_distance = 10.0

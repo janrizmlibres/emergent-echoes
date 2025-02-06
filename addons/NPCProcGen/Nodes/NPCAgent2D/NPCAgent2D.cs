@@ -212,7 +212,7 @@ namespace NPCProcGen
 
         public bool IsAnyActorInRange()
         {
-            return _detectedActors.Where(actor => actor is NPCAgent2D).Any();
+            return _detectedActors.Any();
         }
 
         public ActorTag2D GetRandomActorInRange()

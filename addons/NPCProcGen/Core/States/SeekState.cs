@@ -17,8 +17,8 @@ namespace NPCProcGen.Core.States
 
         private Vector2 _seekPosition;
 
-        private bool _isMoving = true;
         private float _idleTimer = IdleDuration;
+        private bool _isMoving = true;
 
         public event Action<ActorTag2D> CompleteState;
 
@@ -26,17 +26,15 @@ namespace NPCProcGen.Core.States
         /// Initializes a new instance of the <see cref="SeekState"/> class.
         /// </summary>
         /// <param name="owner">The owner of the state.</param>
-        public SeekState(NPCAgent2D owner, ActionType action) : base(owner, action)
-        {
-            _seekPosition = CommonUtils.GetRandomPosInCircularArea(
-                _owner.Parent.GlobalPosition,
-                SeekRadius
-            );
-        }
+        public SeekState(NPCAgent2D owner, ActionType action) : base(owner, action) { }
 
         public override void Enter()
         {
             GD.Print($"{_owner.Parent.Name} SeekState Enter");
+            _seekPosition = CommonUtils.GetRandomPosInCircularArea(
+                _owner.Parent.GlobalPosition,
+                SeekRadius
+            );
 
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
             _owner.NotifManager.ActorDetected += OnActorDetected;
@@ -69,6 +67,8 @@ namespace NPCProcGen.Core.States
 
         public override void Exit()
         {
+            GD.Print($"{_owner.Parent.Name} SeekState Exit");
+
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
             _owner.NotifManager.ActorDetected -= OnActorDetected;
 
@@ -96,6 +96,7 @@ namespace NPCProcGen.Core.States
 
         private void OnActorDetected(ActorTag2D actor)
         {
+            GD.Print($"{_owner.Parent.Name} Actor detected: {actor.Parent.Name}");
             CompleteState?.Invoke(actor);
         }
     }

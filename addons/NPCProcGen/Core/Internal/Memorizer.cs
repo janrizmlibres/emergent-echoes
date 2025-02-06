@@ -36,7 +36,6 @@ namespace NPCProcGen.Core.Internal
         {
             DebugTool.Assert(_actorData.ContainsKey(actor), $"Actor {actor.Parent.Name} not found in memorizer.");
             _actorData[actor].Relationship += amount;
-            GD.Print($"Updated relationship with {actor.Parent.Name} by {amount}. New relationship: {_actorData[actor].Relationship}");
         }
 
         public List<ActorTag2D> GetPeerActors() => _actorData.Keys.ToList();

@@ -38,7 +38,7 @@ namespace NPCProcGen.Core.States
             GD.Print($"{_owner.Parent.Name} EngageState Enter");
 
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
-            _target.NotifManager.InteractionStarted += OnTargetInteractionStarted;
+            _target.NotifManager.InteractionStarted += CompleteWithTargetBusy;
 
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
@@ -55,7 +55,7 @@ namespace NPCProcGen.Core.States
         public override void Exit()
         {
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
-            _target.NotifManager.InteractionStarted -= OnTargetInteractionStarted;
+            _target.NotifManager.InteractionStarted -= CompleteWithTargetBusy;
 
             CommonUtils.EmitSignal(
                 _owner,
@@ -88,7 +88,7 @@ namespace NPCProcGen.Core.States
             throw new InvalidOperationException("Invalid waypoint type.");
         }
 
-        private void OnTargetInteractionStarted()
+        private void CompleteWithTargetBusy()
         {
             bool isTargetBusy = true;
             CompleteState?.Invoke(isTargetBusy);
