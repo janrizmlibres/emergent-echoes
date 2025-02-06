@@ -19,6 +19,8 @@ namespace NPCProcGen.Core.States
         private const int MinCompanionshipIncrease = 20;
         private const int MaxCompanionshipIncrease = 40;
 
+        private readonly float _companionshipIncrease;
+
         private readonly ActorTag2D _partner;
 
         public event Action CompleteState;
@@ -34,6 +36,7 @@ namespace NPCProcGen.Core.States
         {
             _partner = partner;
             _duration = GD.RandRange(MinDuration, MaxDuration);
+            _companionshipIncrease = ComputeIncrease();
         }
 
         public override void Enter()
@@ -43,9 +46,11 @@ namespace NPCProcGen.Core.States
             Array<Variant> ownerData = new() { _partner.Parent };
             Array<Variant> partnerData = new() { _owner.Parent };
 
+            _owner.NotifManager.NotifyInteractionStarted();
             _partner.NotifManager.NotifyInteractionStarted();
-            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
-            _partner.Sensor.SetTaskRecord(_partner, _actionType, ActionStateValue);
+
+            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+            _partner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
             CommonUtils.EmitSignal(
                 _owner,
@@ -73,29 +78,55 @@ namespace NPCProcGen.Core.States
 
         public override void Exit()
         {
+            _owner.NotifManager.NotifyInteractionEnded();
             _partner.NotifManager.NotifyInteractionEnded();
-            _partner.Sensor.ResetTaskRecord(_partner);
+            _partner.Sensor.ClearTaskRecord();
+
+            Array<Variant> data = new()
+            {
+                _partner.Parent,
+                _companionshipIncrease
+            };
 
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateExited,
                 Variant.From(ActionStateValue),
-                new Array<Variant>()
+                data
             );
             CommonUtils.EmitSignal(_partner, ActorTag2D.SignalName.InteractionEnded);
+
+            if (_partner is NPCAgent2D npc && !npc.IsActive())
+            {
+                CommonUtils.EmitSignal(
+                    _partner,
+                    NPCAgent2D.SignalName.ExecutionEnded
+                );
+            }
+        }
+
+        private float ComputeIncrease()
+        {
+            float scaler = (_duration - MinDuration) / (MaxDuration - MinDuration);
+            float increaseRange = MaxCompanionshipIncrease - MinCompanionshipIncrease;
+            float amount = MinCompanionshipIncrease + scaler * increaseRange;
+            return Math.Clamp(amount, MinCompanionshipIncrease, MaxCompanionshipIncrease);
         }
 
         private void EndInteraction()
         {
             // Calculate the amount of companionship to increase based on duration using
             // linear interpolation
-            float scaler = (_duration - MinDuration) / (MaxDuration - MinDuration);
-            float increaseRange = MaxCompanionshipIncrease - MinCompanionshipIncrease;
-            float amount = MinCompanionshipIncrease + scaler * increaseRange;
-            amount = Math.Clamp(amount, MinCompanionshipIncrease, MaxCompanionshipIncrease);
-
-            ResourceManager.Instance.ModifyResource(_owner, ResourceType.Companionship, amount);
-            ResourceManager.Instance.ModifyResource(_partner, ResourceType.Companionship, amount);
+            ResourceManager.Instance.ModifyResource(
+                _owner,
+                ResourceType.Companionship,
+                _companionshipIncrease
+            );
+            ResourceManager.Instance.ModifyResource(
+                _partner,
+                ResourceType.Companionship,
+                _companionshipIncrease
+            );
 
             _owner.Memorizer.UpdateRelationship(_partner, 1);
             _partner.Memorizer.UpdateRelationship(_owner, 1);

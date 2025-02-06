@@ -13,10 +13,14 @@ namespace NPCProcGen.Core.States
         public const ActionState ActionStateValue = ActionState.Petition;
 
         private const float NegotiationDuration = 15;
+        private const int CompanionshipIncrease = 3;
+        private const int CompanionshipDecrease = -1;
 
         private readonly ActorTag2D _target;
         private readonly ResourceType _resourceType;
         private readonly int _amount;
+
+        private bool _isAccepted;
 
         private float _negotiationTimer = NegotiationDuration;
 
@@ -32,7 +36,7 @@ namespace NPCProcGen.Core.States
 
         public override void Enter()
         {
-            GD.Print($"{_owner.Parent.Name} PetitionState Enter");
+            // GD.Print($"{_owner.Parent.Name} PetitionState Enter");
 
             Array<Variant> ownerData = new() { _target.Parent };
             Array<Variant> targetData = new()
@@ -43,9 +47,11 @@ namespace NPCProcGen.Core.States
             };
 
             _owner.NotifManager.PetitionAnswered += OnPetitionAnswered;
+            _owner.NotifManager.NotifyInteractionStarted();
             _target.NotifManager.NotifyInteractionStarted();
-            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
-            _target.Sensor.SetTaskRecord(_target, _actionType, ActionStateValue);
+
+            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+            _target.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
             CommonUtils.EmitSignal(
                 _owner,
@@ -73,16 +79,18 @@ namespace NPCProcGen.Core.States
 
         public override void Exit()
         {
-            GD.Print($"{_owner.Parent.Name} PetitionState Exit");
             _owner.NotifManager.PetitionAnswered -= OnPetitionAnswered;
+            _owner.NotifManager.NotifyInteractionEnded();
             _target.NotifManager.NotifyInteractionEnded();
-            _target.Sensor.ResetTaskRecord(_target);
+            _target.Sensor.ClearTaskRecord();
 
             Array<Variant> data = new()
             {
+                _isAccepted,
                 _target.Parent,
                 Variant.From(_resourceType),
                 _amount,
+                _isAccepted ? CompanionshipIncrease : CompanionshipDecrease,
             };
 
             CommonUtils.EmitSignal(
@@ -95,6 +103,14 @@ namespace NPCProcGen.Core.States
                 _target,
                 ActorTag2D.SignalName.InteractionEnded
             );
+
+            if (_target is NPCAgent2D npc && !npc.IsActive())
+            {
+                CommonUtils.EmitSignal(
+                    _target,
+                    NPCAgent2D.SignalName.ExecutionEnded
+                );
+            }
         }
 
         private void DetermineOutcome()
@@ -129,12 +145,18 @@ namespace NPCProcGen.Core.States
 
         private void OnPetitionAnswered(bool isAccepted)
         {
+            _isAccepted = isAccepted;
+
             if (isAccepted)
             {
                 ResourceManager.Instance.TranserResources(_target, _owner, _resourceType, _amount);
+                _target.Memorizer.UpdateLastPetitionResource(_owner, _resourceType);
             }
 
-            _owner.Memorizer.UpdateRelationship(_target, isAccepted ? 3 : -1);
+            _owner.Memorizer.UpdateRelationship(
+                _target,
+                isAccepted ? CompanionshipIncrease : CompanionshipDecrease
+            );
             CompleteState?.Invoke();
         }
     }

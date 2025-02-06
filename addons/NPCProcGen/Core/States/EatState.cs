@@ -26,7 +26,7 @@ namespace NPCProcGen.Core.States
             GD.Print($"{_owner.Parent.Name} EatState Enter");
 
             Array<Variant> data = new() { _amountToEat };
-            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
+            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
             _owner.NotifManager.ConsumptionComplete += OnConsumptionComplete;
             CommonUtils.EmitSignal(
