@@ -55,12 +55,27 @@ namespace NPCProcGen.Core.Traits
                         actionCandidates, type,
                         actor => !_memorizer.IsTrusted(actor),
                         (_) => null,
-                        (chosenActor) => () => new TheftAction(_owner, chosenActor, type)
+                        ActionType.Theft
                     );
                 }
             }
 
             return actionCandidates.OrderByDescending(tuple => tuple.Item2).FirstOrDefault();
+        }
+
+        // ! Remove in production
+        public override BaseAction EvaluateActionStub(Type actionType, ResourceType resType)
+        {
+            List<Tuple<BaseAction, float>> actionCandidates = new();
+
+            EvaluateInteraction(
+                actionCandidates, resType,
+                actor => true,
+                (_) => null,
+                ActionType.Theft
+            );
+
+            return actionCandidates.FirstOrDefault()?.Item1;
         }
     }
 }

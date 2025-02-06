@@ -51,7 +51,7 @@ namespace NPCProcGen.Core.Traits
                         actionCandidates, type,
                         actor => _memorizer.IsFriendly(actor),
                         (peerActors) => FindActorWithoutBond(peerActors, type),
-                        (chosenActor) => () => new PetitionAction(_owner, chosenActor, type)
+                        ActionType.Petition
                     );
                 }
             }
@@ -59,15 +59,15 @@ namespace NPCProcGen.Core.Traits
             if (resourceMgr.IsDeficient(_owner, ResourceType.Satiation)
                 && resourceMgr.HasResource(_owner, ResourceType.Food))
             {
-                AddAction(actionCandidates, ResourceType.Satiation, () => new EatAction(_owner));
+                AddAction(actionCandidates, ActionType.Eat, ResourceType.Satiation);
             }
 
             if (resourceMgr.IsDeficient(_owner, ResourceType.Companionship))
             {
                 AddAction(
                     actionCandidates,
-                    ResourceType.Companionship,
-                    () => new SocializeAction(_owner)
+                    ActionType.Socialize,
+                    ResourceType.Companionship
                 );
             }
 
@@ -85,7 +85,7 @@ namespace NPCProcGen.Core.Traits
                     actionCandidates, resType,
                     actor => _memorizer.IsFriendly(actor),
                     (peerActors) => FindActorWithoutBond(peerActors, resType),
-                    (chosenActor) => () => new PetitionAction(_owner, chosenActor, resType)
+                    ActionType.Petition
                 );
 
                 return actionCandidates.FirstOrDefault()?.Item1;
@@ -94,7 +94,7 @@ namespace NPCProcGen.Core.Traits
             if (actionType == typeof(EatAction) &&
                 ResourceManager.Instance.HasResource(_owner, ResourceType.Food))
             {
-                AddAction(actionCandidates, ResourceType.Satiation, () => new EatAction(_owner));
+                AddAction(actionCandidates, ActionType.Eat, ResourceType.Satiation);
                 return actionCandidates.FirstOrDefault()?.Item1;
             }
 
@@ -102,8 +102,8 @@ namespace NPCProcGen.Core.Traits
             {
                 AddAction(
                     actionCandidates,
-                    ResourceType.Companionship,
-                    () => new SocializeAction(_owner)
+                    ActionType.Socialize,
+                    ResourceType.Companionship
                 );
 
                 return actionCandidates.FirstOrDefault()?.Item1;
