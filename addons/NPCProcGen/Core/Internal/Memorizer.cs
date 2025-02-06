@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Helpers;
 using System.Linq;
+using NPCProcGen.Core.Components.Enums;
 
 namespace NPCProcGen.Core.Internal
 {
@@ -45,6 +46,8 @@ namespace NPCProcGen.Core.Internal
 
         public virtual Vector2? GetLastKnownPosition(ActorTag2D actor) => null;
         public virtual void UpdateLastKnownPosition(ActorTag2D actor, Vector2 location) { }
+        public virtual void UpdateLastPetitionResource(ActorTag2D actor, ResourceType type) { }
+        public virtual bool IsValidPetitionTarget(ActorTag2D actor, ResourceType type) => false;
     }
 
     /// <summary>
@@ -65,17 +68,6 @@ namespace NPCProcGen.Core.Internal
         }
 
         /// <summary>
-        /// Updates the location of the specified actor.
-        /// </summary>
-        /// <param name="actor">The actor to update the location for.</param>
-        /// <param name="location">The new location of the actor.</param>
-        public override void UpdateLastKnownPosition(ActorTag2D actor, Vector2 location)
-        {
-            NPCActorData npcActorData = _actorData[actor] as NPCActorData;
-            npcActorData.LastKnownPosition = location;
-        }
-
-        /// <summary>
         /// Gets the last known location of the specified actor.
         /// </summary>
         /// <param name="actor">The actor to get the location for.</param>
@@ -83,7 +75,25 @@ namespace NPCProcGen.Core.Internal
         public override Vector2? GetLastKnownPosition(ActorTag2D actor)
         {
             DebugTool.Assert(_actorData[actor] is NPCActorData, "Actor data is not of type NPCActorData.");
-            return (_actorData[actor] as NPCActorData)?.LastKnownPosition;
+            return (_actorData[actor] as NPCActorData).LastKnownPosition;
+        }
+
+        public override void UpdateLastKnownPosition(ActorTag2D actor, Vector2 location)
+        {
+            DebugTool.Assert(_actorData[actor] is NPCActorData, "Actor data is not of type NPCActorData.");
+            (_actorData[actor] as NPCActorData).LastKnownPosition = location;
+        }
+
+        public override void UpdateLastPetitionResource(ActorTag2D actor, ResourceType type)
+        {
+            DebugTool.Assert(_actorData[actor] is NPCActorData, "Actor data is not of type NPCActorData.");
+            (_actorData[actor] as NPCActorData).LastPetitionResource = type;
+        }
+
+        public override bool IsValidPetitionTarget(ActorTag2D actor, ResourceType type)
+        {
+            DebugTool.Assert(_actorData[actor] is NPCActorData, "Actor data is not of type NPCActorData.");
+            return (_actorData[actor] as NPCActorData).IsValidPetitionTarget(type);
         }
     }
 }
