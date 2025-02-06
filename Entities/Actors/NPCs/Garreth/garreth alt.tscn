@@ -1,62 +1,22 @@
-[gd_scene load_steps=24 format=3 uid="uid://c46vvjqepxr5c"]
+[gd_scene load_steps=16 format=3 uid="uid://c46vvjqepxr5c"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/garreth_alt.gd" id="1_0w5gq"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_ykyr2"]
-[ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="3_ddblb"]
+[ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="3_hjw3h"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_s0dao"]
 [ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Interactions/npc_alt_detector.tscn" id="4_t4ib7"]
+[ext_resource type="AnimationNodeStateMachine" uid="uid://cw72ka7tmedn0" path="res://Entities/Actors/actor_anim_sm.tres" id="4_vx0j5"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="5_x35se"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_6gfsl"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/is_patrol_done.gd" id="8_sd1jt"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/delayer.gd" id="9_gnkor"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/patrol_action.gd" id="10_a6mv2"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/has_the_agent_arrived.gd" id="9_7j1tl"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/is_the_agent_idle.gd" id="10_6jhpa"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/patrol_action.gd" id="11_8k8tp"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/wait_for_5_sec.gd" id="11_hcrvy"]
+[ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="12_77cs2"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0
 height = 10.0
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_bfue1"]
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8poqu"]
-animation = &"npc_anims/idle_left"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_0c0yc"]
-animation = &"npc_anims/idle_right"
-
-[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_u5glx"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_8poqu")
-blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_0c0yc")
-blend_point_1/pos = 1.0
-blend_mode = 1
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ne5tr"]
-animation = &"npc_anims/move_left"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3hi50"]
-animation = &"npc_anims/move_right"
-
-[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_egro6"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_ne5tr")
-blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_3hi50")
-blend_point_1/pos = 1.0
-blend_mode = 1
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_y4d7w"]
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1snfb"]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ap3hn"]
-
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_epujy"]
-states/Idle/node = SubResource("AnimationNodeBlendSpace1D_u5glx")
-states/Idle/position = Vector2(335, 100)
-states/Move/node = SubResource("AnimationNodeBlendSpace1D_egro6")
-states/Move/position = Vector2(335, 0)
-transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_y4d7w"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_1snfb"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_ap3hn")]
-graph_offset = Vector2(0, -75.9467)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ajai6"]
 radius = 23.0868
@@ -67,11 +27,11 @@ script = ExtResource("1_0w5gq")
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -9)
+position = Vector2(0, -10)
 texture = ExtResource("2_ykyr2")
 hframes = 8
 vframes = 6
-frame = 6
+frame = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -79,13 +39,13 @@ shape = SubResource("CapsuleShape2D_tfsnf")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_bfue1"),
-"npc_anims": ExtResource("3_ddblb")
+"": ExtResource("3_hjw3h")
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource("AnimationNodeStateMachine_epujy")
+tree_root = ExtResource("4_vx0j5")
 anim_player = NodePath("../AnimationPlayer")
+parameters/Eat/blend_position = 0
 parameters/Idle/blend_position = 0
 parameters/Move/blend_position = 0
 
@@ -106,9 +66,19 @@ NPCName = "Garreth"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NpcAltDetector"]
 shape = SubResource("CircleShape2D_ajai6")
 
+[node name="Blackboard" type="Node" parent="."]
+script = ExtResource("12_77cs2")
+blackboard = {
+"is_idle": true
+}
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
 [node name="GarrethBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("4_s0dao")
-blackboard = NodePath("@Node@32246")
+blackboard = NodePath("../Blackboard")
 actor = NodePath("..")
 
 [node name="SelectorComposite" type="Node" parent="GarrethBehaviour"]
@@ -117,16 +87,18 @@ script = ExtResource("5_x35se")
 [node name="Patrol" type="Node" parent="GarrethBehaviour/SelectorComposite"]
 script = ExtResource("6_6gfsl")
 
-[node name="Is Patrol Done" type="Node" parent="GarrethBehaviour/SelectorComposite/Patrol"]
-script = ExtResource("8_sd1jt")
+[node name="Is The Agent Idle" type="Node" parent="GarrethBehaviour/SelectorComposite/Patrol"]
+script = ExtResource("10_6jhpa")
 
-[node name="DelayDecorator" type="Node" parent="GarrethBehaviour/SelectorComposite/Patrol"]
-script = ExtResource("9_gnkor")
-wait_time = 5.0
+[node name="Has The Agent Arrived" type="Node" parent="GarrethBehaviour/SelectorComposite/Patrol"]
+script = ExtResource("9_7j1tl")
 
-[node name="Patrol Action" type="Node" parent="GarrethBehaviour/SelectorComposite/Patrol/DelayDecorator"]
-script = ExtResource("10_a6mv2")
+[node name="Wait For 5 sec" type="Node" parent="GarrethBehaviour/SelectorComposite/Patrol"]
+script = ExtResource("11_hcrvy")
 
-[connection signal="navigation_finished" from="NavigationAgent2D" to="GarrethBehaviour/SelectorComposite/Patrol/Is Patrol Done" method="_on_navigation_agent_2d_navigation_finished"]
+[node name="Patrol Action" type="Node" parent="GarrethBehaviour/SelectorComposite/Patrol"]
+script = ExtResource("11_8k8tp")
+
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
-[connection signal="on_patrol" from="GarrethBehaviour/SelectorComposite/Patrol/DelayDecorator/Patrol Action" to="." method="_on_patrol"]
+[connection signal="timeout" from="Timer" to="GarrethBehaviour/SelectorComposite/Patrol/Wait For 5 sec" method="_on_timer_timeout"]
+[connection signal="move_player" from="GarrethBehaviour/SelectorComposite/Patrol/Patrol Action" to="." method="move_player"]

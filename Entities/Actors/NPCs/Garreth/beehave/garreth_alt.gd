@@ -44,7 +44,7 @@ func handle_animation() -> void:
 	else:
 		animation_state.travel("Idle")
 
-func _on_patrol(patrol_location: Variant) -> void:
+func move_player(patrol_location: Vector2):
 	current_location = patrol_location
 	npc_active = true
 	pass # Replace with function body.
