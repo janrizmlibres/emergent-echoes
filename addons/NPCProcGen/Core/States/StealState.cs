@@ -43,8 +43,8 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Enter()
         {
-            GD.Print($"{_owner.Parent.Name} StealState Enter");
-            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
+            // GD.Print($"{_owner.Parent.Name} StealState Enter");
+            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateEntered,

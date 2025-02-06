@@ -5,42 +5,35 @@ using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
-    /// <summary>
-    /// Represents the state where an NPC agent flees to a random position.
-    /// </summary>
-    public class FleeState : BaseState, INavigationState
+    public class SearchState : BaseState, INavigationState
     {
-        public const ActionState ActionStateValue = ActionState.Flee;
+        public const ActionState ActionStateValue = ActionState.Search;
 
-        private const float MinDistance = 200;
-        private const float MaxDistance = 400;
-
-        private Vector2 _fleePosition;
+        private readonly ActorTag2D _target;
+        private Vector2 _lastKnownPosition;
 
         /// <summary>
         /// Event triggered when the state is completed.
         /// </summary>
-        public event Action CompleteState;
+        public event Action<bool> CompleteState;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FleeState"/> class.
-        /// </summary>
-        /// <param name="owner">The NPC agent owning this state.</param>
-        public FleeState(NPCAgent2D owner, ActionType action) : base(owner, action) { }
+        public SearchState(NPCAgent2D owner, ActionType action, ActorTag2D target,
+            Vector2 lastKnownPosition) : base(owner, action)
+        {
+            _target = target;
+            _lastKnownPosition = lastKnownPosition;
+        }
 
         /// <summary>
         /// Called when the state is entered.
         /// </summary>
         public override void Enter()
         {
-            GD.Print($"{_owner.Parent.Name} FleeState Enter");
-            _fleePosition = CommonUtils.GetRandomPosInCircularArea(
-                _owner.Parent.GlobalPosition,
-                MaxDistance,
-                MinDistance
-            );
+            // GD.Print($"{_owner.Parent.Name} SearchState Enter");
 
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
+            _owner.NotifManager.ActorDetected += OnActorDetected;
+
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
             CommonUtils.EmitSignal(
@@ -56,6 +49,8 @@ namespace NPCProcGen.Core.States
         public override void Exit()
         {
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
+            _owner.NotifManager.ActorDetected -= OnActorDetected;
+
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateExited,
@@ -75,15 +70,25 @@ namespace NPCProcGen.Core.States
         /// <summary>
         /// Gets the target position for navigation.
         /// </summary>
-        /// <returns>The target position.</returns>
+        /// <returns>The global position of the target.</returns>
         public Vector2 GetTargetPosition()
         {
-            return _fleePosition;
+            return _lastKnownPosition;
         }
 
         private void OnNavigationComplete()
         {
-            CompleteState?.Invoke();
+            bool isTargetFound = false;
+            CompleteState?.Invoke(isTargetFound);
+        }
+
+        private void OnActorDetected(ActorTag2D target)
+        {
+            if (target == _target)
+            {
+                bool isTargetFound = true;
+                CompleteState?.Invoke(isTargetFound);
+            }
         }
     }
 }

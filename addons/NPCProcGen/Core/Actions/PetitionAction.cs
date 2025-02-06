@@ -1,5 +1,4 @@
 using Godot;
-using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.States;
@@ -16,20 +15,15 @@ namespace NPCProcGen.Core.Actions
         /// <summary>
         /// The target actor from which to steal.
         /// </summary>
-        private readonly ActorTag2D _target;
+        private readonly ActorTag2D _targetActor;
 
         /// <summary>
         /// The type of resource to steal.
         /// </summary>
         private readonly ResourceType _targetResource;
 
-        /// <summary>
-        /// The last known position of the target.
-        /// </summary>
-        private Vector2 _targetLastPos;
-
-        private MoveState _initialMoveState;
-        private MoveState _moveState;
+        private SearchState _searchState;
+        private EngageState _engageState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PetitionAction"/> class.
@@ -38,27 +32,32 @@ namespace NPCProcGen.Core.Actions
         public PetitionAction(NPCAgent2D owner, ActorTag2D target, ResourceType type)
             : base(owner)
         {
-            DebugTool.Assert(_owner.Memorizer.GetLastKnownPosition(target).HasValue,
-                "Target must have a location");
-
-            _target = target;
+            _targetActor = target;
             _targetResource = type;
-            _targetLastPos = _owner.Memorizer.GetLastKnownPosition(target).Value;
 
             InitializeStates();
         }
 
         private void InitializeStates()
         {
-            _initialMoveState = new MoveState(_owner, ActionTypeValue, _target.Parent, _targetLastPos);
-            WanderState wanderState = new(_owner, ActionTypeValue, _target);
-            _moveState = new(_owner, ActionTypeValue, _target.Parent);
-            PetitionState petitionState = new(_owner, ActionTypeValue, _target, _targetResource);
+            Vector2? targetLastPosition = _owner.Memorizer.GetLastKnownPosition(_targetActor);
 
-            _initialMoveState.CompleteState += (bool isTargetFound) =>
+            WanderState wanderState = new(_owner, ActionTypeValue, _targetActor);
+
+            if (targetLastPosition != null)
             {
-                TransitionTo(isTargetFound ? petitionState : wanderState);
-            };
+                _searchState = new(_owner, ActionTypeValue, _targetActor, targetLastPosition.Value);
+                _searchState.CompleteState += (bool isTargetFound) =>
+                {
+                    TransitionTo(isTargetFound ? _engageState : wanderState);
+                };
+            }
+            _engageState = new(_owner, ActionTypeValue, _targetActor, Waypoint.Lateral);
+
+
+            WaitState waitState = new(_owner, ActionTypeValue, _targetActor);
+            PetitionState petitionState = new(_owner, ActionTypeValue, _targetActor, _targetResource);
+
             wanderState.CompleteState += (bool durationReached) =>
             {
                 if (durationReached)
@@ -67,10 +66,14 @@ namespace NPCProcGen.Core.Actions
                 }
                 else
                 {
-                    TransitionTo(_moveState);
+                    TransitionTo(_targetActor.Sensor.IsActorBusy() ? waitState : _engageState);
                 }
             };
-            _moveState.CompleteState += (_) => TransitionTo(petitionState);
+            _engageState.CompleteState += (bool isTargetBusy) =>
+            {
+                TransitionTo(isTargetBusy ? waitState : petitionState);
+            };
+            waitState.CompleteState += () => TransitionTo(_engageState);
             petitionState.CompleteState += () => CompleteAction();
         }
 
@@ -81,12 +84,23 @@ namespace NPCProcGen.Core.Actions
 
         public override void Run()
         {
+            _owner.Sensor.SetPetitionResourceType(_targetResource);
+
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ExecutionStarted,
                 Variant.From(ActionTypeValue)
             );
-            TransitionTo(_owner.IsActorInRange(_target) ? _moveState : _initialMoveState);
+
+            if (_owner.IsActorInRange(_targetActor))
+            {
+                TransitionTo(_engageState);
+            }
+            else
+            {
+                DebugTool.Assert(_searchState != null, "Search state is not initialized.");
+                TransitionTo(_searchState);
+            }
         }
     }
 }

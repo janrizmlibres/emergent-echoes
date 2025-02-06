@@ -5,42 +5,41 @@ using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
-    /// <summary>
-    /// Represents the state where an NPC agent flees to a random position.
-    /// </summary>
-    public class FleeState : BaseState, INavigationState
+    public class EngageState : BaseState, INavigationState
     {
-        public const ActionState ActionStateValue = ActionState.Flee;
+        public const ActionState ActionStateValue = ActionState.Engage;
 
-        private const float MinDistance = 200;
-        private const float MaxDistance = 400;
-
-        private Vector2 _fleePosition;
+        private readonly ActorTag2D _target;
+        private readonly Waypoint _waypoint;
 
         /// <summary>
         /// Event triggered when the state is completed.
         /// </summary>
-        public event Action CompleteState;
+        public event Action<bool> CompleteState;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FleeState"/> class.
+        /// Initializes a new instance of the <see cref="MoveState"/> class with a target node.
         /// </summary>
         /// <param name="owner">The NPC agent owning this state.</param>
-        public FleeState(NPCAgent2D owner, ActionType action) : base(owner, action) { }
+        /// <param name="target">The target node to move to.</param>
+        /// <param name="lastKnownPosition">The last known position of the target.</param>
+        public EngageState(NPCAgent2D owner, ActionType action, ActorTag2D target,
+            Waypoint waypoint) : base(owner, action)
+        {
+            _target = target;
+            _waypoint = waypoint;
+        }
 
         /// <summary>
         /// Called when the state is entered.
         /// </summary>
         public override void Enter()
         {
-            GD.Print($"{_owner.Parent.Name} FleeState Enter");
-            _fleePosition = CommonUtils.GetRandomPosInCircularArea(
-                _owner.Parent.GlobalPosition,
-                MaxDistance,
-                MinDistance
-            );
+            GD.Print($"{_owner.Parent.Name} EngageState Enter");
 
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
+            _target.NotifManager.InteractionStarted += OnTargetInteractionStarted;
+
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
             CommonUtils.EmitSignal(
@@ -56,6 +55,8 @@ namespace NPCProcGen.Core.States
         public override void Exit()
         {
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
+            _target.NotifManager.InteractionStarted -= OnTargetInteractionStarted;
+
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateExited,
@@ -75,15 +76,28 @@ namespace NPCProcGen.Core.States
         /// <summary>
         /// Gets the target position for navigation.
         /// </summary>
-        /// <returns>The target position.</returns>
+        /// <returns>The global position of the target.</returns>
         public Vector2 GetTargetPosition()
         {
-            return _fleePosition;
+            if (_waypoint == Waypoint.Lateral)
+                return _target.GetLateralWaypoint(_owner);
+
+            if (_waypoint == Waypoint.Omni)
+                return _target.GetOmniDirectionalWaypoint(_owner);
+
+            throw new InvalidOperationException("Invalid waypoint type.");
+        }
+
+        private void OnTargetInteractionStarted()
+        {
+            bool isTargetBusy = true;
+            CompleteState?.Invoke(isTargetBusy);
         }
 
         private void OnNavigationComplete()
         {
-            CompleteState?.Invoke();
+            bool isTargetBusy = false;
+            CompleteState?.Invoke(isTargetBusy);
         }
     }
 }

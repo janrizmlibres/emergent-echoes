@@ -99,11 +99,15 @@ namespace EmergentEchoes.Entities.Actors
             MoveAndSlide();
         }
 
+        private void ShowFloatText(ResourceType resType, string text)
+        {
+            _floatTextController.ShowFloatText(resType, text);
+        }
+
         private void HandleWanderState()
         {
             if (_navigationAgent2d.IsNavigationFinished())
             {
-                GD.Print($"{Name} is done wandering. Randomizing main state.");
                 RandomizeMainState();
                 return;
             }
@@ -160,11 +164,9 @@ namespace EmergentEchoes.Entities.Actors
             switch (_mainState)
             {
                 case MainState.Idle:
-                    GD.Print($"{Name} is idling.");
                     _stateTimer.Start(GD.RandRange(MinInterval, MaxInterval));
                     break;
                 case MainState.Wander:
-                    GD.Print($"{Name} is wandering.");
                     Vector2 wanderTarget = PickTargetPosition();
                     _navigationAgent2d.TargetPosition = wanderTarget;
                     break;
@@ -202,7 +204,6 @@ namespace EmergentEchoes.Entities.Actors
         {
             if (animName.ToString().Contains("eat"))
             {
-                GD.Print($"{Name} is done eating.");
                 _npcAgent2d.CompleteConsumption();
             }
         }
@@ -231,27 +232,20 @@ namespace EmergentEchoes.Entities.Actors
 
         private void OnExecutionEnded()
         {
-            GD.Print($"{Name} is done executing. Randomizing main state.");
             RandomizeMainState();
         }
 
         private void OnInteractionStarted(Variant state, Array<Variant> data)
         {
             _stateTimer.Stop();
-            FacePartner(data[0].As<Node2D>());
+
+            Node2D partner = data[0].As<Node2D>();
+            FacePartner(partner);
         }
 
         private void OnInteractionEnded()
         {
-            if (_npcAgent2d.IsActive())
-            {
-                _mainState = MainState.Procedural;
-            }
-            else
-            {
-                RandomizeMainState();
-            }
-
+            _mainState = MainState.Procedural;
             _emoteController.Deactivate();
         }
 
@@ -261,7 +255,8 @@ namespace EmergentEchoes.Entities.Actors
 
             if (actionState == ActionState.Talk || actionState == ActionState.Petition)
             {
-                FacePartner(data[0].As<Node2D>());
+                Node2D partner = data[0].As<Node2D>();
+                FacePartner(partner);
             }
         }
 
@@ -272,11 +267,10 @@ namespace EmergentEchoes.Entities.Actors
             if (actionState == ActionState.Steal)
             {
                 float amountStolen = data[1].As<float>();
-                _floatTextController.ShowFloatText(amountStolen.ToString());
+                _floatTextController.ShowFloatText(ResourceType.Money, amountStolen.ToString(), false);
             }
             else if (actionState == ActionState.Talk || actionState == ActionState.Petition)
             {
-                GD.Print($"{Name} is done interacting.");
                 _mainState = MainState.Procedural;
                 _emoteController.Deactivate();
             }
@@ -292,13 +286,45 @@ namespace EmergentEchoes.Entities.Actors
             else if (actionState == ActionState.Eat)
             {
                 int satiationIncrease = data[0].As<int>();
-                _floatTextController.ShowFloatText(satiationIncrease.ToString());
+                _floatTextController.ShowFloatText(
+                    ResourceType.Satiation,
+                    satiationIncrease.ToString()
+                );
             }
 
             if (actionState == ActionState.Petition)
             {
-                int amountPetitioned = data[2].As<int>();
-                _floatTextController.ShowFloatText(amountPetitioned.ToString());
+                bool isAccepted = data[0].As<bool>();
+
+                if (isAccepted)
+                {
+                    ResourceType type = data[2].As<ResourceType>();
+                    int amountPetitioned = data[3].As<int>();
+                    _floatTextController.ShowFloatText(type, amountPetitioned.ToString());
+                }
+                else
+                {
+                    int companionshipChange = data[4].As<int>();
+                    _floatTextController.ShowFloatText(
+                        ResourceType.Companionship,
+                        companionshipChange.ToString()
+                    );
+                }
+            }
+            else if (actionState == ActionState.Talk)
+            {
+                Node2D partner = data[0].As<Node2D>();
+
+                if (partner is not NPC) return;
+
+                float companionshipIncrease = data[1].As<float>();
+                NPC npc = partner as NPC;
+
+                npc.ShowFloatText(ResourceType.Companionship, companionshipIncrease.ToString());
+                _floatTextController.ShowFloatText(
+                    ResourceType.Companionship,
+                    companionshipIncrease.ToString()
+                );
             }
         }
 
@@ -311,7 +337,6 @@ namespace EmergentEchoes.Entities.Actors
 
             _mainState = MainState.Idle;
             _emoteController.Activate();
-            GD.Print($"{Name} is interacting with {partner.Name}");
         }
     }
 }

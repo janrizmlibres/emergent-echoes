@@ -36,7 +36,7 @@ namespace NPCProcGen.Core.States
             GD.Print($"{_owner.Parent.Name} SeekState Enter");
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
             _owner.NotifManager.ActorDetected += OnActorDetected;
-            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
+            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateEntered,
