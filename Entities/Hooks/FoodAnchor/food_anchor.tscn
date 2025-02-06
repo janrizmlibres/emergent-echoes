@@ -1,10 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://bccwhdlbu5ny0"]
+[gd_scene load_steps=3 format=3 uid="uid://bccwhdlbu5ny0"]
 
 [ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Objects/Crops/Wheat/Art/Basic_Plants.png" id="1_et0eb"]
+[ext_resource type="Script" path="res://Entities/Hooks/FoodAnchor/FoodAnchor.cs" id="1_rbyrb"]
 
 [node name="FoodAnchor" type="Marker2D"]
 texture_filter = 1
 position = Vector2(0, -5)
+script = ExtResource("1_rbyrb")
 
 [node name="FoodSprite" type="Sprite2D" parent="."]
 position = Vector2(9, 0)
