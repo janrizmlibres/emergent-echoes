@@ -3,10 +3,15 @@ extends ActionLeaf
 signal move_player(set_state: String, patrol_location: Vector2)
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
+	if blackboard.get_value("current_state") != "stealing":
+		return FAILURE
+		
 	if actor.navigation_agent_2d.is_navigation_finished():
 		blackboard.set_value("is_idle", true)
+		blackboard.set_value("current_state", "patrolling")
 		blackboard.set_value("player_found", false)
-		blackboard.set_value("player_near", false)
+		blackboard.set_value("player_stolen", false)
+		
 		return SUCCESS
 	
 	move_player.emit(Vector2(720, 48))

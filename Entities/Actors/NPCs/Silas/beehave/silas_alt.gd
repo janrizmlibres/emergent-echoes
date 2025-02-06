@@ -3,6 +3,9 @@ extends CharacterBody2D
 @onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
 @onready var animation_tree: AnimationTree = $AnimationTree
 @onready var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/playback")
+@onready var blackboard_object = $Blackboard
+@onready var patrol_leaf = $"SilasBehaviour/SelectorComposite/On Patrol/Wait For 5 Sec"
+@onready var timer = $Timer
 
 @export var FRICTION: int = 4
 @export var movement_speed: int = 60
@@ -51,4 +54,12 @@ func move_player(patrol_location: Vector2):
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
 	velocity = safe_velocity
+	pass # Replace with function body.
+
+func _on_npc_alt_detector_body_entered(body: Node2D) -> void:
+	if body.get_node_or_null("ActorTag2D"):
+		timer.stop()
+		blackboard_object.set_value("is_idle", false)
+		blackboard_object.set_value("player", body)
+		blackboard_object.set_value("player_found", true)
 	pass # Replace with function body.

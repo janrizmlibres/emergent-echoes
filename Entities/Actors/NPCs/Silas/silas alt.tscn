@@ -1,66 +1,28 @@
-[gd_scene load_steps=30 format=3 uid="uid://etlq2q1jbury"]
+[gd_scene load_steps=23 format=3 uid="uid://etlq2q1jbury"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/silas_alt.gd" id="1_17b4c"]
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_hdw1b"]
-[ext_resource type="AnimationLibrary" uid="uid://78ghpvleme55" path="res://Entities/Actors/NPCs/npc_anims.res" id="3_3716a"]
+[ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="3_tr4bx"]
+[ext_resource type="AnimationNodeStateMachine" uid="uid://cw72ka7tmedn0" path="res://Entities/Actors/actor_anim_sm.tres" id="4_5m5fc"]
 [ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Interactions/npc_alt_detector.tscn" id="4_acgvc"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_vmoef"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="5_a23i0"]
+[ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="5_l6iaq"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_1ro2l"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/has_the_player_arrived.gd" id="8_4ytb8"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/delayer.gd" id="8_mrkiu"]
+[ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="6_vcruu"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/has_the_agent_arrived.gd" id="8_4ytb8"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/patrol_action.gd" id="9_58j85"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="11_enow8"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/is_player_present.gd" id="11_kxjq6"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/is_the_agent_idle.gd" id="12_ky6yt"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/chase_player.gd" id="12_q20m7"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/steal_money_from_player.gd" id="13_q0u1v"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/wait_for_5_sec.gd" id="13_sovwx"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/go_to_house.gd" id="15_yth3l"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="16_8orm2"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30oj8"]
 radius = 3.0
 height = 10.0
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8poqu"]
-animation = &"npc_anims/idle_left"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_0c0yc"]
-animation = &"npc_anims/idle_right"
-
-[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_u5glx"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_8poqu")
-blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_0c0yc")
-blend_point_1/pos = 1.0
-blend_mode = 1
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ne5tr"]
-animation = &"npc_anims/move_left"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3hi50"]
-animation = &"npc_anims/move_right"
-
-[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_egro6"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_ne5tr")
-blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_3hi50")
-blend_point_1/pos = 1.0
-blend_mode = 1
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_y4d7w"]
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1snfb"]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ap3hn"]
-
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_cn5l4"]
-states/Idle/node = SubResource("AnimationNodeBlendSpace1D_u5glx")
-states/Idle/position = Vector2(335, 100)
-states/Move/node = SubResource("AnimationNodeBlendSpace1D_egro6")
-states/Move/position = Vector2(335, 0)
-transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_y4d7w"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_1snfb"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_ap3hn")]
-graph_offset = Vector2(0, -75.9467)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_eyjh3"]
 size = Vector2(24, 30)
@@ -75,11 +37,11 @@ script = ExtResource("1_17b4c")
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -9)
+position = Vector2(0, -10)
 texture = ExtResource("2_hdw1b")
 hframes = 8
 vframes = 6
-frame = 6
+frame = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -87,12 +49,13 @@ shape = SubResource("CapsuleShape2D_30oj8")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"npc_anims": ExtResource("3_3716a")
+"": ExtResource("3_tr4bx")
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource("AnimationNodeStateMachine_cn5l4")
+tree_root = ExtResource("4_5m5fc")
 anim_player = NodePath("../AnimationPlayer")
+parameters/Eat/blend_position = 0
 parameters/Idle/blend_position = 0.0
 parameters/Move/blend_position = 0
 
@@ -119,6 +82,21 @@ shape = SubResource("RectangleShape2D_eyjh3")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NpcAltDetector"]
 shape = SubResource("CircleShape2D_5724d")
 
+[node name="EmoteController" parent="." instance=ExtResource("6_vcruu")]
+
+[node name="FloatTextController" parent="." instance=ExtResource("5_l6iaq")]
+
+[node name="Blackboard" type="Node" parent="."]
+script = ExtResource("16_8orm2")
+blackboard = {
+"current_state": "patrol",
+"is_idle": true
+}
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
 [node name="SilasBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("4_vmoef")
 blackboard = NodePath("../Blackboard")
@@ -130,18 +108,20 @@ script = ExtResource("5_a23i0")
 [node name="On Patrol" type="Node" parent="SilasBehaviour/SelectorComposite"]
 script = ExtResource("6_1ro2l")
 
-[node name="Has The Player Arrived" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol"]
+[node name="Is The Agent Idle" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol"]
+script = ExtResource("12_ky6yt")
+
+[node name="Has The Agent Arrived" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol"]
 script = ExtResource("8_4ytb8")
 
-[node name="DelayDecorator" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol"]
-script = ExtResource("8_mrkiu")
-wait_time = 5.0
+[node name="Wait For 5 Sec" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol"]
+script = ExtResource("13_sovwx")
 
-[node name="Patrol Action" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol/DelayDecorator"]
+[node name="Patrol Action" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol"]
 script = ExtResource("9_58j85")
 
 [node name="On Steal" type="Node" parent="SilasBehaviour/SelectorComposite"]
-script = ExtResource("11_enow8")
+script = ExtResource("6_1ro2l")
 
 [node name="Is Player Present" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
 script = ExtResource("11_kxjq6")
@@ -155,15 +135,10 @@ script = ExtResource("13_q0u1v")
 [node name="Go To House" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
 script = ExtResource("15_yth3l")
 
-[node name="Blackboard" type="Node" parent="."]
-script = ExtResource("16_8orm2")
-blackboard = {
-"is_idle": true
-}
-
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="body_entered" from="StealArea" to="SilasBehaviour/SelectorComposite/On Steal/Chase Player" method="_on_steal_area_body_entered"]
-[connection signal="body_entered" from="NpcAltDetector" to="SilasBehaviour/SelectorComposite/On Steal/Is Player Present" method="_on_npc_alt_detector_body_entered"]
-[connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Patrol/DelayDecorator/Patrol Action" to="." method="move_player"]
+[connection signal="body_entered" from="NpcAltDetector" to="." method="_on_npc_alt_detector_body_entered"]
+[connection signal="timeout" from="Timer" to="SilasBehaviour/SelectorComposite/On Patrol/Wait For 5 Sec" method="_on_timer_timeout"]
+[connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Patrol/Patrol Action" to="." method="move_player"]
 [connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Steal/Chase Player" to="." method="move_player"]
 [connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Steal/Go To House" to="." method="move_player"]

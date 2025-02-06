@@ -2,6 +2,7 @@ extends ConditionLeaf
 
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
-	if actor.navigation_agent_2d.is_navigation_finished():
+	if blackboard.get_value("is_idle") == true:
 		return SUCCESS
+		
 	return FAILURE
