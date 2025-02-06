@@ -9,8 +9,8 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	if actor.navigation_agent_2d.is_navigation_finished():
 		blackboard.set_value("is_idle", true)
 		blackboard.set_value("current_state", "patrolling")
-		blackboard.set_value("player_found", false)
-		blackboard.set_value("player_stolen", false)
+		blackboard.set_value("actor_found", false)
+		blackboard.set_value("actor_stolen", false)
 		
 		return SUCCESS
 	

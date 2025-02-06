@@ -7,8 +7,8 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	if blackboard.get_value("current_state") != "stealing":
 		return FAILURE
 	
-	blackboard.set_value("player_near", false)
-	blackboard.set_value("player_stolen", true)
+	blackboard.set_value("actor_near", false)
+	blackboard.set_value("actor_stolen", true)
 	return SUCCESS
 
 func after_run(actor: Node, blackboard: Blackboard) -> void:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://etlq2q1jbury"]
+[gd_scene load_steps=24 format=3 uid="uid://etlq2q1jbury"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/silas_alt.gd" id="1_17b4c"]
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_hdw1b"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_1ro2l"]
 [ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="6_vcruu"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/has_the_agent_arrived.gd" id="8_4ytb8"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/personality.gd" id="9_3lm7t"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/patrol_action.gd" id="9_58j85"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/is_player_present.gd" id="11_kxjq6"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/is_the_agent_idle.gd" id="12_ky6yt"]
@@ -89,6 +90,7 @@ shape = SubResource("CircleShape2D_5724d")
 [node name="Blackboard" type="Node" parent="."]
 script = ExtResource("16_8orm2")
 blackboard = {
+"actor_found": false,
 "current_state": "patrol",
 "is_idle": true
 }
@@ -96,6 +98,9 @@ blackboard = {
 [node name="Timer" type="Timer" parent="."]
 wait_time = 5.0
 one_shot = true
+
+[node name="Personality" type="Node" parent="."]
+script = ExtResource("9_3lm7t")
 
 [node name="SilasBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("4_vmoef")
@@ -137,7 +142,7 @@ script = ExtResource("15_yth3l")
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="body_entered" from="StealArea" to="SilasBehaviour/SelectorComposite/On Steal/Chase Player" method="_on_steal_area_body_entered"]
-[connection signal="body_entered" from="NpcAltDetector" to="." method="_on_npc_alt_detector_body_entered"]
+[connection signal="body_entered" from="NpcAltDetector" to="Personality" method="_on_npc_alt_detector_body_entered"]
 [connection signal="timeout" from="Timer" to="SilasBehaviour/SelectorComposite/On Patrol/Wait For 5 Sec" method="_on_timer_timeout"]
 [connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Patrol/Patrol Action" to="." method="move_player"]
 [connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Steal/Chase Player" to="." method="move_player"]
