@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using NPCProcGen.Core.Components.Enums;
 
 namespace NPCProcGen.Core.Components
 {
@@ -48,12 +49,10 @@ namespace NPCProcGen.Core.Components
     // Trusted: 15 to 24
     // Close: 25 to 35
 
-    /// <summary>
-    /// Represents data related to an actor.
-    /// </summary>
     public class NPCActorData : ActorData
     {
         private const float DecayDuration = 60;
+        private const float PetitionInterval = 15;
 
         public Vector2? LastKnownPosition
         {
@@ -65,8 +64,21 @@ namespace NPCProcGen.Core.Components
             }
         }
 
+        public ResourceType? LastPetitionResource
+        {
+            get => _lastPetitionResource;
+            set
+            {
+                _lastPetitionResource = value;
+                _petitionTimer = PetitionInterval;
+            }
+        }
+
         private Vector2? _lastKnownPosition = null;
+        private ResourceType? _lastPetitionResource = null;
+
         private float _decayTimer = DecayDuration;
+        private float _petitionTimer = PetitionInterval;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActorData"/> class.
@@ -89,6 +101,21 @@ namespace NPCProcGen.Core.Components
                 GD.Print($"{_actor.Parent.Name}'s last known position has decayed.");
                 _lastKnownPosition = null;
             }
+
+            if (_lastPetitionResource == null) return;
+
+            _petitionTimer -= (float)delta;
+
+            if (_petitionTimer <= 0)
+            {
+                GD.Print($"{_actor.Parent.Name}'s last petition was forgotten.");
+                _lastPetitionResource = null;
+            }
+        }
+
+        public bool IsValidPetitionTarget(ResourceType type)
+        {
+            return _lastPetitionResource != type;
         }
     }
 }
