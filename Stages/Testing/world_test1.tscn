@@ -259,9 +259,10 @@ sources/0 = SubResource("TileSetAtlasSource_k42pd")
 y_sort_enabled = true
 texture_filter = 1
 script = ExtResource("1_2a375")
+metadata/_edit_lock_ = true
 
 [node name="Camera2D" parent="." instance=ExtResource("2_1qb5f")]
-position = Vector2(176, 160)
+position = Vector2(174, 165)
 
 [node name="TopLeft" parent="Camera2D" index="0"]
 position = Vector2(-176, -160)
@@ -276,7 +277,7 @@ tile_set = SubResource("TileSet_07foc")
 metadata/_edit_lock_ = true
 
 [node name="Player" parent="." instance=ExtResource("7_mu6ya")]
-position = Vector2(176, 160)
+position = Vector2(174, 165)
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
 remote_path = NodePath("../../Camera2D")
