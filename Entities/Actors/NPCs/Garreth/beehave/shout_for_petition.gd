@@ -10,7 +10,7 @@ func before_run(actor: Node, blackboard: Blackboard) -> void:
 	timer.start() 
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
-	if blackboard.get_value("is_idle") == false:
+	if blackboard.get_value("current_state") != "patrolling":
 		return FAILURE
 
 	if chances >= 5:

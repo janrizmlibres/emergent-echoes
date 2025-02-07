@@ -7,7 +7,6 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		return FAILURE
 		
 	if actor.navigation_agent_2d.is_navigation_finished():
-		print("It should not be here")
 		blackboard.set_value("current_state", "idle")
 		blackboard.set_value("actor_found", false)
 		blackboard.set_value("actor_stolen", false)

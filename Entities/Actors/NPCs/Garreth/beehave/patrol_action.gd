@@ -7,7 +7,7 @@ var current_patrol_index: int = 0
 const patrol_locations = [Vector2(464, 240), Vector2(448, 64), Vector2(288, 128), Vector2(112, 128), Vector2(432, 352), Vector2(768, 496), Vector2(912, 544), Vector2(848, 240), Vector2(832, 96)]
 	
 func tick(_actor: Node, blackboard: Blackboard) -> int:
-	if blackboard.get_value("is_idle") == false:
+	if blackboard.get_value("current_state") != "patrolling":
 		return FAILURE
 	
 	move_player.emit(patrol_locations[current_patrol_index])
