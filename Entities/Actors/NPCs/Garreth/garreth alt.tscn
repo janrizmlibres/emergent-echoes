@@ -1,11 +1,11 @@
-[gd_scene load_steps=19 format=3 uid="uid://c46vvjqepxr5c"]
+[gd_scene load_steps=20 format=3 uid="uid://c46vvjqepxr5c"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/garreth_alt.gd" id="1_0w5gq"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_ykyr2"]
 [ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="3_hjw3h"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_s0dao"]
 [ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Interactions/npc_alt_detector.tscn" id="4_t4ib7"]
-[ext_resource type="AnimationNodeStateMachine" uid="uid://cw72ka7tmedn0" path="res://Entities/Actors/actor_anim_sm.tres" id="4_vx0j5"]
+[ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="4_vx0j5"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="5_x35se"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_6gfsl"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/personality.gd" id="7_rs2tg"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/has_the_agent_arrived.gd" id="9_7j1tl"]
 [ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="9_7sty6"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/is_the_agent_idle.gd" id="10_6jhpa"]
+[ext_resource type="PackedScene" uid="uid://bccwhdlbu5ny0" path="res://Entities/Hooks/FoodAnchor/food_anchor.tscn" id="10_wrbgc"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/patrol_action.gd" id="11_8k8tp"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/wait_for_5_sec.gd" id="11_hcrvy"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="12_77cs2"]
@@ -85,6 +86,9 @@ script = ExtResource("7_rs2tg")
 [node name="EmoteController" parent="." instance=ExtResource("8_btyao")]
 
 [node name="FloatTextController" parent="." instance=ExtResource("9_7sty6")]
+
+[node name="FoodAnchor" parent="." instance=ExtResource("10_wrbgc")]
+visible = false
 
 [node name="GarrethBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("4_s0dao")

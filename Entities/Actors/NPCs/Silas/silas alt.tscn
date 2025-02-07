@@ -1,9 +1,9 @@
-[gd_scene load_steps=24 format=3 uid="uid://etlq2q1jbury"]
+[gd_scene load_steps=25 format=3 uid="uid://etlq2q1jbury"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/silas_alt.gd" id="1_17b4c"]
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_hdw1b"]
 [ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="3_tr4bx"]
-[ext_resource type="AnimationNodeStateMachine" uid="uid://cw72ka7tmedn0" path="res://Entities/Actors/actor_anim_sm.tres" id="4_5m5fc"]
+[ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="4_5m5fc"]
 [ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Interactions/npc_alt_detector.tscn" id="4_acgvc"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_vmoef"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="5_a23i0"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/has_the_agent_arrived.gd" id="8_4ytb8"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/personality.gd" id="9_3lm7t"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/patrol_action.gd" id="9_58j85"]
+[ext_resource type="PackedScene" uid="uid://bccwhdlbu5ny0" path="res://Entities/Hooks/FoodAnchor/food_anchor.tscn" id="10_3iu71"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/is_player_present.gd" id="11_kxjq6"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/is_the_agent_idle.gd" id="12_ky6yt"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/chase_player.gd" id="12_q20m7"]
@@ -101,6 +102,9 @@ one_shot = true
 
 [node name="Personality" type="Node" parent="."]
 script = ExtResource("9_3lm7t")
+
+[node name="FoodAnchor" parent="." instance=ExtResource("10_3iu71")]
+visible = false
 
 [node name="SilasBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("4_vmoef")
