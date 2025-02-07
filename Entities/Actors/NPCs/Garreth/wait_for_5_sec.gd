@@ -23,5 +23,4 @@ func _on_timer_timeout() -> void:
 	timer.start()
 	emote_controller.ShowEmoteBubble(7)
 	chances += 1
-	print("Chances" + str(chances))
 	pass # Replace with function body.
