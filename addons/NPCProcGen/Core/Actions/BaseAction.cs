@@ -54,6 +54,9 @@ namespace NPCProcGen.Core.Actions
             TransitionTo(null);
             ActionComplete?.Invoke();
             _owner.EmitSignal(NPCAgent2D.SignalName.ExecutionEnded);
+
+            _owner.Sensor.ClearTaskRecord();
+            _owner.Sensor.ClearPetitionResourceType();
         }
 
         /// <summary>

@@ -29,6 +29,9 @@ namespace NPCProcGen
         [Signal]
         public delegate void ActionStateExitedEventHandler(Variant state, Array<Variant> data);
 
+        private const int MinEvaluationInterval = 10;
+        private const int MaxEvaluationInterval = 20;
+
         [Export(PropertyHint.Range, "1,100,")]
         public int SatiationAmount { get; set; } = 15;
 
@@ -107,6 +110,7 @@ namespace NPCProcGen
             if (Engine.IsEditorHint()) return;
 
             Parent = GetParent() as Node2D;
+            Sensor = new Sensor(this);
             Memorizer = new NPCMemorizer();
 
             if (Parent == null || RearMarker == null)
@@ -126,7 +130,7 @@ namespace NPCProcGen
                 if (!IsActive())
                 {
                     GD.Print($"Evaluation timer started for {Parent.Name}");
-                    _evaluationTimer.Start();
+                    _evaluationTimer.Start(GD.RandRange(MinEvaluationInterval, MaxEvaluationInterval));
                 }
             };
 
@@ -150,13 +154,14 @@ namespace NPCProcGen
 
             _evaluationTimer = new Timer()
             {
-                WaitTime = 10,
+                WaitTime = GD.RandRange(MinEvaluationInterval, MaxEvaluationInterval),
                 OneShot = true,
                 Autostart = true
             };
             _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
             AddChild(_evaluationTimer);
-            AddTraits();
+            // AddTraits();
+            AddTraitsStub();
         }
 
         /// <summary>
@@ -235,7 +240,7 @@ namespace NPCProcGen
 
         public Tuple<ActionType, ActionState> GetAction()
         {
-            return Sensor.GetTaskRecord(this);
+            return Sensor.GetTaskRecord();
         }
 
         /// <summary>
@@ -268,6 +273,17 @@ namespace NPCProcGen
                 Strategizer.AddTrait(new LawfulTrait(this, Lawful, Sensor, npcMemorizer));
         }
 
+        // ! Remove in production
+        private void AddTraitsStub()
+        {
+            DebugTool.Assert(Memorizer is NPCMemorizer, "Memorizer is not of type NPCMemorizer");
+            NPCMemorizer npcMemorizer = Memorizer as NPCMemorizer;
+
+            Strategizer.AddTrait(new SurvivalTrait(this, Survival, Sensor, npcMemorizer));
+            Strategizer.AddTrait(new ThiefTrait(this, Thief, Sensor, npcMemorizer));
+            Strategizer.AddTrait(new LawfulTrait(this, Lawful, Sensor, npcMemorizer));
+        }
+
         private void SetActorDetector(Area2D actorDetector)
         {
             Parent.AddChild(actorDetector);
@@ -281,8 +297,8 @@ namespace NPCProcGen
         {
             BaseAction action = Strategizer.EvaluateActionStub(
                 typeof(SurvivalTrait),
-                typeof(PetitionAction),
-                ResourceType.Money
+                typeof(SocializeAction),
+                ResourceType.Companionship
             );
 
             if (action != null)
@@ -293,7 +309,7 @@ namespace NPCProcGen
             else
             {
                 GD.Print($"No action evaluated by {Parent.Name}");
-                _evaluationTimer.Start();
+                _evaluationTimer.Start(GD.RandRange(MinEvaluationInterval, MaxEvaluationInterval));
             }
         }
 
@@ -303,8 +319,7 @@ namespace NPCProcGen
         /// </summary>
         private void OnExecutionEnded()
         {
-            Sensor.ResetTaskRecord(this);
-            _evaluationTimer.Start();
+            _evaluationTimer.Start(GD.RandRange(MinEvaluationInterval, MaxEvaluationInterval));
         }
 
         // TODO: Resolve self detection in editor

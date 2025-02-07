@@ -62,7 +62,7 @@ namespace NPCProcGen
         /// <summary>
         /// Gets the sensor component of the NPC.
         /// </summary>
-        public Sensor Sensor { get; private set; } = new();
+        public Sensor Sensor { get; protected set; }
 
         /// <summary>
         /// Gets the memorizer component of the Actor.
@@ -98,6 +98,7 @@ namespace NPCProcGen
             if (Engine.IsEditorHint()) return;
 
             Parent = GetParent() as Node2D;
+            Sensor = new Sensor(this);
             Memorizer = new Memorizer();
 
             if (Parent == null || _rearMarker == null)
@@ -140,6 +141,28 @@ namespace NPCProcGen
         public Vector2 GetRearPosition()
         {
             return Parent.GlobalPosition + RearMarker.Position.Normalized() * CommonUtils.PositionOffset;
+        }
+
+        public Vector2 GetLateralWaypoint(ActorTag2D initiator)
+        {
+            float offset = CommonUtils.PositionOffset;
+
+            Vector2 offset1 = new(offset, 0);
+            Vector2 adjustedPosition1 = Parent.GlobalPosition + offset1;
+            float distance1 = initiator.Parent.GlobalPosition.DistanceTo(adjustedPosition1);
+
+            Vector2 offset2 = new(-offset, 0);
+            Vector2 adjustedPosition2 = Parent.GlobalPosition + offset2;
+            float distance2 = initiator.Parent.GlobalPosition.DistanceTo(adjustedPosition2);
+
+            // Return the target's position adjusted by the best offset
+            return distance1 < distance2 ? adjustedPosition1 : adjustedPosition2;
+        }
+
+        public Vector2 GetOmniDirectionalWaypoint(ActorTag2D initiator)
+        {
+            Vector2 directionToInitiator = Parent.GlobalPosition.DirectionTo(initiator.Parent.GlobalPosition);
+            return Parent.GlobalPosition + directionToInitiator * CommonUtils.PositionOffset;
         }
 
         public void AnswerPetition(bool isAccepted)

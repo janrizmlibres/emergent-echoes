@@ -15,8 +15,8 @@ namespace NPCProcGen.Core.Actions
         private readonly ActorTag2D _targetActor;
         private readonly ResourceType _targetResource;
 
-        private MoveState _initialMoveState;
-        private MoveState _moveState;
+        private SearchState _searchState;
+        private SneakState _sneakState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TheftAction"/> class.
@@ -29,6 +29,7 @@ namespace NPCProcGen.Core.Actions
         {
             _targetActor = target;
             _targetResource = type;
+
             InitializeStates();
         }
 
@@ -38,18 +39,26 @@ namespace NPCProcGen.Core.Actions
         private void InitializeStates()
         {
             Vector2? targetLastPosition = _owner.Memorizer.GetLastKnownPosition(_targetActor);
-            DebugTool.Assert(targetLastPosition != null, "Target must have a location");
 
-            _initialMoveState = new(_owner, ActionTypeValue, _targetActor.Parent, targetLastPosition.Value, true);
             WanderState wanderState = new(_owner, ActionTypeValue, _targetActor);
-            _moveState = new(_owner, ActionTypeValue, _targetActor.Parent, isStealing: true);
+
+            if (targetLastPosition != null)
+            {
+                _searchState = new SearchState(
+                    _owner,
+                    ActionTypeValue,
+                    _targetActor, targetLastPosition.Value
+                );
+                _searchState.CompleteState += (bool isTargetFound) =>
+                {
+                    TransitionTo(isTargetFound ? _sneakState : wanderState);
+                };
+            }
+            _sneakState = new SneakState(_owner, ActionTypeValue, _targetActor);
+
             StealState stealState = new(_owner, ActionTypeValue, _targetActor, _targetResource);
             FleeState fleeState = new(_owner, ActionTypeValue);
 
-            _initialMoveState.CompleteState += (bool isTargetFound) =>
-            {
-                TransitionTo(isTargetFound ? _moveState : wanderState);
-            };
             wanderState.CompleteState += (bool durationReached) =>
             {
                 if (durationReached)
@@ -58,10 +67,10 @@ namespace NPCProcGen.Core.Actions
                 }
                 else
                 {
-                    TransitionTo(_moveState);
+                    TransitionTo(_sneakState);
                 }
             };
-            _moveState.CompleteState += (_) => TransitionTo(stealState);
+            _sneakState.CompleteState += () => TransitionTo(stealState);
             stealState.CompleteState += () => TransitionTo(fleeState);
             fleeState.CompleteState += () => CompleteAction();
         }
@@ -85,7 +94,16 @@ namespace NPCProcGen.Core.Actions
                 NPCAgent2D.SignalName.ExecutionStarted,
                 Variant.From(ActionTypeValue)
             );
-            TransitionTo(_owner.IsActorInRange(_targetActor) ? _moveState : _initialMoveState);
+
+            if (_owner.IsActorInRange(_targetActor))
+            {
+                TransitionTo(_sneakState);
+            }
+            else
+            {
+                DebugTool.Assert(_searchState != null, "Search state is not initialized.");
+                TransitionTo(_searchState);
+            }
         }
     }
 }

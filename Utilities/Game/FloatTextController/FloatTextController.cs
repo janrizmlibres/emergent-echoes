@@ -1,5 +1,6 @@
 using EmergentEchoes.Entities.UI.Indicators;
 using Godot;
+using NPCProcGen.Core.Components.Enums;
 
 namespace EmergentEchoes.Utilities.Game
 {
@@ -13,7 +14,7 @@ namespace EmergentEchoes.Utilities.Game
 
 		private static Vector2 _travel = new(0, -10);
 
-		public void ShowFloatText(string value)
+		public void ShowFloatText(ResourceType type, string value, bool isNormal = true)
 		{
 			FloatingText floatingText = (FloatingText)_floatingTextScene.Instantiate();
 
@@ -23,7 +24,7 @@ namespace EmergentEchoes.Utilities.Game
 			floatingText.GlobalPosition = newPosition;
 
 			AddChild(floatingText);
-			floatingText.ShowValue(value, _travel, Duration, Spread);
+			floatingText.ShowValue(type, value, isNormal, _travel, Duration, Spread);
 		}
 	}
 }

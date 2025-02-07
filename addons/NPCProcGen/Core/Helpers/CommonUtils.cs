@@ -35,20 +35,6 @@ namespace NPCProcGen.Core.Helpers
             );
         }
 
-        public static Vector2 GetInteractionPosition(ActorTag2D _owner, ActorTag2D _target)
-        {
-            Vector2 offset1 = new(PositionOffset, 0);
-            Vector2 adjustedPosition1 = _target.Parent.GlobalPosition + offset1;
-            float distance1 = _owner.Parent.GlobalPosition.DistanceTo(adjustedPosition1);
-
-            Vector2 offset2 = new(-PositionOffset, 0);
-            Vector2 adjustedPosition2 = _target.Parent.GlobalPosition + offset2;
-            float distance2 = _owner.Parent.GlobalPosition.DistanceTo(adjustedPosition2);
-
-            // Return the target's position adjusted by the best offset
-            return distance1 < distance2 ? adjustedPosition1 : adjustedPosition2;
-        }
-
         public static int CalculateSkewedAmount(ResourceStat resource, float minRange, float maxRange,
             float maxPossible)
         {
@@ -66,8 +52,8 @@ namespace NPCProcGen.Core.Helpers
 
             float petitionAmount = baseValue * petitionMultiplier;
             // Ensure petition amount does not exceed the target's current resource amount
-            // ! Error when minRaise is greater than maxPossible
-            petitionAmount = Math.Clamp(petitionAmount, minRaise, maxPossible);
+            petitionAmount = Math.Min(petitionAmount, maxPossible);
+            petitionAmount = Math.Max(petitionAmount, minRaise);
 
             return (int)Math.Floor(petitionAmount);
         }

@@ -17,7 +17,7 @@ namespace NPCProcGen.Core.States
 
         private Vector2 _seekPosition;
 
-        private bool _isMoving = false;
+        private bool _isMoving = true;
         private float _idleTimer = IdleDuration;
 
         public event Action<ActorTag2D> CompleteState;
@@ -28,15 +28,21 @@ namespace NPCProcGen.Core.States
         /// <param name="owner">The owner of the state.</param>
         public SeekState(NPCAgent2D owner, ActionType action) : base(owner, action)
         {
-            _seekPosition = owner.Parent.GlobalPosition;
+            _seekPosition = CommonUtils.GetRandomPosInCircularArea(
+                _owner.Parent.GlobalPosition,
+                SeekRadius
+            );
         }
 
         public override void Enter()
         {
             GD.Print($"{_owner.Parent.Name} SeekState Enter");
+
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
             _owner.NotifManager.ActorDetected += OnActorDetected;
-            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
+
+            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateEntered,
@@ -65,6 +71,7 @@ namespace NPCProcGen.Core.States
         {
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
             _owner.NotifManager.ActorDetected -= OnActorDetected;
+
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateExited,

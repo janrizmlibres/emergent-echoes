@@ -41,7 +41,7 @@ namespace NPCProcGen.Core.States
             );
 
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
-            _owner.Sensor.SetTaskRecord(_owner, _actionType, ActionStateValue);
+            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
             CommonUtils.EmitSignal(
                 _owner,

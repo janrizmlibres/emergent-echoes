@@ -13,6 +13,7 @@ namespace NPCProcGen.Core.Actions
         public const ActionType ActionTypeValue = ActionType.Socialize;
 
         private SeekState _seekState;
+        private EngageState _engageState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SocializeAction"/> class.
@@ -26,16 +27,7 @@ namespace NPCProcGen.Core.Actions
         private void InitializeStates()
         {
             _seekState = new SeekState(_owner, ActionTypeValue);
-            _seekState.CompleteState += (ActorTag2D partner) =>
-            {
-                MoveState moveState = new(_owner, ActionTypeValue, partner.Parent);
-                TalkState talkState = new(_owner, ActionTypeValue, partner);
-
-                moveState.CompleteState += (_) => TransitionTo(talkState);
-                talkState.CompleteState += () => CompleteAction();
-
-                TransitionTo(moveState);
-            };
+            _seekState.CompleteState += partner => InitializeInteractStates(partner);
         }
 
         public override void Update(double delta)
@@ -53,20 +45,28 @@ namespace NPCProcGen.Core.Actions
 
             if (_owner.IsAnyActorInRange())
             {
-                ActorTag2D actor = _owner.GetRandomActorInRange();
-
-                MoveState moveState = new(_owner, ActionTypeValue, actor.Parent);
-                TalkState talkState = new(_owner, ActionTypeValue, actor);
-
-                moveState.CompleteState += (_) => TransitionTo(talkState);
-                talkState.CompleteState += () => CompleteAction();
-
-                TransitionTo(moveState);
+                ActorTag2D target = _owner.GetRandomActorInRange();
+                InitializeInteractStates(target);
+                TransitionTo(_engageState);
             }
             else
             {
                 TransitionTo(_seekState);
             }
+        }
+
+        private void InitializeInteractStates(ActorTag2D partner)
+        {
+            _engageState = new(_owner, ActionTypeValue, partner, Waypoint.Lateral);
+            WaitState waitState = new(_owner, ActionTypeValue, partner);
+            TalkState talkState = new(_owner, ActionTypeValue, partner);
+
+            _engageState.CompleteState += isTargetBusy =>
+            {
+                TransitionTo(isTargetBusy ? waitState : talkState);
+            };
+            waitState.CompleteState += () => TransitionTo(_engageState);
+            talkState.CompleteState += () => CompleteAction();
         }
     }
 }

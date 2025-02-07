@@ -1,4 +1,5 @@
 using Godot;
+using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Components.Records;
 using NPCProcGen.Core.Events;
@@ -34,7 +35,7 @@ namespace NPCProcGen.Autoloads
 
 		private List<ActorTag2D> _actors;
 
-		private readonly Dictionary<ActorTag2D, Tuple<ActionType, ActionState>> _taskRecords = new();
+		private readonly Dictionary<ActorTag2D, ActorState> _actorState = new();
 
 		/// <summary>
 		/// List of structures in the world.
@@ -72,26 +73,26 @@ namespace NPCProcGen.Autoloads
 			foreach (ActorTag2D actor in actors)
 			{
 				actor.Initialize(actors.Where(a => actor != a).ToList());
-				_taskRecords.Add(actor, null);
+				_actorState.Add(actor, new ActorState());
 			}
 		}
 
 		public Tuple<ActionType, ActionState> GetTaskRecord(ActorTag2D actor)
 		{
-			DebugTool.Assert(_taskRecords.ContainsKey(actor), "Actor does not have an action record");
-			return _taskRecords[actor] ?? null;
+			DebugTool.Assert(_actorState.ContainsKey(actor), "Actor does not have an action record");
+			return _actorState[actor].CurrentTask ?? null;
 		}
 
 		public void SetTaskRecord(ActorTag2D actor, ActionType actionType, ActionState actionState)
 		{
-			DebugTool.Assert(_taskRecords.ContainsKey(actor), "Actor does not have an action record");
-			_taskRecords[actor] = new Tuple<ActionType, ActionState>(actionType, actionState);
+			DebugTool.Assert(_actorState.ContainsKey(actor), "Actor does not have an action record");
+			_actorState[actor].CurrentTask = new Tuple<ActionType, ActionState>(actionType, actionState);
 		}
 
 		public void ResetTaskRecord(ActorTag2D actor)
 		{
-			DebugTool.Assert(_taskRecords.ContainsKey(actor), "Actor does not have an action record");
-			_taskRecords[actor] = null;
+			DebugTool.Assert(_actorState.ContainsKey(actor), "Actor does not have an action record");
+			_actorState[actor].CurrentTask = null;
 		}
 
 		public bool IsActorBusy(ActorTag2D actor)
@@ -99,6 +100,24 @@ namespace NPCProcGen.Autoloads
 			Tuple<ActionType, ActionState> action = GetTaskRecord(actor);
 			if (action == null) return false;
 			return action.Item2 == ActionState.Talk || action.Item2 == ActionState.Petition;
+		}
+
+		public ResourceType? GetPetitionResourceType(ActorTag2D actor)
+		{
+			DebugTool.Assert(_actorState.ContainsKey(actor), "Actor does not have an action record");
+			return _actorState[actor].CurrentPetitionResourceType;
+		}
+
+		public void SetPetitionResourceType(ActorTag2D actor, ResourceType type)
+		{
+			DebugTool.Assert(_actorState.ContainsKey(actor), "Actor does not have an action record");
+			_actorState[actor].CurrentPetitionResourceType = type;
+		}
+
+		public void ClearPetitionResourceType(ActorTag2D actor)
+		{
+			DebugTool.Assert(_actorState.ContainsKey(actor), "Actor does not have an action record");
+			_actorState[actor].CurrentPetitionResourceType = null;
 		}
 	}
 }
