@@ -1,6 +1,6 @@
 extends ActionLeaf
 
-signal move_player(set_state: String, patrol_location: Vector2)
+signal move_player(patrol_location: Vector2)
 
 var current_patrol_index: int = 0
 
