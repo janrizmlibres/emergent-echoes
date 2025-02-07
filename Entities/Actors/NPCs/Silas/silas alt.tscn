@@ -14,8 +14,8 @@
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/personality.gd" id="9_3lm7t"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/patrol_action.gd" id="9_58j85"]
 [ext_resource type="PackedScene" uid="uid://bccwhdlbu5ny0" path="res://Entities/Hooks/FoodAnchor/food_anchor.tscn" id="10_3iu71"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/chase_player.gd" id="12_q20m7"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/steal_money_from_player.gd" id="13_q0u1v"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/chase_actor.gd" id="12_q20m7"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/steal_money_from_actor.gd" id="13_q0u1v"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/wait_for_5_sec.gd" id="13_sovwx"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/go_to_house.gd" id="15_yth3l"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="16_8orm2"]
@@ -125,19 +125,19 @@ script = ExtResource("9_58j85")
 [node name="On Steal" type="Node" parent="SilasBehaviour/SelectorComposite"]
 script = ExtResource("6_1ro2l")
 
-[node name="Chase Player" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
+[node name="Chase Actor" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
 script = ExtResource("12_q20m7")
 
-[node name="Steal Money From Player" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
+[node name="Steal Money From Actor" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
 script = ExtResource("13_q0u1v")
 
 [node name="Go To House" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
 script = ExtResource("15_yth3l")
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
-[connection signal="body_entered" from="StealArea" to="SilasBehaviour/SelectorComposite/On Steal/Chase Player" method="_on_steal_area_body_entered"]
+[connection signal="body_entered" from="StealArea" to="SilasBehaviour/SelectorComposite/On Steal/Chase Actor" method="_on_steal_area_body_entered"]
 [connection signal="body_entered" from="NpcAltDetector" to="Personality" method="_on_npc_alt_detector_body_entered"]
 [connection signal="timeout" from="Timer" to="SilasBehaviour/SelectorComposite/On Patrol/Wait For 5 Sec" method="_on_timer_timeout"]
 [connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Patrol/Patrol Action" to="." method="move_player"]
-[connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Steal/Chase Player" to="." method="move_player"]
+[connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Steal/Chase Actor" to="." method="move_player"]
 [connection signal="move_player" from="SilasBehaviour/SelectorComposite/On Steal/Go To House" to="." method="move_player"]
