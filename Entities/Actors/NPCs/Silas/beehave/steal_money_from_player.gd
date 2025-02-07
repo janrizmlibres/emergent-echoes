@@ -12,6 +12,5 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	return SUCCESS
 
 func after_run(actor: Node, blackboard: Blackboard) -> void:
-	float_text_controller.ShowFloatText("100")
+	float_text_controller.ShowFloatText(0, "100", true)
 	emote_controller.ShowEmoteBubble(5)
-	
