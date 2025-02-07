@@ -4,8 +4,8 @@ extends ConditionLeaf
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
 	if blackboard.get_value("actor_found") == true:
-		blackboard.set_value("current_state", "stealing")
-		emote_controller.ShowEmoteBubble(4)
+		blackboard.set_value("current_state", "chasing")
+		
 		return SUCCESS
 	
 	return FAILURE
