@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://c3s3r5aucrjod"]
+[gd_scene load_steps=10 format=3 uid="uid://c3s3r5aucrjod"]
 
 [ext_resource type="Texture2D" uid="uid://chebn1ujnluva" path="res://Entities/UI/HUD/Prompt/Prompt BG (1).png" id="1_t75cs"]
 [ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/PressStart2P-Regular.ttf" id="2_jkvan"]
@@ -7,6 +7,8 @@
 [ext_resource type="Script" path="res://Entities/UI/HUD/Prompt/Scripts/NpcDescription.cs" id="5_ax7q8"]
 [ext_resource type="Script" path="res://Entities/UI/HUD/Prompt/Scripts/Traits.cs" id="6_dplg3"]
 [ext_resource type="PackedScene" uid="uid://c0ee67a3a37o5" path="res://Entities/UI/HUD/Status Bar/heart_bar/heart_bar.tscn" id="7_qdw11"]
+[ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="8_3b0bo"]
+[ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="9_tb52g"]
 
 [node name="DescriptionPrompt" type="CanvasLayer"]
 layer = 10
@@ -109,3 +111,17 @@ layout_mode = 2
 
 [node name="HeartBar5" parent="Prompt/HBoxContainer" instance=ExtResource("7_qdw11")]
 layout_mode = 2
+
+[node name="Silas" type="Sprite2D" parent="."]
+position = Vector2(100, 232.727)
+texture = ExtResource("9_tb52g")
+hframes = 8
+vframes = 6
+frame = 4
+
+[node name="Garreth" type="Sprite2D" parent="."]
+position = Vector2(168.657, 232.727)
+texture = ExtResource("8_3b0bo")
+hframes = 8
+vframes = 6
+frame = 5

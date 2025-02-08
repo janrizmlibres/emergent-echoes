@@ -313,6 +313,7 @@ position = Vector2(272, 162)
 position = Vector2(229, 260)
 
 [node name="PetitionPrompt" parent="." instance=ExtResource("12_5qavy")]
+visible = false
 
 [editable path="Camera2D"]
 [editable path="Player"]
