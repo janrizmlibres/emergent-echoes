@@ -2,6 +2,7 @@ using System;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Autoloads;
+using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 
@@ -43,26 +44,35 @@ namespace NPCProcGen.Core.States
         {
             GD.Print($"{_owner.Parent.Name} TalkState Enter");
 
-            Array<Variant> ownerData = new() { _partner.Parent };
-            Array<Variant> partnerData = new() { _owner.Parent };
+            if (_partner is NPCAgent2D npc)
+            {
+                npc.AddAction(new InteractAction(npc, _owner));
+            }
+            else
+            {
+                _partner.NotifManager.NotifyInteractionStarted();
+                _partner.Sensor.SetTaskRecord(ActionType.Interact, ActionState.Interact);
+
+                Array<Variant> partnerData = new() { _owner.Parent };
+
+                CommonUtils.EmitSignal(
+                    _partner,
+                    ActorTag2D.SignalName.InteractionStarted,
+                    Variant.From((InteractState)ActionStateValue),
+                    partnerData
+                );
+            }
 
             _owner.NotifManager.NotifyInteractionStarted();
-            _partner.NotifManager.NotifyInteractionStarted();
-
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
-            _partner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+
+            Array<Variant> ownerData = new() { _partner.Parent };
 
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateEntered,
                 Variant.From(ActionStateValue),
                 ownerData
-            );
-            CommonUtils.EmitSignal(
-                _partner,
-                ActorTag2D.SignalName.InteractionStarted,
-                Variant.From((InteractState)ActionStateValue),
-                partnerData
             );
         }
 
@@ -79,10 +89,7 @@ namespace NPCProcGen.Core.States
         public override void Exit()
         {
             _owner.NotifManager.NotifyInteractionEnded();
-            _partner.NotifManager.NotifyInteractionEnded();
-
             _owner.Sensor.ClearTaskRecord();
-            _partner.Sensor.ClearTaskRecord();
 
             Array<Variant> data = new()
             {
@@ -96,13 +103,19 @@ namespace NPCProcGen.Core.States
                 Variant.From(ActionStateValue),
                 data
             );
-            CommonUtils.EmitSignal(_partner, ActorTag2D.SignalName.InteractionEnded);
 
-            if (_partner is NPCAgent2D npc && !npc.IsActive())
+            if (_partner is NPCAgent2D npc)
             {
+                npc.EndAction();
+            }
+            else
+            {
+                _partner.NotifManager.NotifyInteractionEnded();
+                _partner.Sensor.ClearTaskRecord();
+
                 CommonUtils.EmitSignal(
                     _partner,
-                    NPCAgent2D.SignalName.ExecutionEnded
+                    ActorTag2D.SignalName.InteractionEnded
                 );
             }
         }

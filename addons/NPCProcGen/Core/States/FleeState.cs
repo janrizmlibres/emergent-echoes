@@ -34,13 +34,13 @@ namespace NPCProcGen.Core.States
         public override void Enter()
         {
             GD.Print($"{_owner.Parent.Name} FleeState Enter");
+
             _fleePosition = CommonUtils.GetRandomPosInCircularArea(
                 _owner.Parent.GlobalPosition,
                 MaxDistance,
                 MinDistance
             );
 
-            _owner.NotifManager.NavigationComplete += OnNavigationComplete;
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
             CommonUtils.EmitSignal(
@@ -55,7 +55,6 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Exit()
         {
-            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateExited,
@@ -81,7 +80,7 @@ namespace NPCProcGen.Core.States
             return _fleePosition;
         }
 
-        private void OnNavigationComplete()
+        public void OnNavigationComplete()
         {
             CompleteState?.Invoke();
         }

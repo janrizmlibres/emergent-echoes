@@ -5,7 +5,7 @@ using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
-    public class SearchState : BaseState, INavigationState
+    public class SearchState : BaseState, INavigationState, IActorDetectionState
     {
         public const ActionState ActionStateValue = ActionState.Search;
 
@@ -31,9 +31,6 @@ namespace NPCProcGen.Core.States
         {
             // GD.Print($"{_owner.Parent.Name} SearchState Enter");
 
-            _owner.NotifManager.NavigationComplete += OnNavigationComplete;
-            _owner.NotifManager.ActorDetected += OnActorDetected;
-
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
             CommonUtils.EmitSignal(
@@ -48,9 +45,6 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Exit()
         {
-            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
-            _owner.NotifManager.ActorDetected -= OnActorDetected;
-
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateExited,
@@ -76,13 +70,13 @@ namespace NPCProcGen.Core.States
             return _lastKnownPosition;
         }
 
-        private void OnNavigationComplete()
+        public void OnNavigationComplete()
         {
             bool isTargetFound = false;
             CompleteState?.Invoke(isTargetFound);
         }
 
-        private void OnActorDetected(ActorTag2D target)
+        public void OnActorDetected(ActorTag2D target)
         {
             if (target == _target)
             {

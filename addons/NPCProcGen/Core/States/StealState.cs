@@ -45,6 +45,7 @@ namespace NPCProcGen.Core.States
         {
             // GD.Print($"{_owner.Parent.Name} StealState Enter");
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateEntered,
@@ -57,6 +58,7 @@ namespace NPCProcGen.Core.States
                 _targetResource,
                 _amountToSteal
             );
+
             CompleteState?.Invoke();
         }
 

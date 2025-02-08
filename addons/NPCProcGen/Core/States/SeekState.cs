@@ -8,7 +8,7 @@ namespace NPCProcGen.Core.States
     /// <summary>
     /// Represents the state of seeking a target.
     /// </summary>
-    public class SeekState : BaseState, INavigationState
+    public class SeekState : BaseState, INavigationState, IActorDetectionState
     {
         public const ActionState ActionStateValue = ActionState.Seek;
 
@@ -31,13 +31,11 @@ namespace NPCProcGen.Core.States
         public override void Enter()
         {
             GD.Print($"{_owner.Parent.Name} SeekState Enter");
+
             _seekPosition = CommonUtils.GetRandomPosInCircularArea(
                 _owner.Parent.GlobalPosition,
                 SeekRadius
             );
-
-            _owner.NotifManager.NavigationComplete += OnNavigationComplete;
-            _owner.NotifManager.ActorDetected += OnActorDetected;
 
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
@@ -56,6 +54,7 @@ namespace NPCProcGen.Core.States
 
             if (_idleTimer <= 0)
             {
+                GD.Print($"{_owner.Parent.Name} seeking new position");
                 _seekPosition = CommonUtils.GetRandomPosInCircularArea(
                     _owner.Parent.GlobalPosition,
                     SeekRadius
@@ -68,9 +67,6 @@ namespace NPCProcGen.Core.States
         public override void Exit()
         {
             GD.Print($"{_owner.Parent.Name} SeekState Exit");
-
-            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
-            _owner.NotifManager.ActorDetected -= OnActorDetected;
 
             CommonUtils.EmitSignal(
                 _owner,
@@ -89,14 +85,14 @@ namespace NPCProcGen.Core.States
             return _seekPosition;
         }
 
-        private void OnNavigationComplete()
+        public void OnNavigationComplete()
         {
             _isMoving = false;
         }
 
-        private void OnActorDetected(ActorTag2D actor)
+        public void OnActorDetected(ActorTag2D actor)
         {
-            GD.Print($"{_owner.Parent.Name} Actor detected: {actor.Parent.Name}");
+            if (actor.IsPlayer()) return; // ! Remove after testing
             CompleteState?.Invoke(actor);
         }
     }

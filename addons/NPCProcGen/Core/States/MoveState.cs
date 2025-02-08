@@ -38,8 +38,6 @@ namespace NPCProcGen.Core.States
         {
             GD.Print($"{_owner.Parent.Name} MoveState Enter");
 
-            _owner.NotifManager.NavigationComplete += OnNavigationComplete;
-
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
             CommonUtils.EmitSignal(
@@ -54,8 +52,6 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Exit()
         {
-            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
-
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateExited,
@@ -81,7 +77,7 @@ namespace NPCProcGen.Core.States
             return _movePosition;
         }
 
-        private void OnNavigationComplete()
+        public void OnNavigationComplete()
         {
             CompleteState?.Invoke();
         }

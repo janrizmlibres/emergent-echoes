@@ -9,7 +9,7 @@ namespace NPCProcGen.Core.States
     /// <summary>
     /// Represents a state where the NPC wanders around.
     /// </summary>
-    public class WanderState : BaseState, INavigationState
+    public class WanderState : BaseState, INavigationState, IActorDetectionState
     {
         public const ActionState ActionStateValue = ActionState.Wander;
 
@@ -54,9 +54,8 @@ namespace NPCProcGen.Core.States
 
             _origin = _owner.Parent.GlobalPosition;
 
-            _owner.NotifManager.NavigationComplete += OnNavigationComplete;
-            _owner.NotifManager.ActorDetected += OnActorDetected;
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateEntered,
@@ -69,8 +68,6 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Exit()
         {
-            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
-            _owner.NotifManager.ActorDetected -= OnActorDetected;
             // Bring back emit signal in refactor
         }
 
@@ -118,23 +115,23 @@ namespace NPCProcGen.Core.States
         }
 
         /// <summary>
+        /// Handles the completion of navigation.
+        /// </summary>
+        public void OnNavigationComplete()
+        {
+            _isWandering = false;
+        }
+
+        /// <summary>
         /// Handles the detection of an actor.
         /// </summary>
         /// <param name="target">The detected actor.</param>
-        private void OnActorDetected(ActorTag2D target)
+        public void OnActorDetected(ActorTag2D target)
         {
             if (target == _targetActor)
             {
                 OnCompleteState(false);
             }
-        }
-
-        /// <summary>
-        /// Handles the completion of navigation.
-        /// </summary>
-        private void OnNavigationComplete()
-        {
-            _isWandering = false;
         }
 
         /// <summary>
@@ -144,7 +141,9 @@ namespace NPCProcGen.Core.States
         private void OnCompleteState(bool durationReached)
         {
             CompleteState?.Invoke(durationReached);
+
             Array<Variant> data = new() { durationReached };
+
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateExited,

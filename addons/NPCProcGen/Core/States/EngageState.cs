@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 
@@ -30,6 +31,11 @@ namespace NPCProcGen.Core.States
             _waypoint = waypoint;
         }
 
+        public override void Subscribe()
+        {
+            _target.NotifManager.InteractionStarted += CompleteWithTargetBusy;
+        }
+
         /// <summary>
         /// Called when the state is entered.
         /// </summary>
@@ -37,16 +43,19 @@ namespace NPCProcGen.Core.States
         {
             GD.Print($"{_owner.Parent.Name} EngageState Enter");
 
-            _owner.NotifManager.NavigationComplete += OnNavigationComplete;
-            _target.NotifManager.InteractionStarted += CompleteWithTargetBusy;
-
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue)
+                Variant.From(ActionStateValue),
+                new Array<Variant>()
             );
+        }
+
+        public override void Unsubscribe()
+        {
+            _target.NotifManager.InteractionStarted -= CompleteWithTargetBusy;
         }
 
         /// <summary>
@@ -54,9 +63,6 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Exit()
         {
-            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
-            _target.NotifManager.InteractionStarted -= CompleteWithTargetBusy;
-
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateExited,
@@ -88,15 +94,15 @@ namespace NPCProcGen.Core.States
             throw new InvalidOperationException("Invalid waypoint type.");
         }
 
-        private void CompleteWithTargetBusy()
+        public void OnNavigationComplete()
         {
-            bool isTargetBusy = true;
+            bool isTargetBusy = false;
             CompleteState?.Invoke(isTargetBusy);
         }
 
-        private void OnNavigationComplete()
+        private void CompleteWithTargetBusy()
         {
-            bool isTargetBusy = false;
+            bool isTargetBusy = true;
             CompleteState?.Invoke(isTargetBusy);
         }
     }

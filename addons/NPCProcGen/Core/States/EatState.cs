@@ -28,7 +28,6 @@ namespace NPCProcGen.Core.States
             Array<Variant> data = new() { _amountToEat };
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
-            _owner.NotifManager.ConsumptionComplete += OnConsumptionComplete;
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateEntered,
@@ -40,7 +39,6 @@ namespace NPCProcGen.Core.States
         public override void Exit()
         {
             GD.Print($"{_owner.Parent.Name} EatState Exit");
-            _owner.NotifManager.ConsumptionComplete -= OnConsumptionComplete;
 
             // ! Magic number 10
             int satiationIncrease = _amountToEat * 10;
@@ -54,7 +52,7 @@ namespace NPCProcGen.Core.States
             );
         }
 
-        private void OnConsumptionComplete()
+        public void OnConsumptionComplete()
         {
             _owner.DeductFood(_amountToEat);
             // TODO: Move constant 10 elsewhere

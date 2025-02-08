@@ -8,17 +8,14 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public interface INavigationState
     {
-        /// <summary>
-        /// Checks if the NPC is navigating.
-        /// </summary>
-        /// <returns>True if navigating, otherwise false.</returns>
         public bool IsNavigating();
-
-        /// <summary>
-        /// Gets the target position for navigation.
-        /// </summary>
-        /// <returns>The target position as a Vector2.</returns>
         public Vector2 GetTargetPosition();
+        public void OnNavigationComplete();
+    }
+
+    public interface IActorDetectionState
+    {
+        public void OnActorDetected(ActorTag2D actor);
     }
 
     /// <summary>
@@ -42,6 +39,8 @@ namespace NPCProcGen.Core.States
             _actionType = action;
         }
 
+        public virtual void Subscribe() { }
+
         /// <summary>
         /// Called when the state is entered.
         /// </summary>
@@ -53,14 +52,11 @@ namespace NPCProcGen.Core.States
         /// <param name="delta">The time elapsed since the last update.</param>
         public virtual void Update(double delta) { }
 
+        public virtual void Unsubscribe() { }
+
         /// <summary>
         /// Called when the state is exited.
         /// </summary>
         public virtual void Exit() { }
-
-        protected bool IsActionSocial()
-        {
-            return _actionType == ActionType.Petition || _actionType == ActionType.Socialize;
-        }
     }
 }

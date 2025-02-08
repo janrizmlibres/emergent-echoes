@@ -20,11 +20,14 @@ namespace NPCProcGen.Core.States
             _target = target;
         }
 
+        public override void Subscribe()
+        {
+            _target.NotifManager.InteractionEnded += OnTargetInteractionEnded;
+        }
+
         public override void Enter()
         {
             GD.Print($"{_owner.Parent.Name} WaitState Enter");
-
-            _target.NotifManager.InteractionEnded += OnTargetInteractionEnded;
 
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
@@ -35,10 +38,13 @@ namespace NPCProcGen.Core.States
             );
         }
 
-        public override void Exit()
+        public override void Unsubscribe()
         {
             _target.NotifManager.InteractionEnded -= OnTargetInteractionEnded;
+        }
 
+        public override void Exit()
+        {
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateExited,
@@ -57,6 +63,11 @@ namespace NPCProcGen.Core.States
                 _owner.Parent.GlobalPosition
             );
             return _target.Parent.GlobalPosition + directionToInitiator * WaitDistance;
+        }
+
+        public void OnNavigationComplete()
+        {
+            return;
         }
 
         private void OnTargetInteractionEnded()

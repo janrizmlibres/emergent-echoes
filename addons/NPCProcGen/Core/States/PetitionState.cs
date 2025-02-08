@@ -2,6 +2,7 @@ using System;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Autoloads;
+using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
@@ -34,36 +35,49 @@ namespace NPCProcGen.Core.States
             _amount = CalculateAmount();
         }
 
+        public override void Subscribe()
+        {
+            _owner.NotifManager.PetitionAnswered += OnPetitionAnswered;
+        }
+
         public override void Enter()
         {
             // GD.Print($"{_owner.Parent.Name} PetitionState Enter");
 
-            Array<Variant> ownerData = new() { _target.Parent };
-            Array<Variant> targetData = new()
+            if (_target is NPCAgent2D npc)
             {
-                _owner.Parent,
-                Variant.From(_resourceType),
-                _amount,
-            };
+                npc.AddAction(new InteractAction(npc, _owner));
+            }
+            else
+            {
+                _target.NotifManager.NotifyInteractionStarted();
+                _target.Sensor.SetTaskRecord(ActionType.Interact, ActionState.Interact);
 
-            _owner.NotifManager.PetitionAnswered += OnPetitionAnswered;
+                Array<Variant> targetData = new()
+                {
+                    _owner.Parent,
+                    Variant.From(_resourceType),
+                    _amount,
+                };
+
+                CommonUtils.EmitSignal(
+                    _target,
+                    ActorTag2D.SignalName.InteractionStarted,
+                    Variant.From((InteractState)ActionStateValue),
+                    targetData
+                );
+            }
+
             _owner.NotifManager.NotifyInteractionStarted();
-            _target.NotifManager.NotifyInteractionStarted();
-
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
-            _target.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+
+            Array<Variant> ownerData = new() { _target.Parent };
 
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateEntered,
                 Variant.From(ActionStateValue),
                 ownerData
-            );
-            CommonUtils.EmitSignal(
-                _target,
-                ActorTag2D.SignalName.InteractionStarted,
-                Variant.From((InteractState)ActionStateValue),
-                targetData
             );
         }
 
@@ -77,14 +91,15 @@ namespace NPCProcGen.Core.States
             }
         }
 
-        public override void Exit()
+        public override void Unsubscribe()
         {
             _owner.NotifManager.PetitionAnswered -= OnPetitionAnswered;
-            _owner.NotifManager.NotifyInteractionEnded();
-            _target.NotifManager.NotifyInteractionEnded();
+        }
 
+        public override void Exit()
+        {
+            _owner.NotifManager.NotifyInteractionEnded();
             _owner.Sensor.ClearTaskRecord();
-            _target.Sensor.ClearTaskRecord();
 
             Array<Variant> data = new()
             {
@@ -101,16 +116,19 @@ namespace NPCProcGen.Core.States
                 Variant.From(ActionStateValue),
                 data
             );
-            CommonUtils.EmitSignal(
-                _target,
-                ActorTag2D.SignalName.InteractionEnded
-            );
 
-            if (_target is NPCAgent2D npc && !npc.IsActive())
+            if (_target is NPCAgent2D npc)
             {
+                npc.EndAction();
+            }
+            else
+            {
+                _target.NotifManager.NotifyInteractionEnded();
+                _target.Sensor.ClearTaskRecord();
+
                 CommonUtils.EmitSignal(
                     _target,
-                    NPCAgent2D.SignalName.ExecutionEnded
+                    ActorTag2D.SignalName.InteractionEnded
                 );
             }
         }
