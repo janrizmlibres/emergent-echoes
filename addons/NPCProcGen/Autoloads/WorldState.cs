@@ -98,8 +98,14 @@ namespace NPCProcGen.Autoloads
 		public bool IsActorBusy(ActorTag2D actor)
 		{
 			Tuple<ActionType, ActionState> action = GetTaskRecord(actor);
+
 			if (action == null) return false;
-			return action.Item2 == ActionState.Talk || action.Item2 == ActionState.Petition;
+
+			ActionState state = action.Item2;
+
+			return state == ActionState.Talk || state == ActionState.Petition
+				|| state == ActionState.Interact || state == ActionState.Flee
+				|| state == ActionState.Eat;
 		}
 
 		public ResourceType? GetPetitionResourceType(ActorTag2D actor)
