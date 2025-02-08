@@ -23,7 +23,9 @@ namespace NPCProcGen.Core.Actions
         private readonly ResourceType _targetResource;
 
         private SearchState _searchState;
+        private WanderState _wanderState;
         private EngageState _engageState;
+        private WaitState _waitState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PetitionAction"/> class.
@@ -42,23 +44,22 @@ namespace NPCProcGen.Core.Actions
         {
             Vector2? targetLastPosition = _owner.Memorizer.GetLastKnownPosition(_targetActor);
 
-            WanderState wanderState = new(_owner, ActionTypeValue, _targetActor);
+            _wanderState = new(_owner, ActionTypeValue, _targetActor);
 
             if (targetLastPosition != null)
             {
                 _searchState = new(_owner, ActionTypeValue, _targetActor, targetLastPosition.Value);
-                _searchState.CompleteState += (bool isTargetFound) =>
+                _searchState.CompleteState += isTargetFound =>
                 {
-                    TransitionTo(isTargetFound ? _engageState : wanderState);
+                    TransitionTo(isTargetFound ? _engageState : _wanderState);
                 };
             }
             _engageState = new(_owner, ActionTypeValue, _targetActor, Waypoint.Lateral);
 
-
-            WaitState waitState = new(_owner, ActionTypeValue, _targetActor);
+            _waitState = new(_owner, ActionTypeValue, _targetActor);
             PetitionState petitionState = new(_owner, ActionTypeValue, _targetActor, _targetResource);
 
-            wanderState.CompleteState += durationReached =>
+            _wanderState.CompleteState += durationReached =>
             {
                 if (durationReached)
                 {
@@ -66,14 +67,14 @@ namespace NPCProcGen.Core.Actions
                 }
                 else
                 {
-                    TransitionTo(_targetActor.Sensor.IsActorBusy() ? waitState : _engageState);
+                    TransitionTo(_targetActor.Sensor.IsActorBusy() ? _waitState : _engageState);
                 }
             };
             _engageState.CompleteState += isTargetBusy =>
             {
-                TransitionTo(isTargetBusy ? waitState : petitionState);
+                TransitionTo(isTargetBusy ? _waitState : petitionState);
             };
-            waitState.CompleteState += () => TransitionTo(_engageState);
+            _waitState.CompleteState += () => TransitionTo(_engageState);
             petitionState.CompleteState += () => CompleteAction();
         }
 
@@ -94,13 +95,28 @@ namespace NPCProcGen.Core.Actions
 
             if (_owner.IsActorInRange(_targetActor))
             {
-                TransitionTo(_engageState);
+                TransitionTo(_targetActor.Sensor.IsActorBusy() ? _waitState : _engageState);
+                return;
             }
-            else
+
+            if (_searchState == null)
             {
-                DebugTool.Assert(_searchState != null, "Search state is not initialized.");
-                TransitionTo(_searchState);
+                Vector2? targetLastPosition = _owner.Memorizer.GetLastKnownPosition(_targetActor);
+
+                if (targetLastPosition == null)
+                {
+                    CompleteAction();
+                    return;
+                }
+
+                _searchState = new(_owner, ActionTypeValue, _targetActor, targetLastPosition.Value);
+                _searchState.CompleteState += isTargetFound =>
+                {
+                    TransitionTo(isTargetFound ? _engageState : _wanderState);
+                };
             }
+
+            TransitionTo(_searchState);
         }
     }
 }

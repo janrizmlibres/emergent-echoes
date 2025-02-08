@@ -38,34 +38,29 @@ namespace NPCProcGen.Core.Actions
         /// Transitions to a new state.
         /// </summary>
         /// <param name="newState">The new state to transition to.</param>
-        protected void TransitionTo(BaseState newState)
+        public void TransitionTo(BaseState newState)
         {
+            _currentState?.Unsubscribe();
             _currentState?.Exit();
             _currentState = newState;
+            _currentState?.Subscribe();
             _currentState?.Enter();
+        }
+
+        public void ClearState()
+        {
+            _currentState?.Unsubscribe();
+            _currentState = null;
         }
 
         /// <summary>
         /// Completes the current action.
         /// </summary>
         /// <param name="actionType">The type of action that was completed.</param>
-        protected void CompleteAction()
+        public void CompleteAction()
         {
             TransitionTo(null);
             ActionComplete?.Invoke();
-            _owner.EmitSignal(NPCAgent2D.SignalName.ExecutionEnded);
-
-            _owner.Sensor.ClearTaskRecord();
-            _owner.Sensor.ClearPetitionResourceType();
-        }
-
-        /// <summary>
-        /// Gets the target position for the current action.
-        /// </summary>
-        /// <returns>The target position as a <see cref="Vector2"/>.</returns>
-        public Vector2 GetTargetPosition()
-        {
-            return (_currentState as INavigationState)?.GetTargetPosition() ?? _owner.Parent.GlobalPosition;
         }
 
         /// <summary>
@@ -75,6 +70,31 @@ namespace NPCProcGen.Core.Actions
         public bool IsNavigating()
         {
             return _currentState is INavigationState state && state.IsNavigating();
+        }
+
+        /// <summary>
+        /// Gets the target position for the current action.
+        /// </summary>
+        /// <returns>The target position as a <see cref="Vector2"/>.</returns>
+        public Vector2 GetTargetPosition()
+        {
+            return (_currentState as INavigationState)?.GetTargetPosition()
+                ?? _owner.Parent.GlobalPosition;
+        }
+
+        public void CompleteNavigation()
+        {
+            (_currentState as INavigationState)?.OnNavigationComplete();
+        }
+
+        public void CompleteConsumption()
+        {
+            (_currentState as EatState)?.OnConsumptionComplete();
+        }
+
+        public void OnActorDetected(ActorTag2D actor)
+        {
+            (_currentState as IActorDetectionState)?.OnActorDetected(actor);
         }
 
         /// <summary>

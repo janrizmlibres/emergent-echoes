@@ -16,6 +16,7 @@ namespace NPCProcGen.Core.Actions
         private readonly ResourceType _targetResource;
 
         private SearchState _searchState;
+        private WanderState _wanderState;
         private SneakState _sneakState;
 
         /// <summary>
@@ -40,8 +41,6 @@ namespace NPCProcGen.Core.Actions
         {
             Vector2? targetLastPosition = _owner.Memorizer.GetLastKnownPosition(_targetActor);
 
-            WanderState wanderState = new(_owner, ActionTypeValue, _targetActor);
-
             if (targetLastPosition != null)
             {
                 _searchState = new SearchState(
@@ -49,17 +48,19 @@ namespace NPCProcGen.Core.Actions
                     ActionTypeValue,
                     _targetActor, targetLastPosition.Value
                 );
-                _searchState.CompleteState += (bool isTargetFound) =>
+                _searchState.CompleteState += isTargetFound =>
                 {
-                    TransitionTo(isTargetFound ? _sneakState : wanderState);
+                    TransitionTo(isTargetFound ? _sneakState : _wanderState);
                 };
             }
+
+            _wanderState = new(_owner, ActionTypeValue, _targetActor);
             _sneakState = new SneakState(_owner, ActionTypeValue, _targetActor);
 
             StealState stealState = new(_owner, ActionTypeValue, _targetActor, _targetResource);
             FleeState fleeState = new(_owner, ActionTypeValue);
 
-            wanderState.CompleteState += (bool durationReached) =>
+            _wanderState.CompleteState += durationReached =>
             {
                 if (durationReached)
                 {
@@ -71,6 +72,7 @@ namespace NPCProcGen.Core.Actions
                 }
             };
             _sneakState.CompleteState += () => TransitionTo(stealState);
+
             stealState.CompleteState += () => TransitionTo(fleeState);
             fleeState.CompleteState += () => CompleteAction();
         }
@@ -98,12 +100,27 @@ namespace NPCProcGen.Core.Actions
             if (_owner.IsActorInRange(_targetActor))
             {
                 TransitionTo(_sneakState);
+                return;
             }
-            else
+
+            if (_searchState == null)
             {
-                DebugTool.Assert(_searchState != null, "Search state is not initialized.");
-                TransitionTo(_searchState);
+                Vector2? targetLastPosition = _owner.Memorizer.GetLastKnownPosition(_targetActor);
+
+                if (targetLastPosition == null)
+                {
+                    CompleteAction();
+                    return;
+                }
+
+                _searchState = new(_owner, ActionTypeValue, _targetActor, targetLastPosition.Value);
+                _searchState.CompleteState += isTargetFound =>
+                {
+                    TransitionTo(isTargetFound ? _sneakState : _wanderState);
+                };
             }
+
+            TransitionTo(_searchState);
         }
     }
 }
