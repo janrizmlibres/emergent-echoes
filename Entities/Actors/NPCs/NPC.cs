@@ -24,6 +24,7 @@ namespace EmergentEchoes.Entities.Actors
         public int Friction { get; set; } = 4;
 
         private MainState _mainState = MainState.Idle;
+        private int _maxSpeed;
 
         private readonly Array<Vector2I> _validTilePositions = new();
 
@@ -41,6 +42,8 @@ namespace EmergentEchoes.Entities.Actors
         public override void _Ready()
         {
             if (Engine.IsEditorHint()) return;
+
+            _maxSpeed = MaxSpeed;
 
             _stateTimer = new Timer()
             {
@@ -139,7 +142,7 @@ namespace EmergentEchoes.Entities.Actors
         {
             Vector2 destination = _navigationAgent2d.GetNextPathPosition();
             Vector2 direction = GlobalPosition.DirectionTo(destination);
-            _navigationAgent2d.Velocity = Velocity.MoveToward(direction * MaxSpeed, Acceleration);
+            _navigationAgent2d.Velocity = Velocity.MoveToward(direction * _maxSpeed, Acceleration);
 
             HandleAnimation();
         }
@@ -252,8 +255,11 @@ namespace EmergentEchoes.Entities.Actors
         private void OnActionStateEntered(Variant state, Array<Variant> data)
         {
             ActionState actionState = state.As<ActionState>();
+            _maxSpeed = actionState == ActionState.Engage ? MaxSpeed + 10 : MaxSpeed;
+            GD.Print($"Max Speed: {_maxSpeed}");
 
-            if (actionState == ActionState.Talk || actionState == ActionState.Petition)
+            if (actionState == ActionState.Talk || actionState == ActionState.Petition
+                || actionState == ActionState.Interact)
             {
                 Node2D partner = data[0].As<Node2D>();
                 FacePartner(partner);
@@ -263,13 +269,15 @@ namespace EmergentEchoes.Entities.Actors
         private void OnActionStateExited(Variant state, Array<Variant> data)
         {
             ActionState actionState = state.As<ActionState>();
+            _maxSpeed = MaxSpeed;
 
             if (actionState == ActionState.Steal)
             {
                 float amountStolen = data[1].As<float>();
                 _floatTextController.ShowFloatText(ResourceType.Money, amountStolen.ToString(), false);
             }
-            else if (actionState == ActionState.Talk || actionState == ActionState.Petition)
+            else if (actionState == ActionState.Talk || actionState == ActionState.Petition
+                || actionState == ActionState.Interact)
             {
                 _mainState = MainState.Procedural;
                 _emoteController.Deactivate();
@@ -314,13 +322,11 @@ namespace EmergentEchoes.Entities.Actors
             else if (actionState == ActionState.Talk)
             {
                 Node2D partner = data[0].As<Node2D>();
-
-                if (partner is not NPC) return;
-
-                float companionshipIncrease = data[1].As<float>();
                 NPC npc = partner as NPC;
 
-                npc.ShowFloatText(ResourceType.Companionship, companionshipIncrease.ToString());
+                float companionshipIncrease = data[1].As<float>();
+
+                npc?.ShowFloatText(ResourceType.Companionship, companionshipIncrease.ToString());
                 _floatTextController.ShowFloatText(
                     ResourceType.Companionship,
                     companionshipIncrease.ToString()

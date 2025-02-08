@@ -283,22 +283,22 @@ position = Vector2(174, 165)
 remote_path = NodePath("../../Camera2D")
 
 [node name="Silas" parent="." instance=ExtResource("8_0wj5x")]
-position = Vector2(320, 172)
-
-[node name="Garreth" parent="." instance=ExtResource("9_cbx2p")]
-position = Vector2(229, 260)
+position = Vector2(239, 309)
 
 [node name="Silas2" parent="." instance=ExtResource("8_0wj5x")]
-position = Vector2(361, 273)
-
-[node name="Garreth2" parent="." instance=ExtResource("9_cbx2p")]
-position = Vector2(128, 271)
+position = Vector2(320, 172)
 
 [node name="Silas3" parent="." instance=ExtResource("8_0wj5x")]
-position = Vector2(241, 310)
+position = Vector2(203, 258)
+
+[node name="Garreth" parent="." instance=ExtResource("9_cbx2p")]
+position = Vector2(359, 281)
+
+[node name="Garreth2" parent="." instance=ExtResource("9_cbx2p")]
+position = Vector2(287, 221)
 
 [node name="Garreth3" parent="." instance=ExtResource("9_cbx2p")]
-position = Vector2(268, 149)
+position = Vector2(128, 214)
 
 [editable path="Camera2D"]
 [editable path="Player"]

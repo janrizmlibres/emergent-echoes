@@ -119,21 +119,8 @@ namespace NPCProcGen
                 return;
             }
 
-            NotifManager.InteractionStarted += () =>
-            {
-                GD.Print($"Evaluation timer stopped for {Parent.Name}");
-                _evaluationTimer.Stop();
-            };
-            NotifManager.InteractionEnded += () =>
-            {
-                // Do not start evaluation timer if the NPC is still executing an action
-                if (!IsActive())
-                {
-                    GD.Print($"Evaluation timer started for {Parent.Name}");
-                    _evaluationTimer.Start(GD.RandRange(MinEvaluationInterval, MaxEvaluationInterval));
-                }
-            };
-
+            // NotifManager.InteractionStarted += OnInteractionStarted;
+            // NotifManager.InteractionEnded += OnInteractionEnded;
             Executor = new(this);
             Executor.ExecutionEnded += OnExecutionEnded;
 
@@ -235,7 +222,7 @@ namespace NPCProcGen
         /// <returns>True if navigation is required, otherwise false.</returns>
         public bool IsNavigationRequired()
         {
-            return Executor.QueryNavigationAction();
+            return Executor.IsNavigationRequired();
         }
 
         public Tuple<ActionType, ActionState> GetAction()
@@ -248,12 +235,12 @@ namespace NPCProcGen
         /// </summary>
         public void CompleteNavigation()
         {
-            NotifManager.NotifyNavigationComplete();
+            Executor.CompleteNavigation();
         }
 
         public void CompleteConsumption()
         {
-            NotifManager.NotifyConsumptionComplete();
+            Executor.CompleteConsumption();
         }
 
         /// <summary>
@@ -304,7 +291,7 @@ namespace NPCProcGen
             if (action != null)
             {
                 GD.Print($"Action evaluated by {Parent.Name}: {action.GetType().Name}");
-                Executor.SetAction(action);
+                Executor.AddAction(action);
             }
             else
             {
@@ -320,6 +307,18 @@ namespace NPCProcGen
         private void OnExecutionEnded()
         {
             _evaluationTimer.Start(GD.RandRange(MinEvaluationInterval, MaxEvaluationInterval));
+            CommonUtils.EmitSignal(this, SignalName.ExecutionEnded);
+        }
+
+        public void AddAction(BaseAction action)
+        {
+            Executor.AddAction(action);
+            _evaluationTimer.Stop();
+        }
+
+        public void EndAction()
+        {
+            Executor.EndCurrentAction();
         }
 
         // TODO: Resolve self detection in editor
@@ -332,7 +331,7 @@ namespace NPCProcGen
             if (actor != null)
             {
                 _detectedActors.Add(actor);
-                NotifManager.NotifyActorDetected(actor);
+                Executor.OnActorDetected(actor);
             }
         }
 
