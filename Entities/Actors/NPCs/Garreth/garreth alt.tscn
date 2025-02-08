@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://c46vvjqepxr5c"]
+[gd_scene load_steps=21 format=3 uid="uid://c46vvjqepxr5c"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/garreth_alt.gd" id="1_0w5gq"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_ykyr2"]
@@ -21,6 +21,9 @@
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0
 height = 10.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rsp3p"]
+size = Vector2(24, 30)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ajai6"]
 radius = 44.0
@@ -63,6 +66,12 @@ rotation = 3.14159
 
 [node name="Marker2D" type="Marker2D" parent="RearMarker"]
 position = Vector2(-10, -2.53518e-05)
+
+[node name="PetitionArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PetitionArea"]
+position = Vector2(0, -6)
+shape = SubResource("RectangleShape2D_rsp3p")
 
 [node name="NpcAltDetector" parent="." instance=ExtResource("4_t4ib7")]
 NPCName = "Garreth"
