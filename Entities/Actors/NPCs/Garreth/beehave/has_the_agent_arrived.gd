@@ -6,6 +6,7 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		return FAILURE
 	
 	if actor.navigation_agent_2d.is_navigation_finished():
+		blackboard.set_value("current_state", "shouting")
 		return SUCCESS
 		
 	return FAILURE

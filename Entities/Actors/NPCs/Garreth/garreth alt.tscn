@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://c46vvjqepxr5c"]
+[gd_scene load_steps=23 format=3 uid="uid://c46vvjqepxr5c"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/garreth_alt.gd" id="1_0w5gq"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_ykyr2"]
@@ -16,7 +16,9 @@
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/patrol_action.gd" id="11_8k8tp"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/shout_for_petition.gd" id="11_hcrvy"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="12_77cs2"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/chase_agent.gd" id="17_8186l"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/chase_agent.gd" id="17_8186l"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/ask_for_petition.gd" id="18_e4j5f"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/resume_patrol.gd" id="19_76401"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0
@@ -82,7 +84,8 @@ shape = SubResource("CircleShape2D_ajai6")
 [node name="Blackboard" type="Node" parent="."]
 script = ExtResource("12_77cs2")
 blackboard = {
-"current_state": "idle"
+"current_state": "idle",
+"last_patrol_location": Vector2(464, 240)
 }
 
 [node name="Timer" type="Timer" parent="."]
@@ -119,14 +122,22 @@ script = ExtResource("11_hcrvy")
 [node name="Patrol Action" type="Node" parent="GarrethBehaviour/SelectorComposite/Patrol"]
 script = ExtResource("11_8k8tp")
 
-[node name="SequenceComposite" type="Node" parent="GarrethBehaviour/SelectorComposite"]
+[node name="Petitioning" type="Node" parent="GarrethBehaviour/SelectorComposite"]
 script = ExtResource("6_6gfsl")
 
-[node name="Chase Agent" type="Node" parent="GarrethBehaviour/SelectorComposite/SequenceComposite"]
+[node name="Chase Agent" type="Node" parent="GarrethBehaviour/SelectorComposite/Petitioning"]
 script = ExtResource("17_8186l")
 
+[node name="Ask For Petition" type="Node" parent="GarrethBehaviour/SelectorComposite/Petitioning"]
+script = ExtResource("18_e4j5f")
+
+[node name="Resume Patrol" type="Node" parent="GarrethBehaviour/SelectorComposite/Petitioning"]
+script = ExtResource("19_76401")
+
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
+[connection signal="body_entered" from="PetitionArea" to="GarrethBehaviour/SelectorComposite/Petitioning/Chase Agent" method="_on_petition_area_body_entered"]
 [connection signal="body_entered" from="NpcAltDetector" to="Personality" method="_on_npc_alt_detector_body_entered"]
 [connection signal="timeout" from="Timer" to="GarrethBehaviour/SelectorComposite/Patrol/Shout For Petition" method="_on_timer_timeout"]
-[connection signal="move_player" from="GarrethBehaviour/SelectorComposite/Patrol/Patrol Action" to="." method="move_player"]
-[connection signal="move_player" from="GarrethBehaviour/SelectorComposite/SequenceComposite/Chase Agent" to="." method="move_player"]
+[connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Patrol/Patrol Action" to="." method="move_actor"]
+[connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Petitioning/Chase Agent" to="." method="move_actor"]
+[connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Petitioning/Resume Patrol" to="." method="move_actor"]

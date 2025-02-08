@@ -1,6 +1,6 @@
 extends ActionLeaf
 
-signal move_player(patrol_location: Vector2)
+signal move_actor(patrol_location: Vector2)
 
 var current_patrol_index: int = 0
 
@@ -10,7 +10,8 @@ func tick(_actor: Node, blackboard: Blackboard) -> int:
 	if blackboard.get_value("current_state") != "patrolling":
 		return FAILURE
 	
-	move_player.emit(patrol_locations[current_patrol_index])
+	blackboard.set_value("last_patrol_location", patrol_locations[current_patrol_index])
+	move_actor.emit(patrol_locations[current_patrol_index])
 		
 	if _actor.navigation_agent_2d.is_navigation_finished():
 		if current_patrol_index < patrol_locations.size() - 1:

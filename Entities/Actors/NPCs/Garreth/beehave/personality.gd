@@ -9,7 +9,7 @@ func _process(delta: float) -> void:
 		blackboard.set_value("current_state", "patrolling")
 
 func _on_npc_alt_detector_body_entered(body: Node2D) -> void:
-	if blackboard.get_value("current_state") == "petitioning":
+	if blackboard.get_value("current_state") != "shouting":
 		return
 
 	if body.get_name() == "SilasAlt":
@@ -24,5 +24,5 @@ func _on_npc_alt_detector_body_entered(body: Node2D) -> void:
 		timer.stop()
 		emote_controller.ShowEmoteBubble(4)
 		
-		blackboard.set_value("current_state", "petitioning")
+		blackboard.set_value("current_state", "chasing")
 	pass # Replace with function body.
