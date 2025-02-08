@@ -9,6 +9,7 @@ namespace NPCProcGen.Core.Components.Enums
         Eat,
         Petition,
         Socialize,
+        Interact,
     }
 
     public enum ActionState
@@ -25,6 +26,7 @@ namespace NPCProcGen.Core.Components.Enums
         Eat,
         Petition,
         Talk,
+        Interact,
     }
 
     public enum InteractState

@@ -41,29 +41,28 @@ namespace NPCProcGen.Core.Internal
         /// Sets a new action to be executed.
         /// </summary>
         /// <param name="action">The action to be executed.</param>
-        public void SetAction(BaseAction action)
+        public void AddAction(BaseAction action)
         {
-            DebugTool.Assert(_actions.Count == 0, "Actions should be null when assigning a new action");
             DebugTool.Assert(action != null, "Action to be assigned cannot be null");
+
+            _owner.Sensor.ClearPetitionResourceType();
+
+            if (_actions.TryPeek(out BaseAction currentAction))
+            {
+                currentAction.ActionComplete -= OnActionComplete;
+                currentAction.ClearState();
+            }
 
             _actions.Push(action);
             action.ActionComplete += OnActionComplete;
             action.Run();
         }
 
-        /// <summary>
-        /// Gets the target position of the current action.
-        /// </summary>
-        /// <returns>The target position.</returns>
-        public Vector2 GetTargetPosition()
+        public void EndCurrentAction()
         {
             if (_actions.TryPeek(out BaseAction action))
             {
-                return action.GetTargetPosition();
-            }
-            else
-            {
-                return _owner.Parent.GlobalPosition;
+                action.CompleteAction();
             }
         }
 
@@ -77,18 +76,54 @@ namespace NPCProcGen.Core.Internal
         }
 
         /// <summary>
+        /// Gets the target position of the current action.
+        /// </summary>
+        /// <returns>The target position.</returns>
+        public Vector2 GetTargetPosition()
+        {
+            if (_actions.TryPeek(out BaseAction action))
+            {
+                return action.GetTargetPosition();
+            }
+
+            return _owner.Parent.GlobalPosition;
+        }
+
+        /// <summary>
         /// Queries if the current action involves navigation.
         /// </summary>
         /// <returns>True if the action involves navigation, otherwise false.</returns>
-        public bool QueryNavigationAction()
+        public bool IsNavigationRequired()
         {
             if (_actions.TryPeek(out BaseAction action))
             {
                 return action.IsNavigating();
             }
-            else
+
+            return false;
+        }
+
+        public void CompleteNavigation()
+        {
+            if (_actions.TryPeek(out BaseAction action))
             {
-                return false;
+                action.CompleteNavigation();
+            }
+        }
+
+        public void CompleteConsumption()
+        {
+            if (_actions.TryPeek(out BaseAction action))
+            {
+                action.CompleteConsumption();
+            }
+        }
+
+        public void OnActorDetected(ActorTag2D actor)
+        {
+            if (_actions.TryPeek(out BaseAction action))
+            {
+                action.OnActorDetected(actor);
             }
         }
 
@@ -98,8 +133,21 @@ namespace NPCProcGen.Core.Internal
         private void OnActionComplete()
         {
             DebugTool.Assert(_actions.Count > 0, "Actions cannot be null when completing an action");
+
+            _owner.Sensor.ClearPetitionResourceType();
             _actions.Pop().ActionComplete -= OnActionComplete;
-            ExecutionEnded?.Invoke();
+
+            if (_actions.TryPeek(out BaseAction action))
+            {
+                GD.Print($"{action.GetType().Name} is resumed by {_owner.Parent.Name}");
+                action.ActionComplete += OnActionComplete;
+                action.Run();
+            }
+            else
+            {
+                ExecutionEnded?.Invoke();
+                _owner.Sensor.ClearTaskRecord();
+            }
         }
     }
 }
