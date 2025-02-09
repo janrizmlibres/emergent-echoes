@@ -9,6 +9,7 @@ func before_run(actor: Node, blackboard: Blackboard) -> void:
 		
 	if blackboard.get_value("actor").get_name() == "Player":
 		blackboard.get_value("actor").OnInteractionStartedOnNPCAlt(blackboard.get_value("current_state"), actor)
+		actor.npc_active = false
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
 	if blackboard.get_value("current_state") == "petitioning":
