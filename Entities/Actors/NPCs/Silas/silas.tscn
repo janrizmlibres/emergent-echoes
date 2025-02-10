@@ -91,12 +91,10 @@ avoidance_enabled = true
 radius = 5.0
 debug_enabled = true
 
-[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("ActorDetector", "StealMarker")]
+[node name="NPCAgent2D" type="Node" parent="."]
 script = ExtResource("3_x7obk")
-ActorDetector = NodePath("../ActorDetector")
 Survival = 0.52
 Thief = 0.73
-StealMarker = NodePath("../StealMarker/Marker2D")
 
 [node name="StealMarker" type="Node2D" parent="."]
 rotation = 3.14159

@@ -299,10 +299,6 @@ tile_set = SubResource("TileSet_1jo8w")
 [node name="Player" parent="." instance=ExtResource("2_ne4id")]
 position = Vector2(176, 160)
 
-[node name="ActorTag2D" parent="Player" index="5"]
-MoneyValue = 50
-FoodValue = 20
-
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
 remote_path = NodePath("../../Camera2D")
 
