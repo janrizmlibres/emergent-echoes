@@ -42,6 +42,11 @@ namespace NPCProcGen.Core.Actions
                 Variant.From(ActionTypeValue)
             );
 
+            SetStartingState();
+        }
+
+        private void SetStartingState()
+        {
             if (_owner.IsAnyActorInRange())
             {
                 ActorTag2D target = _owner.GetRandomActorInRange();
@@ -59,9 +64,20 @@ namespace NPCProcGen.Core.Actions
             WaitState waitState = new(_owner, ActionTypeValue, partner);
             TalkState talkState = new(_owner, ActionTypeValue, partner);
 
-            engageState.CompleteState += isTargetBusy =>
+            engageState.CompleteState += outcome =>
             {
-                TransitionTo(isTargetBusy ? waitState : talkState);
+                switch (outcome)
+                {
+                    case EngageOutcome.DurationExceeded:
+                        CompleteAction();
+                        break;
+                    case EngageOutcome.TargetBusy:
+                        TransitionTo(waitState);
+                        break;
+                    case EngageOutcome.TargetAvailable:
+                        TransitionTo(talkState);
+                        break;
+                }
             };
             waitState.CompleteState += () => TransitionTo(engageState);
             talkState.CompleteState += () => CompleteAction();

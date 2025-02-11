@@ -82,9 +82,9 @@ namespace NPCProcGen.Core.Actions
                 ?? _owner.Parent.GlobalPosition;
         }
 
-        public void CompleteNavigation()
+        public bool CompleteNavigation()
         {
-            (_currentState as INavigationState)?.OnNavigationComplete();
+            return (_currentState as INavigationState)?.OnNavigationComplete() ?? false;
         }
 
         public void CompleteConsumption()

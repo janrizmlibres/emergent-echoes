@@ -70,9 +70,20 @@ namespace NPCProcGen.Core.Actions
                     TransitionTo(_targetActor.Sensor.IsActorBusy() ? _waitState : _engageState);
                 }
             };
-            _engageState.CompleteState += isTargetBusy =>
+            _engageState.CompleteState += outcome =>
             {
-                TransitionTo(isTargetBusy ? _waitState : petitionState);
+                switch (outcome)
+                {
+                    case EngageOutcome.DurationExceeded:
+                        CompleteAction();
+                        break;
+                    case EngageOutcome.TargetBusy:
+                        TransitionTo(_waitState);
+                        break;
+                    case EngageOutcome.TargetAvailable:
+                        TransitionTo(petitionState);
+                        break;
+                }
             };
             _waitState.CompleteState += () => TransitionTo(_engageState);
             petitionState.CompleteState += () => CompleteAction();
