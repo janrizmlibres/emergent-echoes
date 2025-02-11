@@ -6,13 +6,15 @@ extends CharacterBody2D
 
 @export var FRICTION: int = 4
 @export var movement_speed: int = 60
+@export var money = 100
+@export var food = 5
 
 const npc_name: String = "Garreth"
 
 var npc_active: bool = false
 var current_location: Vector2
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if npc_active and current_location:
 		navigation_agent_2d.target_position = current_location
 		
@@ -31,6 +33,9 @@ func _physics_process(delta: float) -> void:
 			
 		handle_animation()
 		move_and_slide()
+	else:
+		npc_active = false
+		velocity = velocity.move_toward(Vector2.ZERO, FRICTION)
 
 func handle_animation() -> void:
 	if velocity.x != 0:
@@ -42,7 +47,7 @@ func handle_animation() -> void:
 	else:
 		animation_state.travel("Idle")
 
-func _on_patrol(patrol_location: Variant) -> void:
+func move_actor(patrol_location: Vector2):
 	current_location = patrol_location
 	npc_active = true
 	pass # Replace with function body.

@@ -9,10 +9,7 @@ namespace EmergentEchoes.Entities.Camera
 			Marker2D topLeft = GetNode<Marker2D>("TopLeft");
 			Marker2D bottomRight = GetNode<Marker2D>("BottomRight");
 
-			LimitTop = (int)topLeft.GlobalPosition.Y;
-			LimitLeft = (int)topLeft.GlobalPosition.X;
-			LimitBottom = (int)bottomRight.GlobalPosition.Y;
-			LimitRight = (int)bottomRight.GlobalPosition.X;
+			
 		}
 	}
 }

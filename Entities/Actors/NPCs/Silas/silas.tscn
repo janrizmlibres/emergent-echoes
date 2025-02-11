@@ -64,6 +64,6 @@ rotation = 3.14159
 [node name="Marker2D" type="Marker2D" parent="RearMarker"]
 position = Vector2(-10, -2.53518e-05)
 
-[node name="EmoteController" parent="." instance=ExtResource("5_6ilnl")]
-
 [node name="FloatTextController" parent="." instance=ExtResource("8_hr3nq")]
+
+[node name="EmoteController" parent="." instance=ExtResource("5_6ilnl")]

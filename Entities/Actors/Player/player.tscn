@@ -7,7 +7,7 @@
 [ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="4_t03r2"]
 [ext_resource type="PackedScene" uid="uid://ddv2dvtqnrekh" path="res://Utilities/Interactions/interacting_component.tscn" id="4_y61k5"]
 [ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="5_04v7w"]
-[ext_resource type="AnimationNodeStateMachine" uid="uid://cw72ka7tmedn0" path="res://Entities/Actors/actor_anim_sm.tres" id="5_hn5bo"]
+[ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="5_hn5bo"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6wwjl"]
 radius = 3.0
