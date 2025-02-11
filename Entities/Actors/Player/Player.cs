@@ -16,6 +16,8 @@ namespace EmergentEchoes.Entities.Actors
 
 		private State _state = State.Active;
 
+		private TileMapLayer _tileMapLayer;
+
 		private AnimationTree _animationTree;
 		private AnimationNodeStateMachinePlayback _animationState;
 		private ActorTag2D _actorTag2D;
@@ -23,6 +25,8 @@ namespace EmergentEchoes.Entities.Actors
 
 		public override void _Ready()
 		{
+			_tileMapLayer = GetNode<TileMapLayer>("%WorldLayer");
+
 			_animationTree = GetNode<AnimationTree>("AnimationTree");
 			_animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
 			_actorTag2D = GetNode<ActorTag2D>("ActorTag2D");

@@ -68,3 +68,6 @@ position = Vector2(-10, -2.53518e-05)
 [node name="EmoteController" parent="." instance=ExtResource("5_6ilnl")]
 
 [node name="FloatTextController" parent="." instance=ExtResource("8_hr3nq")]
+
+[node name="Line2D" type="Line2D" parent="."]
+width = 2.0

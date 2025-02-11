@@ -6,6 +6,8 @@ using System.Linq;
 using EmergentEchoes.Utilities.Game.Enums;
 using EmergentEchoes.Utilities.Game;
 using EmergentEchoes.Utilities;
+using System.Collections.Generic;
+using EmergentEchoes.Stages.Testing;
 
 namespace EmergentEchoes.Entities.Actors
 {
@@ -25,16 +27,18 @@ namespace EmergentEchoes.Entities.Actors
 
         private MainState _mainState = MainState.Idle;
         private int _maxSpeed;
+        private int _acceleration;
 
         private readonly Array<Vector2I> _validTilePositions = new();
 
         private Timer _stateTimer;
 
-        private TileMapLayer _tileMapLayer;
+        private WorldLayer _tileMapLayer;
         private AnimationTree _animationTree;
         private AnimationNodeStateMachinePlayback _animationState;
         private NavigationAgent2D _navigationAgent2d;
         private NPCAgent2D _npcAgent2d;
+        private Line2D _line2d;
 
         private EmoteController _emoteController;
         private FloatTextController _floatTextController;
@@ -44,6 +48,7 @@ namespace EmergentEchoes.Entities.Actors
             if (Engine.IsEditorHint()) return;
 
             _maxSpeed = MaxSpeed;
+            _acceleration = Acceleration;
 
             _stateTimer = new Timer()
             {
@@ -55,12 +60,13 @@ namespace EmergentEchoes.Entities.Actors
             _stateTimer.Timeout += RandomizeMainState;
             AddChild(_stateTimer);
 
-            _tileMapLayer = GetNode<TileMapLayer>("%TileMapLayer");
+            _tileMapLayer = GetNode<WorldLayer>("%WorldLayer");
 
             _animationTree = GetNode<AnimationTree>("AnimationTree");
             _animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
             _navigationAgent2d = GetNode<NavigationAgent2D>("NavigationAgent2D");
             _npcAgent2d = GetNode<NPCAgent2D>("NPCAgent2D");
+            _line2d = GetNode<Line2D>("Line2D");
 
             _emoteController = GetNode<EmoteController>("EmoteController");
             _floatTextController = GetNode<FloatTextController>("FloatTextController");
@@ -70,8 +76,6 @@ namespace EmergentEchoes.Entities.Actors
 
             _npcAgent2d.ExecutionStarted += OnExecutionStarted;
             _npcAgent2d.ExecutionEnded += OnExecutionEnded;
-            _npcAgent2d.InteractionStarted += OnInteractionStarted;
-            _npcAgent2d.InteractionEnded += OnInteractionEnded;
             _npcAgent2d.ActionStateEntered += OnActionStateEntered;
             _npcAgent2d.ActionStateExited += OnActionStateExited;
 
@@ -142,7 +146,7 @@ namespace EmergentEchoes.Entities.Actors
         {
             Vector2 destination = _navigationAgent2d.GetNextPathPosition();
             Vector2 direction = GlobalPosition.DirectionTo(destination);
-            _navigationAgent2d.Velocity = Velocity.MoveToward(direction * _maxSpeed, Acceleration);
+            _navigationAgent2d.Velocity = Velocity.MoveToward(direction * _maxSpeed, _acceleration);
 
             HandleAnimation();
         }
@@ -203,6 +207,20 @@ namespace EmergentEchoes.Entities.Actors
             return Vector2.Zero;
         }
 
+        private void AddActorObstacles(Node2D partner)
+        {
+            _tileMapLayer.Obstacles.Add(this);
+            _tileMapLayer.Obstacles.Add(partner);
+            _tileMapLayer.NotifyRuntimeTileDataUpdate();
+        }
+
+        private void RemoveActorObstacles(Node2D partner)
+        {
+            _tileMapLayer.Obstacles.Remove(this);
+            _tileMapLayer.Obstacles.Remove(partner);
+            _tileMapLayer.NotifyRuntimeTileDataUpdate();
+        }
+
         private void OnAnimationFinished(StringName animName)
         {
             if (animName.ToString().Contains("eat"))
@@ -235,28 +253,16 @@ namespace EmergentEchoes.Entities.Actors
 
         private void OnExecutionEnded()
         {
+            GD.Print("Execution ended");
             RandomizeMainState();
-        }
-
-        private void OnInteractionStarted(Variant state, Array<Variant> data)
-        {
-            _stateTimer.Stop();
-
-            Node2D partner = data[0].As<Node2D>();
-            FacePartner(partner);
-        }
-
-        private void OnInteractionEnded()
-        {
-            _mainState = MainState.Procedural;
-            _emoteController.Deactivate();
         }
 
         private void OnActionStateEntered(Variant state, Array<Variant> data)
         {
             ActionState actionState = state.As<ActionState>();
+
             _maxSpeed = actionState == ActionState.Engage ? MaxSpeed + 10 : MaxSpeed;
-            GD.Print($"Max Speed: {_maxSpeed}");
+            _acceleration = actionState == ActionState.Engage ? Acceleration + 2 : Acceleration;
 
             if (actionState == ActionState.Talk || actionState == ActionState.Petition
                 || actionState == ActionState.Interact)
@@ -264,12 +270,20 @@ namespace EmergentEchoes.Entities.Actors
                 Node2D partner = data[0].As<Node2D>();
                 FacePartner(partner);
             }
+
+            if (actionState == ActionState.Talk || actionState == ActionState.Petition)
+            {
+                Node2D partner = data[0].As<Node2D>();
+                AddActorObstacles(partner);
+            }
         }
 
         private void OnActionStateExited(Variant state, Array<Variant> data)
         {
             ActionState actionState = state.As<ActionState>();
+
             _maxSpeed = MaxSpeed;
+            _acceleration = Acceleration;
 
             if (actionState == ActionState.Steal)
             {
@@ -300,14 +314,20 @@ namespace EmergentEchoes.Entities.Actors
                 );
             }
 
+            if (actionState == ActionState.Petition || actionState == ActionState.Talk)
+            {
+                Node2D partner = data[0].As<Node2D>();
+                RemoveActorObstacles(partner);
+            }
+
             if (actionState == ActionState.Petition)
             {
-                bool isAccepted = data[0].As<bool>();
+                bool isAccepted = data[3].As<bool>();
 
                 if (isAccepted)
                 {
-                    ResourceType type = data[2].As<ResourceType>();
-                    int amountPetitioned = data[3].As<int>();
+                    ResourceType type = data[1].As<ResourceType>();
+                    int amountPetitioned = data[2].As<int>();
                     _floatTextController.ShowFloatText(type, amountPetitioned.ToString());
                 }
                 else

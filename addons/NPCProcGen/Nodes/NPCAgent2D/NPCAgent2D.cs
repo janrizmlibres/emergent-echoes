@@ -233,9 +233,9 @@ namespace NPCProcGen
         /// <summary>
         /// Completes the navigation for the NPC.
         /// </summary>
-        public void CompleteNavigation()
+        public bool CompleteNavigation()
         {
-            Executor.CompleteNavigation();
+            return Executor.CompleteNavigation();
         }
 
         public void CompleteConsumption()
