@@ -6,6 +6,19 @@ using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
+    public enum Waypoint
+    {
+        Lateral,
+        Omni
+    }
+
+    public enum EngageOutcome
+    {
+        TargetBusy,
+        TargetAvailable,
+        DurationExceeded
+    }
+
     public class EngageState : BaseState, INavigationState
     {
         public const ActionState ActionStateValue = ActionState.Engage;
@@ -13,10 +26,13 @@ namespace NPCProcGen.Core.States
         private readonly ActorTag2D _target;
         private readonly Waypoint _waypoint;
 
+        private bool _isTargetReached = false;
+        private float _navigationTimer = 15;
+
         /// <summary>
         /// Event triggered when the state is completed.
         /// </summary>
-        public event Action<bool> CompleteState;
+        public event Action<EngageOutcome> CompleteState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MoveState"/> class with a target node.
@@ -51,6 +67,19 @@ namespace NPCProcGen.Core.States
                 Variant.From(ActionStateValue),
                 new Array<Variant>()
             );
+        }
+
+        public override void Update(double delta)
+        {
+            if (!_isTargetReached) return;
+
+            _navigationTimer -= (float)delta;
+
+            if (_navigationTimer <= 0)
+            {
+                GD.Print($"{_owner.Parent.Name} EngageState Timeout");
+                CompleteState?.Invoke(EngageOutcome.DurationExceeded);
+            }
         }
 
         public override void Unsubscribe()
@@ -94,16 +123,28 @@ namespace NPCProcGen.Core.States
             throw new InvalidOperationException("Invalid waypoint type.");
         }
 
-        public void OnNavigationComplete()
+        public bool OnNavigationComplete()
         {
-            bool isTargetBusy = false;
-            CompleteState?.Invoke(isTargetBusy);
+            _isTargetReached = true;
+
+            // Get current position and target waypoint
+            Vector2 currentPos = _owner.Parent.GlobalPosition;
+            Vector2 targetWaypoint = GetTargetPosition();
+
+            // Verify we're actually at the waypoint (within reasonable distance)
+            float distanceToWaypoint = currentPos.DistanceTo(targetWaypoint);
+            if (distanceToWaypoint < 5) // Adjust threshold as needed
+            {
+                CompleteState?.Invoke(EngageOutcome.TargetAvailable);
+                return true;
+            }
+
+            return false;
         }
 
         private void CompleteWithTargetBusy()
         {
-            bool isTargetBusy = true;
-            CompleteState?.Invoke(isTargetBusy);
+            CompleteState?.Invoke(EngageOutcome.TargetBusy);
         }
     }
 }

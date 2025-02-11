@@ -70,10 +70,11 @@ namespace NPCProcGen.Core.States
             return _lastKnownPosition;
         }
 
-        public void OnNavigationComplete()
+        public bool OnNavigationComplete()
         {
             bool isTargetFound = false;
             CompleteState?.Invoke(isTargetFound);
+            return true;
         }
 
         public void OnActorDetected(ActorTag2D target)

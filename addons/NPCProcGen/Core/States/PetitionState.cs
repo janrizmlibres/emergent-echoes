@@ -103,10 +103,10 @@ namespace NPCProcGen.Core.States
 
             Array<Variant> data = new()
             {
-                _isAccepted,
                 _target.Parent,
                 Variant.From(_resourceType),
                 _amount,
+                _isAccepted,
                 _isAccepted ? CompanionshipIncrease : CompanionshipDecrease,
             };
 

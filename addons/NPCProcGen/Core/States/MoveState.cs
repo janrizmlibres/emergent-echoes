@@ -77,9 +77,10 @@ namespace NPCProcGen.Core.States
             return _movePosition;
         }
 
-        public void OnNavigationComplete()
+        public bool OnNavigationComplete()
         {
             CompleteState?.Invoke();
+            return true;
         }
     }
 }

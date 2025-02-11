@@ -65,9 +65,9 @@ namespace NPCProcGen.Core.States
             return _target.Parent.GlobalPosition + directionToInitiator * WaitDistance;
         }
 
-        public void OnNavigationComplete()
+        public bool OnNavigationComplete()
         {
-            return;
+            return true;
         }
 
         private void OnTargetInteractionEnded()

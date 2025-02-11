@@ -50,9 +50,10 @@ namespace NPCProcGen.Core.States
             return _target.GetRearPosition();
         }
 
-        public void OnNavigationComplete()
+        public bool OnNavigationComplete()
         {
             CompleteState?.Invoke();
+            return true;
         }
     }
 }

@@ -117,9 +117,10 @@ namespace NPCProcGen.Core.States
         /// <summary>
         /// Handles the completion of navigation.
         /// </summary>
-        public void OnNavigationComplete()
+        public bool OnNavigationComplete()
         {
             _isWandering = false;
+            return true;
         }
 
         /// <summary>

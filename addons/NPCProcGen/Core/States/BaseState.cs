@@ -10,7 +10,7 @@ namespace NPCProcGen.Core.States
     {
         public bool IsNavigating();
         public Vector2 GetTargetPosition();
-        public void OnNavigationComplete();
+        public bool OnNavigationComplete();
     }
 
     public interface IActorDetectionState

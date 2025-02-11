@@ -103,12 +103,13 @@ namespace NPCProcGen.Core.Internal
             return false;
         }
 
-        public void CompleteNavigation()
+        public bool CompleteNavigation()
         {
             if (_actions.TryPeek(out BaseAction action))
             {
-                action.CompleteNavigation();
+                return action.CompleteNavigation();
             }
+            return false;
         }
 
         public void CompleteConsumption()

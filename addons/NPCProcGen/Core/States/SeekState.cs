@@ -85,9 +85,10 @@ namespace NPCProcGen.Core.States
             return _seekPosition;
         }
 
-        public void OnNavigationComplete()
+        public bool OnNavigationComplete()
         {
             _isMoving = false;
+            return true;
         }
 
         public void OnActorDetected(ActorTag2D actor)
