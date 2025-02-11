@@ -51,7 +51,14 @@ namespace NPCProcGen.Core.Actions
                 _searchState = new(_owner, ActionTypeValue, _targetActor, targetLastPosition.Value);
                 _searchState.CompleteState += isTargetFound =>
                 {
-                    TransitionTo(isTargetFound ? _engageState : _wanderState);
+                    if (isTargetFound)
+                    {
+                        TransitionTo(_targetActor.Sensor.IsActorBusy() ? _waitState : _engageState);
+                    }
+                    else
+                    {
+                        TransitionTo(_wanderState);
+                    }
                 };
             }
             _engageState = new(_owner, ActionTypeValue, _targetActor, Waypoint.Lateral);
@@ -123,7 +130,14 @@ namespace NPCProcGen.Core.Actions
                 _searchState = new(_owner, ActionTypeValue, _targetActor, targetLastPosition.Value);
                 _searchState.CompleteState += isTargetFound =>
                 {
-                    TransitionTo(isTargetFound ? _engageState : _wanderState);
+                    if (isTargetFound)
+                    {
+                        TransitionTo(_targetActor.Sensor.IsActorBusy() ? _waitState : _engageState);
+                    }
+                    else
+                    {
+                        TransitionTo(_wanderState);
+                    }
                 };
             }
 

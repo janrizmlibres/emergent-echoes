@@ -34,7 +34,7 @@ project/assembly_name="EmergentEchoes"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/NPCProcGen/plugin.cfg", "res://addons/beehave/plugin.cfg")
+enabled=PackedStringArray("res://addons/beehave/plugin.cfg")
 
 [input]
 

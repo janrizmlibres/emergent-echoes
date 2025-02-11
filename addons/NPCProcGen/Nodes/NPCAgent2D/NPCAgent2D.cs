@@ -283,9 +283,9 @@ namespace NPCProcGen
         private void OnEvaluationTimerTimeout()
         {
             BaseAction action = Strategizer.EvaluateActionStub(
-                typeof(SurvivalTrait),
-                typeof(SocializeAction),
-                ResourceType.Companionship
+                typeof(ThiefTrait),
+                typeof(TheftAction),
+                ResourceType.Money
             );
 
             if (action != null)

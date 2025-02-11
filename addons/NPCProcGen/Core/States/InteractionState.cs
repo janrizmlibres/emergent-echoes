@@ -41,7 +41,8 @@ namespace NPCProcGen.Core.States
             CommonUtils.EmitSignal(
                 _owner,
                 NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue)
+                Variant.From(ActionStateValue),
+                new Array<Variant>()
             );
         }
     }

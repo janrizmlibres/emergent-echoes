@@ -42,11 +42,6 @@ namespace NPCProcGen.Core.Actions
                 Variant.From(ActionTypeValue)
             );
 
-            SetStartingState();
-        }
-
-        private void SetStartingState()
-        {
             if (_owner.IsAnyActorInRange())
             {
                 ActorTag2D target = _owner.GetRandomActorInRange();
