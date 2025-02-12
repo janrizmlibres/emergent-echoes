@@ -17,24 +17,11 @@ namespace EmergentEchoes.Entities.UI.HUD.Inventory
 		{
 			Array<Node> slots = GetNode<HBoxContainer>("SlotContainer").GetChildren();
 
-			foreach (Node child in slots)
+			foreach (InventorySlot child in slots.Cast<InventorySlot>())
 			{
-				if (child is not InventorySlot inSlot)
-				{
-					GD.PrintErr($"Child node {child.Name} is not an InventorySlot node, it is of type {child.GetType()}");
-					throw new InvalidCastException();
-				}
-
-				_slots.Add(inSlot);
-
-				// if (child.HasMethod("SetItem"))
-				// {
-				// 	child.SetItem(null);
-				// 	child.InventoryWindow = this;
-				// }
-
-				// child.SetItem(null);
-				// child.InventoryWindow = this;
+				_slots.Add(child);
+				child.SetItem(null);
+				child.InventoryWindow = this;
 			}
 
 			_selectedSlot = 0;

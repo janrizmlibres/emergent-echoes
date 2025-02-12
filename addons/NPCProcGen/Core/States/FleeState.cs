@@ -10,10 +10,12 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public class FleeState : BaseState, INavigationState
     {
-        private static readonly float _minDistance = 200;
-        private static readonly float _maxDistance = 400;
+        public const ActionState ActionStateValue = ActionState.Flee;
 
-        private Vector2 _target;
+        private const float MinDistance = 200;
+        private const float MaxDistance = 400;
+
+        private Vector2 _fleePosition;
 
         /// <summary>
         /// Event triggered when the state is completed.
@@ -24,7 +26,7 @@ namespace NPCProcGen.Core.States
         /// Initializes a new instance of the <see cref="FleeState"/> class.
         /// </summary>
         /// <param name="owner">The NPC agent owning this state.</param>
-        public FleeState(NPCAgent2D owner) : base(owner) { }
+        public FleeState(NPCAgent2D owner, ActionType action) : base(owner, action) { }
 
         /// <summary>
         /// Called when the state is entered.
@@ -32,9 +34,20 @@ namespace NPCProcGen.Core.States
         public override void Enter()
         {
             GD.Print($"{_owner.Parent.Name} FleeState Enter");
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Flee));
-            _target = CommonUtils.GetRandomPosInCircularArea(_owner.Parent.GlobalPosition, _maxDistance, _minDistance);
+            _fleePosition = CommonUtils.GetRandomPosInCircularArea(
+                _owner.Parent.GlobalPosition,
+                MaxDistance,
+                MinDistance
+            );
+
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
+            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateEntered,
+                Variant.From(ActionStateValue)
+            );
         }
 
         /// <summary>
@@ -42,8 +55,12 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Exit()
         {
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Flee));
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateExited,
+                Variant.From(ActionStateValue)
+            );
         }
 
         /// <summary>
@@ -61,7 +78,7 @@ namespace NPCProcGen.Core.States
         /// <returns>The target position.</returns>
         public Vector2 GetTargetPosition()
         {
-            return _target;
+            return _fleePosition;
         }
 
         private void OnNavigationComplete()

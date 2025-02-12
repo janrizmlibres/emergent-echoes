@@ -1,4 +1,4 @@
-[gd_resource type="AnimationNodeStateMachine" load_steps=15 format=3 uid="uid://b62bmdqoidi0v"]
+[gd_resource type="AnimationNodeStateMachine" load_steps=15 format=3 uid="uid://bluo3agl14ob3"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_klc7v"]
 animation = &"eat_left"

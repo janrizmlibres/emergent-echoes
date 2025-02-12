@@ -1,31 +1,54 @@
+using System.Linq;
 using EmergentEchoes.Utilities;
+using EmergentEchoes.Utilities.Game;
+using EmergentEchoes.Utilities.Game.Enums;
 using Godot;
+using Godot.Collections;
+using NPCProcGen;
+using NPCProcGen.Core.Components.Enums;
 
 namespace EmergentEchoes.Entities.Actors
 {
 	public partial class Player : CharacterBody2D
 	{
+		public enum State { Active, Dormant }
+
 		[Export] private int MaxSpeed { get; set; } = 80;
 		[Export] private int Acceleration { get; set; } = 10;
 		[Export] private int Friction { get; set; } = 10;
 
+		private State _state = State.Active;
+
 		private AnimationTree _animationTree;
 		private AnimationNodeStateMachinePlayback _animationState;
-
-		// ! Remove after testing
-		private Area2D _floatTextClicker;
+		private ActorTag2D _actorTag2D;
+		private EmoteController _emoteController;
 
 		public override void _Ready()
 		{
 			_animationTree = GetNode<AnimationTree>("AnimationTree");
 			_animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
+			_actorTag2D = GetNode<ActorTag2D>("ActorTag2D");
+			_emoteController = GetNode<EmoteController>("EmoteController");
 
-			// ! Remove after testing
-			_floatTextClicker = GetNode<Area2D>("FloatTextClicker");
-			_floatTextClicker.InputEvent += OnFloatTextClickerInputEvent;
+			_actorTag2D.InteractionStarted += OnInteractionStarted;
+			_actorTag2D.InteractionEnded += OnInteractionEnded;
 		}
 
 		public override void _PhysicsProcess(double delta)
+		{
+			switch (_state)
+			{
+				case State.Active:
+					HandleActiveState();
+					break;
+				case State.Dormant:
+					StopMoving();
+					break;
+			}
+		}
+
+		private void HandleActiveState()
 		{
 			Vector2 inputVector = Input.GetVector("left", "right", "up", "down");
 
@@ -33,34 +56,71 @@ namespace EmergentEchoes.Entities.Actors
 			{
 				_animationTree.Set("parameters/Idle/blend_position", inputVector.X);
 				_animationTree.Set("parameters/Move/blend_position", inputVector.X);
-				Move(inputVector);
+				MovePlayer(inputVector);
 			}
 			else if (inputVector.Y != 0)
 			{
-				Move(inputVector);
+				MovePlayer(inputVector);
 			}
 			else
 			{
 				_animationState.Travel("Idle");
-				Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
+				StopMoving();
 			}
 
 			MoveAndSlide();
 		}
 
-		private void Move(Vector2 inputVector)
+		private void StopMoving()
+		{
+			Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
+		}
+
+		private void MovePlayer(Vector2 inputVector)
 		{
 			_animationState.Travel("Move");
 			Velocity = Velocity.MoveToward(inputVector * MaxSpeed, Acceleration);
 		}
 
-		// ! Remove after testing
-		private void OnFloatTextClickerInputEvent(Node viewport, InputEvent @event, long shapeIdx)
+		private void OnInteractionStarted(Variant state, Array<Variant> data)
 		{
-			if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed)
+			InteractState actionState = state.As<InteractState>();
+
+			if (actionState == InteractState.Petition)
 			{
-				FloatTextManager.ShowFloatText(this, "-12");
+				_actorTag2D.AnswerPetition(true);
 			}
+
+			Node2D partner = data[0].As<Node2D>();
+			Vector2 directionToFace = GlobalPosition.DirectionTo(partner.GlobalPosition);
+
+			_animationTree.Set("parameters/Idle/blend_position", directionToFace.X);
+			_animationState.Travel("Idle");
+
+			_state = State.Dormant;
+			_emoteController.Activate();
+		}
+		
+		private void OnInteractionStartedOnNPCAlt(string state, Node2D npc)
+		{
+			if (state == "petitioning")
+			{
+				_emoteController.ShowEmoteBubble(0);
+				npc.GetNode("Blackboard").Call("set_value", "current_state", "petition answered");
+			}
+
+			Vector2 directionToFace = GlobalPosition.DirectionTo(npc.GlobalPosition);
+
+			_animationTree.Set("parameters/Idle/blend_position", directionToFace.X);
+			_animationState.Travel("Idle");
+
+			_state = State.Dormant;
+		}
+		
+		private void OnInteractionEnded()
+		{
+			_state = State.Active;
+			_emoteController.Deactivate();
 		}
 	}
 }

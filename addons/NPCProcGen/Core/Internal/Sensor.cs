@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using NPCProcGen.Autoloads;
+using NPCProcGen.Core.Components.Enums;
 
 namespace NPCProcGen.Core.Internal
 {
@@ -12,23 +14,76 @@ namespace NPCProcGen.Core.Internal
         /// <summary>
         /// The world state instance.
         /// </summary>
-        private readonly WorldState _worldState;
+        private static readonly WorldState _worldState = new();
+        private readonly ActorTag2D _owner;
 
-        /// <summary>
-        /// Initializes a new instance of the Sensor class.
-        /// </summary>
-        public Sensor()
+        public Sensor(ActorTag2D owner)
         {
-            _worldState = WorldState.Instance;
+            _owner = owner;
+        }
+
+        public static void InitializeWorldState(List<ActorTag2D> actors)
+        {
+            _worldState.Initialize(actors);
         }
 
         /// <summary>
         /// Retrieves the list of actors from the world state.
         /// </summary>
         /// <returns>A read-only list of actors.</returns>
-        public IReadOnlyList<ActorTag2D> GetActors()
+        public List<ActorTag2D> GetActors()
         {
             return _worldState.Actors;
+        }
+
+        public Tuple<ActionType, ActionState> GetTaskRecord()
+        {
+            return _worldState.GetTaskRecord(_owner);
+        }
+
+        public ActionType? GetTaskActionType()
+        {
+            return _worldState.GetTaskRecord(_owner)?.Item1;
+        }
+
+        public ActionState? GetTaskActionState()
+        {
+            return _worldState.GetTaskRecord(_owner)?.Item2;
+        }
+
+        public void SetTaskRecord(ActionType actionType, ActionState actionState)
+        {
+            _worldState.SetTaskRecord(_owner, actionType, actionState);
+        }
+
+        public void ClearTaskRecord()
+        {
+            _worldState.ResetTaskRecord(_owner);
+        }
+
+        public bool IsActorBusy()
+        {
+            return _worldState.IsActorBusy(_owner);
+        }
+
+        public bool IsActorPetitioning()
+        {
+            return _worldState.GetTaskRecord(_owner)?.Item1 == ActionType.Petition;
+        }
+
+        public ResourceType? GetPetitionResourceType()
+        {
+            return _worldState.GetPetitionResourceType(_owner);
+        }
+
+        public void SetPetitionResourceType(ResourceType type)
+        {
+            _worldState.SetPetitionResourceType(_owner, type);
+        }
+
+        public void ClearPetitionResourceType()
+        {
+            _worldState.ClearPetitionResourceType(_owner);
         }
     }
 }

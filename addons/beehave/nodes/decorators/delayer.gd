@@ -46,4 +46,3 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 			blackboard.set_value(cache_key, 0.0, str(actor.get_instance_id()))
 	
 	return response
-
