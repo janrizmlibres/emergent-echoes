@@ -1,212 +1,342 @@
 using Godot;
-using System;
 using Godot.Collections;
 using NPCProcGen;
 using NPCProcGen.Core.Components.Enums;
+using System.Linq;
+using EmergentEchoes.Utilities.Game.Enums;
+using EmergentEchoes.Utilities.Game;
 using EmergentEchoes.Utilities;
-using EmergentEchoes.Utilities.Enums;
-using NPCProcGen.Core.Components.Variants;
 
 namespace EmergentEchoes.Entities.Actors
 {
-	public partial class NPC : CharacterBody2D
-	{
-		[Export]
-		public int MaxSpeed { get; set; } = 60;
-		[Export]
-		public int Acceleration { get; set; } = 4;
-		[Export]
-		public int Friction { get; set; } = 4;
+    public partial class NPC : CharacterBody2D
+    {
+        private enum MainState { Idle, Wander, Procedural, Eat }
 
-		private enum State { Idle, Wander }
+        private const float MinInterval = 1;
+        private const float MaxInterval = 3;
 
-		private Timer _stateTimer;
-		private NavigationAgent2D _navigationAgent2d;
-		private AnimationTree _animationTree;
-		private AnimationNodeStateMachinePlayback _animationState;
-		private NPCAgent2D _npcAgent2d;
-		private TileMapLayer _tileMapLayer;
+        [Export]
+        public int MaxSpeed { get; set; } = 40;
+        [Export]
+        public int Acceleration { get; set; } = 8;
+        [Export]
+        public int Friction { get; set; } = 4;
 
-		// private State _state = State.Idle;
-		private readonly Array<Vector2I> _validTilePositions = new();
+        private MainState _mainState = MainState.Idle;
 
-		public override void _Ready()
-		{
-			if (Engine.IsEditorHint()) return;
+        private readonly Array<Vector2I> _validTilePositions = new();
 
-			// _stateTimer = GetNode<Timer>("StateTimer");
-			_navigationAgent2d = GetNode<NavigationAgent2D>("NavigationAgent2D");
-			_animationTree = GetNode<AnimationTree>("AnimationTree");
-			_animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
-			_npcAgent2d = GetNode<NPCAgent2D>("NPCAgent2D");
+        private Timer _stateTimer;
 
-			// _stateTimer.Timeout += OnNavigationFinished;
-			// _stateTimer.OneShot = true;
-			// _stateTimer.Start(GD.RandRange(1.0, 3.0));
+        private TileMapLayer _tileMapLayer;
+        private AnimationTree _animationTree;
+        private AnimationNodeStateMachinePlayback _animationState;
+        private NavigationAgent2D _navigationAgent2d;
+        private NPCAgent2D _npcAgent2d;
 
-			_navigationAgent2d.NavigationFinished += OnNavigationFinished;
-			_navigationAgent2d.VelocityComputed += OnNavigationAgentVelocityComputed;
+        private EmoteController _emoteController;
+        private FloatTextController _floatTextController;
 
-			_npcAgent2d.ExecutionStarted += OnExecutionStarted;
-			_npcAgent2d.ActionStateEntered += OnActionStateEntered;
-			_npcAgent2d.TheftCompleted += OnTheftCompleted;
+        public override void _Ready()
+        {
+            if (Engine.IsEditorHint()) return;
 
-			_tileMapLayer = GetNode<TileMapLayer>("%TileMapLayer");
+            _stateTimer = new Timer()
+            {
+                WaitTime = GD.RandRange(MinInterval, MaxInterval),
+                OneShot = true,
+                Autostart = true
+            };
 
-			SetupTilePositions();
-		}
+            _stateTimer.Timeout += RandomizeMainState;
+            AddChild(_stateTimer);
 
-		public override void _PhysicsProcess(double delta)
-		{
-			if (Engine.IsEditorHint()) return;
+            _tileMapLayer = GetNode<TileMapLayer>("%TileMapLayer");
 
-			if (_npcAgent2d.IsActive())
-			{
-				_navigationAgent2d.TargetPosition = _npcAgent2d.TargetPosition;
-			}
+            _animationTree = GetNode<AnimationTree>("AnimationTree");
+            _animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
+            _navigationAgent2d = GetNode<NavigationAgent2D>("NavigationAgent2D");
+            _npcAgent2d = GetNode<NPCAgent2D>("NPCAgent2D");
 
-			if (_navigationAgent2d.IsNavigationFinished())
-			{
-				_navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
-				return;
-			}
+            _emoteController = GetNode<EmoteController>("EmoteController");
+            _floatTextController = GetNode<FloatTextController>("FloatTextController");
 
-			Vector2 destination = _navigationAgent2d.GetNextPathPosition();
-			Vector2 direction = GlobalPosition.DirectionTo(destination);
-			_navigationAgent2d.Velocity = Velocity.MoveToward(direction * MaxSpeed, Acceleration);
+            _animationTree.AnimationFinished += OnAnimationFinished;
+            _navigationAgent2d.VelocityComputed += OnNavigationAgentVelocityComputed;
 
-			HandleAnimation();
-			MoveAndSlide();
+            _npcAgent2d.ExecutionStarted += OnExecutionStarted;
+            _npcAgent2d.ExecutionEnded += OnExecutionEnded;
+            _npcAgent2d.InteractionStarted += OnInteractionStarted;
+            _npcAgent2d.InteractionEnded += OnInteractionEnded;
+            _npcAgent2d.ActionStateEntered += OnActionStateEntered;
+            _npcAgent2d.ActionStateExited += OnActionStateExited;
 
-			// if (_state == State.Idle)
-			// {
-			//     IdleState();
-			// }
-			// else if (_state == State.Wander)
-			// {
-			//     MoveCharacter();
-			// }
-		}
+            SetupTilePositions();
+        }
 
-		private void SetupTilePositions()
-		{
-			Array<Vector2I> usedCells = _tileMapLayer.GetUsedCells();
+        public override void _PhysicsProcess(double delta)
+        {
+            if (Engine.IsEditorHint()) return;
 
-			foreach (Vector2I cell in usedCells)
-			{
-				TileData tileData = _tileMapLayer.GetCellTileData(cell);
+            switch (_mainState)
+            {
+                case MainState.Idle:
+                    StopMoving();
+                    break;
+                case MainState.Wander:
+                    HandleWanderState();
+                    break;
+                case MainState.Procedural:
+                    HandleProceduralState();
+                    break;
+                case MainState.Eat:
+                    _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
+                    _animationState.Travel("Eat");
+                    break;
+            }
 
-				if (tileData != null && (bool)tileData.GetCustomData("isNavigatable"))
-				{
-					_validTilePositions.Add(cell);
-				}
-			}
-		}
+            MoveAndSlide();
+        }
 
-		private void HandleAnimation()
-		{
-			if (Velocity.X != 0)
-			{
-				_animationTree.Set("parameters/Idle/blend_position", Velocity.X);
-				_animationTree.Set("parameters/Move/blend_position", Velocity.X);
-				_animationState.Travel("Move");
-			}
-			else if (Velocity.Y != 0)
-			{
-				_animationState.Travel("Move");
-			}
-			else
-			{
-				_animationState.Travel("Idle");
-			}
-		}
+        private void ShowFloatText(ResourceType resType, string text)
+        {
+            _floatTextController.ShowFloatText(resType, text);
+        }
 
-		private void IdleState()
-		{
-			_navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
-		}
+        private void HandleWanderState()
+        {
+            if (_navigationAgent2d.IsNavigationFinished())
+            {
+                RandomizeMainState();
+                return;
+            }
 
-		private void MoveCharacter()
-		{
-			if (_navigationAgent2d.IsNavigationFinished())
-			{
-				_navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
-			}
+            MoveCharacter();
+        }
 
-			Vector2 destination = _navigationAgent2d.GetNextPathPosition();
-			Vector2 direction = GlobalPosition.DirectionTo(destination);
-			_navigationAgent2d.Velocity = Velocity.MoveToward(direction * MaxSpeed, Acceleration);
-		}
+        private void HandleProceduralState()
+        {
+            _navigationAgent2d.TargetPosition = _npcAgent2d.TargetPosition;
 
-		private static State RandomizeState()
-		{
-			System.Array values = Enum.GetValues(typeof(State));
-			int randomIdx = GD.RandRange(0, values.Length - 1);
-			return ((State[])values)[randomIdx];
-		}
+            if (_navigationAgent2d.IsNavigationFinished())
+            {
+                _npcAgent2d.CompleteNavigation();
+                StopMoving();
+                return;
+            }
 
-		private Vector2 PickTargetPosition()
-		{
-			if (_validTilePositions.Count > 0)
-			{
-				int randomIdx = (int)(GD.Randi() % _validTilePositions.Count);
-				Vector2I chosenCell = _validTilePositions[randomIdx];
-				return _tileMapLayer.MapToLocal(chosenCell);
-			}
+            MoveCharacter();
+        }
 
-			return Vector2.Zero;
-		}
+        private void StopMoving()
+        {
+            _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
+            _animationState.Travel("Idle");
+        }
 
-		private void OnNavigationAgentVelocityComputed(Vector2 safeVelocity)
-		{
-			Velocity = safeVelocity;
-		}
+        private void MoveCharacter()
+        {
+            Vector2 destination = _navigationAgent2d.GetNextPathPosition();
+            Vector2 direction = GlobalPosition.DirectionTo(destination);
+            _navigationAgent2d.Velocity = Velocity.MoveToward(direction * MaxSpeed, Acceleration);
 
-		private void OnNavigationFinished()
-		{
-			_npcAgent2d.CompleteNavigation();
-			ChangeState();
-		}
+            HandleAnimation();
+        }
 
-		private void ChangeState()
-		{
-			// _state = RandomizeState();
+        private void HandleAnimation()
+        {
+            if (Velocity.X != 0)
+            {
+                _animationTree.Set("parameters/Idle/blend_position", Velocity.X);
+                _animationTree.Set("parameters/Move/blend_position", Velocity.X);
+            }
 
-			// switch (_state)
-			// {
-			//     case State.Idle:
-			//         _stateTimer.Start(GD.RandRange(1.0, 3.0));
-			//         break;
-			//     case State.Wander:
-			//         Vector2 wanderTarget = PickTargetPosition();
-			//         _navigationAgent2d.TargetPosition = wanderTarget;
-			//         break;
-			// }
-		}
+            _animationState.Travel("Move");
+        }
 
-		private void OnExecutionStarted(Variant action)
-		{
-			ActionType actionType = action.As<ActionType>();
+        private void RandomizeMainState()
+        {
+            _mainState = CoreHelpers.ShuffleEnum<MainState>().Where((x) =>
+                x != MainState.Procedural && x != MainState.Eat
+            ).First();
 
-			if (actionType == ActionType.Theft)
-			{
-				EmoteManager.ShowEmoteBubble(this, Emote.Hum);
-			}
-		}
+            switch (_mainState)
+            {
+                case MainState.Idle:
+                    _stateTimer.Start(GD.RandRange(MinInterval, MaxInterval));
+                    break;
+                case MainState.Wander:
+                    Vector2 wanderTarget = PickTargetPosition();
+                    _navigationAgent2d.TargetPosition = wanderTarget;
+                    break;
+            }
+        }
 
-		private void OnActionStateEntered(Variant state)
-		{
-			ActionState actionState = state.As<ActionState>();
+        private void SetupTilePositions()
+        {
+            Array<Vector2I> usedCells = _tileMapLayer.GetUsedCells();
 
-			if (actionState == ActionState.Steal)
-			{
-				EmoteManager.ShowEmoteBubble(this, Emote.Mark);
-			}
-		}
+            foreach (Vector2I cell in usedCells)
+            {
+                TileData tileData = _tileMapLayer.GetCellTileData(cell);
 
-		private void OnTheftCompleted(TheftData theftData)
-		{
-			FloatTextManager.ShowFloatText(this, theftData.Amount.ToString());
-		}
-	}
+                if (tileData != null && (bool)tileData.GetCustomData("isNavigatable"))
+                {
+                    _validTilePositions.Add(cell);
+                }
+            }
+        }
+
+        private Vector2 PickTargetPosition()
+        {
+            if (_validTilePositions.Count > 0)
+            {
+                int randomIdx = (int)(GD.Randi() % _validTilePositions.Count);
+                Vector2I chosenCell = _validTilePositions[randomIdx];
+                return _tileMapLayer.MapToLocal(chosenCell);
+            }
+
+            return Vector2.Zero;
+        }
+
+        private void OnAnimationFinished(StringName animName)
+        {
+            if (animName.ToString().Contains("eat"))
+            {
+                _npcAgent2d.CompleteConsumption();
+            }
+        }
+
+        private void OnNavigationAgentVelocityComputed(Vector2 safeVelocity)
+        {
+            Velocity = safeVelocity;
+        }
+
+        private void OnExecutionStarted(Variant action)
+        {
+            ActionType actionType = action.As<ActionType>();
+
+            _mainState = MainState.Procedural;
+            _stateTimer.Stop();
+
+            if (actionType == ActionType.Theft)
+            {
+                _emoteController.ShowEmoteBubble(Emote.Hum);
+            }
+            else if (actionType == ActionType.Eat)
+            {
+                _mainState = MainState.Eat;
+            }
+        }
+
+        private void OnExecutionEnded()
+        {
+            RandomizeMainState();
+        }
+
+        private void OnInteractionStarted(Variant state, Array<Variant> data)
+        {
+            _stateTimer.Stop();
+
+            Node2D partner = data[0].As<Node2D>();
+            FacePartner(partner);
+        }
+
+        private void OnInteractionEnded()
+        {
+            _mainState = MainState.Procedural;
+            _emoteController.Deactivate();
+        }
+
+        private void OnActionStateEntered(Variant state, Array<Variant> data)
+        {
+            ActionState actionState = state.As<ActionState>();
+
+            if (actionState == ActionState.Talk || actionState == ActionState.Petition)
+            {
+                Node2D partner = data[0].As<Node2D>();
+                FacePartner(partner);
+            }
+        }
+
+        private void OnActionStateExited(Variant state, Array<Variant> data)
+        {
+            ActionState actionState = state.As<ActionState>();
+
+            if (actionState == ActionState.Steal)
+            {
+                float amountStolen = data[1].As<float>();
+                _floatTextController.ShowFloatText(ResourceType.Money, amountStolen.ToString(), false);
+            }
+            else if (actionState == ActionState.Talk || actionState == ActionState.Petition)
+            {
+                _mainState = MainState.Procedural;
+                _emoteController.Deactivate();
+            }
+            else if (actionState == ActionState.Wander)
+            {
+                bool durationReached = data[0].As<bool>();
+
+                if (durationReached)
+                {
+                    _emoteController.ShowEmoteBubble(Emote.Ellipsis);
+                }
+            }
+            else if (actionState == ActionState.Eat)
+            {
+                int satiationIncrease = data[0].As<int>();
+                _floatTextController.ShowFloatText(
+                    ResourceType.Satiation,
+                    satiationIncrease.ToString()
+                );
+            }
+
+            if (actionState == ActionState.Petition)
+            {
+                bool isAccepted = data[0].As<bool>();
+
+                if (isAccepted)
+                {
+                    ResourceType type = data[2].As<ResourceType>();
+                    int amountPetitioned = data[3].As<int>();
+                    _floatTextController.ShowFloatText(type, amountPetitioned.ToString());
+                }
+                else
+                {
+                    int companionshipChange = data[4].As<int>();
+                    _floatTextController.ShowFloatText(
+                        ResourceType.Companionship,
+                        companionshipChange.ToString()
+                    );
+                }
+            }
+            else if (actionState == ActionState.Talk)
+            {
+                Node2D partner = data[0].As<Node2D>();
+
+                if (partner is not NPC) return;
+
+                float companionshipIncrease = data[1].As<float>();
+                NPC npc = partner as NPC;
+
+                npc.ShowFloatText(ResourceType.Companionship, companionshipIncrease.ToString());
+                _floatTextController.ShowFloatText(
+                    ResourceType.Companionship,
+                    companionshipIncrease.ToString()
+                );
+            }
+        }
+
+        private void FacePartner(Node2D partner)
+        {
+            Vector2 directionToFace = GlobalPosition.DirectionTo(partner.GlobalPosition);
+
+            _animationTree.Set("parameters/Idle/blend_position", directionToFace.X);
+            _animationState.Travel("Idle");
+
+            _mainState = MainState.Idle;
+            _emoteController.Activate();
+        }
+    }
 }

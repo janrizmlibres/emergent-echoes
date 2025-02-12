@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dgbo1efdlkji0"]
-
-[ext_resource type="Script" path="res://Utilities/Game Components/Interactable.cs" id="1_1dynv"]
-
-[node name="Interactable" type="Area2D"]
-collision_layer = 2
-collision_mask = 0
-script = ExtResource("1_1dynv")

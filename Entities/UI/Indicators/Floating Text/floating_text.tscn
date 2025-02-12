@@ -1,29 +1,23 @@
-[gd_scene load_steps=5 format=3 uid="uid://d077ssc0c3wto"]
+[gd_scene load_steps=4 format=3 uid="uid://d077ssc0c3wto"]
 
-[ext_resource type="Texture2D" uid="uid://ctb5b3ex5i2t1" path="res://Entities/UI/Indicators/Floating Text/Art/coin.png" id="1_53a03"]
 [ext_resource type="Script" path="res://Entities/UI/Indicators/Floating Text/FloatingText.cs" id="1_rdrfv"]
-[ext_resource type="FontFile" uid="uid://cvj72gjhqsumb" path="res://Assets/Fonts/floating_font.ttf" id="2_8npxg"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_bwy8v"]
-font = ExtResource("2_8npxg")
-font_size = 10
-font_color = Color(1, 0.341176, 0.298039, 1)
+[ext_resource type="Texture2D" uid="uid://c3nnr45q4uwt5" path="res://Entities/UI/Indicators/Floating Text/Data/team_compressed_texture_2d.tres" id="2_sbf0e"]
+[ext_resource type="LabelSettings" uid="uid://c84y7knhdw36u" path="res://Entities/UI/Indicators/Floating Text/Data/normal_float_text_label_settings.tres" id="3_qex6n"]
 
 [node name="FloatingText" type="HBoxContainer"]
 texture_filter = 1
 offset_right = 47.0
 offset_bottom = 16.0
 scale = Vector2(0.5, 0.5)
-theme_override_constants/separation = 0
 script = ExtResource("1_rdrfv")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 2
-texture = ExtResource("1_53a03")
+texture = ExtResource("2_sbf0e")
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
 text = "-12"
-label_settings = SubResource("LabelSettings_bwy8v")
+label_settings = ExtResource("3_qex6n")
 vertical_alignment = 1

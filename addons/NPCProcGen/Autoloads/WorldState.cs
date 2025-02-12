@@ -1,6 +1,9 @@
 using Godot;
+using NPCProcGen.Core.Components;
+using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Components.Records;
 using NPCProcGen.Core.Events;
+using NPCProcGen.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,19 +15,27 @@ namespace NPCProcGen.Autoloads
 	/// </summary>
 	public partial class WorldState : Node
 	{
-		private static readonly Lazy<WorldState> _instance = new(() => new WorldState());
+		public WorldState()
+		{
+			DebugTool.Assert(!_isInstantiated, "WorldState has already been instantiated");
+			_isInstantiated = true;
+		}
 
-		/// <summary>
-		/// Gets the singleton instance of the WorldState.
-		/// </summary>
-		public static WorldState Instance { get { return _instance.Value; } }
-
-		private WorldState() { }
+		~WorldState()
+		{
+			_isInstantiated = false;
+		}
 
 		/// <summary>
 		/// Gets the list of actors in the world.
 		/// </summary>
-		public IReadOnlyList<ActorTag2D> Actors { get; private set; }
+		public List<ActorTag2D> Actors => _actors.ToList();
+
+		private bool _isInstantiated = false;
+
+		private List<ActorTag2D> _actors;
+
+		private readonly Dictionary<ActorTag2D, ActorState> _actorState = new();
 
 		/// <summary>
 		/// List of structures in the world.
@@ -39,20 +50,15 @@ namespace NPCProcGen.Autoloads
 		/// <summary>
 		/// Crimes that are publicly known and not yet solved.
 		/// </summary>
-		private readonly List<Crime> _unsolvedCrimes = new();
+		private readonly Queue<Event> _unsolvedCrimes = new();
 
 		/// <summary>
 		/// Solved crimes and who apprehended the criminal.
 		/// </summary>
 		private readonly List<Crime> _solvedCrimes = new();
 
-		/// <summary>
-		/// Tasks that are delegated to which individuals.
-		/// </summary>
-		private readonly List<Event> _taskRecords = new();
-
-		// Workplaces and who they belong to (Possibly _structures)
-		// Current date (?)
+		// ? Workplaces and who they belong to (Possibly _structures)
+		// ? Current date (?)
 
 		// TODO: Consider limiting access to data
 
@@ -62,15 +68,56 @@ namespace NPCProcGen.Autoloads
 		/// <param name="actors">The list of actors to initialize.</param>
 		public void Initialize(List<ActorTag2D> actors)
 		{
-			Actors = actors;
+			_actors = actors;
 
 			foreach (ActorTag2D actor in actors)
 			{
-				if (actor is NPCAgent2D npc)
-				{
-					npc.Initialize(actors.Where(a => npc != a).ToList());
-				}
+				actor.Initialize(actors.Where(a => actor != a).ToList());
+				_actorState.Add(actor, new ActorState());
 			}
+		}
+
+		public Tuple<ActionType, ActionState> GetTaskRecord(ActorTag2D actor)
+		{
+			DebugTool.Assert(_actorState.ContainsKey(actor), "Actor does not have an action record");
+			return _actorState[actor].CurrentTask ?? null;
+		}
+
+		public void SetTaskRecord(ActorTag2D actor, ActionType actionType, ActionState actionState)
+		{
+			DebugTool.Assert(_actorState.ContainsKey(actor), "Actor does not have an action record");
+			_actorState[actor].CurrentTask = new Tuple<ActionType, ActionState>(actionType, actionState);
+		}
+
+		public void ResetTaskRecord(ActorTag2D actor)
+		{
+			DebugTool.Assert(_actorState.ContainsKey(actor), "Actor does not have an action record");
+			_actorState[actor].CurrentTask = null;
+		}
+
+		public bool IsActorBusy(ActorTag2D actor)
+		{
+			Tuple<ActionType, ActionState> action = GetTaskRecord(actor);
+			if (action == null) return false;
+			return action.Item2 == ActionState.Talk || action.Item2 == ActionState.Petition;
+		}
+
+		public ResourceType? GetPetitionResourceType(ActorTag2D actor)
+		{
+			DebugTool.Assert(_actorState.ContainsKey(actor), "Actor does not have an action record");
+			return _actorState[actor].CurrentPetitionResourceType;
+		}
+
+		public void SetPetitionResourceType(ActorTag2D actor, ResourceType type)
+		{
+			DebugTool.Assert(_actorState.ContainsKey(actor), "Actor does not have an action record");
+			_actorState[actor].CurrentPetitionResourceType = type;
+		}
+
+		public void ClearPetitionResourceType(ActorTag2D actor)
+		{
+			DebugTool.Assert(_actorState.ContainsKey(actor), "Actor does not have an action record");
+			_actorState[actor].CurrentPetitionResourceType = null;
 		}
 	}
 }

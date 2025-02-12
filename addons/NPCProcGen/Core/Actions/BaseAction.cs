@@ -49,11 +49,14 @@ namespace NPCProcGen.Core.Actions
         /// Completes the current action.
         /// </summary>
         /// <param name="actionType">The type of action that was completed.</param>
-        protected void CompleteAction(ActionType actionType)
+        protected void CompleteAction()
         {
             TransitionTo(null);
             ActionComplete?.Invoke();
-            _owner.EmitSignal(NPCAgent2D.SignalName.ExecutionEnded, Variant.From(actionType));
+            _owner.EmitSignal(NPCAgent2D.SignalName.ExecutionEnded);
+
+            _owner.Sensor.ClearTaskRecord();
+            _owner.Sensor.ClearPetitionResourceType();
         }
 
         /// <summary>

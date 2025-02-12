@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using Godot;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
@@ -9,36 +11,24 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public class MoveState : BaseState, INavigationState
     {
-        private readonly Node2D _target = null;
-        private Vector2? _targetPosition = null;
+        public const ActionState ActionStateValue = ActionState.Move;
+
+        private Vector2 _movePosition;
 
         /// <summary>
         /// Event triggered when the state is completed.
         /// </summary>
-        public event Action<bool> CompleteState;
+        public event Action CompleteState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MoveState"/> class with a target node.
         /// </summary>
         /// <param name="owner">The NPC agent owning this state.</param>
         /// <param name="target">The target node to move to.</param>
-        /// <param name="lastPos">The last known position of the target.</param>
-        public MoveState(NPCAgent2D owner, Node2D target, Vector2? lastPos = null)
-            : base(owner)
+        /// <param name="lastKnownPosition">The last known position of the target.</param>
+        public MoveState(NPCAgent2D owner, ActionType action, Vector2 movePosition) : base(owner, action)
         {
-            _target = target;
-            _targetPosition = lastPos;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MoveState"/> class with a target position.
-        /// </summary>
-        /// <param name="owner">The NPC agent owning this state.</param>
-        /// <param name="targetPosition">The target position to move to.</param>
-        public MoveState(NPCAgent2D owner, Vector2 targetPosition)
-            : base(owner)
-        {
-            _targetPosition = targetPosition;
+            _movePosition = movePosition;
         }
 
         /// <summary>
@@ -46,10 +36,17 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Enter()
         {
-            GD.Print($"{_owner.Parent.Name} MoveState Enter - Instance: {GetHashCode()}");
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateEntered, Variant.From(ActionState.Move));
+            GD.Print($"{_owner.Parent.Name} MoveState Enter");
+
             _owner.NotifManager.NavigationComplete += OnNavigationComplete;
-            _owner.NotifManager.ActorDetected += OnActorDetected;
+
+            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateEntered,
+                Variant.From(ActionStateValue)
+            );
         }
 
         /// <summary>
@@ -57,9 +54,13 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Exit()
         {
-            _owner.EmitSignal(NPCAgent2D.SignalName.ActionStateExited, Variant.From(ActionState.Move));
             _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
-            _owner.NotifManager.ActorDetected -= OnActorDetected;
+
+            CommonUtils.EmitSignal(
+                _owner,
+                NPCAgent2D.SignalName.ActionStateExited,
+                Variant.From(ActionStateValue)
+            );
         }
 
         /// <summary>
@@ -77,25 +78,12 @@ namespace NPCProcGen.Core.States
         /// <returns>The global position of the target.</returns>
         public Vector2 GetTargetPosition()
         {
-            return _targetPosition ?? _target.GlobalPosition;
+            return _movePosition;
         }
 
         private void OnNavigationComplete()
         {
-            OnCompleteState(false);
-        }
-
-        private void OnActorDetected(ActorTag2D target)
-        {
-            if (target.Parent == _target)
-            {
-                OnCompleteState(true);
-            }
-        }
-
-        private void OnCompleteState(bool isActorDetected)
-        {
-            CompleteState?.Invoke(isActorDetected);
+            CompleteState?.Invoke();
         }
     }
 }
