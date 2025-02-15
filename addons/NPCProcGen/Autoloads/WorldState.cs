@@ -1,8 +1,6 @@
 using Godot;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
-using NPCProcGen.Core.Components.Records;
-using NPCProcGen.Core.Events;
 using NPCProcGen.Core.Helpers;
 using System;
 using System.Collections.Generic;
@@ -36,26 +34,24 @@ namespace NPCProcGen.Autoloads
 		private List<ActorTag2D> _actors;
 
 		private readonly Dictionary<ActorTag2D, ActorState> _actorState = new();
+		private readonly Dictionary<NPCAgent2D, Crime> _investigations = new();
+
+		/// <summary>
+		/// Actions and interactions that have taken place and what actors performed them.
+		/// </summary>
+		private readonly List<string> _globalEvents = new();
+
+		/// <summary>
+		/// Crimes that are publicly known and not yet solved.
+		/// </summary>
+		private readonly Queue<Crime> _recordedCrimes = new();
+		private readonly List<Crime> _unsolvedCrimes = new();
+		private readonly List<Crime> _solvedCrimes = new();
 
 		/// <summary>
 		/// List of structures in the world.
 		/// </summary>
 		private readonly List<Node2D> _structures = new();
-
-		/// <summary>
-		/// Actions and interactions that have taken place and what actors performed them.
-		/// </summary>
-		private readonly List<Event> _globalEvents = new();
-
-		/// <summary>
-		/// Crimes that are publicly known and not yet solved.
-		/// </summary>
-		private readonly Queue<Event> _unsolvedCrimes = new();
-
-		/// <summary>
-		/// Solved crimes and who apprehended the criminal.
-		/// </summary>
-		private readonly List<Crime> _solvedCrimes = new();
 
 		// ? Workplaces and who they belong to (Possibly _structures)
 		// ? Current date (?)
@@ -105,7 +101,7 @@ namespace NPCProcGen.Autoloads
 
 			return state == ActionState.Talk || state == ActionState.Petition
 				|| state == ActionState.Interact || state == ActionState.Flee
-				|| state == ActionState.Eat;
+				|| state == ActionState.Eat || state == ActionState.Research;
 		}
 
 		public ResourceType? GetPetitionResourceType(ActorTag2D actor)
@@ -124,6 +120,51 @@ namespace NPCProcGen.Autoloads
 		{
 			DebugTool.Assert(_actorState.ContainsKey(actor), "Actor does not have an action record");
 			_actorState[actor].CurrentPetitionResourceType = null;
+		}
+
+		public bool HasCrimes()
+		{
+			return _recordedCrimes.Count > 0;
+		}
+
+		public void RecordCrime(Crime crime)
+		{
+			_recordedCrimes.Enqueue(crime);
+		}
+
+		public Crime InvestigateCrime(NPCAgent2D investigator)
+		{
+			if (_recordedCrimes.TryDequeue(out Crime crime))
+			{
+				crime.Investigator = investigator;
+				_investigations.Add(investigator, crime);
+				return crime;
+			}
+			return null;
+		}
+
+		public void CloseInvestigation(NPCAgent2D investigator)
+		{
+			DebugTool.Assert(
+				_investigations.ContainsKey(investigator),
+				"Investigator is not investigating a crime"
+			);
+
+			Crime crime = _investigations[investigator];
+			_investigations.Remove(investigator);
+			_unsolvedCrimes.Add(crime);
+		}
+
+		public void SolveInvestigation(NPCAgent2D investigator)
+		{
+			DebugTool.Assert(
+				_investigations.ContainsKey(investigator),
+				"Investigator is not investigating a crime"
+			);
+
+			Crime crime = _investigations[investigator];
+			_investigations.Remove(investigator);
+			_solvedCrimes.Add(crime);
 		}
 	}
 }
