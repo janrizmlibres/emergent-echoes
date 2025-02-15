@@ -10,6 +10,8 @@ namespace NPCProcGen.Core.Components.Enums
         Petition,
         Socialize,
         Interact,
+        Investigate,
+        Pursuit,
     }
 
     public enum ActionState
@@ -27,6 +29,9 @@ namespace NPCProcGen.Core.Components.Enums
         Petition,
         Talk,
         Interact,
+        Research,
+        Interrogate,
+        Capture
     }
 
     public enum InteractState
