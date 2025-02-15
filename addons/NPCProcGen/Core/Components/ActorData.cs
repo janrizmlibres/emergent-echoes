@@ -34,6 +34,20 @@ namespace NPCProcGen.Core.Components
             };
         }
 
+        public static float GetInterrogationProbability(float relationshipLevel)
+        {
+            return relationshipLevel switch
+            {
+                <= -26 => 0.30f,
+                <= -16 => 0.50f,
+                <= -6 => 0.70f,
+                <= 4 => 0.90f,
+                <= 14 => 0.92f,
+                <= 24 => 0.95f,
+                _ => 1.00f,
+            };
+        }
+
         public bool IsFriendly() => _relationship >= 5;
         public bool IsTrusted() => _relationship >= 15;
         public bool IsClose() => _relationship >= 25;
