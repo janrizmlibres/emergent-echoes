@@ -91,11 +91,11 @@ namespace NPCProcGen.Core.Actions
         /// </summary>
         public override void Run()
         {
-            CommonUtils.EmitSignal(
-                _owner,
+            Error reuslt = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ExecutionStarted,
                 Variant.From(ActionTypeValue)
             );
+            DebugTool.Assert(reuslt != Error.Unavailable, "Signal emitted error");
 
             if (_owner.IsActorInRange(_targetActor))
             {

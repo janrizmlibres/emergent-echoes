@@ -105,11 +105,11 @@ namespace NPCProcGen.Core.Actions
         {
             _owner.Sensor.SetPetitionResourceType(_targetResource);
 
-            CommonUtils.EmitSignal(
-                _owner,
+            Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ExecutionStarted,
                 Variant.From(ActionTypeValue)
             );
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
 
             if (_owner.IsActorInRange(_targetActor))
             {
