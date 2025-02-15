@@ -111,7 +111,7 @@ namespace NPCProcGen
 
             Parent = GetParent() as Node2D;
             Sensor = new Sensor(this);
-            Memorizer = new NPCMemorizer();
+            Memorizer = new NPCMemorizer(this);
 
             if (Parent == null || RearMarker == null)
             {
@@ -200,6 +200,11 @@ namespace NPCProcGen
         public bool IsAnyActorInRange()
         {
             return _detectedActors.Any();
+        }
+
+        public List<ActorTag2D> GetActorsInRange()
+        {
+            return _detectedActors.ToList();
         }
 
         public ActorTag2D GetRandomActorInRange()
@@ -307,7 +312,8 @@ namespace NPCProcGen
         private void OnExecutionEnded()
         {
             _evaluationTimer.Start(GD.RandRange(MinEvaluationInterval, MaxEvaluationInterval));
-            CommonUtils.EmitSignal(this, SignalName.ExecutionEnded);
+            Error result = EmitSignal(SignalName.ExecutionEnded);
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
         }
 
         public void AddAction(BaseAction action)

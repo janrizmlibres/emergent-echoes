@@ -55,6 +55,13 @@ namespace NPCProcGen.Core.Traits
             actionCandidates.Add(new(action, weightedScore));
         }
 
+        protected void AddSimpleAction(List<Tuple<BaseAction, float>> actionCandidates,
+            Func<BaseAction> actionCreator, float weight)
+        {
+            BaseAction action = actionCreator();
+            actionCandidates.Add(new(action, weight));
+        }
+
         private BaseAction CreateAction(ActionType actionType, ActorTag2D chosenActor, ResourceType resType)
         {
             if (actionType == ActionType.Theft)

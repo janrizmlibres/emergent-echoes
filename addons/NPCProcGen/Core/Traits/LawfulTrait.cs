@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using NPCProcGen.Core.Actions;
+using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Internal;
 
@@ -27,7 +30,32 @@ namespace NPCProcGen.Core.Traits
         /// <returns>A tuple containing the evaluated action and its weight.</returns>
         public override Tuple<BaseAction, float> EvaluateAction(SocialPractice practice)
         {
+            if (practice == SocialPractice.Proactive)
+            {
+                return EvaluateProactiveAction();
+            }
             return null;
+        }
+
+        private Tuple<BaseAction, float> EvaluateProactiveAction()
+        {
+            List<Tuple<BaseAction, float>> actionCandidates = new();
+
+            if (!_memorizer.IsInvestigating())
+            {
+                Crime crime = _memorizer.StartInvestigation();
+                if (crime == null) return null;
+                AddSimpleAction(actionCandidates, () => new InvestigateAction(_owner, crime), _weight);
+            }
+
+            Crime currentCrime = _memorizer.GetInvestigation();
+
+            Func<BaseAction> actionCreator = currentCrime.HasRemainingWitnesses() ?
+                () => new InvestigateAction(_owner, currentCrime) :
+                () => new PursuitAction(_owner, currentCrime.Criminal);
+
+            AddSimpleAction(actionCandidates, actionCreator, _weight);
+            return actionCandidates.OrderByDescending(tuple => tuple.Item2).FirstOrDefault();
         }
     }
 }
