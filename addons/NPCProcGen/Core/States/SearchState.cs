@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 
@@ -33,11 +34,12 @@ namespace NPCProcGen.Core.States
 
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
-            CommonUtils.EmitSignal(
-                _owner,
+            Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue)
+                Variant.From(ActionStateValue),
+                new Array<Variant>()
             );
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
         }
 
         /// <summary>
@@ -45,11 +47,12 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Exit()
         {
-            CommonUtils.EmitSignal(
-                _owner,
+            Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue)
+                Variant.From(ActionStateValue),
+                new Array<Variant>()
             );
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
         }
 
         /// <summary>

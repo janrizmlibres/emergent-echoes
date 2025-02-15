@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Autoloads;
@@ -46,11 +48,12 @@ namespace NPCProcGen.Core.States
             // GD.Print($"{_owner.Parent.Name} StealState Enter");
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
-            CommonUtils.EmitSignal(
-                _owner,
+            Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue)
+                Variant.From(ActionStateValue),
+                new Array<Variant>()
             );
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
 
             ResourceManager.Instance.TranserResources(
                 _targetActor,
@@ -67,18 +70,25 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Exit()
         {
+            List<ActorTag2D> witnesses = _owner.GetActorsInRange()
+                .Where(actor => actor != _targetActor)
+                .ToList();
+
+            Crime newCrime = new(CrimeCategory.Theft, _owner, _targetActor, witnesses);
+            _owner.Sensor.RecordCrime(newCrime);
+
             Array<Variant> data = new()
             {
                 Variant.From(_targetResource),
                 _amountToSteal
             };
 
-            CommonUtils.EmitSignal(
-                _owner,
+            Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateExited,
                 Variant.From(ActionStateValue),
                 data
             );
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
         }
 
         /// <summary>

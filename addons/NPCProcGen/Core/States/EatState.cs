@@ -28,28 +28,26 @@ namespace NPCProcGen.Core.States
             Array<Variant> data = new() { _amountToEat };
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
-            CommonUtils.EmitSignal(
-                _owner,
+            Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateEntered,
                 Variant.From(ActionStateValue),
                 data
             );
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
         }
 
         public override void Exit()
         {
-            GD.Print($"{_owner.Parent.Name} EatState Exit");
-
             // ! Magic number 10
             int satiationIncrease = _amountToEat * 10;
             Array<Variant> data = new() { satiationIncrease };
 
-            CommonUtils.EmitSignal(
-                _owner,
+            Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateExited,
                 Variant.From(ActionStateValue),
                 data
             );
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
         }
 
         public void OnConsumptionComplete()

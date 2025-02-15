@@ -6,24 +6,26 @@ using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
-    public class SneakState : BaseState, INavigationState
+    public class ResearchState : BaseState
     {
-        public const ActionState ActionStateValue = ActionState.Sneak;
+        public const ActionState ActionStateValue = ActionState.Research;
 
-        private readonly ActorTag2D _target;
+        private const int MinDuration = 5;
+        private const int MaxDuration = 10;
 
         public event Action CompleteState;
 
-        public SneakState(NPCAgent2D owner, ActionType action, ActorTag2D target) : base(owner, action)
+        private float _duration;
+
+        public ResearchState(NPCAgent2D owner, ActionType action) : base(owner, action)
         {
-            _target = target;
+            _duration = GD.RandRange(MinDuration, MaxDuration);
         }
 
         public override void Enter()
         {
-            GD.Print($"{_owner.Parent.Name} SneakState Enter");
-
-            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+            GD.Print($"{_owner.Parent.Name} ResearchState Enter");
+            _owner.Sensor.SetTaskRecord(ActionType.Investigate, ActionState.Research);
 
             Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateEntered,
@@ -31,6 +33,16 @@ namespace NPCProcGen.Core.States
                 new Array<Variant>()
             );
             DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+        }
+
+        public override void Update(double delta)
+        {
+            _duration -= (float)delta;
+
+            if (_duration <= 0)
+            {
+                CompleteState?.Invoke();
+            }
         }
 
         public override void Exit()
@@ -41,22 +53,6 @@ namespace NPCProcGen.Core.States
                 new Array<Variant>()
             );
             DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
-        }
-
-        public bool IsNavigating()
-        {
-            return true;
-        }
-
-        public Vector2 GetTargetPosition()
-        {
-            return _target.GetRearPosition();
-        }
-
-        public bool OnNavigationComplete()
-        {
-            CompleteState?.Invoke();
-            return true;
         }
     }
 }

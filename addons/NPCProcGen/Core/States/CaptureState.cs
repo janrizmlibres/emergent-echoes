@@ -6,24 +6,27 @@ using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.States
 {
-    public class SneakState : BaseState, INavigationState
+    public class CaptureState : BaseState, INavigationState
     {
-        public const ActionState ActionStateValue = ActionState.Sneak;
+        public const ActionState ActionStateValue = ActionState.Capture;
 
-        private readonly ActorTag2D _target;
+        private readonly Marker2D _jailMarker;
 
         public event Action CompleteState;
 
-        public SneakState(NPCAgent2D owner, ActionType action, ActorTag2D target) : base(owner, action)
+        public CaptureState(NPCAgent2D owner, ActionType actionType, Marker2D marker)
+            : base(owner, actionType)
         {
-            _target = target;
+            _jailMarker = marker;
         }
 
         public override void Enter()
         {
-            GD.Print($"{_owner.Parent.Name} SneakState Enter");
+            GD.Print($"{_owner.Parent.Name} CaptureState Enter");
 
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+
+            // data here
 
             Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateEntered,
@@ -35,6 +38,10 @@ namespace NPCProcGen.Core.States
 
         public override void Exit()
         {
+            GD.Print($"{_owner.Parent.Name} EatState Exit");
+
+            // Data here
+
             Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateExited,
                 Variant.From(ActionStateValue),
@@ -50,7 +57,7 @@ namespace NPCProcGen.Core.States
 
         public Vector2 GetTargetPosition()
         {
-            return _target.GetRearPosition();
+            return _jailMarker.GlobalPosition;
         }
 
         public bool OnNavigationComplete()

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Autoloads;
@@ -55,12 +56,12 @@ namespace NPCProcGen.Core.States
 
                 Array<Variant> partnerData = new() { _owner.Parent };
 
-                CommonUtils.EmitSignal(
-                    _partner,
+                Error partnerResult = _partner.EmitSignal(
                     ActorTag2D.SignalName.InteractionStarted,
                     Variant.From((InteractState)ActionStateValue),
                     partnerData
                 );
+                DebugTool.Assert(partnerResult != Error.Unavailable, "Signal emitted error");
             }
 
             _owner.NotifManager.NotifyInteractionStarted();
@@ -68,12 +69,12 @@ namespace NPCProcGen.Core.States
 
             Array<Variant> ownerData = new() { _partner.Parent };
 
-            CommonUtils.EmitSignal(
-                _owner,
+            Error ownerResult = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateEntered,
                 Variant.From(ActionStateValue),
                 ownerData
             );
+            DebugTool.Assert(ownerResult != Error.Unavailable, "Signal emitted error");
         }
 
         public override void Update(double delta)
@@ -97,12 +98,13 @@ namespace NPCProcGen.Core.States
                 _companionshipIncrease
             };
 
-            CommonUtils.EmitSignal(
-                _owner,
+            Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateExited,
                 Variant.From(ActionStateValue),
                 data
             );
+
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
 
             if (_partner is NPCAgent2D npc)
             {
@@ -113,10 +115,8 @@ namespace NPCProcGen.Core.States
                 _partner.NotifManager.NotifyInteractionEnded();
                 _partner.Sensor.ClearTaskRecord();
 
-                CommonUtils.EmitSignal(
-                    _partner,
-                    ActorTag2D.SignalName.InteractionEnded
-                );
+                result = _owner.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
+                DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
             }
         }
 

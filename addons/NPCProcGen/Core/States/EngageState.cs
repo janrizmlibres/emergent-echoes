@@ -61,12 +61,12 @@ namespace NPCProcGen.Core.States
 
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
-            CommonUtils.EmitSignal(
-                _owner,
+            Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateEntered,
                 Variant.From(ActionStateValue),
                 new Array<Variant>()
             );
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
         }
 
         public override void Update(double delta)
@@ -92,11 +92,12 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Exit()
         {
-            CommonUtils.EmitSignal(
-                _owner,
+            Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue)
+                Variant.From(ActionStateValue),
+                new Array<Variant>()
             );
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
         }
 
         /// <summary>

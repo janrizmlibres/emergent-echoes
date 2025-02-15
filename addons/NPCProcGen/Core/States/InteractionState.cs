@@ -26,24 +26,24 @@ namespace NPCProcGen.Core.States
 
             Array<Variant> data = new() { _target.Parent };
 
-            CommonUtils.EmitSignal(
-                _owner,
+            Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateEntered,
                 Variant.From(ActionStateValue),
                 data
             );
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
         }
 
         public override void Exit()
         {
             _owner.NotifManager.NotifyInteractionEnded();
 
-            CommonUtils.EmitSignal(
-                _owner,
+            Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateExited,
                 Variant.From(ActionStateValue),
                 new Array<Variant>()
             );
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
         }
     }
 }
