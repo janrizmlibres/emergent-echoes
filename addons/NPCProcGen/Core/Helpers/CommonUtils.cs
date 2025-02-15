@@ -58,30 +58,6 @@ namespace NPCProcGen.Core.Helpers
             return (int)Math.Floor(petitionAmount);
         }
 
-        public static void EmitSignal(ActorTag2D actor, StringName signalName, Variant? type = null,
-            Array<Variant> data = null)
-        {
-            Error result = DelegateEmit();
-
-            Error DelegateEmit()
-            {
-                if (data != null)
-                {
-                    DebugTool.Assert(type != null, "Variant parameter must not be null");
-                    return actor.EmitSignal(signalName, type.Value, data);
-                }
-
-                if (type != null)
-                {
-                    return actor.EmitSignal(signalName, type.Value);
-                }
-
-                return actor.EmitSignal(signalName);
-            }
-
-            DebugTool.Assert(result != Error.Unavailable, "Signal parameters are invalid");
-        }
-
         public static List<T> Shuffle<T>(List<T> list)
         {
             return list.OrderBy(_ => GD.Randi()).ToList();
