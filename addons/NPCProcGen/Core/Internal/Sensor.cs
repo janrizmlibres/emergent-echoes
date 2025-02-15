@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using NPCProcGen.Autoloads;
+using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.Internal
 {
@@ -84,6 +86,34 @@ namespace NPCProcGen.Core.Internal
         public void ClearPetitionResourceType()
         {
             _worldState.ClearPetitionResourceType(_owner);
+        }
+
+        public bool HasCrimes()
+        {
+            return _worldState.HasCrimes();
+        }
+
+        public void RecordCrime(Crime crime)
+        {
+            _worldState.RecordCrime(crime);
+        }
+
+        public Crime InvestigateCrime()
+        {
+            DebugTool.Assert(_owner is NPCAgent2D, "Only NPC agents can investigate crimes");
+            return _worldState.InvestigateCrime(_owner as NPCAgent2D);
+        }
+
+        public void CloseInvestigation()
+        {
+            DebugTool.Assert(_owner is NPCAgent2D, "Only NPC agents can close investigations");
+            _worldState.CloseInvestigation(_owner as NPCAgent2D);
+        }
+
+        public void SolveInvestigation()
+        {
+            DebugTool.Assert(_owner is NPCAgent2D, "Only NPC agents can solve investigations");
+            _worldState.SolveInvestigation(_owner as NPCAgent2D);
         }
     }
 }
