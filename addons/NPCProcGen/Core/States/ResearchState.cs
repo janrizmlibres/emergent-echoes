@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Traits;
 
 namespace NPCProcGen.Core.States
 {
@@ -13,13 +15,16 @@ namespace NPCProcGen.Core.States
         private const int MinDuration = 5;
         private const int MaxDuration = 10;
 
-        public event Action CompleteState;
-
+        private readonly bool _isIndeterminate;
         private float _duration;
 
-        public ResearchState(NPCAgent2D owner, ActionType action) : base(owner, action)
+        public event Action CompleteState;
+
+        public ResearchState(NPCAgent2D owner, ActionType action, bool isIndeterminate = false)
+            : base(owner, action)
         {
             _duration = GD.RandRange(MinDuration, MaxDuration);
+            _isIndeterminate = isIndeterminate;
         }
 
         public override void Enter()
@@ -47,10 +52,17 @@ namespace NPCProcGen.Core.States
 
         public override void Exit()
         {
+            if (_isIndeterminate)
+            {
+                _owner.Traits.OfType<LawfulTrait>().FirstOrDefault()?.MarkCrimeAsUnsolved();
+            }
+
+            Array<Variant> data = new() { _isIndeterminate };
+
             Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateExited,
                 Variant.From(ActionStateValue),
-                new Array<Variant>()
+                data
             );
             DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
         }

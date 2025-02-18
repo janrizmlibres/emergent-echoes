@@ -56,7 +56,6 @@ namespace NPCProcGen.Core.States
 
             if (_idleTimer <= 0)
             {
-                GD.Print($"{_owner.Parent.Name} seeking new position");
                 _seekPosition = CommonUtils.GetRandomPosInCircularArea(
                     _owner.Parent.GlobalPosition,
                     SeekRadius
@@ -68,8 +67,6 @@ namespace NPCProcGen.Core.States
 
         public override void Exit()
         {
-            GD.Print($"{_owner.Parent.Name} SeekState Exit");
-
             Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateExited,
                 Variant.From(ActionStateValue),

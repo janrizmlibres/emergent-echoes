@@ -42,8 +42,6 @@ namespace NPCProcGen.Core.States
 
         public override void Enter()
         {
-            // GD.Print($"{_owner.Parent.Name} PetitionState Enter");
-
             if (_target is NPCAgent2D npc)
             {
                 npc.AddAction(new InteractAction(npc, _owner));

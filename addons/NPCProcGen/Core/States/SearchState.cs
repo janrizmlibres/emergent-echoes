@@ -30,8 +30,6 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Enter()
         {
-            // GD.Print($"{_owner.Parent.Name} SearchState Enter");
-
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
             Error result = _owner.EmitSignal(

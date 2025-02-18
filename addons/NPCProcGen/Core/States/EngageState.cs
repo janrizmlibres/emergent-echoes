@@ -77,7 +77,6 @@ namespace NPCProcGen.Core.States
 
             if (_navigationTimer <= 0)
             {
-                GD.Print($"{_owner.Parent.Name} EngageState Timeout");
                 CompleteState?.Invoke(EngageOutcome.DurationExceeded);
             }
         }

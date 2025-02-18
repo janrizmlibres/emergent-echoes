@@ -45,7 +45,6 @@ namespace NPCProcGen.Core.States
         /// </summary>
         public override void Enter()
         {
-            // GD.Print($"{_owner.Parent.Name} StealState Enter");
             _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
 
             Error result = _owner.EmitSignal(
@@ -73,6 +72,13 @@ namespace NPCProcGen.Core.States
             List<ActorTag2D> witnesses = _owner.GetActorsInRange()
                 .Where(actor => actor != _targetActor)
                 .ToList();
+
+            witnesses.ForEach(actor => actor.EmitSignal(
+                ActorTag2D.SignalName.EventTriggered, Variant.From(EventType.CrimeWitnessed)
+            ));
+
+            GD.Print("Crime witnessed by:");
+            witnesses.ForEach(actor => GD.Print(actor.Owner.Name));
 
             Crime newCrime = new(CrimeCategory.Theft, _owner, _targetActor, witnesses);
             _owner.Sensor.RecordCrime(newCrime);
