@@ -86,6 +86,8 @@ namespace NPCProcGen
         /// </summary>
         public Executor Executor { get; private set; }
 
+        public List<Trait> Traits { get; private set; } = new();
+
         // TODO: Consider using raycast for detection
         private readonly List<ActorTag2D> _detectedActors = new();
 
@@ -147,8 +149,8 @@ namespace NPCProcGen
             };
             _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
             AddChild(_evaluationTimer);
-            // AddTraits();
-            AddTraitsStub();
+            AddTraits();
+            // AddTraitsStub();
         }
 
         /// <summary>
@@ -183,8 +185,17 @@ namespace NPCProcGen
 
             ResourceManager.Instance.Update(delta);
 
+            Traits.ForEach(trait => trait.Update(delta));
             Memorizer.Update(delta);
             Executor.Update(delta);
+        }
+
+        public override void Arrest()
+        {
+            NotifManager.NotifyActorImprisoned();
+            Executor.EndAllActions();
+            _evaluationTimer.Stop();
+            _isImprisoned = true;
         }
 
         /// <summary>
@@ -256,13 +267,15 @@ namespace NPCProcGen
             DebugTool.Assert(Memorizer is NPCMemorizer, "Memorizer is not of type NPCMemorizer");
             NPCMemorizer npcMemorizer = Memorizer as NPCMemorizer;
 
-            Strategizer.AddTrait(new SurvivalTrait(this, Survival, Sensor, npcMemorizer));
+            Traits.Add(new SurvivalTrait(this, Survival, Sensor, npcMemorizer));
 
             if (Thief > 0)
-                Strategizer.AddTrait(new ThiefTrait(this, Thief, Sensor, npcMemorizer));
+                Traits.Add(new ThiefTrait(this, Thief, Sensor, npcMemorizer));
 
             if (Lawful > 0)
-                Strategizer.AddTrait(new LawfulTrait(this, Lawful, Sensor, npcMemorizer));
+                Traits.Add(new LawfulTrait(this, Lawful, Sensor, npcMemorizer));
+
+            Strategizer.InitializeTraits(Traits);
         }
 
         // ! Remove in production
@@ -271,9 +284,10 @@ namespace NPCProcGen
             DebugTool.Assert(Memorizer is NPCMemorizer, "Memorizer is not of type NPCMemorizer");
             NPCMemorizer npcMemorizer = Memorizer as NPCMemorizer;
 
-            Strategizer.AddTrait(new SurvivalTrait(this, Survival, Sensor, npcMemorizer));
-            Strategizer.AddTrait(new ThiefTrait(this, Thief, Sensor, npcMemorizer));
-            Strategizer.AddTrait(new LawfulTrait(this, Lawful, Sensor, npcMemorizer));
+            Traits.Add(new SurvivalTrait(this, Survival, Sensor, npcMemorizer));
+            Traits.Add(new ThiefTrait(this, Thief, Sensor, npcMemorizer));
+            Traits.Add(new LawfulTrait(this, Lawful, Sensor, npcMemorizer));
+            Strategizer.InitializeTraits(Traits);
         }
 
         private void SetActorDetector(Area2D actorDetector)
@@ -281,17 +295,15 @@ namespace NPCProcGen
             Parent.AddChild(actorDetector);
         }
 
-        /// <summary>
-        /// Handles the evaluation timer timeout event.
-        /// Evaluates an action for the NPC.
-        /// </summary>
         private void OnEvaluationTimerTimeout()
         {
-            BaseAction action = Strategizer.EvaluateActionStub(
-                typeof(ThiefTrait),
-                typeof(TheftAction),
-                ResourceType.Money
-            );
+            // BaseAction action = Strategizer.EvaluateActionStub(
+            //     typeof(ThiefTrait),
+            //     typeof(TheftAction),
+            //     ResourceType.Money
+            // );
+
+            BaseAction action = Strategizer.EvaluateAction(SocialPractice.Proactive);
 
             if (action != null)
             {
@@ -300,7 +312,6 @@ namespace NPCProcGen
             }
             else
             {
-                GD.Print($"No action evaluated by {Parent.Name}");
                 _evaluationTimer.Start(GD.RandRange(MinEvaluationInterval, MaxEvaluationInterval));
             }
         }
