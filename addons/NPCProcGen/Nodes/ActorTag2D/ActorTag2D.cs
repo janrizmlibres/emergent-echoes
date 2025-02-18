@@ -19,6 +19,9 @@ namespace NPCProcGen
         [Signal]
         public delegate void InteractionEndedEventHandler();
 
+        [Signal]
+        public delegate void EventTriggeredEventHandler(Variant eventType);
+
         /// <summary>
         /// Gets or sets the monetary value associated with this actor.
         /// </summary>
@@ -74,6 +77,8 @@ namespace NPCProcGen
         /// </summary>
         public Node2D Parent { get; protected set; }
 
+        protected bool _isImprisoned = false;
+
         private Marker2D _rearMarker;
 
         /// <summary>
@@ -99,7 +104,7 @@ namespace NPCProcGen
 
             Parent = GetParent() as Node2D;
             Sensor = new Sensor(this);
-            Memorizer = new Memorizer();
+            Memorizer = new Memorizer(this);
 
             if (Parent == null || _rearMarker == null)
             {
@@ -123,7 +128,8 @@ namespace NPCProcGen
 
             if (_rearMarker == null)
             {
-                warnings.Add("The ActorTag2D requires a Marker2D node to identify the rear side of the actor.");
+                warnings.Add(@"The ActorTag2D requires a Marker2D node to identify the rear side 
+                    of the actor.");
             }
 
             return warnings.ToArray();
@@ -161,7 +167,8 @@ namespace NPCProcGen
 
         public Vector2 GetOmniDirectionalWaypoint(ActorTag2D initiator)
         {
-            Vector2 directionToInitiator = Parent.GlobalPosition.DirectionTo(initiator.Parent.GlobalPosition);
+            Vector2 directionToInitiator = Parent.GlobalPosition
+                .DirectionTo(initiator.Parent.GlobalPosition);
             return Parent.GlobalPosition + directionToInitiator * CommonUtils.PositionOffset;
         }
 
@@ -188,6 +195,17 @@ namespace NPCProcGen
         public bool IsPlayer()
         {
             return GetType() != typeof(NPCAgent2D);
+        }
+
+        public bool IsImprisoned()
+        {
+            return _isImprisoned;
+        }
+
+        public virtual void Arrest()
+        {
+            NotifManager.NotifyActorImprisoned();
+            _isImprisoned = true;
         }
     }
 }
