@@ -167,9 +167,6 @@ namespace NPCProcGen.Autoloads
 
             fromResource.Amount -= amount;
             toResource.Amount += amount;
-
-            GD.Print("Transferred " + amount + " " + type.ToString() + " from " + from.Parent.Name
-                + " to " + to.Parent.Name);
         }
 
         public void ModifyResource(ActorTag2D actor, ResourceType type, float amount)
