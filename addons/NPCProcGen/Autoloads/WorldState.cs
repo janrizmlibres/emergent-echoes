@@ -32,6 +32,7 @@ namespace NPCProcGen.Autoloads
 		private bool _isInstantiated = false;
 
 		private List<ActorTag2D> _actors;
+		private List<PrisonArea2D> _prisons = new();
 
 		private readonly Dictionary<ActorTag2D, ActorState> _actorState = new();
 		private readonly Dictionary<NPCAgent2D, Crime> _investigations = new();
@@ -62,9 +63,10 @@ namespace NPCProcGen.Autoloads
 		/// Initializes the world state with the given list of actors.
 		/// </summary>
 		/// <param name="actors">The list of actors to initialize.</param>
-		public void Initialize(List<ActorTag2D> actors)
+		public void Initialize(List<ActorTag2D> actors, List<PrisonArea2D> prisons)
 		{
 			_actors = actors;
+			_prisons = prisons;
 
 			foreach (ActorTag2D actor in actors)
 			{
@@ -101,7 +103,8 @@ namespace NPCProcGen.Autoloads
 
 			return state == ActionState.Talk || state == ActionState.Petition
 				|| state == ActionState.Interact || state == ActionState.Flee
-				|| state == ActionState.Eat || state == ActionState.Research;
+				|| state == ActionState.Capture;
+			// || state == ActionState.Eat || state == ActionState.Research
 		}
 
 		public ResourceType? GetPetitionResourceType(ActorTag2D actor)
@@ -165,6 +168,11 @@ namespace NPCProcGen.Autoloads
 			Crime crime = _investigations[investigator];
 			_investigations.Remove(investigator);
 			_solvedCrimes.Add(crime);
+		}
+
+		public PrisonArea2D GetAvailablePrison()
+		{
+			return CommonUtils.Shuffle(_prisons).First();
 		}
 	}
 }
