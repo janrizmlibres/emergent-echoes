@@ -12,6 +12,7 @@ namespace NPCProcGen.Core.Components.Enums
         Interact,
         Investigate,
         Pursuit,
+        CloseCase,
     }
 
     public enum ActionState
