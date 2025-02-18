@@ -36,11 +36,11 @@ namespace NPCProcGen.Core.Actions
 
         public override void Run()
         {
-            CommonUtils.EmitSignal(
-                _owner,
+            Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ExecutionStarted,
                 Variant.From(ActionTypeValue)
             );
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
             TransitionTo(_eatState);
         }
     }

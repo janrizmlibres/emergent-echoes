@@ -11,7 +11,10 @@ namespace NPCProcGen.Core.Actions
 
         private readonly ActorTag2D _targetActor;
 
+        private bool _doneResearching = false;
+
         private ResearchState _researchState;
+        private EngageState _engageState;
 
         public PursuitAction(NPCAgent2D owner, ActorTag2D target) : base(owner)
         {
@@ -27,13 +30,28 @@ namespace NPCProcGen.Core.Actions
         private void InitializeStates()
         {
             _researchState = new(_owner, ActionTypeValue);
-
-            EngageState engageState = new(_owner, ActionTypeValue, _targetActor, Waypoint.Omni);
+            _engageState = new(_owner, ActionTypeValue, _targetActor, Waypoint.Omni);
+            CaptureState captureState = new(_owner, ActionTypeValue, _targetActor);
 
             _researchState.CompleteState += () =>
             {
-
+                _doneResearching = true;
+                TransitionTo(_engageState);
             };
+            _engageState.CompleteState += outcome =>
+            {
+                switch (outcome)
+                {
+                    case EngageOutcome.DurationExceeded:
+                        CompleteAction();
+                        break;
+                    case EngageOutcome.TargetBusy:
+                    case EngageOutcome.TargetAvailable:
+                        TransitionTo(captureState);
+                        break;
+                }
+            };
+            captureState.CompleteState += () => CompleteAction();
         }
 
         public override void Run()
@@ -44,7 +62,13 @@ namespace NPCProcGen.Core.Actions
             );
             DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
 
-            TransitionTo(_researchState);
+            if (!_doneResearching)
+            {
+                TransitionTo(_researchState);
+                return;
+            }
+
+            TransitionTo(_engageState);
         }
     }
 }

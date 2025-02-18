@@ -53,6 +53,18 @@ namespace NPCProcGen.Core.Actions
             _currentState = null;
         }
 
+        public void InterruptAction()
+        {
+            _owner.NotifManager.NotifyInteractionEnded();
+            _owner.EmitSignal(
+                ActorTag2D.SignalName.EventTriggered,
+                Variant.From(EventType.TargetInterrupted)
+            );
+
+            ClearState();
+            ActionComplete?.Invoke();
+        }
+
         /// <summary>
         /// Completes the current action.
         /// </summary>

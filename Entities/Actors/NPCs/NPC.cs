@@ -78,6 +78,7 @@ namespace EmergentEchoes.Entities.Actors
             _npcAgent2d.ExecutionEnded += OnExecutionEnded;
             _npcAgent2d.ActionStateEntered += OnActionStateEntered;
             _npcAgent2d.ActionStateExited += OnActionStateExited;
+            _npcAgent2d.EventTriggered += OnEventTriggered;
 
             SetupTilePositions();
         }
@@ -253,7 +254,6 @@ namespace EmergentEchoes.Entities.Actors
 
         private void OnExecutionEnded()
         {
-            GD.Print("Execution ended");
             RandomizeMainState();
         }
 
@@ -265,13 +265,14 @@ namespace EmergentEchoes.Entities.Actors
             _acceleration = actionState == ActionState.Engage ? Acceleration + 2 : Acceleration;
 
             if (actionState == ActionState.Talk || actionState == ActionState.Petition
-                || actionState == ActionState.Interact)
+                || actionState == ActionState.Interact || actionState == ActionState.Interrogate)
             {
                 Node2D partner = data[0].As<Node2D>();
                 FacePartner(partner);
             }
 
-            if (actionState == ActionState.Talk || actionState == ActionState.Petition)
+            if (actionState == ActionState.Talk || actionState == ActionState.Petition
+                || actionState == ActionState.Interrogate)
             {
                 Node2D partner = data[0].As<Node2D>();
                 AddActorObstacles(partner);
@@ -291,7 +292,7 @@ namespace EmergentEchoes.Entities.Actors
                 _floatTextController.ShowFloatText(ResourceType.Money, amountStolen.ToString(), false);
             }
             else if (actionState == ActionState.Talk || actionState == ActionState.Petition
-                || actionState == ActionState.Interact)
+                || actionState == ActionState.Interact || actionState == ActionState.Interrogate)
             {
                 _mainState = MainState.Procedural;
                 _emoteController.Deactivate();
@@ -313,8 +314,18 @@ namespace EmergentEchoes.Entities.Actors
                     satiationIncrease.ToString()
                 );
             }
+            else if (actionState == ActionState.Research)
+            {
+                bool isIndeterminate = data[0].As<bool>();
 
-            if (actionState == ActionState.Petition || actionState == ActionState.Talk)
+                if (isIndeterminate)
+                {
+                    _emoteController.ShowEmoteBubble(Emote.Dizzy);
+                }
+            }
+
+            if (actionState == ActionState.Petition || actionState == ActionState.Talk
+                || actionState == ActionState.Interrogate)
             {
                 Node2D partner = data[0].As<Node2D>();
                 RemoveActorObstacles(partner);
@@ -351,6 +362,28 @@ namespace EmergentEchoes.Entities.Actors
                     ResourceType.Companionship,
                     companionshipIncrease.ToString()
                 );
+            }
+        }
+
+        private void OnEventTriggered(Variant eventType)
+        {
+            EventType type = eventType.As<EventType>();
+
+            if (type == EventType.CrimeWitnessed)
+            {
+                _emoteController.ShowEmoteBubble(Emote.Interrobang);
+            }
+            else if (type == EventType.Captured)
+            {
+                // Captured
+            }
+            else if (type == EventType.Released)
+            {
+                // Released
+            }
+            else if (type == EventType.TargetInterrupted)
+            {
+
             }
         }
 

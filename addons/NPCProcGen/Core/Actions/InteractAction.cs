@@ -9,11 +9,23 @@ namespace NPCProcGen.Core.Actions
     {
         public const ActionType ActionTypeValue = ActionType.Interact;
 
+        private readonly ActorTag2D _target;
         private readonly InteractionState _interactState;
 
         public InteractAction(NPCAgent2D owner, ActorTag2D target) : base(owner)
         {
+            _target = target;
             _interactState = new(owner, ActionTypeValue, target);
+        }
+
+        public void Subscribe()
+        {
+            _target.NotifManager.ActorImprisoned += InterruptAction;
+        }
+
+        public void Unsubscribe()
+        {
+            _target.NotifManager.ActorImprisoned -= InterruptAction;
         }
 
         public override void Update(double delta)
