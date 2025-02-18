@@ -222,6 +222,18 @@ namespace EmergentEchoes.Entities.Actors
             _tileMapLayer.NotifyRuntimeTileDataUpdate();
         }
 
+        private void AddSingleObstacle()
+        {
+            _tileMapLayer.Obstacles.Add(this);
+            _tileMapLayer.NotifyRuntimeTileDataUpdate();
+        }
+
+        private void RemoveSingleObstacle()
+        {
+            _tileMapLayer.Obstacles.Remove(this);
+            _tileMapLayer.NotifyRuntimeTileDataUpdate();
+        }
+
         private void OnAnimationFinished(StringName animName)
         {
             if (animName.ToString().Contains("eat"))
