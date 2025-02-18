@@ -112,7 +112,6 @@ namespace NPCProcGen.Core.Components
 
             if (_decayTimer <= 0)
             {
-                GD.Print($"{_actor.Parent.Name}'s last known position has decayed.");
                 LastKnownPosition = null;
             }
 
@@ -122,7 +121,6 @@ namespace NPCProcGen.Core.Components
 
             if (_petitionTimer <= 0)
             {
-                GD.Print($"{_actor.Parent.Name}'s last petition was forgotten.");
                 LastPetitionResource = null;
             }
         }
