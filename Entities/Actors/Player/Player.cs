@@ -1,4 +1,5 @@
 using EmergentEchoes.Utilities.Game;
+using EmergentEchoes.Utilities.Game.Enums;
 using Godot;
 using Godot.Collections;
 using NPCProcGen;
@@ -34,6 +35,7 @@ namespace EmergentEchoes.Entities.Actors
 
 			_actorTag2D.InteractionStarted += OnInteractionStarted;
 			_actorTag2D.InteractionEnded += OnInteractionEnded;
+			_actorTag2D.EventTriggered += OnEventTriggered;
 		}
 
 		public override void _PhysicsProcess(double delta)
@@ -106,6 +108,24 @@ namespace EmergentEchoes.Entities.Actors
 		{
 			_state = State.Active;
 			_emoteController.Deactivate();
+		}
+
+		private void OnEventTriggered(Variant eventType)
+		{
+			EventType type = eventType.As<EventType>();
+
+			if (type == EventType.CrimeWitnessed)
+			{
+				_emoteController.ShowEmoteBubble(Emote.Interrobang);
+			}
+			else if (type == EventType.Captured)
+			{
+				// Captured
+			}
+			else if (type == EventType.Released)
+			{
+				// Released
+			}
 		}
 	}
 }
