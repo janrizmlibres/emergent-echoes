@@ -24,9 +24,9 @@ namespace NPCProcGen.Core.Internal
             _owner = owner;
         }
 
-        public static void InitializeWorldState(List<ActorTag2D> actors)
+        public static void InitializeWorldState(List<ActorTag2D> actors, List<PrisonArea2D> prisons)
         {
-            _worldState.Initialize(actors);
+            _worldState.Initialize(actors, prisons);
         }
 
         /// <summary>
@@ -114,6 +114,11 @@ namespace NPCProcGen.Core.Internal
         {
             DebugTool.Assert(_owner is NPCAgent2D, "Only NPC agents can solve investigations");
             _worldState.SolveInvestigation(_owner as NPCAgent2D);
+        }
+
+        public PrisonArea2D GetPrisonArea()
+        {
+            return _worldState.GetAvailablePrison();
         }
     }
 }

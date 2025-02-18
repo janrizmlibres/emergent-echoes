@@ -58,6 +58,19 @@ namespace NPCProcGen.Core.Internal
             action.Run();
         }
 
+        public void EndAllActions()
+        {
+            while (_actions.Count > 0)
+            {
+                BaseAction action = _actions.Pop();
+                action.ActionComplete -= OnActionComplete;
+                action.ClearState();
+            }
+
+            _owner.Sensor.ClearPetitionResourceType();
+            _owner.Sensor.ClearTaskRecord();
+        }
+
         public void EndCurrentAction()
         {
             if (_actions.TryPeek(out BaseAction action))
@@ -136,18 +149,17 @@ namespace NPCProcGen.Core.Internal
             DebugTool.Assert(_actions.Count > 0, "Actions cannot be null when completing an action");
 
             _owner.Sensor.ClearPetitionResourceType();
+            _owner.Sensor.ClearTaskRecord();
             _actions.Pop().ActionComplete -= OnActionComplete;
 
             if (_actions.TryPeek(out BaseAction action))
             {
-                GD.Print($"{action.GetType().Name} is resumed by {_owner.Parent.Name}");
                 action.ActionComplete += OnActionComplete;
                 action.Run();
             }
             else
             {
                 ExecutionEnded?.Invoke();
-                _owner.Sensor.ClearTaskRecord();
             }
         }
     }

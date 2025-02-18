@@ -21,9 +21,9 @@ namespace NPCProcGen.Core.Internal
         /// Adds a trait to the strategizer.
         /// </summary>
         /// <param name="trait">The trait to be added.</param>
-        public void AddTrait(Trait trait)
+        public void InitializeTraits(List<Trait> traits)
         {
-            _traits.Add(trait);
+            _traits.AddRange(traits);
         }
 
         /// <summary>
