@@ -12,6 +12,8 @@ namespace NPCProcGen.Core.Helpers
         public event Action InteractionStarted;
         public event Action InteractionEnded;
 
+        public event Action ActorImprisoned;
+
         public void NotifyPetitionAnswered(bool isAccepted)
         {
             PetitionAnswered?.Invoke(isAccepted);
@@ -25,6 +27,11 @@ namespace NPCProcGen.Core.Helpers
         public void NotifyInteractionEnded()
         {
             InteractionEnded?.Invoke();
+        }
+
+        public void NotifyActorImprisoned()
+        {
+            ActorImprisoned?.Invoke();
         }
     }
 }
