@@ -36,10 +36,9 @@ namespace NPCProcGen.Core.Traits
         }
 
         protected void EvaluateInteraction(List<Tuple<BaseAction, float>> actionCandidates,
-            ResourceType type, Func<ActorTag2D, bool> bondChecker,
-            Func<List<ActorTag2D>, ActorTag2D> alternator, ActionType actionType)
+            ResourceType type, Func<List<ActorTag2D>, ActorTag2D> alternator, ActionType actionType)
         {
-            ActorTag2D chosenActor = ChooseActor(type, bondChecker, alternator, actionType);
+            ActorTag2D chosenActor = ChooseActor(type, actionType, alternator);
 
             if (chosenActor != null)
             {
@@ -84,11 +83,11 @@ namespace NPCProcGen.Core.Traits
         /// </summary>
         /// <param name="type">The resource type to steal.</param>
         /// <returns>The chosen actor.</returns>
-        private ActorTag2D ChooseActor(ResourceType type, Func<ActorTag2D, bool> bondChecker,
-            Func<List<ActorTag2D>, ActorTag2D> alternator, ActionType actionType)
+        private ActorTag2D ChooseActor(ResourceType type, ActionType actionType,
+            Func<List<ActorTag2D>, ActorTag2D> actorPicker)
         {
             List<ActorTag2D> peerActors = CommonUtils.Shuffle(_owner.Memorizer.GetPeerActors());
-            List<ActorTag2D> alternativeActors = new();
+            List<ActorTag2D> potentialActors = new();
 
             foreach (ActorTag2D actor in peerActors)
             {
@@ -105,16 +104,13 @@ namespace NPCProcGen.Core.Traits
                     if (!_owner.Memorizer.IsValidPetitionTarget(actor, type)) continue;
                 }
 
-                alternativeActors.Add(actor);
+                ResourceManager resMgr = ResourceManager.Instance;
 
-                // TODO: Add check if actor workplace is known
-                if (!ResourceManager.Instance.IsDeficient(actor, type) && bondChecker(actor))
-                {
-                    return actor;
-                }
+                if (!resMgr.HasResource(actor, type)) continue;
+                potentialActors.Add(actor);
             }
 
-            return alternator(alternativeActors);
+            return actorPicker(potentialActors);
         }
 
         private float CalculateWeight(ResourceType type)
@@ -133,6 +129,7 @@ namespace NPCProcGen.Core.Traits
         /// <param name="practice">The social practice to evaluate.</param>
         /// <returns>A tuple containing the evaluated action and its weight.</returns>
         public abstract Tuple<BaseAction, float> EvaluateAction(SocialPractice practice);
+        public virtual void Update(double delta) { }
 
         // ! Remove in production
         public virtual BaseAction EvaluateActionStub(Type actionType, ResourceType resType)

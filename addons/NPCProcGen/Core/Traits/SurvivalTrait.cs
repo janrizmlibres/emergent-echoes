@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
@@ -49,8 +50,7 @@ namespace NPCProcGen.Core.Traits
                 {
                     EvaluateInteraction(
                         actionCandidates, type,
-                        actor => _memorizer.IsFriendly(actor),
-                        (peerActors) => FindActorWithoutBond(peerActors, type),
+                        (peerActors) => PickActor(peerActors, type),
                         ActionType.Petition
                     );
                 }
@@ -83,8 +83,7 @@ namespace NPCProcGen.Core.Traits
             {
                 EvaluateInteraction(
                     actionCandidates, resType,
-                    actor => _memorizer.IsFriendly(actor),
-                    (peerActors) => FindActorWithoutBond(peerActors, resType),
+                    peerActors => PickActor(peerActors, resType),
                     ActionType.Petition
                 );
 
@@ -112,36 +111,17 @@ namespace NPCProcGen.Core.Traits
             return null;
         }
 
-        private static ActorTag2D FindActorWithoutBond(List<ActorTag2D> peerActors, ResourceType type)
-        {
-            return FindActorWithoutDeficiency(peerActors, type)
-                ?? FindActorWithResource(peerActors, type) ?? null;
-        }
-
-        private static ActorTag2D FindActorWithoutDeficiency(List<ActorTag2D> peerActors, ResourceType type)
+        private ActorTag2D PickActor(List<ActorTag2D> peerActors, ResourceType type)
         {
             foreach (ActorTag2D actor in peerActors)
             {
-                if (!ResourceManager.Instance.IsDeficient(actor, type))
+                if (_memorizer.IsFriendly(actor) || !ResourceManager.Instance.IsDeficient(actor, type))
                 {
                     return actor;
                 }
             }
 
-            return null;
-        }
-
-        private static ActorTag2D FindActorWithResource(List<ActorTag2D> peerActors, ResourceType type)
-        {
-            foreach (ActorTag2D actor in peerActors)
-            {
-                if (ResourceManager.Instance.HasResource(actor, type))
-                {
-                    return actor;
-                }
-            }
-
-            return null;
+            return peerActors.FirstOrDefault();
         }
     }
 }
