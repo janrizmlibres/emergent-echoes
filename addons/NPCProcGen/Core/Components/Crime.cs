@@ -9,11 +9,24 @@ namespace NPCProcGen.Core.Components
 {
     public class Crime
     {
-        public NPCAgent2D Investigator { get; set; } = null;
+        public NPCAgent2D Investigator
+        {
+            get => _investigator;
+            set
+            {
+                _investigator = value;
+                if (_witnesses.Contains(value))
+                {
+                    MarkSuccessfulWitness(value);
+                }
+            }
+        }
+
         public CrimeCategory Category { get; private set; }
         public ActorTag2D Criminal { get; private set; }
         public ActorTag2D Victim { get; private set; }
 
+        private NPCAgent2D _investigator = null;
         private readonly List<ActorTag2D> _witnesses;
         private readonly List<ActorTag2D> _successfulWitnesses = new();
         private readonly List<ActorTag2D> _failedWitnesses = new();
@@ -34,7 +47,9 @@ namespace NPCProcGen.Core.Components
                 || investigator.IsActorInRange(actor))
                 .ToList();
 
-            ActorTag2D chosenWitness = shuffledActors.FirstOrDefault();
+            ActorTag2D chosenWitness = shuffledActors
+                .Where(actor => !actor.IsImprisoned())
+                .FirstOrDefault();
 
             if (chosenWitness != null)
             {

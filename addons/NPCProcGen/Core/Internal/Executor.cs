@@ -50,11 +50,13 @@ namespace NPCProcGen.Core.Internal
             if (_actions.TryPeek(out BaseAction currentAction))
             {
                 currentAction.ActionComplete -= OnActionComplete;
+                (action as IInteractionAction)?.Unsubscribe();
                 currentAction.ClearState();
             }
 
             _actions.Push(action);
             action.ActionComplete += OnActionComplete;
+            (action as IInteractionAction)?.Subscribe();
             action.Run();
         }
 
@@ -64,6 +66,7 @@ namespace NPCProcGen.Core.Internal
             {
                 BaseAction action = _actions.Pop();
                 action.ActionComplete -= OnActionComplete;
+                (action as IInteractionAction)?.Unsubscribe();
                 action.ClearState();
             }
 
@@ -150,11 +153,15 @@ namespace NPCProcGen.Core.Internal
 
             _owner.Sensor.ClearPetitionResourceType();
             _owner.Sensor.ClearTaskRecord();
-            _actions.Pop().ActionComplete -= OnActionComplete;
+
+            BaseAction removedAction = _actions.Pop();
+            removedAction.ActionComplete -= OnActionComplete;
+            (removedAction as IInteractionAction)?.Unsubscribe();
 
             if (_actions.TryPeek(out BaseAction action))
             {
                 action.ActionComplete += OnActionComplete;
+                (action as IInteractionAction)?.Subscribe();
                 action.Run();
             }
             else

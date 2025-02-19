@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://7ykbd3t05bcd"]
+[gd_scene load_steps=18 format=4 uid="uid://7ykbd3t05bcd"]
 
 [ext_resource type="Script" path="res://Stages/Island/World.cs" id="1_2a375"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="2_1qb5f"]
@@ -257,6 +257,9 @@ custom_data_layer_0/type = 1
 sources/1 = SubResource("TileSetScenesCollectionSource_bvqbq")
 sources/0 = SubResource("TileSetAtlasSource_k42pd")
 
+[sub_resource type="LabelSettings" id="LabelSettings_fj47m"]
+font_size = 8
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ne8vx"]
 size = Vector2(50, 66)
 
@@ -302,6 +305,12 @@ position = Vector2(269, 138)
 [node name="NPCAgent2D" parent="Garreth" index="6"]
 Lawful = 0.8
 
+[node name="Label" type="Label" parent="Garreth"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Garreth"
+label_settings = SubResource("LabelSettings_fj47m")
+
 [node name="Garreth2" parent="." instance=ExtResource("9_cbx2p")]
 position = Vector2(199, 259)
 
@@ -312,7 +321,6 @@ Lawful = 0.0
 [node name="PrisonArea2D" type="Area2D" parent="."]
 position = Vector2(335, 239)
 script = ExtResource("11_0bl23")
-Capacity = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PrisonArea2D"]
 position = Vector2(25, 33)

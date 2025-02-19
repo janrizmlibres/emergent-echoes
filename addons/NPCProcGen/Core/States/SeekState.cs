@@ -94,6 +94,7 @@ namespace NPCProcGen.Core.States
         public void OnActorDetected(ActorTag2D actor)
         {
             if (actor.IsPlayer()) return; // ! Remove after testing
+            if (actor.IsImprisoned()) return;
             CompleteState?.Invoke(actor);
         }
     }

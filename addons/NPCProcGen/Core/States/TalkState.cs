@@ -114,7 +114,7 @@ namespace NPCProcGen.Core.States
                 _partner.NotifManager.NotifyInteractionEnded();
                 _partner.Sensor.ClearTaskRecord();
 
-                result = _owner.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
+                result = _partner.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
                 DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
             }
         }

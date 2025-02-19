@@ -95,6 +95,7 @@ namespace NPCProcGen.Core.Traits
 
                 if (actorLastPos == null && !_owner.IsActorInRange(actor)) continue;
                 if (actor.IsPlayer() && GD.Randf() > 0.2) continue;
+                if (actor.IsImprisoned()) continue;
 
                 if (actionType == ActionType.Petition)
                 {

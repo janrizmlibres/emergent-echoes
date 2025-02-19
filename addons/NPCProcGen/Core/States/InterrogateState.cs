@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using Godot.Collections;
+using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
@@ -31,9 +32,30 @@ namespace NPCProcGen.Core.States
         public override void Enter()
         {
             GD.Print($"{_owner.Parent.Name} InterrogateState Enter");
-            _owner.Sensor.SetTaskRecord(ActionType.Investigate, ActionState.Research);
 
-            Array<Variant> data = new() { _subject };
+            if (_subject is NPCAgent2D npc)
+            {
+                npc.AddAction(new InteractAction(npc, _owner));
+            }
+            else
+            {
+                _subject.NotifManager.NotifyInteractionStarted();
+                _subject.Sensor.SetTaskRecord(ActionType.Interact, ActionState.Interact);
+
+                Array<Variant> targetData = new() { _owner.Parent, };
+
+                Error targetResult = _subject.EmitSignal(
+                    ActorTag2D.SignalName.InteractionStarted,
+                    Variant.From((InteractState)ActionStateValue),
+                    targetData
+                );
+                DebugTool.Assert(targetResult != Error.Unavailable, "Signal emitted error");
+            }
+
+            _owner.NotifManager.NotifyInteractionStarted();
+            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+
+            Array<Variant> data = new() { _subject.Parent };
 
             Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateEntered,
@@ -56,12 +78,30 @@ namespace NPCProcGen.Core.States
 
         public override void Exit()
         {
+            _owner.NotifManager.NotifyInteractionEnded();
+            _owner.Sensor.ClearTaskRecord();
+
+            Array<Variant> data = new() { _subject.Parent };
+
             Error result = _owner.EmitSignal(
                 NPCAgent2D.SignalName.ActionStateEntered,
                 Variant.From(ActionStateValue),
-                new Array<Variant>()
+                data
             );
             DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+
+            if (_subject is NPCAgent2D npc)
+            {
+                npc.EndAction();
+            }
+            else
+            {
+                _subject.NotifManager.NotifyInteractionEnded();
+                _subject.Sensor.ClearTaskRecord();
+
+                result = _subject.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
+                DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+            }
         }
 
         private void CalculateSuccess()
