@@ -7,12 +7,12 @@ using NPCProcGen.Core.States;
 
 namespace NPCProcGen.Core.Actions
 {
-    public class InvestigateAction : BaseAction
+    public class InvestigateAction : BaseAction, IInteractionAction
     {
         public const ActionType ActionTypeValue = ActionType.Investigate;
 
         private readonly Crime _crime;
-        private ActorTag2D _targetWitness;
+        private ActorTag2D _targetWitness = null;
 
         private bool _doneResearching = false;
 
@@ -49,6 +49,8 @@ namespace NPCProcGen.Core.Actions
             }
 
             _targetWitness = targetWitnessData.Item1;
+            _targetWitness.NotifManager.ActorImprisoned += InterruptAction;
+
             Vector2 targetLastPosition = targetWitnessData.Item2;
 
             _searchState = new(_owner, ActionTypeValue, _targetWitness, targetLastPosition);
@@ -97,6 +99,18 @@ namespace NPCProcGen.Core.Actions
             };
             _waitState.CompleteState += () => TransitionTo(_engageState);
             interrogateState.CompleteState += () => CompleteAction();
+
+            TransitionTo(_searchState);
+        }
+
+        public void Subscribe() { }
+
+        public void Unsubscribe()
+        {
+            if (_targetWitness != null)
+            {
+                _targetWitness.NotifManager.ActorImprisoned -= InterruptAction;
+            }
         }
 
         public override void Update(double delta)

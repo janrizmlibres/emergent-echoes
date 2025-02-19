@@ -8,7 +8,7 @@ namespace NPCProcGen.Core.Actions
     /// <summary>
     /// Represents an action where an NPC agent attempts to steal a resource from a target.
     /// </summary>
-    public class TheftAction : BaseAction
+    public class TheftAction : BaseAction, IInteractionAction
     {
         public const ActionType ActionTypeValue = ActionType.Theft;
 
@@ -75,6 +75,16 @@ namespace NPCProcGen.Core.Actions
 
             stealState.CompleteState += () => TransitionTo(fleeState);
             fleeState.CompleteState += () => CompleteAction();
+        }
+
+        public void Subscribe()
+        {
+            _targetActor.NotifManager.ActorImprisoned += InterruptAction;
+        }
+
+        public void Unsubscribe()
+        {
+            _targetActor.NotifManager.ActorImprisoned -= InterruptAction;
         }
 
         /// <summary>

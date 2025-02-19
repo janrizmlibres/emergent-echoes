@@ -5,7 +5,7 @@ using NPCProcGen.Core.States;
 
 namespace NPCProcGen.Core.Actions
 {
-    public class PursuitAction : BaseAction
+    public class PursuitAction : BaseAction, IInteractionAction
     {
         public const ActionType ActionTypeValue = ActionType.Pursuit;
 
@@ -20,11 +20,6 @@ namespace NPCProcGen.Core.Actions
         {
             _targetActor = target;
             InitializeStates();
-        }
-
-        public override void Update(double delta)
-        {
-            _currentState?.Update(delta);
         }
 
         private void InitializeStates()
@@ -52,6 +47,21 @@ namespace NPCProcGen.Core.Actions
                 }
             };
             captureState.CompleteState += () => CompleteAction();
+        }
+
+        public void Subscribe()
+        {
+            _targetActor.NotifManager.ActorImprisoned += InterruptAction;
+        }
+
+        public void Unsubscribe()
+        {
+            _targetActor.NotifManager.ActorImprisoned -= InterruptAction;
+        }
+
+        public override void Update(double delta)
+        {
+            _currentState?.Update(delta);
         }
 
         public override void Run()

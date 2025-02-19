@@ -5,6 +5,12 @@ using NPCProcGen.Core.Components.Enums;
 
 namespace NPCProcGen.Core.Actions
 {
+    public interface IInteractionAction
+    {
+        public void Subscribe();
+        public void Unsubscribe();
+    }
+
     /// <summary>
     /// Abstract base class for actions performed by an NPC agent.
     /// </summary>

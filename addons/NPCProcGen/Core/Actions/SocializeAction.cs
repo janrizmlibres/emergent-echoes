@@ -8,9 +8,11 @@ namespace NPCProcGen.Core.Actions
     /// <summary>
     /// Represents an action to socialize with another actor.
     /// </summary>
-    public class SocializeAction : BaseAction
+    public class SocializeAction : BaseAction, IInteractionAction
     {
         public const ActionType ActionTypeValue = ActionType.Socialize;
+
+        private ActorTag2D _target = null;
 
         private SeekState _seekState;
 
@@ -27,6 +29,16 @@ namespace NPCProcGen.Core.Actions
         {
             _seekState = new SeekState(_owner, ActionTypeValue);
             _seekState.CompleteState += partner => InitializeInteractStates(partner);
+        }
+
+        public void Subscribe() { }
+
+        public void Unsubscribe()
+        {
+            if (_target != null)
+            {
+                _target.NotifManager.ActorImprisoned -= InterruptAction;
+            }
         }
 
         public override void Update(double delta)
@@ -55,6 +67,9 @@ namespace NPCProcGen.Core.Actions
 
         private void InitializeInteractStates(ActorTag2D partner)
         {
+            _target = partner;
+            _target.NotifManager.ActorImprisoned += InterruptAction;
+
             EngageState engageState = new(_owner, ActionTypeValue, partner, Waypoint.Lateral);
             WaitState waitState = new(_owner, ActionTypeValue, partner);
             TalkState talkState = new(_owner, ActionTypeValue, partner);

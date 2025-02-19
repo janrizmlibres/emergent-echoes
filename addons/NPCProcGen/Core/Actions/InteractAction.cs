@@ -5,7 +5,7 @@ using NPCProcGen.Core.States;
 
 namespace NPCProcGen.Core.Actions
 {
-    public class InteractAction : BaseAction
+    public class InteractAction : BaseAction, IInteractionAction
     {
         public const ActionType ActionTypeValue = ActionType.Interact;
 

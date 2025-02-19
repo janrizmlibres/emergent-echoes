@@ -8,7 +8,7 @@ namespace NPCProcGen.Core.Actions
     /// <summary>
     /// Represents an action where an NPC agent attempts to petition a resource.
     /// </summary>
-    public class PetitionAction : BaseAction
+    public class PetitionAction : BaseAction, IInteractionAction
     {
         public const ActionType ActionTypeValue = ActionType.Petition;
 
@@ -94,6 +94,16 @@ namespace NPCProcGen.Core.Actions
             };
             _waitState.CompleteState += () => TransitionTo(_engageState);
             petitionState.CompleteState += () => CompleteAction();
+        }
+
+        public void Subscribe()
+        {
+            _targetActor.NotifManager.ActorImprisoned += InterruptAction;
+        }
+
+        public void Unsubscribe()
+        {
+            _targetActor.NotifManager.ActorImprisoned -= InterruptAction;
         }
 
         public override void Update(double delta)
