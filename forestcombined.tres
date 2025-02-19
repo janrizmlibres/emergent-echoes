@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=38 format=3 uid="uid://kmbdo8s7eos"]
+[gd_resource type="TileSet" load_steps=40 format=3 uid="uid://kmbdo8s7eos"]
 
 [ext_resource type="Texture2D" uid="uid://b48g1mtrqdo7a" path="res://Stages/Island/Areas/Forest/Art/forest_.png" id="1_iudv6"]
 [ext_resource type="Texture2D" uid="uid://qt1p5td3mrie" path="res://Stages/Island/Areas/Forest/Art/forest_ [resources].png" id="2_y5ii8"]
@@ -700,6 +700,12 @@ polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)])
 agent_radius = 0.0
 
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_e2el8"]
+vertices = PackedVector2Array(8, 8, -8, 8, -8, -8, 8, -8)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)])
+agent_radius = 0.0
+
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_bxhi8"]
 vertices = PackedVector2Array(8, 8, -8, 8, -8, -8, 8, -8)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
@@ -799,6 +805,7 @@ texture = ExtResource("7_krlt2")
 2:2/0/terrains_peering_bit/top_left_corner = 2
 2:2/0/terrains_peering_bit/top_side = 2
 2:2/0/terrains_peering_bit/top_right_corner = 2
+2:2/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_e2el8")
 3:2/0 = 0
 3:2/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_a8ijh")
 4:2/0 = 0
@@ -1063,6 +1070,12 @@ texture = ExtResource("7_krlt2")
 6:3/0/texture_origin = Vector2i(-24, 8)
 6:3/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, -4, 0, -4, 0, -20, 48, -20, 48, -4, 56, -4, 56, 4, 36, 4, 36, -8, 36, -12, 32, -16, 16, -16, 12, -12, 12, 4, -8, 4)
 
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_crdrk"]
+vertices = PackedVector2Array(8, 8, -8, 8, -8, -8, 8, -8)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)])
+agent_radius = 0.0
+
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_d1p55"]
 vertices = PackedVector2Array(8, 8, -8, 8, -8, -8, 8, -8)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
@@ -1129,6 +1142,7 @@ texture = ExtResource("8_xfk66")
 1:2/0/terrains_peering_bit/top_right_corner = 1
 2:2/0 = 0
 2:2/0/terrain_set = 0
+2:2/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_crdrk")
 3:2/0 = 0
 3:2/0/terrain_set = 0
 3:2/0/terrains_peering_bit/bottom_left_corner = 1
