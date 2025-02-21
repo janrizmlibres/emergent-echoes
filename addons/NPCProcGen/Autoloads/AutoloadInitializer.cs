@@ -21,7 +21,7 @@ namespace NPCProcGen.Autoloads
             List<PrisonArea2D> prisons = new();
             FindPrisonsInNode(currentScene, prisons);
 
-            Sensor.InitializeWorldState(actors, prisons);
+            Sensor.Initialize(actors, prisons);
             ResourceManager.Instance.Initialize(actors);
 
             // ! Remove temporary debug code in production
