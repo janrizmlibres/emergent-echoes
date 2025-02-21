@@ -35,7 +35,7 @@ namespace EmergentEchoes.Entities.Actors
 
 			_actorTag2D.InteractionStarted += OnInteractionStarted;
 			_actorTag2D.InteractionEnded += OnInteractionEnded;
-			_actorTag2D.EventTriggered += OnEventTriggered;
+			// _actorTag2D.EventTriggered += OnEventTriggered;
 		}
 
 		public override void _PhysicsProcess(double delta)
