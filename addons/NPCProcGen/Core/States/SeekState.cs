@@ -3,49 +3,65 @@ using Godot;
 using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
-    /// <summary>
-    /// Represents the state of seeking a target.
-    /// </summary>
     public class SeekState : BaseState, INavigationState, IActorDetectionState
     {
-        public const ActionState ActionStateValue = ActionState.Seek;
-
         private const float SeekRadius = 150;
         private const float IdleDuration = 10;
 
+        private readonly Action<ActorTag2D> _setupInteractStates;
         private Vector2 _seekPosition;
 
         private float _idleTimer = IdleDuration;
         private bool _isMoving = true;
 
-        public event Action<ActorTag2D> CompleteState;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SeekState"/> class.
-        /// </summary>
-        /// <param name="owner">The owner of the state.</param>
-        public SeekState(NPCAgent2D owner, ActionType action) : base(owner, action) { }
-
-        public override void Enter()
+        public SeekState(ActorContext actorContext, StateContext stateContext,
+            Action<ActorTag2D> setupInteractStates)
+            : base(actorContext, stateContext, ActionState.Seek)
         {
-            GD.Print($"{_owner.Parent.Name} SeekState Enter");
+            _setupInteractStates = setupInteractStates;
+        }
 
+        protected override bool Validate()
+        {
+            NPCAgent2D agent = _actorContext.GetNPCAgent2D();
+
+            if (agent.IsAnyActorInRange())
+            {
+                ActorTag2D target = agent.GetRandomActorInRange();
+                _setupInteractStates(target);
+                return false;
+            }
+
+            return true;
+        }
+
+        protected override void ExecuteEnterLogic()
+        {
             _seekPosition = CommonUtils.GetRandomPosInCircularArea(
-                _owner.Parent.GlobalPosition,
+                _actorContext.ActorNode2D.GlobalPosition,
                 SeekRadius
             );
+        }
 
-            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+        protected override EnterParameters GetEnterParameters()
+        {
+            return new EnterParameters
+            {
+                StateName = "SeekState",
+                Data = new Array<Variant>()
+            };
+        }
 
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue),
-                new Array<Variant>()
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+        protected override ExitParameters GetExitParameters()
+        {
+            return new ExitParameters
+            {
+                Data = new Array<Variant>()
+            };
         }
 
         public override void Update(double delta)
@@ -57,22 +73,12 @@ namespace NPCProcGen.Core.States
             if (_idleTimer <= 0)
             {
                 _seekPosition = CommonUtils.GetRandomPosInCircularArea(
-                    _owner.Parent.GlobalPosition,
+                    _actorContext.ActorNode2D.GlobalPosition,
                     SeekRadius
                 );
                 _idleTimer = IdleDuration;
                 _isMoving = true;
             }
-        }
-
-        public override void Exit()
-        {
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue),
-                new Array<Variant>()
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
         }
 
         public bool IsNavigating()
@@ -93,9 +99,8 @@ namespace NPCProcGen.Core.States
 
         public void OnActorDetected(ActorTag2D actor)
         {
-            if (actor.IsPlayer()) return; // ! Remove after testing
-            if (actor.IsImprisoned()) return;
-            CompleteState?.Invoke(actor);
+            if (actor.Sensor.IsUnavailable()) return;
+            _actorContext.Executor.FinishAction();
         }
     }
 }

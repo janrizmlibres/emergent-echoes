@@ -1,58 +1,48 @@
-using System;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
     public class WaitState : BaseState, INavigationState
     {
-        public const ActionState ActionStateValue = ActionState.Wait;
-
         private const float WaitDistance = 40;
 
         private readonly ActorTag2D _target;
 
-        public event Action CompleteState;
-
-        public WaitState(NPCAgent2D owner, ActionType action, ActorTag2D target) : base(owner, action)
+        public WaitState(ActorContext actorContext, StateContext stateContext, ActorTag2D target)
+            : base(actorContext, stateContext, ActionState.Wait)
         {
             _target = target;
         }
 
         public override void Subscribe()
         {
-            _target.NotifManager.InteractionEnded += OnTargetInteractionEnded;
+            NotifManager.Instance.InteractionEnded += OnTargetInteractionEnded;
         }
 
-        public override void Enter()
+        protected override EnterParameters GetEnterParameters()
         {
-            GD.Print($"{_owner.Parent.Name} WaitState Enter");
+            return new EnterParameters
+            {
+                StateName = "WaitState",
+                Data = new Array<Variant>()
+            };
+        }
 
-            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
-
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue),
-                new Array<Variant>()
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+        protected override ExitParameters GetExitParameters()
+        {
+            return new ExitParameters
+            {
+                Data = new Array<Variant>()
+            };
         }
 
         public override void Unsubscribe()
         {
-            _target.NotifManager.InteractionEnded -= OnTargetInteractionEnded;
-        }
-
-        public override void Exit()
-        {
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue),
-                new Array<Variant>()
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+            NotifManager.Instance.InteractionEnded -= OnTargetInteractionEnded;
         }
 
         public bool IsNavigating()
@@ -62,10 +52,10 @@ namespace NPCProcGen.Core.States
 
         public Vector2 GetTargetPosition()
         {
-            Vector2 directionToInitiator = _target.Parent.GlobalPosition.DirectionTo(
-                _owner.Parent.GlobalPosition
+            Vector2 directionToInitiator = _target.GetParent<Node2D>().GlobalPosition.DirectionTo(
+                _actorContext.ActorNode2D.GlobalPosition
             );
-            return _target.Parent.GlobalPosition + directionToInitiator * WaitDistance;
+            return _target.GetParent<Node2D>().GlobalPosition + directionToInitiator * WaitDistance;
         }
 
         public bool OnNavigationComplete()
@@ -73,9 +63,10 @@ namespace NPCProcGen.Core.States
             return true;
         }
 
-        private void OnTargetInteractionEnded()
+        private void OnTargetInteractionEnded(ActorTag2D target)
         {
-            CompleteState?.Invoke();
+            if (target != _target) return;
+            _stateContext.Action.TransitionTo(_stateContext.ApproachState);
         }
     }
 }

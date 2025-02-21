@@ -1,71 +1,63 @@
-using System;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
-using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
     public class SearchState : BaseState, INavigationState, IActorDetectionState
     {
-        public const ActionState ActionStateValue = ActionState.Search;
-
         private readonly ActorTag2D _target;
         private Vector2 _lastKnownPosition;
 
-        /// <summary>
-        /// Event triggered when the state is completed.
-        /// </summary>
-        public event Action<bool> CompleteState;
-
-        public SearchState(NPCAgent2D owner, ActionType action, ActorTag2D target,
-            Vector2 lastKnownPosition) : base(owner, action)
+        public SearchState(ActorContext context, StateContext stateContext, ActorTag2D target)
+            : base(context, stateContext, ActionState.Search)
         {
             _target = target;
-            _lastKnownPosition = lastKnownPosition;
         }
 
-        /// <summary>
-        /// Called when the state is entered.
-        /// </summary>
-        public override void Enter()
+        protected override bool Validate()
         {
-            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+            if (_actorContext.GetNPCAgent2D().IsActorInRange(_target))
+            {
+                _stateContext.ApproachTarget(_target);
+                return false;
+            }
 
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue),
-                new Array<Variant>()
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+            Vector2? lastPosition = _actorContext.Memorizer.GetLastKnownPosition(_target);
+
+            if (lastPosition == null)
+            {
+                _actorContext.Executor.FinishAction();
+                return false;
+            }
+
+            _lastKnownPosition = lastPosition.Value;
+            return true;
         }
 
-        /// <summary>
-        /// Called when the state is exited.
-        /// </summary>
-        public override void Exit()
+        protected override EnterParameters GetEnterParameters()
         {
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue),
-                new Array<Variant>()
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+            return new EnterParameters
+            {
+                StateName = "SearchState",
+                Data = new Array<Variant>()
+            };
         }
 
-        /// <summary>
-        /// Determines whether the agent is currently navigating.
-        /// </summary>
-        /// <returns>True if the agent is navigating; otherwise, false.</returns>
+        protected override ExitParameters GetExitParameters()
+        {
+            return new ExitParameters
+            {
+                Data = new Array<Variant>()
+            };
+        }
+
         public bool IsNavigating()
         {
             return true;
         }
 
-        /// <summary>
-        /// Gets the target position for navigation.
-        /// </summary>
-        /// <returns>The global position of the target.</returns>
         public Vector2 GetTargetPosition()
         {
             return _lastKnownPosition;
@@ -73,8 +65,7 @@ namespace NPCProcGen.Core.States
 
         public bool OnNavigationComplete()
         {
-            bool isTargetFound = false;
-            CompleteState?.Invoke(isTargetFound);
+            _stateContext.Action.TransitionTo(_stateContext.WanderState);
             return true;
         }
 
@@ -82,8 +73,7 @@ namespace NPCProcGen.Core.States
         {
             if (target == _target)
             {
-                bool isTargetFound = true;
-                CompleteState?.Invoke(isTargetFound);
+                _stateContext.ApproachTarget(_target);
             }
         }
     }

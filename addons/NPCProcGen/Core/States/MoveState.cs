@@ -1,65 +1,35 @@
-using System;
-using System.Linq;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
-using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
-    /// <summary>
-    /// Represents the state where an NPC agent moves to a target position.
-    /// </summary>
     public class MoveState : BaseState, INavigationState
     {
-        public const ActionState ActionStateValue = ActionState.Move;
-
         private Vector2 _movePosition;
 
-        /// <summary>
-        /// Event triggered when the state is completed.
-        /// </summary>
-        public event Action CompleteState;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MoveState"/> class with a target node.
-        /// </summary>
-        /// <param name="owner">The NPC agent owning this state.</param>
-        /// <param name="target">The target node to move to.</param>
-        /// <param name="lastKnownPosition">The last known position of the target.</param>
-        public MoveState(NPCAgent2D owner, ActionType action, Vector2 movePosition) : base(owner, action)
+        public MoveState(ActorContext actorContext, StateContext stateContext, Vector2 movePosition)
+            : base(actorContext, stateContext, ActionState.Move)
         {
             _movePosition = movePosition;
         }
 
-        /// <summary>
-        /// Called when the state is entered.
-        /// </summary>
-        public override void Enter()
+        protected override EnterParameters GetEnterParameters()
         {
-            GD.Print($"{_owner.Parent.Name} MoveState Enter");
-
-            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
-
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue),
-                new Array<Variant>()
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+            return new EnterParameters
+            {
+                StateName = "MoveState",
+                Data = new Array<Variant>()
+            };
         }
 
-        /// <summary>
-        /// Called when the state is exited.
-        /// </summary>
-        public override void Exit()
+        protected override ExitParameters GetExitParameters()
         {
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue),
-                new Array<Variant>()
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+            return new ExitParameters
+            {
+                Data = new Array<Variant>()
+            };
         }
 
         /// <summary>
@@ -82,7 +52,7 @@ namespace NPCProcGen.Core.States
 
         public bool OnNavigationComplete()
         {
-            CompleteState?.Invoke();
+            _actorContext.Executor.FinishAction();
             return true;
         }
     }

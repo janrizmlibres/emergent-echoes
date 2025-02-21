@@ -1,86 +1,67 @@
-using System;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
-    /// <summary>
-    /// Represents a state where the NPC wanders around.
-    /// </summary>
     public class WanderState : BaseState, INavigationState, IActorDetectionState
     {
-        public const ActionState ActionStateValue = ActionState.Wander;
-
         private const float WanderRadius = 100;
         private const int MinInterval = 5;
         private const int MaxInterval = 10;
         private const int MaxDuration = 30;
 
-        private readonly ActorTag2D _targetActor;
+        private readonly ActorTag2D _target;
         private Vector2 _wanderPosition;
         private Vector2 _origin;
 
         private bool _isWandering = false;
+        private bool _durationReached = false;
 
         private float _durationTimer = MaxDuration;
         private float _idleTimer;
 
-        /// <summary>
-        /// Event triggered when the state is completed.
-        /// </summary>
-        public event Action<bool> CompleteState;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WanderState"/> class.
-        /// </summary>
-        /// <param name="owner">The owner of the state.</param>
-        /// <param name="target">The target actor.</param>
-        public WanderState(NPCAgent2D owner, ActionType action, ActorTag2D target)
-            : base(owner, action)
+        public WanderState(ActorContext actorContext, StateContext stateContext, ActorTag2D target)
+            : base(actorContext, stateContext, ActionState.Wander)
         {
-            _targetActor = target;
-            _wanderPosition = owner.Parent.GlobalPosition;
+            _target = target;
+            _wanderPosition = actorContext.ActorNode2D.GlobalPosition;
             _idleTimer = GD.RandRange(MinInterval, MaxInterval);
         }
 
-        /// <summary>
-        /// Called when the state is entered.
-        /// </summary>
-        public override void Enter()
+        protected override void ExecuteEnterLogic()
         {
-            _origin = _owner.Parent.GlobalPosition;
-
-            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
-
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue),
-                new Array<Variant>()
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+            _origin = _actorContext.ActorNode2D.GlobalPosition;
         }
 
-        /// <summary>
-        /// Called when the state is exited.
-        /// </summary>
-        public override void Exit()
+        protected override EnterParameters GetEnterParameters()
         {
-            // Bring back emit signal in refactor
+            return new EnterParameters
+            {
+                StateName = "WanderState",
+                Data = new Array<Variant>()
+            };
         }
 
-        /// <summary>
-        /// Updates the state.
-        /// </summary>
-        /// <param name="delta">The time elapsed since the last update.</param>
+        protected override ExitParameters GetExitParameters()
+        {
+            return new ExitParameters
+            {
+                Data = new Array<Variant>() { _durationReached }
+            };
+        }
+
         public override void Update(double delta)
         {
             _durationTimer -= (float)delta;
 
             if (_durationTimer <= 0)
             {
-                OnCompleteState(true);
+                _durationReached = true;
+                _actorContext.Executor.FinishAction();
+                return;
             }
 
             if (_isWandering) return;
@@ -95,61 +76,28 @@ namespace NPCProcGen.Core.States
             }
         }
 
-        /// <summary>
-        /// Checks if the NPC is navigating.
-        /// </summary>
-        /// <returns>True if the NPC is navigating, otherwise false.</returns>
         public bool IsNavigating()
         {
             return _isWandering;
         }
 
-        /// <summary>
-        /// Gets the target position.
-        /// </summary>
-        /// <returns>The target position.</returns>
         public Vector2 GetTargetPosition()
         {
             return _wanderPosition;
         }
 
-        /// <summary>
-        /// Handles the completion of navigation.
-        /// </summary>
         public bool OnNavigationComplete()
         {
             _isWandering = false;
             return true;
         }
 
-        /// <summary>
-        /// Handles the detection of an actor.
-        /// </summary>
-        /// <param name="target">The detected actor.</param>
         public void OnActorDetected(ActorTag2D target)
         {
-            if (target == _targetActor)
+            if (target == _target)
             {
-                OnCompleteState(false);
+                _stateContext.ApproachTarget(_target);
             }
-        }
-
-        /// <summary>
-        /// Handles the completion of the state.
-        /// </summary>
-        /// <param name="durationReached">Indicates if the maximum duration was reached.</param>
-        private void OnCompleteState(bool durationReached)
-        {
-            CompleteState?.Invoke(durationReached);
-
-            Array<Variant> data = new() { durationReached };
-
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue),
-                data
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
         }
     }
 }

@@ -1,49 +1,47 @@
-using System;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
     public class InteractionState : BaseState
     {
-        public const ActionState ActionStateValue = ActionState.Interact;
-
         private readonly ActorTag2D _target;
 
-        public InteractionState(NPCAgent2D owner, ActionType actionType, ActorTag2D target)
-            : base(owner, actionType)
+        public InteractionState(ActorContext actorContext, StateContext stateContext,
+            ActorTag2D target)
+            : base(actorContext, stateContext, ActionState.Interact)
         {
             _target = target;
         }
 
-        public override void Enter()
+        protected override EnterParameters GetEnterParameters()
         {
-            GD.Print($"{_owner.Parent.Name} InteractionState Enter");
-            _owner.NotifManager.NotifyInteractionStarted();
-            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
-
-            Array<Variant> data = new() { _target.Parent };
-
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue),
-                data
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+            return new EnterParameters
+            {
+                StateName = "InteractionState",
+                Data = new Array<Variant> { _target.GetParent<Node2D>() }
+            };
         }
 
-        public override void Exit()
+        protected override ExitParameters GetExitParameters()
         {
-            _owner.NotifManager.NotifyInteractionEnded();
+            return new ExitParameters
+            {
+                Data = new Array<Variant>()
+            };
+        }
 
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue),
-                new Array<Variant>()
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+        protected override void ExecuteEnterLogic()
+        {
+            NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
+        }
+
+        protected override void ExecuteExitLogic()
+        {
+            NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);
         }
     }
 }

@@ -1,66 +1,59 @@
-using System;
 using System.Linq;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 using NPCProcGen.Core.Traits;
 
 namespace NPCProcGen.Core.States
 {
     public class CaptureState : BaseState, INavigationState
     {
-        public const ActionState ActionStateValue = ActionState.Capture;
-
         private readonly ActorTag2D _criminal;
         private Vector2 _targetPosition;
 
-        public event Action CompleteState;
-
-        public CaptureState(NPCAgent2D owner, ActionType actionType, ActorTag2D criminal)
-            : base(owner, actionType)
+        public CaptureState(ActorContext actorContext, StateContext stateContext,
+            ActorTag2D criminal) : base(actorContext, stateContext, ActionState.Capture)
         {
             _criminal = criminal;
-            _targetPosition = _owner.Parent.GlobalPosition;
         }
 
-        public override void Enter()
+        protected override void ExecuteEnterLogic()
         {
-            GD.Print($"{_owner.Parent.Name} CaptureState Enter");
-
-            PrisonArea2D prisonArea = _owner.Sensor.GetPrisonArea();
+            PrisonArea2D prisonArea = _actorContext.Sensor.GetRandomPrison();
             DebugTool.Assert(prisonArea != null, "Prison area not found");
             _targetPosition = prisonArea.GetRandomPoint();
 
-            _criminal.Arrest();
-            _criminal.EmitSignal(ActorTag2D.SignalName.EventTriggered, Variant.From(EventType.Captured));
-
-            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
-
-            Array<Variant> data = new() { _criminal };
-
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue),
-                data
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+            // _criminal.Arrest();
+            // _criminal.EmitSignal(ActorTag2D.SignalName.EventTriggered, Variant.From(EventType.Captured));
         }
 
-        public override void Exit()
+        protected override EnterParameters GetEnterParameters()
         {
-            _owner.Traits.OfType<LawfulTrait>().FirstOrDefault()?.MarkCrimeAsSolved();
+            return new EnterParameters
+            {
+                StateName = "CaptureState",
+                Data = new Array<Variant> { _criminal }
+            };
+        }
 
-            Array<Variant> data = new() { _criminal };
+        protected override ExitParameters GetExitParameters()
+        {
+            return new ExitParameters
+            {
+                Data = new Array<Variant> { _criminal }
+            };
+        }
 
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue),
-                data
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+        protected override void ExecuteExitLogic()
+        {
+            _actorContext.GetNPCAgent2D().Traits
+                .OfType<LawfulTrait>()
+                .FirstOrDefault()?
+                .MarkCrimeAsSolved();
 
-            _criminal.EmitSignal(ActorTag2D.SignalName.EventTriggered, Variant.From(EventType.Released));
+            // _criminal.EmitSignal(ActorTag2D.SignalName.EventTriggered, Variant.From(EventType.Released));
         }
 
         public bool IsNavigating()
@@ -75,7 +68,7 @@ namespace NPCProcGen.Core.States
 
         public bool OnNavigationComplete()
         {
-            CompleteState?.Invoke();
+            _actorContext.Executor.FinishAction();
             return true;
         }
     }
