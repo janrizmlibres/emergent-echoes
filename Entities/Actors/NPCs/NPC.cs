@@ -6,7 +6,6 @@ using System.Linq;
 using EmergentEchoes.Utilities.Game.Enums;
 using EmergentEchoes.Utilities.Game;
 using EmergentEchoes.Utilities;
-using System.Collections.Generic;
 using EmergentEchoes.Stages.Testing;
 
 namespace EmergentEchoes.Entities.Actors
@@ -38,7 +37,6 @@ namespace EmergentEchoes.Entities.Actors
         private AnimationNodeStateMachinePlayback _animationState;
         private NavigationAgent2D _navigationAgent2d;
         private NPCAgent2D _npcAgent2d;
-        private Line2D _line2d;
 
         private EmoteController _emoteController;
         private FloatTextController _floatTextController;
@@ -66,7 +64,6 @@ namespace EmergentEchoes.Entities.Actors
             _animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
             _navigationAgent2d = GetNode<NavigationAgent2D>("NavigationAgent2D");
             _npcAgent2d = GetNode<NPCAgent2D>("NPCAgent2D");
-            _line2d = GetNode<Line2D>("Line2D");
 
             _emoteController = GetNode<EmoteController>("EmoteController");
             _floatTextController = GetNode<FloatTextController>("FloatTextController");
@@ -74,11 +71,11 @@ namespace EmergentEchoes.Entities.Actors
             _animationTree.AnimationFinished += OnAnimationFinished;
             _navigationAgent2d.VelocityComputed += OnNavigationAgentVelocityComputed;
 
+            _npcAgent2d.ActionStarted += OnActionStarted;
             _npcAgent2d.ExecutionStarted += OnExecutionStarted;
             _npcAgent2d.ExecutionEnded += OnExecutionEnded;
-            _npcAgent2d.ActionStateEntered += OnActionStateEntered;
-            _npcAgent2d.ActionStateExited += OnActionStateExited;
-            _npcAgent2d.EventTriggered += OnEventTriggered;
+            _npcAgent2d.StateEntered += OnStateEntered;
+            _npcAgent2d.StateExited += OnStateExited;
 
             SetupTilePositions();
         }
@@ -247,12 +244,15 @@ namespace EmergentEchoes.Entities.Actors
             Velocity = safeVelocity;
         }
 
-        private void OnExecutionStarted(Variant action)
+        private void OnExecutionStarted()
         {
-            ActionType actionType = action.As<ActionType>();
-
             _mainState = MainState.Procedural;
             _stateTimer.Stop();
+        }
+
+        private void OnActionStarted(Variant action)
+        {
+            ActionType actionType = action.As<ActionType>();
 
             if (actionType == ActionType.Theft)
             {
@@ -269,7 +269,7 @@ namespace EmergentEchoes.Entities.Actors
             RandomizeMainState();
         }
 
-        private void OnActionStateEntered(Variant state, Array<Variant> data)
+        private void OnStateEntered(Variant state, Array<Variant> data)
         {
             ActionState actionState = state.As<ActionState>();
 
@@ -291,7 +291,7 @@ namespace EmergentEchoes.Entities.Actors
             }
         }
 
-        private void OnActionStateExited(Variant state, Array<Variant> data)
+        private void OnStateExited(Variant state, Array<Variant> data)
         {
             ActionState actionState = state.As<ActionState>();
 
@@ -374,28 +374,6 @@ namespace EmergentEchoes.Entities.Actors
                     ResourceType.Companionship,
                     companionshipIncrease.ToString()
                 );
-            }
-        }
-
-        private void OnEventTriggered(Variant eventType)
-        {
-            EventType type = eventType.As<EventType>();
-
-            if (type == EventType.CrimeWitnessed)
-            {
-                _emoteController.ShowEmoteBubble(Emote.Interrobang);
-            }
-            else if (type == EventType.Captured)
-            {
-                // Captured
-            }
-            else if (type == EventType.Released)
-            {
-                // Released
-            }
-            else if (type == EventType.TargetInterrupted)
-            {
-
             }
         }
 
