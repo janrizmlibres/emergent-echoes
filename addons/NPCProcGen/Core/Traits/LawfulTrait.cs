@@ -29,15 +29,7 @@ namespace NPCProcGen.Core.Traits
         private Crime _assignedCrime = null;
         private float _investigationTimer = CrimeInvestigationTime;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LawfulTrait"/> class.
-        /// </summary>
-        /// <param name="owner">The owner of the trait.</param>
-        /// <param name="weight">The weight of the trait.</param>
-        /// <param name="sensor">The sensor associated with the trait.</param>
-        /// <param name="memorizer">The memorizer associated with the trait.</param>
-        public LawfulTrait(NPCAgent2D owner, float weight, Sensor sensor, NPCMemorizer memorizer)
-            : base(owner, weight, sensor, memorizer) { }
+        public LawfulTrait(ActorContext context, float weight) : base(context, weight) { }
 
         public override void Update(double delta)
         {
@@ -79,12 +71,12 @@ namespace NPCProcGen.Core.Traits
 
         private void StartNewInvestigation(List<Tuple<BaseAction, float>> actionCandidates)
         {
-            AssignedCrime = _sensor.InvestigateCrime();
+            AssignedCrime = _actorCtx.Sensor.InvestigateCrime();
             if (AssignedCrime == null) return;
 
             AddSimpleAction(
                 actionCandidates,
-                () => new InvestigateAction(_owner, AssignedCrime), _weight
+                () => new InvestigateAction(_actorCtx, AssignedCrime), _weight
             );
         }
 
@@ -94,7 +86,7 @@ namespace NPCProcGen.Core.Traits
             {
                 AddSimpleAction(
                     actionCandidates,
-                    () => new InvestigateAction(_owner, AssignedCrime), _weight
+                    () => new InvestigateAction(_actorCtx, AssignedCrime), _weight
                 );
                 return;
             }
@@ -105,24 +97,24 @@ namespace NPCProcGen.Core.Traits
             {
                 AddSimpleAction(
                     actionCandidates,
-                    () => new PursuitAction(_owner, AssignedCrime.Criminal), _weight
+                    () => new PursuitAction(_actorCtx, AssignedCrime.Criminal), _weight
                 );
                 return;
             }
 
-            AddSimpleAction(actionCandidates, () => new CloseCaseAction(_owner), _weight);
+            AddSimpleAction(actionCandidates, () => new CloseCaseAction(_actorCtx), _weight);
         }
 
         public void MarkCrimeAsUnsolved()
         {
             AssignedCrime = null;
-            _sensor.CloseInvestigation();
+            _actorCtx.Sensor.CloseInvestigation();
         }
 
         public void MarkCrimeAsSolved()
         {
             AssignedCrime = null;
-            _sensor.SolveInvestigation();
+            _actorCtx.Sensor.SolveInvestigation();
         }
     }
 }
