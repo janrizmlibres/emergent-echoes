@@ -10,29 +10,15 @@ using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.Traits
 {
-    /// <summary>
-    /// Represents a trait of an NPC.
-    /// </summary>
     public abstract class Trait
     {
-        protected readonly NPCAgent2D _owner;
+        protected readonly ActorContext _actorCtx;
         protected readonly float _weight;
-        protected readonly Sensor _sensor;
-        protected readonly NPCMemorizer _memorizer;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Trait"/> class.
-        /// </summary>
-        /// <param name="owner">The owner of the trait.</param>
-        /// <param name="weight">The weight of the trait.</param>
-        /// <param name="sensor">The sensor associated with the trait.</param>
-        /// <param name="memorizer">The memorizer associated with the trait.</param>
-        public Trait(NPCAgent2D owner, float weight, Sensor sensor, NPCMemorizer memorizer)
+        public Trait(ActorContext actorCtx, float weight)
         {
-            _owner = owner;
+            _actorCtx = actorCtx;
             _weight = weight;
-            _sensor = sensor;
-            _memorizer = memorizer;
         }
 
         protected void EvaluateInteraction(List<Tuple<BaseAction, float>> actionCandidates,
@@ -64,16 +50,16 @@ namespace NPCProcGen.Core.Traits
         private BaseAction CreateAction(ActionType actionType, ActorTag2D chosenActor, ResourceType resType)
         {
             if (actionType == ActionType.Theft)
-                return new TheftAction(_owner, chosenActor, resType);
+                return new TheftAction(_actorCtx, chosenActor, resType);
 
             if (actionType == ActionType.Petition)
-                return new PetitionAction(_owner, chosenActor, resType);
+                return new PetitionAction(_actorCtx, chosenActor, resType);
 
             if (actionType == ActionType.Eat)
-                return new EatAction(_owner);
+                return new EatAction(_actorCtx);
 
             if (actionType == ActionType.Socialize)
-                return new SocializeAction(_owner);
+                return new SocializeAction(_actorCtx);
 
             throw new ArgumentException("Invalid action type");
         }
@@ -86,23 +72,23 @@ namespace NPCProcGen.Core.Traits
         private ActorTag2D ChooseActor(ResourceType type, ActionType actionType,
             Func<List<ActorTag2D>, ActorTag2D> actorPicker)
         {
-            List<ActorTag2D> peerActors = CommonUtils.Shuffle(_owner.Memorizer.GetPeerActors());
+            List<ActorTag2D> peerActors = CommonUtils.Shuffle(_actorCtx.Memorizer.GetPeerActors());
             List<ActorTag2D> potentialActors = new();
 
             foreach (ActorTag2D actor in peerActors)
             {
-                Vector2? actorLastPos = _owner.Memorizer.GetLastKnownPosition(actor);
+                Vector2? actorLastPos = _actorCtx.Memorizer.GetLastKnownPosition(actor);
 
-                if (actorLastPos == null && !_owner.IsActorInRange(actor)) continue;
+                if (actorLastPos == null && !_actorCtx.GetNPCAgent2D().IsActorInRange(actor)) continue;
                 if (actor.IsPlayer() && GD.Randf() > 0.2) continue;
-                if (actor.IsImprisoned()) continue;
+                if (actor.Sensor.IsUnavailable()) continue;
 
                 if (actionType == ActionType.Petition)
                 {
                     // Equates to false if the actor is not petitioning (petition resource type is null)
                     // or if the actor is petitioning for a different resource type.
                     if (actor.Sensor.GetPetitionResourceType() == type) continue;
-                    if (!_owner.Memorizer.IsValidPetitionTarget(actor, type)) continue;
+                    if (!_actorCtx.Memorizer.IsValidPetitionTarget(actor, type)) continue;
                 }
 
                 ResourceManager resMgr = ResourceManager.Instance;
@@ -116,7 +102,7 @@ namespace NPCProcGen.Core.Traits
 
         private float CalculateWeight(ResourceType type)
         {
-            ResourceStat chosenResource = ResourceManager.Instance.GetResource(_owner, type);
+            ResourceStat chosenResource = ResourceManager.Instance.GetResource(_actorCtx.Actor, type);
 
             float imbalance = chosenResource.LowerThreshold - chosenResource.Amount;
             float unweightedScore = Math.Max(0, imbalance) / chosenResource.LowerThreshold;
