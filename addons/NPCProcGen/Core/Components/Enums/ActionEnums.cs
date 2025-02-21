@@ -39,5 +39,6 @@ namespace NPCProcGen.Core.Components.Enums
     {
         Petition = ActionState.Petition,
         Talk = ActionState.Talk,
+        Interrogate = ActionState.Interrogate
     }
 }
