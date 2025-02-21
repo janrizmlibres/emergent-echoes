@@ -2,36 +2,32 @@ using System;
 
 namespace NPCProcGen.Core.Helpers
 {
-    /// <summary>
-    /// Manages notifications for navigation completion and actor detection.
-    /// </summary>
-    public class NotifManager
+    public sealed class NotifManager
     {
-        public event Action<bool> PetitionAnswered;
+        private static readonly Lazy<NotifManager> _instance = new(() => new NotifManager());
 
-        public event Action InteractionStarted;
-        public event Action InteractionEnded;
+        public static NotifManager Instance => _instance.Value;
 
-        public event Action ActorImprisoned;
+        private NotifManager() { }
 
-        public void NotifyPetitionAnswered(bool isAccepted)
+        public event Action<ActorTag2D, bool> PetitionAnswered;
+
+        public event Action<ActorTag2D> InteractionStarted;
+        public event Action<ActorTag2D> InteractionEnded;
+
+        public void NotifyPetitionAnswered(ActorTag2D source, bool isAccepted)
         {
-            PetitionAnswered?.Invoke(isAccepted);
+            PetitionAnswered?.Invoke(source, isAccepted);
         }
 
-        public void NotifyInteractionStarted()
+        public void NotifyInteractionStarted(ActorTag2D source)
         {
-            InteractionStarted?.Invoke();
+            InteractionStarted?.Invoke(source);
         }
 
-        public void NotifyInteractionEnded()
+        public void NotifyInteractionEnded(ActorTag2D source)
         {
-            InteractionEnded?.Invoke();
-        }
-
-        public void NotifyActorImprisoned()
-        {
-            ActorImprisoned?.Invoke();
+            InteractionEnded?.Invoke(source);
         }
     }
 }
