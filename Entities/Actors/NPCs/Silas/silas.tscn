@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://diiesf6ffioa7"]
+[gd_scene load_steps=12 format=3 uid="uid://diiesf6ffioa7"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/NPC.cs" id="1_scutl"]
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_5inc2"]
@@ -7,7 +7,9 @@
 [ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_x7obk"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="5_2y03f"]
 [ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="5_6ilnl"]
+[ext_resource type="PackedScene" uid="uid://bgcerqofqnnn6" path="res://Entities/Hooks/actor_detector.tscn" id="7_ctg42"]
 [ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="8_hr3nq"]
+[ext_resource type="PackedScene" uid="uid://ljm1capb63sh" path="res://Entities/Hooks/EvaluationTimer/evaluation_timer.tscn" id="9_mq0hm"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30oj8"]
 radius = 3.0
@@ -25,13 +27,16 @@ texture = ExtResource("2_5inc2")
 hframes = 8
 vframes = 6
 frame = 8
+metadata/_edit_lock_ = true
 
 [node name="FoodAnchor" parent="." instance=ExtResource("3_kx0md")]
 visible = false
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_30oj8")
+metadata/_edit_lock_ = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -52,22 +57,29 @@ path_postprocessing = 1
 avoidance_enabled = true
 radius = 5.0
 
-[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("RearMarker")]
+[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("ActorDetector", "EvaluationTimer", "RearMarker")]
 script = ExtResource("3_x7obk")
-Survival = 0.52
-Thief = 0.73
+ActorDetector = NodePath("../ActorDetector")
+EvaluationTimer = NodePath("../EvaluationTimer")
 MoneyAmount = 1000
 RearMarker = NodePath("../RearMarker/Marker2D")
 
+[node name="ActorDetector" parent="." instance=ExtResource("7_ctg42")]
+metadata/_edit_lock_ = true
+
 [node name="RearMarker" type="Node2D" parent="."]
 rotation = 3.14159
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
 
 [node name="Marker2D" type="Marker2D" parent="RearMarker"]
 position = Vector2(-10, -2.53518e-05)
+metadata/_edit_lock_ = true
 
 [node name="EmoteController" parent="." instance=ExtResource("5_6ilnl")]
+metadata/_edit_lock_ = true
 
 [node name="FloatTextController" parent="." instance=ExtResource("8_hr3nq")]
+metadata/_edit_lock_ = true
 
-[node name="Line2D" type="Line2D" parent="."]
-width = 2.0
+[node name="EvaluationTimer" parent="." instance=ExtResource("9_mq0hm")]
