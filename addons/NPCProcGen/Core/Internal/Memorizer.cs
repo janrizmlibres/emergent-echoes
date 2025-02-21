@@ -9,13 +9,13 @@ namespace NPCProcGen.Core.Internal
 {
     public class Memorizer
     {
-        protected readonly ActorTag2D _owner;
-
         protected readonly Dictionary<ActorTag2D, ActorData> _actorData = new();
 
-        public Memorizer(ActorTag2D owner)
+        private readonly ActorContext _context;
+
+        public Memorizer(ActorContext context)
         {
-            _owner = owner;
+            _context = context;
         }
 
         public virtual void Initialize(List<ActorTag2D> actors)
@@ -38,7 +38,7 @@ namespace NPCProcGen.Core.Internal
 
         public void UpdateRelationship(ActorTag2D actor, float amount)
         {
-            DebugTool.Assert(_actorData.ContainsKey(actor), $"Actor {actor.Parent.Name} not found in memorizer.");
+            DebugTool.Assert(_actorData.ContainsKey(actor), $"Actor {_context.ActorNode2D.Name} not found in memorizer.");
             _actorData[actor].Relationship += amount;
         }
 
@@ -55,7 +55,7 @@ namespace NPCProcGen.Core.Internal
 
     public class NPCMemorizer : Memorizer
     {
-        public NPCMemorizer(NPCAgent2D owner) : base(owner) { }
+        public NPCMemorizer(ActorContext context) : base(context) { }
 
         public override void Initialize(List<ActorTag2D> actors)
         {
