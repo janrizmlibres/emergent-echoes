@@ -48,7 +48,7 @@ namespace NPCProcGen.Core.Components
                 .ToList();
 
             ActorTag2D chosenWitness = shuffledActors
-                .Where(actor => !actor.IsImprisoned())
+                .Where(actor => !actor.Sensor.IsUnavailable())
                 .FirstOrDefault();
 
             if (chosenWitness != null)
