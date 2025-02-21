@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
@@ -7,118 +8,125 @@ using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.Internal
 {
-    // TODO: Make this class the only component that can access the world state
-    /// <summary>
-    /// The Sensor class is responsible for accessing the world state and retrieving actor information.
-    /// </summary>
     public class Sensor
     {
-        /// <summary>
-        /// The world state instance.
-        /// </summary>
         private static readonly WorldState _worldState = new();
-        private readonly ActorTag2D _owner;
 
-        public Sensor(ActorTag2D owner)
+        private readonly ActorContext _actorCtx;
+
+        public Sensor(ActorContext context)
         {
-            _owner = owner;
+            _actorCtx = context;
         }
 
-        public static void InitializeWorldState(List<ActorTag2D> actors, List<PrisonArea2D> prisons)
+        public static void Initialize(List<ActorTag2D> actors, List<PrisonArea2D> prisons)
         {
-            _worldState.Initialize(actors, prisons);
+            _worldState.Actors.AddRange(actors);
+            _worldState.Prisons.AddRange(prisons);
+
+            foreach (ActorTag2D actor in actors)
+            {
+                actor.Initialize(actors.Where(a => actor != a).ToList());
+                _worldState.ActorState.Add(actor, new ActorState());
+            }
         }
 
-        /// <summary>
-        /// Retrieves the list of actors from the world state.
-        /// </summary>
-        /// <returns>A read-only list of actors.</returns>
         public List<ActorTag2D> GetActors()
         {
-            return _worldState.Actors;
+            return _worldState.Actors.ToList();
         }
 
         public Tuple<ActionType, ActionState> GetTaskRecord()
         {
-            return _worldState.GetTaskRecord(_owner);
-        }
-
-        public ActionType? GetTaskActionType()
-        {
-            return _worldState.GetTaskRecord(_owner)?.Item1;
-        }
-
-        public ActionState? GetTaskActionState()
-        {
-            return _worldState.GetTaskRecord(_owner)?.Item2;
+            return _worldState.ActorState[_actorCtx.Actor].CurrentTask ?? null;
         }
 
         public void SetTaskRecord(ActionType actionType, ActionState actionState)
         {
-            _worldState.SetTaskRecord(_owner, actionType, actionState);
+            ActorState actorState = _worldState.ActorState[_actorCtx.Actor];
+            actorState.CurrentTask = new Tuple<ActionType, ActionState>(
+                actionType, actionState
+            );
         }
 
         public void ClearTaskRecord()
         {
-            _worldState.ResetTaskRecord(_owner);
+            _worldState.ActorState[_actorCtx.Actor].CurrentTask = null;
         }
 
-        public bool IsActorBusy()
+        public bool IsBusy()
         {
-            return _worldState.IsActorBusy(_owner);
+            Tuple<ActionType, ActionState> action = GetTaskRecord();
+
+            if (action == null) return false;
+
+            ActionState state = action.Item2;
+
+            return state == ActionState.Talk || state == ActionState.Petition
+                || state == ActionState.Interact || state == ActionState.Flee
+                || state == ActionState.Capture;
         }
 
-        public bool IsActorPetitioning()
+        public bool IsUnavailable()
         {
-            return _worldState.GetTaskRecord(_owner)?.Item1 == ActionType.Petition;
+            return _worldState.ActorState[_actorCtx.Actor].IsUnavailable;
         }
 
         public ResourceType? GetPetitionResourceType()
         {
-            return _worldState.GetPetitionResourceType(_owner);
+            return _worldState.ActorState[_actorCtx.Actor].CurrentPetitionResourceType;
         }
 
         public void SetPetitionResourceType(ResourceType type)
         {
-            _worldState.SetPetitionResourceType(_owner, type);
+            _worldState.ActorState[_actorCtx.Actor].CurrentPetitionResourceType = type;
         }
 
         public void ClearPetitionResourceType()
         {
-            _worldState.ClearPetitionResourceType(_owner);
-        }
-
-        public bool HasCrimes()
-        {
-            return _worldState.HasCrimes();
+            SetPetitionResourceType(ResourceType.None);
         }
 
         public void RecordCrime(Crime crime)
         {
-            _worldState.RecordCrime(crime);
+            _worldState.RecordedCrimes.Enqueue(crime);
         }
 
         public Crime InvestigateCrime()
         {
-            DebugTool.Assert(_owner is NPCAgent2D, "Only NPC agents can investigate crimes");
-            return _worldState.InvestigateCrime(_owner as NPCAgent2D);
+            if (_worldState.RecordedCrimes.TryDequeue(out Crime crime))
+            {
+                NPCAgent2D investigator = _actorCtx.GetNPCAgent2D();
+                crime.Investigator = investigator;
+                _worldState.Investigations.Add(investigator, crime);
+                return crime;
+            }
+            return null;
         }
 
         public void CloseInvestigation()
         {
-            DebugTool.Assert(_owner is NPCAgent2D, "Only NPC agents can close investigations");
-            _worldState.CloseInvestigation(_owner as NPCAgent2D);
+            Crime crime = RemoveInvestigation();
+            _worldState.UnsolvedCrimes.Add(crime);
         }
 
         public void SolveInvestigation()
         {
-            DebugTool.Assert(_owner is NPCAgent2D, "Only NPC agents can solve investigations");
-            _worldState.SolveInvestigation(_owner as NPCAgent2D);
+            Crime crime = RemoveInvestigation();
+            _worldState.SolvedCrimes.Add(crime);
         }
 
-        public PrisonArea2D GetPrisonArea()
+        public PrisonArea2D GetRandomPrison()
         {
-            return _worldState.GetAvailablePrison();
+            return CommonUtils.Shuffle(_worldState.Prisons).First();
+        }
+
+        private Crime RemoveInvestigation()
+        {
+            NPCAgent2D investigator = _actorCtx.GetNPCAgent2D();
+            Crime crime = _worldState.Investigations[investigator];
+            _worldState.Investigations.Remove(investigator);
+            return crime;
         }
     }
 }
