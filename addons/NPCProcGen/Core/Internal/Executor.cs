@@ -1,34 +1,22 @@
-using System;
 using System.Collections.Generic;
 using Godot;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.States;
 
 namespace NPCProcGen.Core.Internal
 {
-    /// <summary>
-    /// Executes actions for NPCs.
-    /// </summary>
     public class Executor
     {
         private readonly Stack<BaseAction> _actions = new();
 
-        private readonly NPCAgent2D _owner;
+        private readonly ActorContext _actorContext;
 
-        /// <summary>
-        /// Event triggered when the execution of an action ends.
-        /// </summary>
-        public event Action ExecutionEnded;
-
-        public Executor(NPCAgent2D owner)
+        public Executor(ActorContext context)
         {
-            _owner = owner;
+            _actorContext = context;
         }
 
-        /// <summary>
-        /// Updates the current action.
-        /// </summary>
-        /// <param name="delta">The time elapsed since the last update.</param>
         public void Update(double delta)
         {
             if (_actions.TryPeek(out BaseAction action))
@@ -37,83 +25,71 @@ namespace NPCProcGen.Core.Internal
             }
         }
 
-        /// <summary>
-        /// Sets a new action to be executed.
-        /// </summary>
-        /// <param name="action">The action to be executed.</param>
         public void AddAction(BaseAction action)
         {
             DebugTool.Assert(action != null, "Action to be assigned cannot be null");
 
-            _owner.Sensor.ClearPetitionResourceType();
-
             if (_actions.TryPeek(out BaseAction currentAction))
             {
-                currentAction.ActionComplete -= OnActionComplete;
-                (action as IInteractionAction)?.Unsubscribe();
-                currentAction.ClearState();
+                currentAction.InterruptAction();
+            }
+            else
+            {
+                _actorContext.EmitSignal(NPCAgent2D.SignalName.ExecutionStarted);
             }
 
             _actions.Push(action);
-            action.ActionComplete += OnActionComplete;
-            (action as IInteractionAction)?.Subscribe();
             action.Run();
         }
 
-        public void EndAllActions()
+        public void FinishAction()
+        {
+            DebugTool.Assert(_actions.Count > 0, "Actions cannot be null when completing an action");
+
+            _actions.Pop().Finish();
+
+            if (_actions.TryPeek(out BaseAction action))
+            {
+                action.Run();
+            }
+            else
+            {
+                _actorContext.GetNPCAgent2D().OnExecutionEnded();
+                _actorContext.EmitSignal(NPCAgent2D.SignalName.ExecutionEnded);
+            }
+        }
+
+        public void TerminateActions()
         {
             while (_actions.Count > 0)
             {
-                BaseAction action = _actions.Pop();
-                action.ActionComplete -= OnActionComplete;
-                (action as IInteractionAction)?.Unsubscribe();
-                action.ClearState();
+                _actions.Pop().InterruptAction();
             }
-
-            _owner.Sensor.ClearPetitionResourceType();
-            _owner.Sensor.ClearTaskRecord();
         }
 
-        public void EndCurrentAction()
+        public Vector2 GetTargetPosition()
         {
             if (_actions.TryPeek(out BaseAction action))
             {
-                action.CompleteAction();
+                BaseState currentState = action.CurrentState;
+                return (currentState as INavigationState)?.GetTargetPosition()
+                    ?? _actorContext.ActorNode2D.GlobalPosition;
             }
+
+            return _actorContext.ActorNode2D.GlobalPosition;
         }
 
-        /// <summary>
-        /// Checks if there is an action currently being executed.
-        /// </summary>
-        /// <returns>True if an action is being executed, otherwise false.</returns>
         public bool HasAction()
         {
             return _actions.Count > 0;
         }
 
-        /// <summary>
-        /// Gets the target position of the current action.
-        /// </summary>
-        /// <returns>The target position.</returns>
-        public Vector2 GetTargetPosition()
-        {
-            if (_actions.TryPeek(out BaseAction action))
-            {
-                return action.GetTargetPosition();
-            }
-
-            return _owner.Parent.GlobalPosition;
-        }
-
-        /// <summary>
-        /// Queries if the current action involves navigation.
-        /// </summary>
-        /// <returns>True if the action involves navigation, otherwise false.</returns>
         public bool IsNavigationRequired()
         {
             if (_actions.TryPeek(out BaseAction action))
             {
-                return action.IsNavigating();
+                BaseState currentState = action.CurrentState;
+                return currentState is INavigationState state && state.IsNavigating();
             }
 
             return false;
@@ -123,7 +99,8 @@ namespace NPCProcGen.Core.Internal
         {
             if (_actions.TryPeek(out BaseAction action))
             {
-                return action.CompleteNavigation();
+                BaseState currentState = action.CurrentState;
+                return (currentState as INavigationState)?.OnNavigationComplete() ?? false; ;
             }
             return false;
         }
@@ -132,7 +109,7 @@ namespace NPCProcGen.Core.Internal
         {
             if (_actions.TryPeek(out BaseAction action))
             {
-                action.CompleteConsumption();
+                (action.CurrentState as EatState)?.OnConsumptionComplete();
             }
         }
 
@@ -140,33 +117,8 @@ namespace NPCProcGen.Core.Internal
         {
             if (_actions.TryPeek(out BaseAction action))
             {
-                action.OnActorDetected(actor);
-            }
-        }
-
-        /// <summary>
-        /// Handles the completion of the current action.
-        /// </summary>
-        private void OnActionComplete()
-        {
-            DebugTool.Assert(_actions.Count > 0, "Actions cannot be null when completing an action");
-
-            _owner.Sensor.ClearPetitionResourceType();
-            _owner.Sensor.ClearTaskRecord();
-
-            BaseAction removedAction = _actions.Pop();
-            removedAction.ActionComplete -= OnActionComplete;
-            (removedAction as IInteractionAction)?.Unsubscribe();
-
-            if (_actions.TryPeek(out BaseAction action))
-            {
-                action.ActionComplete += OnActionComplete;
-                (action as IInteractionAction)?.Subscribe();
-                action.Run();
-            }
-            else
-            {
-                ExecutionEnded?.Invoke();
+                BaseState currentState = action.CurrentState;
+                (currentState as IActorDetectionState)?.OnActorDetected(actor);
             }
         }
     }
