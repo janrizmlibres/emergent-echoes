@@ -8,9 +8,6 @@ using System.Collections.Generic;
 
 namespace NPCProcGen
 {
-    /// <summary>
-    /// Represents a 2D tag for an actor, which includes monetary and food values, and a steal marker.
-    /// </summary>
     [Tool]
     public partial class ActorTag2D : Node
     {
@@ -22,123 +19,32 @@ namespace NPCProcGen
         [Signal]
         public delegate void EventTriggeredEventHandler(Variant eventType);
 
-        /// <summary>
-        /// Gets or sets the monetary value associated with this actor.
-        /// </summary>
-        /// <value>The monetary value as an integer.</value>
         [Export(PropertyHint.Range, "0,1000000,")]
         public int MoneyAmount { get; set; } = 100;
 
-        /// <summary>
-        /// Gets or sets the food value associated with this actor.
-        /// </summary>
-        /// <value>The food value as an integer.</value>
         [Export(PropertyHint.Range, "0,1000,")]
         public int FoodAmount { get; set; } = 5;
 
-        /// <summary>
-        /// Gets or sets the RearMarker, which is a Marker2D instance.
-        /// When the RearMarker is set to a new value, it updates the configuration warnings.
-        /// </summary>
-        /// <value>The Marker2D instance representing the RearMarker.</value>
         [Export]
-        public Marker2D RearMarker
-        {
-            get => _rearMarker;
-            set
-            {
-                if (value != _rearMarker)
-                {
-                    _rearMarker = value;
-                    UpdateConfigurationWarnings();
-                }
-            }
-        }
+        public Marker2D RearMarker { get; set; }
 
-        // TODO: Add exported property for character dimensions
-
-        /// <summary>
-        /// Gets the notification manager of the Actor.
-        /// </summary>
-        public NotifManager NotifManager { get; private set; } = new();
-
-        /// <summary>
-        /// Gets the sensor component of the NPC.
-        /// </summary>
         public Sensor Sensor { get; protected set; }
 
-        /// <summary>
-        /// Gets the memorizer component of the Actor.
-        /// </summary>
         public Memorizer Memorizer { get; protected set; }
 
-        /// <summary>
-        /// Gets the parent node as a Node2D.
-        /// </summary>
-        public Node2D Parent { get; protected set; }
-
-        protected bool _isImprisoned = false;
-
-        private Marker2D _rearMarker;
-
-        /// <summary>
-        /// Called when the node enters the scene tree.
-        /// Updates the parent node and configuration warnings if in the editor.
-        /// </summary>
-        public override void _EnterTree()
-        {
-            if (Engine.IsEditorHint())
-            {
-                Parent = GetParent() as Node2D;
-                UpdateConfigurationWarnings();
-            }
-        }
-
-        /// <summary>
-        /// Called when the node is added to the scene.
-        /// Initializes the parent node and checks for required nodes.
-        /// </summary>
         public override void _Ready()
         {
             if (Engine.IsEditorHint()) return;
 
-            Parent = GetParent() as Node2D;
-            Sensor = new Sensor(this);
-            Memorizer = new Memorizer(this);
+            ActorContext context = new(this);
 
-            if (Parent == null || _rearMarker == null)
-            {
-                QueueFree();
-                return;
-            }
+            Sensor = new Sensor(context);
+            Memorizer = new Memorizer(context);
+
+            context.Sensor = Sensor;
+            context.Memorizer = Memorizer;
         }
 
-        /// <summary>
-        /// Provides configuration warnings for the node.
-        /// </summary>
-        /// <returns>An array of warning messages.</returns>
-        public override string[] _GetConfigurationWarnings()
-        {
-            List<string> warnings = new();
-
-            if (Parent == null)
-            {
-                warnings.Add("The ActorTag2D can be used only under a Node2D inheriting parent node.");
-            }
-
-            if (_rearMarker == null)
-            {
-                warnings.Add(@"The ActorTag2D requires a Marker2D node to identify the rear side 
-                    of the actor.");
-            }
-
-            return warnings.ToArray();
-        }
-
-        /// <summary>
-        /// Initializes the NPC with a list of actors.
-        /// </summary>
-        /// <param name="actors">The list of actors to initialize with.</param>
         public void Initialize(List<ActorTag2D> actors)
         {
             Memorizer.Initialize(actors);
@@ -146,20 +52,25 @@ namespace NPCProcGen
 
         public Vector2 GetRearPosition()
         {
-            return Parent.GlobalPosition + RearMarker.Position.Normalized() * CommonUtils.PositionOffset;
+            Node2D parent = GetParent<Node2D>();
+            return parent.GlobalPosition + RearMarker.Position.Normalized()
+                * CommonUtils.PositionOffset;
         }
 
         public Vector2 GetLateralWaypoint(ActorTag2D initiator)
         {
+            Node2D parent = GetParent<Node2D>();
+            Node2D initiatorParent = initiator.GetParent<Node2D>();
+
             float offset = CommonUtils.PositionOffset;
 
             Vector2 offset1 = new(offset, 0);
-            Vector2 adjustedPosition1 = Parent.GlobalPosition + offset1;
-            float distance1 = initiator.Parent.GlobalPosition.DistanceTo(adjustedPosition1);
+            Vector2 adjustedPosition1 = parent.GlobalPosition + offset1;
+            float distance1 = initiatorParent.GlobalPosition.DistanceTo(adjustedPosition1);
 
             Vector2 offset2 = new(-offset, 0);
-            Vector2 adjustedPosition2 = Parent.GlobalPosition + offset2;
-            float distance2 = initiator.Parent.GlobalPosition.DistanceTo(adjustedPosition2);
+            Vector2 adjustedPosition2 = parent.GlobalPosition + offset2;
+            float distance2 = initiatorParent.GlobalPosition.DistanceTo(adjustedPosition2);
 
             // Return the target's position adjusted by the best offset
             return distance1 < distance2 ? adjustedPosition1 : adjustedPosition2;
@@ -167,14 +78,16 @@ namespace NPCProcGen
 
         public Vector2 GetOmniDirectionalWaypoint(ActorTag2D initiator)
         {
-            Vector2 directionToInitiator = Parent.GlobalPosition
-                .DirectionTo(initiator.Parent.GlobalPosition);
-            return Parent.GlobalPosition + directionToInitiator * CommonUtils.PositionOffset;
+            Node2D parent = GetParent<Node2D>();
+
+            Vector2 directionToInitiator = parent.GlobalPosition
+                .DirectionTo(initiator.GetParent<Node2D>().GlobalPosition);
+            return parent.GlobalPosition + directionToInitiator * CommonUtils.PositionOffset;
         }
 
         public void AnswerPetition(bool isAccepted)
         {
-            NotifManager.NotifyPetitionAnswered(isAccepted);
+            NotifManager.Instance.NotifyPetitionAnswered(this, isAccepted);
         }
 
         public int GetFoodAmount()
@@ -197,15 +110,26 @@ namespace NPCProcGen
             return GetType() != typeof(NPCAgent2D);
         }
 
-        public bool IsImprisoned()
+        public virtual void TriggerInteraction(ActorTag2D target, ActionState _actionState,
+            Array<Variant> data)
         {
-            return _isImprisoned;
+            NotifManager.Instance.NotifyInteractionStarted(this);
+            Sensor.SetTaskRecord(ActionType.Interact, ActionState.Interact);
+
+            CommonUtils.EmitSignal(
+                this,
+                SignalName.InteractionStarted,
+                Variant.From((InteractState)_actionState),
+                data
+            );
         }
 
-        public virtual void Arrest()
+        public virtual void StopInteraction()
         {
-            NotifManager.NotifyActorImprisoned();
-            _isImprisoned = true;
+            NotifManager.Instance.NotifyInteractionEnded(this);
+            Sensor.ClearTaskRecord();
+
+            CommonUtils.EmitSignal(this, SignalName.InteractionEnded);
         }
     }
 }
