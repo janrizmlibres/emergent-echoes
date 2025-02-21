@@ -20,8 +20,7 @@ namespace NPCProcGen.Core.Traits
         /// <param name="weight">The weight of the trait.</param>
         /// <param name="sensor">The sensor associated with the trait.</param>
         /// <param name="memorizer">The memorizer associated with the trait.</param>
-        public ThiefTrait(NPCAgent2D owner, float weight, Sensor sensor, NPCMemorizer memorizer)
-            : base(owner, weight, sensor, memorizer) { }
+        public ThiefTrait(ActorContext context, float weight) : base(context, weight) { }
 
         /// <summary>
         /// Evaluates an action based on the given social practice.
@@ -49,7 +48,7 @@ namespace NPCProcGen.Core.Traits
 
             foreach (ResourceType type in resourceMgr.TangibleTypes)
             {
-                if (resourceMgr.IsDeficient(_owner, type))
+                if (resourceMgr.IsDeficient(_actorCtx.Actor, type))
                 {
                     EvaluateInteraction(
                         actionCandidates, type,
@@ -80,7 +79,8 @@ namespace NPCProcGen.Core.Traits
         {
             foreach (ActorTag2D actor in peerActors)
             {
-                if (!_memorizer.IsTrusted(actor) || !ResourceManager.Instance.IsDeficient(actor, type))
+                if (!_actorCtx.Memorizer.IsTrusted(actor)
+                    || !ResourceManager.Instance.IsDeficient(actor, type))
                 {
                     return actor;
                 }
