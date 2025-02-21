@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Godot;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
@@ -14,15 +13,7 @@ namespace NPCProcGen.Core.Traits
     /// </summary>
     public class SurvivalTrait : Trait
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SurvivalTrait"/> class.
-        /// </summary>
-        /// <param name="owner">The owner of the trait.</param>
-        /// <param name="weight">The weight of the trait.</param>
-        /// <param name="sensor">The sensor associated with the trait.</param>
-        /// <param name="memorizer">The memorizer associated with the trait.</param>
-        public SurvivalTrait(NPCAgent2D owner, float weight, Sensor sensor, NPCMemorizer memorizer)
-            : base(owner, weight, sensor, memorizer) { }
+        public SurvivalTrait(ActorContext context, float weight) : base(context, weight) { }
 
         /// <summary>
         /// Evaluates an action based on the given social practice.
@@ -46,7 +37,7 @@ namespace NPCProcGen.Core.Traits
 
             foreach (ResourceType type in resourceMgr.TangibleTypes)
             {
-                if (resourceMgr.IsDeficient(_owner, type))
+                if (resourceMgr.IsDeficient(_actorCtx.Actor, type))
                 {
                     EvaluateInteraction(
                         actionCandidates, type,
@@ -56,13 +47,13 @@ namespace NPCProcGen.Core.Traits
                 }
             }
 
-            if (resourceMgr.IsDeficient(_owner, ResourceType.Satiation)
-                && resourceMgr.HasResource(_owner, ResourceType.Food))
+            if (resourceMgr.IsDeficient(_actorCtx.Actor, ResourceType.Satiation)
+                && resourceMgr.HasResource(_actorCtx.Actor, ResourceType.Food))
             {
                 AddAction(actionCandidates, ActionType.Eat, ResourceType.Satiation);
             }
 
-            if (resourceMgr.IsDeficient(_owner, ResourceType.Companionship))
+            if (resourceMgr.IsDeficient(_actorCtx.Actor, ResourceType.Companionship))
             {
                 AddAction(
                     actionCandidates,
@@ -91,7 +82,7 @@ namespace NPCProcGen.Core.Traits
             }
 
             if (actionType == typeof(EatAction) &&
-                ResourceManager.Instance.HasResource(_owner, ResourceType.Food))
+                ResourceManager.Instance.HasResource(_actorCtx.Actor, ResourceType.Food))
             {
                 AddAction(actionCandidates, ActionType.Eat, ResourceType.Satiation);
                 return actionCandidates.FirstOrDefault()?.Item1;
@@ -115,7 +106,7 @@ namespace NPCProcGen.Core.Traits
         {
             foreach (ActorTag2D actor in peerActors)
             {
-                if (_memorizer.IsFriendly(actor) || !ResourceManager.Instance.IsDeficient(actor, type))
+                if (_actorCtx.Memorizer.IsFriendly(actor) || !ResourceManager.Instance.IsDeficient(actor, type))
                 {
                     return actor;
                 }
