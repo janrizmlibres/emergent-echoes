@@ -1,98 +1,35 @@
-using Godot;
 using NPCProcGen.Core.Components.Enums;
-using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 using NPCProcGen.Core.States;
 
 namespace NPCProcGen.Core.Actions
 {
-    /// <summary>
-    /// Represents an action to socialize with another actor.
-    /// </summary>
-    public class SocializeAction : BaseAction, IInteractionAction
+    public class SocializeAction : BaseAction
     {
-        public const ActionType ActionTypeValue = ActionType.Socialize;
-
-        private ActorTag2D _target = null;
-
         private SeekState _seekState;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SocializeAction"/> class.
-        /// </summary>
-        /// <param name="owner">The owner of the action.</param>
-        public SocializeAction(NPCAgent2D owner) : base(owner)
+        public SocializeAction(ActorContext context) : base(context, ActionType.Socialize)
+        { }
+
+        protected override void InitializeStates()
         {
-            InitializeStates();
+            _seekState = new SeekState(_actorContext, _stateContext, SetupInteractStates);
         }
 
-        private void InitializeStates()
+        private void SetupInteractStates(ActorTag2D partner)
         {
-            _seekState = new SeekState(_owner, ActionTypeValue);
-            _seekState.CompleteState += partner => InitializeInteractStates(partner);
-        }
-
-        public void Subscribe() { }
-
-        public void Unsubscribe()
-        {
-            if (_target != null)
-            {
-                _target.NotifManager.ActorImprisoned -= InterruptAction;
-            }
-        }
-
-        public override void Update(double delta)
-        {
-            _currentState?.Update(delta);
-        }
-
-        public override void Run()
-        {
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ExecutionStarted,
-                Variant.From(ActionTypeValue)
+            _stateContext.ApproachState = new EngageState(
+                _actorContext,
+                _stateContext,
+                partner,
+                Waypoint.Lateral
             );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+            _stateContext.WaitState = new(_actorContext, _stateContext, partner);
+            _stateContext.ContactState = new TalkState(_actorContext, _stateContext, partner);
 
-            if (_owner.IsAnyActorInRange())
-            {
-                ActorTag2D target = _owner.GetRandomActorInRange();
-                InitializeInteractStates(target);
-            }
-            else
-            {
-                TransitionTo(_seekState);
-            }
+            TransitionTo(_stateContext.ApproachState);
         }
 
-        private void InitializeInteractStates(ActorTag2D partner)
-        {
-            _target = partner;
-            _target.NotifManager.ActorImprisoned += InterruptAction;
-
-            EngageState engageState = new(_owner, ActionTypeValue, partner, Waypoint.Lateral);
-            WaitState waitState = new(_owner, ActionTypeValue, partner);
-            TalkState talkState = new(_owner, ActionTypeValue, partner);
-
-            engageState.CompleteState += outcome =>
-            {
-                switch (outcome)
-                {
-                    case EngageOutcome.DurationExceeded:
-                        CompleteAction();
-                        break;
-                    case EngageOutcome.TargetBusy:
-                        TransitionTo(waitState);
-                        break;
-                    case EngageOutcome.TargetAvailable:
-                        TransitionTo(talkState);
-                        break;
-                }
-            };
-            waitState.CompleteState += () => TransitionTo(engageState);
-            talkState.CompleteState += () => CompleteAction();
-
-            TransitionTo(partner.Sensor.IsActorBusy() ? waitState : engageState);
-        }
+        protected override BaseState GetStartingState() => _seekState;
     }
 }

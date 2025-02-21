@@ -1,36 +1,21 @@
-using Godot;
 using NPCProcGen.Core.Components.Enums;
-using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 using NPCProcGen.Core.States;
 
 namespace NPCProcGen.Core.Actions
 {
     public class CloseCaseAction : BaseAction
     {
-        public const ActionType ActionTypeValue = ActionType.CloseCase;
+        private ResearchState _researchState;
 
-        private readonly ResearchState _researchState;
+        public CloseCaseAction(ActorContext context) : base(context, ActionType.CloseCase)
+        { }
 
-        public CloseCaseAction(NPCAgent2D owner) : base(owner)
+        protected override void InitializeStates()
         {
-            _researchState = new(owner, ActionTypeValue, true);
-            _researchState.CompleteState += () => CompleteAction();
+            _researchState = new(_actorContext, _stateContext);
         }
 
-        public override void Update(double delta)
-        {
-            _currentState?.Update(delta);
-        }
-
-        public override void Run()
-        {
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ExecutionStarted,
-                Variant.From(ActionTypeValue)
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
-
-            TransitionTo(_researchState);
-        }
+        protected override BaseState GetStartingState() => _researchState;
     }
 }

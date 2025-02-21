@@ -2,149 +2,59 @@ using System;
 using Godot;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
-using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 using NPCProcGen.Core.States;
 
 namespace NPCProcGen.Core.Actions
 {
-    public class InvestigateAction : BaseAction, IInteractionAction
+    public class InvestigateAction : BaseAction
     {
-        public const ActionType ActionTypeValue = ActionType.Investigate;
-
-        private readonly Crime _crime;
-        private ActorTag2D _targetWitness = null;
+        private ActorTag2D _target = null;
+        private Crime _crime;
 
         private bool _doneResearching = false;
 
         private ResearchState _researchState;
         private SearchState _searchState;
-        private WanderState _wanderState;
-        private EngageState _engageState;
-        private WaitState _waitState;
 
-        public InvestigateAction(NPCAgent2D owner, Crime crime) : base(owner)
+        public InvestigateAction(ActorContext context, Crime crime)
+            : base(context, ActionType.Investigate)
         {
             _crime = crime;
-            InitializeStates();
         }
 
-        private void InitializeStates()
+        protected override void InitializeStates()
         {
-            _researchState = new(_owner, ActionTypeValue);
-            _researchState.CompleteState += () =>
-            {
-                _doneResearching = true;
-                CreateInteractStates();
-            };
+            _researchState = new(_actorContext, _stateContext);
         }
 
-        private void CreateInteractStates()
+        protected override BaseState GetStartingState()
         {
-            Tuple<ActorTag2D, Vector2> targetWitnessData = _crime.GetRandomWitnessData(_owner);
+            return _doneResearching ? _searchState : _researchState;
+        }
+
+        public void SetupInteractStates()
+        {
+            _doneResearching = true;
+
+            Tuple<ActorTag2D, Vector2> targetWitnessData = _crime
+                .GetRandomWitnessData(_actorContext.GetNPCAgent2D());
 
             if (targetWitnessData == null)
             {
-                CompleteAction();
+                _actorContext.Executor.FinishAction();
                 return;
             }
 
-            _targetWitness = targetWitnessData.Item1;
-            _targetWitness.NotifManager.ActorImprisoned += InterruptAction;
+            _target = targetWitnessData.Item1;
 
-            Vector2 targetLastPosition = targetWitnessData.Item2;
-
-            _searchState = new(_owner, ActionTypeValue, _targetWitness, targetLastPosition);
-            _searchState.CompleteState += isTargetFound =>
-            {
-                if (isTargetFound)
-                {
-                    TransitionTo(_targetWitness.Sensor.IsActorBusy() ? _waitState : _engageState);
-                }
-                else
-                {
-                    TransitionTo(_wanderState);
-                }
-            };
-            _wanderState = new(_owner, ActionTypeValue, _targetWitness);
-            _engageState = new(_owner, ActionTypeValue, _targetWitness, Waypoint.Lateral);
-            _waitState = new(_owner, ActionTypeValue, _targetWitness);
-
-            InterrogateState interrogateState = new(_owner, ActionTypeValue, _crime, _targetWitness);
-
-            _wanderState.CompleteState += durationReached =>
-            {
-                if (durationReached)
-                {
-                    CompleteAction();
-                }
-                else
-                {
-                    TransitionTo(_targetWitness.Sensor.IsActorBusy() ? _waitState : _engageState);
-                }
-            };
-            _engageState.CompleteState += outcome =>
-            {
-                switch (outcome)
-                {
-                    case EngageOutcome.DurationExceeded:
-                        CompleteAction();
-                        break;
-                    case EngageOutcome.TargetBusy:
-                        TransitionTo(_waitState);
-                        break;
-                    case EngageOutcome.TargetAvailable:
-                        TransitionTo(interrogateState);
-                        break;
-                }
-            };
-            _waitState.CompleteState += () => TransitionTo(_engageState);
-            interrogateState.CompleteState += () => CompleteAction();
-
-            TransitionTo(_searchState);
-        }
-
-        public void Subscribe() { }
-
-        public void Unsubscribe()
-        {
-            if (_targetWitness != null)
-            {
-                _targetWitness.NotifManager.ActorImprisoned -= InterruptAction;
-            }
-        }
-
-        public override void Update(double delta)
-        {
-            _currentState?.Update(delta);
-        }
-
-        public override void Run()
-        {
-            Error result = _owner.EmitSignal(
-                NPCAgent2D.SignalName.ExecutionStarted,
-                Variant.From(ActionTypeValue)
-            );
-            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
-
-            if (!_doneResearching)
-            {
-                TransitionTo(_researchState);
-                return;
-            }
-
-            if (_owner.IsActorInRange(_targetWitness))
-            {
-                TransitionTo(_targetWitness.Sensor.IsActorBusy() ? _waitState : _engageState);
-                return;
-            }
-
-            Vector2? targetLastPosition = _owner.Memorizer.GetLastKnownPosition(_targetWitness);
-
-            if (targetLastPosition == null)
-            {
-                CompleteAction();
-                return;
-            }
+            _searchState = new(_actorContext, _stateContext, _target);
+            _stateContext.WanderState = new(_actorContext, _stateContext, _target);
+            _stateContext.ApproachState = new EngageState(_actorContext, _stateContext, _target,
+                Waypoint.Lateral);
+            _stateContext.WaitState = new(_actorContext, _stateContext, _target);
+            _stateContext.ContactState = new InterrogateState(_actorContext, _stateContext, _crime,
+                _target);
 
             TransitionTo(_searchState);
         }
