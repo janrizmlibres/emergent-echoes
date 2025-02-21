@@ -1,5 +1,7 @@
 using Godot;
+using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
@@ -18,45 +20,79 @@ namespace NPCProcGen.Core.States
         public void OnActorDetected(ActorTag2D actor);
     }
 
-    /// <summary>
-    /// Abstract base class for NPC states.
-    /// </summary>
+    public class EnterParameters
+    {
+        public string StateName { get; set; }
+        public Array<Variant> Data { get; set; }
+    }
+
+    public class ExitParameters
+    {
+        public Array<Variant> Data { get; set; }
+    }
+
     public abstract class BaseState
     {
-        /// <summary>
-        /// The owner NPC agent.
-        /// </summary>
-        protected readonly NPCAgent2D _owner;
-        protected readonly ActionType _actionType;
+        protected readonly ActorContext _actorContext;
+        protected readonly StateContext _stateContext;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BaseState"/> class.
-        /// </summary>
-        /// <param name="owner">The owner NPC agent.</param>
-        public BaseState(NPCAgent2D owner, ActionType action)
+        protected readonly ActionState _actionState;
+
+        public BaseState(ActorContext actorContext, StateContext stateContext, ActionState state)
         {
-            _owner = owner;
-            _actionType = action;
+            _actorContext = actorContext;
+            _stateContext = stateContext;
+
+            _actionState = state;
+        }
+
+        public void Enter()
+        {
+            if (!Validate()) return;
+
+            Subscribe();
+            ExecuteEnterLogic();
+
+            EnterParameters enterParameters = GetEnterParameters();
+
+            GD.Print($"{_actorContext.ActorNode2D.Name} {enterParameters.StateName} Enter");
+
+            _actorContext.Sensor.SetTaskRecord(_stateContext.Action.ActionType, _actionState);
+
+            _actorContext.EmitSignal(
+                NPCAgent2D.SignalName.StateEntered,
+                Variant.From(_actionState),
+                enterParameters.Data
+            );
+        }
+
+        public void Exit()
+        {
+            Unsubscribe();
+            ExecuteExitLogic();
+
+            ExitParameters exitParameters = GetExitParameters();
+
+            _actorContext.Sensor.ClearTaskRecord();
+
+            _actorContext.EmitSignal(
+                NPCAgent2D.SignalName.StateExited,
+                Variant.From(_actionState),
+                exitParameters.Data
+            );
         }
 
         public virtual void Subscribe() { }
-
-        /// <summary>
-        /// Called when the state is entered.
-        /// </summary>
-        public virtual void Enter() { }
-
-        /// <summary>
-        /// Called to update the state.
-        /// </summary>
-        /// <param name="delta">The time elapsed since the last update.</param>
-        public virtual void Update(double delta) { }
-
         public virtual void Unsubscribe() { }
 
-        /// <summary>
-        /// Called when the state is exited.
-        /// </summary>
-        public virtual void Exit() { }
+        public virtual void Update(double delta) { }
+
+        protected virtual bool Validate() => true;
+
+        protected virtual void ExecuteEnterLogic() { }
+        protected virtual void ExecuteExitLogic() { }
+
+        protected abstract EnterParameters GetEnterParameters();
+        protected abstract ExitParameters GetExitParameters();
     }
 }
