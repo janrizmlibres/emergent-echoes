@@ -90,8 +90,8 @@ position = Vector2(551, 333)
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Ysort/Player"]
 remote_path = NodePath("../../../Camera2D")
 
-[node name="Garreth" parent="Ysort" instance=ExtResource("5_5sidg")]
-position = Vector2(600, 363)
+[node name="Garreth" parent="." instance=ExtResource("5_5sidg")]
+position = Vector2(229, 260)
 
 [editable path="Camera2D"]
 [editable path="Ysort/Player"]

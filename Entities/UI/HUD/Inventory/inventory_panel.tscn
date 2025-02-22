@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://d3ue675djrwaj"]
+[gd_scene load_steps=5 format=3 uid="uid://d3ue675djrwaj"]
 
 [ext_resource type="Script" path="res://Entities/UI/HUD/Inventory/InventoryPanel.cs" id="1_gnyvc"]
+[ext_resource type="Texture2D" uid="uid://dt50bi6ca0unr" path="res://Entities/UI/Inventory/Slot/Art/inventory_design_right.png" id="2_br0mf"]
 [ext_resource type="PackedScene" uid="uid://bdi42qxpk10c5" path="res://Entities/UI/Inventory/Slot/inventory_slot.tscn" id="2_hqt16"]
+[ext_resource type="Texture2D" uid="uid://b6wwafm74jrkp" path="res://Entities/UI/Inventory/Slot/Art/inventory_design_left.png" id="2_x2oub"]
 
 [node name="InventoryPanel" type="Panel"]
 texture_filter = 1
@@ -19,6 +21,21 @@ grow_vertical = 2
 scale = Vector2(0.5, 0.5)
 script = ExtResource("1_gnyvc")
 
+[node name="InventoryDesignRight" type="TextureRect" parent="."]
+offset_left = 540.0
+offset_top = 324.0
+offset_right = 554.0
+offset_bottom = 364.0
+texture = ExtResource("2_br0mf")
+
+[node name="InventoryDesignLeft" type="TextureRect" parent="."]
+layout_mode = 2
+offset_left = 93.0
+offset_top = 324.0
+offset_right = 107.0
+offset_bottom = 364.0
+texture = ExtResource("2_x2oub")
+
 [node name="SlotContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 12
@@ -28,6 +45,7 @@ anchor_bottom = 1.0
 offset_top = -40.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_constants/separation = 8
 alignment = 1
 
 [node name="InventorySlot" parent="SlotContainer" instance=ExtResource("2_hqt16")]

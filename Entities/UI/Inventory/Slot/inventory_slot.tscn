@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://bdi42qxpk10c5"]
+[gd_scene load_steps=6 format=3 uid="uid://bdi42qxpk10c5"]
 
 [ext_resource type="Script" path="res://Entities/UI/Inventory/Slot/InventorySlot.cs" id="1_weent"]
+[ext_resource type="Texture2D" uid="uid://155f33mds1eh" path="res://Entities/UI/Inventory/Slot/Art/inventory_slot_bg.png" id="2_d5b83"]
 [ext_resource type="Texture2D" uid="uid://ctb5b3ex5i2t1" path="res://Entities/UI/Indicators/Floating Text/Art/coin.png" id="2_evswi"]
 [ext_resource type="FontFile" uid="uid://cvj72gjhqsumb" path="res://Assets/Fonts/floating_font.ttf" id="3_4kvec"]
 
@@ -14,6 +15,13 @@ texture_filter = 1
 custom_minimum_size = Vector2(40, 40)
 script = ExtResource("1_weent")
 
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("2_d5b83")
+
 [node name="Icon" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 8
@@ -21,10 +29,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -19.0
-offset_top = -19.0
-offset_right = 19.0
-offset_bottom = 19.0
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 22.0
+offset_bottom = 22.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -38,10 +46,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -18.0
-offset_top = -12.0
-offset_right = 4.0
-offset_bottom = 2.0
+offset_left = -15.0
+offset_top = -9.0
+offset_right = 7.0
+offset_bottom = 5.0
 grow_horizontal = 0
 grow_vertical = 0
 scale = Vector2(0.8, 0.8)
