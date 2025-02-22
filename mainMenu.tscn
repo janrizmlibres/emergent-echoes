@@ -1,0 +1,196 @@
+[gd_scene load_steps=18 format=3 uid="uid://xpm7rofy6voc"]
+
+[ext_resource type="Script" path="res://MainMenu.cs" id="1_s4qlx"]
+[ext_resource type="Texture2D" uid="uid://byngch822lh17" path="res://Assets/world_pic.png" id="1_stypl"]
+[ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/PressStart2P-Regular.ttf" id="2_8o3tb"]
+[ext_resource type="Texture2D" uid="uid://cvquecdsaxooi" path="res://Assets/GameLogo.png" id="3_vuv57"]
+[ext_resource type="AudioStream" uid="uid://babisdiss53js" path="res://Assets/SoupTonic UI1 SFX Pack 1 - ogg/SFX_UI_Confirm.ogg" id="4_5q760"]
+[ext_resource type="AudioStream" uid="uid://bsucv253a42jn" path="res://Assets/ogg-short-loopable-background-music/Temple.ogg" id="6_oukpy"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ee7j6"]
+texture = ExtResource("1_stypl")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ruwn3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c1q3v"]
+bg_color = Color(1, 1, 1, 0.678431)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jkf1d"]
+bg_color = Color(1, 1, 1, 0.678431)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p0ilb"]
+bg_color = Color(0.683077, 0.683077, 0.683077, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gkgon"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r0inm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yxpof"]
+bg_color = Color(1, 1, 1, 0.678431)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oikx6"]
+bg_color = Color(0.682353, 0.682353, 0.682353, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y3k4y"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ghupi"]
+texture = ExtResource("3_vuv57")
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -1.0
+offset_right = -2.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_s4qlx")
+
+[node name="Panel" type="Panel" parent="."]
+modulate = Color(0.464235, 0.464235, 0.464235, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ee7j6")
+metadata/_edit_lock_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -123.0
+offset_top = -51.0
+offset_right = 115.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 8
+
+[node name="StartButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/align_to_largest_stylebox = 1
+theme_override_fonts/font = ExtResource("2_8o3tb")
+theme_override_font_sizes/font_size = 12
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ruwn3")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_c1q3v")
+theme_override_styles/hover = SubResource("StyleBoxFlat_jkf1d")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_p0ilb")
+theme_override_styles/normal = SubResource("StyleBoxFlat_gkgon")
+text = "Start Game"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="HBoxContainer/StartButton"]
+stream = ExtResource("4_5q760")
+
+[node name="ExitButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/align_to_largest_stylebox = 1
+theme_override_fonts/font = ExtResource("2_8o3tb")
+theme_override_font_sizes/font_size = 12
+theme_override_styles/focus = SubResource("StyleBoxEmpty_r0inm")
+theme_override_styles/hover = SubResource("StyleBoxFlat_yxpof")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_oikx6")
+theme_override_styles/normal = SubResource("StyleBoxFlat_y3k4y")
+action_mode = 0
+text = "Exit Game"
+
+[node name="Panel2" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -125.0
+offset_right = 125.0
+offset_bottom = 150.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ghupi")
+metadata/_edit_lock_ = true
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_oukpy")
+autoplay = true
+parameters/looping = true
