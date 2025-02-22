@@ -22,6 +22,7 @@ scale = Vector2(0.5, 0.5)
 script = ExtResource("1_gnyvc")
 
 [node name="InventoryDesignRight" type="TextureRect" parent="."]
+layout_mode = 0
 offset_left = 540.0
 offset_top = 324.0
 offset_right = 554.0
