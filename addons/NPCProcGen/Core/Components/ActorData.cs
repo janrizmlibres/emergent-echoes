@@ -94,16 +94,8 @@ namespace NPCProcGen.Core.Components
         private float _decayTimer = DecayDuration;
         private float _petitionTimer = PetitionInterval;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ActorData"/> class.
-        /// </summary>
-        /// <param name="actor">The actor associated with this data.</param>
         public NPCActorData(ActorTag2D actor) : base(actor) { }
 
-        /// <summary>
-        /// Updates the actor data.
-        /// </summary>
-        /// <param name="delta">The time elapsed since the last update.</param>
         public override void Update(double delta)
         {
             if (_lastKnownPosition == null) return;
