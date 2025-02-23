@@ -1,120 +1,100 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Godot;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.Traits
 {
-    /// <summary>
-    /// Represents a trait for lawful actions.
-    /// </summary>
     public class LawfulTrait : Trait
     {
-        private const float CrimeInvestigationTime = 600;
+        private const float InvestigationDuration = 600;
 
-        public Crime AssignedCrime
-        {
-            get => _assignedCrime;
-            set
-            {
-                _assignedCrime = value;
-                _investigationTimer = CrimeInvestigationTime;
-            }
-        }
+        public Crime AssignedCase { get; private set; }
 
-        private Crime _assignedCrime = null;
-        private float _investigationTimer = CrimeInvestigationTime;
+        private float _investigationTimer = InvestigationDuration;
 
         public LawfulTrait(ActorContext context, float weight) : base(context, weight) { }
 
         public override void Update(double delta)
         {
-            if (AssignedCrime == null) return;
+            if (AssignedCase == null) return;
 
             _investigationTimer -= (float)delta;
-
-            if (_investigationTimer <= 0)
-            {
-                MarkCrimeAsUnsolved();
-            }
         }
 
-        /// <summary>
-        /// Evaluates an action based on the given social practice.
-        /// </summary>
-        /// <param name="practice">The social practice to evaluate.</param>
-        /// <returns>A tuple containing the evaluated action and its weight.</returns>
         public override Tuple<BaseAction, float> EvaluateAction(SocialPractice practice)
         {
             if (practice == SocialPractice.Proactive)
             {
                 return EvaluateProactiveAction();
             }
+
             return null;
         }
 
         private Tuple<BaseAction, float> EvaluateProactiveAction()
         {
-            List<Tuple<BaseAction, float>> actionCandidates = new();
+            if (_investigationTimer <= 0) return AttemptResolveCase();
 
-            if (AssignedCrime == null)
-                StartNewInvestigation(actionCandidates);
-            else
-                ContinueInvestigation(actionCandidates);
-
-            return actionCandidates.OrderByDescending(tuple => tuple.Item2).FirstOrDefault();
-        }
-
-        private void StartNewInvestigation(List<Tuple<BaseAction, float>> actionCandidates)
-        {
-            AssignedCrime = _actorCtx.Sensor.InvestigateCrime();
-            if (AssignedCrime == null) return;
-
-            AddSimpleAction(
-                actionCandidates,
-                () => new InvestigateAction(_actorCtx, AssignedCrime), _weight
-            );
-        }
-
-        private void ContinueInvestigation(List<Tuple<BaseAction, float>> actionCandidates)
-        {
-            if (AssignedCrime.HasRemainingWitnesses())
+            if (AssignedCase == null)
             {
-                AddSimpleAction(
-                    actionCandidates,
-                    () => new InvestigateAction(_actorCtx, AssignedCrime), _weight
-                );
-                return;
+                return StartNewInvestigation();
             }
 
-            float successRate = AssignedCrime.GetSolveRate();
+            return ResumeInvestigation();
+        }
 
-            if (GD.Randf() <= successRate)
+        private Tuple<BaseAction, float> StartNewInvestigation()
+        {
+            AssignedCase = _actorCtx.Sensor.AssignCase();
+            if (AssignedCase == null) return null;
+
+            _investigationTimer = InvestigationDuration;
+
+            BaseAction action = new AssessAction(_actorCtx);
+            return new(action, _weight);
+        }
+
+        private Tuple<BaseAction, float> ResumeInvestigation()
+        {
+            ActorTag2D target = AssignedCase.GetRandomParticipant();
+
+            if (target != null)
             {
-                AddSimpleAction(
-                    actionCandidates,
-                    () => new PursuitAction(_actorCtx, AssignedCrime.Criminal), _weight
-                );
-                return;
+                BaseAction interrogateAction = new InterrogateAction(_actorCtx, target, AssignedCase);
+                return new(interrogateAction, _weight);
             }
 
-            AddSimpleAction(actionCandidates, () => new CloseCaseAction(_actorCtx), _weight);
+            if (AssignedCase.IsDeposed())
+            {
+                BaseAction pursuitAction = new PursuitAction(_actorCtx);
+                return new(pursuitAction, _weight);
+            }
+
+            return null;
         }
 
-        public void MarkCrimeAsUnsolved()
+        private Tuple<BaseAction, float> AttemptResolveCase()
         {
-            AssignedCrime = null;
-            _actorCtx.Sensor.CloseInvestigation();
+            if (AssignedCase.IsUnsolvable())
+            {
+                ClearCase(CrimeStatus.Unsolved);
+                return null;
+            }
+
+            BaseAction pursuitAction = new PursuitAction(_actorCtx);
+            return new(pursuitAction, _weight);
         }
 
-        public void MarkCrimeAsSolved()
+        public void ClearCase(CrimeStatus status)
         {
-            AssignedCrime = null;
-            _actorCtx.Sensor.SolveInvestigation();
+            if (status == CrimeStatus.Pending) throw new ArgumentException("Invalid status");
+
+            AssignedCase.Status = status;
+            AssignedCase = null;
+            _investigationTimer = InvestigationDuration;
         }
     }
 }
