@@ -55,8 +55,7 @@ namespace NPCProcGen.Core.Actions
                 Variant.From(ActionType)
             );
 
-            BaseState startState = GetStartingState();
-            TransitionTo(startState);
+            TransitionTo(_stateContext.StartingState);
         }
 
         public void Finish()
@@ -74,6 +73,5 @@ namespace NPCProcGen.Core.Actions
         protected virtual void ExecuteRun() { }
 
         protected abstract void InitializeStates();
-        protected abstract BaseState GetStartingState();
     }
 }
