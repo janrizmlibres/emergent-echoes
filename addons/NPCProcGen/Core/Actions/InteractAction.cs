@@ -8,8 +8,6 @@ namespace NPCProcGen.Core.Actions
     {
         private readonly ActorTag2D _target;
 
-        private InteractionState _interactState;
-
         public InteractAction(ActorContext context, ActorTag2D target)
             : base(context, ActionType.Interact)
         {
@@ -18,10 +16,9 @@ namespace NPCProcGen.Core.Actions
 
         protected override void InitializeStates()
         {
-            _interactState = new InteractionState(_actorContext, _stateContext, _target);
+            _stateContext.StartingState = new InteractionState(_actorContext, _stateContext, _target);
         }
 
-        protected override BaseState GetStartingState() => _interactState;
         public ActorTag2D GetTargetActor() => _target;
     }
 }

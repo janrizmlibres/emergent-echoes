@@ -10,8 +10,6 @@ namespace NPCProcGen.Core.Actions
         private readonly ActorTag2D _targetActor;
         private readonly ResourceType _targetResource;
 
-        private SearchState _searchState;
-
         public PetitionAction(ActorContext context, ActorTag2D target, ResourceType type)
             : base(context, ActionType.Petition)
         {
@@ -21,8 +19,7 @@ namespace NPCProcGen.Core.Actions
 
         protected override void InitializeStates()
         {
-            _searchState = new SearchState(_actorContext, _stateContext, _targetActor);
-
+            _stateContext.StartingState = new SearchState(_actorContext, _stateContext, _targetActor);
             _stateContext.WanderState = new(_actorContext, _stateContext, _targetActor);
             _stateContext.ApproachState = new EngageState(_actorContext, _stateContext, _targetActor,
                 Waypoint.Lateral);
@@ -35,8 +32,6 @@ namespace NPCProcGen.Core.Actions
         {
             _actorContext.Sensor.SetPetitionResourceType(_targetResource);
         }
-
-        protected override BaseState GetStartingState() => _searchState;
 
         public override void Terminate()
         {

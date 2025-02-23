@@ -1,10 +1,12 @@
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Autoloads;
+using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NPCProcGen
 {
@@ -26,11 +28,20 @@ namespace NPCProcGen
         public int FoodAmount { get; set; } = 5;
 
         [Export]
+        public Area2D ActorDetector { get; set; }
+        [Export]
         public Marker2D RearMarker { get; set; }
 
         public Sensor Sensor { get; protected set; }
 
         public Memorizer Memorizer { get; protected set; }
+
+        protected readonly List<ActorTag2D> _nearbyActors = new();
+
+        public ActorTag2D()
+        {
+            NotifManager.Instance.CrimeCommitted += OnCrimeCommitted;
+        }
 
         public override void _Ready()
         {
@@ -43,6 +54,9 @@ namespace NPCProcGen
 
             context.Sensor = Sensor;
             context.Memorizer = Memorizer;
+
+            ActorDetector.BodyEntered += OnBodyEntered;
+            ActorDetector.BodyExited += OnBodyExited;
         }
 
         public void Initialize(List<ActorTag2D> actors)
@@ -110,7 +124,24 @@ namespace NPCProcGen
             return GetType() != typeof(NPCAgent2D);
         }
 
-        public virtual void TriggerInteraction(ActorTag2D target, ActionState _actionState,
+        public bool IsValidTarget(NPCAgent2D agent)
+        {
+            Vector2? actorLastPos = agent.Memorizer.GetLastKnownPosition(this);
+
+            if (actorLastPos == null && !agent.IsActorInRange(this)) return false;
+            if (IsPlayer() && GD.Randf() > 0.2) return false;
+            if (Sensor.IsUnavailable()) return false;
+            return true;
+        }
+
+        public bool CanInteract()
+        {
+            if (Sensor.IsBusy()) return false;
+            if (Sensor.IsUnavailable()) return false;
+            return true;
+        }
+
+        public virtual void TriggerInteraction(ActorTag2D target, InteractState state,
             Array<Variant> data)
         {
             NotifManager.Instance.NotifyInteractionStarted(this);
@@ -119,7 +150,7 @@ namespace NPCProcGen
             CommonUtils.EmitSignal(
                 this,
                 SignalName.InteractionStarted,
-                Variant.From((InteractState)_actionState),
+                Variant.From(state),
                 data
             );
         }
@@ -128,8 +159,76 @@ namespace NPCProcGen
         {
             NotifManager.Instance.NotifyInteractionEnded(this);
             Sensor.ClearTaskRecord();
-
             CommonUtils.EmitSignal(this, SignalName.InteractionEnded);
         }
+
+        public virtual void TriggerDetainment()
+        {
+            NotifManager.Instance.NotifyActorDetained(this);
+            Sensor.SetAvailability(false);
+
+            DetainNPC();
+
+            CommonUtils.EmitSignal(
+                this,
+                SignalName.EventTriggered,
+                Variant.From(EventType.Detained)
+            );
+        }
+
+        public virtual void TriggerCaptivity()
+        {
+            NotifManager.Instance.NotifyActorCaptured(this);
+
+            CommonUtils.EmitSignal(
+                this,
+                SignalName.EventTriggered,
+                Variant.From(EventType.Captured)
+            );
+        }
+
+        private void OnCrimeCommitted(ActorTag2D criminal, Crime crime)
+        {
+            if (criminal == this) return;
+
+            if (_nearbyActors.Contains(criminal))
+            {
+                crime.Participants.Add(this);
+
+                CommonUtils.EmitSignal(
+                    this,
+                    SignalName.EventTriggered,
+                    Variant.From(EventType.CrimeWitnessed)
+                );
+            }
+        }
+
+        protected void OnBodyEntered(Node2D body)
+        {
+            if (GetParent<Node2D>() == body) return;
+
+            ActorTag2D actor = body.GetChildren().OfType<ActorTag2D>().FirstOrDefault();
+
+            if (actor != null)
+            {
+                _nearbyActors.Add(actor);
+                OnNPCActorEntered(actor);
+            }
+        }
+
+        protected void OnBodyExited(Node2D body)
+        {
+            ActorTag2D actor = body.GetChildren().OfType<ActorTag2D>().FirstOrDefault();
+
+            if (actor != null)
+            {
+                Vector2 rememberedPosition = actor.GetParent<Node2D>().GlobalPosition;
+                Memorizer.UpdateLastKnownPosition(actor, rememberedPosition);
+                _nearbyActors.Remove(actor);
+            }
+        }
+
+        protected virtual void DetainNPC() { }
+        protected virtual void OnNPCActorEntered(ActorTag2D actor) { }
     }
 }

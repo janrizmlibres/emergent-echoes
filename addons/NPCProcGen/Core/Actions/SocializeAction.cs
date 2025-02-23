@@ -8,13 +8,15 @@ namespace NPCProcGen.Core.Actions
     {
         private ActorTag2D _target;
 
-        private SeekState _seekState;
-
         public SocializeAction(ActorContext context) : base(context, ActionType.Socialize) { }
 
         protected override void InitializeStates()
         {
-            _seekState = new SeekState(_actorContext, _stateContext, SetupInteractStates);
+            _stateContext.StartingState = new SeekState(
+                _actorContext,
+                _stateContext,
+                SetupInteractStates
+            );
         }
 
         private void SetupInteractStates(ActorTag2D target)
@@ -33,7 +35,6 @@ namespace NPCProcGen.Core.Actions
             TransitionTo(_stateContext.ApproachState);
         }
 
-        protected override BaseState GetStartingState() => _seekState;
         public ActorTag2D GetTargetActor() => _target;
     }
 }

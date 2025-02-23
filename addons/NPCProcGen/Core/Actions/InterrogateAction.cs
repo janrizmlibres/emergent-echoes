@@ -10,8 +10,6 @@ namespace NPCProcGen.Core.Actions
         private readonly ActorTag2D _target;
         private readonly Crime _crime;
 
-        private SearchState _searchState;
-
         public InterrogateAction(ActorContext context, ActorTag2D target, Crime crime)
             : base(context, ActionType.Interrogate)
         {
@@ -21,8 +19,7 @@ namespace NPCProcGen.Core.Actions
 
         protected override void InitializeStates()
         {
-            _searchState = new SearchState(_actorContext, _stateContext, _target);
-
+            _stateContext.StartingState = new SearchState(_actorContext, _stateContext, _target);
             _stateContext.WanderState = new(_actorContext, _stateContext, _target);
             _stateContext.ApproachState = new EngageState(_actorContext, _stateContext, _target,
                 Waypoint.Lateral);
@@ -31,7 +28,6 @@ namespace NPCProcGen.Core.Actions
                 _crime);
         }
 
-        protected override BaseState GetStartingState() => _searchState;
         public ActorTag2D GetTargetActor() => _target;
     }
 }
