@@ -1,8 +1,5 @@
 namespace NPCProcGen.Core.Components.Enums
 {
-    /// <summary>
-    /// Represents the types of actions that can be performed.
-    /// </summary>
     public enum ActionType
     {
         Theft,
@@ -10,9 +7,9 @@ namespace NPCProcGen.Core.Components.Enums
         Petition,
         Socialize,
         Interact,
-        Investigate,
-        Pursuit,
-        CloseCase,
+        Assess,
+        Interrogate,
+        Pursuit
     }
 
     public enum ActionState
@@ -30,7 +27,7 @@ namespace NPCProcGen.Core.Components.Enums
         Petition,
         Talk,
         Interact,
-        Research,
+        Assess,
         Interrogate,
         Capture
     }
@@ -39,6 +36,7 @@ namespace NPCProcGen.Core.Components.Enums
     {
         Petition = ActionState.Petition,
         Talk = ActionState.Talk,
-        Interrogate = ActionState.Interrogate
+        Interrogate = ActionState.Interrogate,
+        Capture = ActionState.Capture
     }
 }
