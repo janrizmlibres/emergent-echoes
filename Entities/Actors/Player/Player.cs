@@ -35,7 +35,7 @@ namespace EmergentEchoes.Entities.Actors
 
 			_actorTag2D.InteractionStarted += OnInteractionStarted;
 			_actorTag2D.InteractionEnded += OnInteractionEnded;
-			// _actorTag2D.EventTriggered += OnEventTriggered;
+			_actorTag2D.EventTriggered += OnEventTriggered;
 		}
 
 		public override void _PhysicsProcess(double delta)
@@ -117,14 +117,12 @@ namespace EmergentEchoes.Entities.Actors
 			if (type == EventType.CrimeWitnessed)
 			{
 				_emoteController.ShowEmoteBubble(Emote.Interrobang);
+				return;
 			}
-			else if (type == EventType.Captured)
+
+			if (type == EventType.Detained)
 			{
-				// Captured
-			}
-			else if (type == EventType.Released)
-			{
-				// Released
+				// Immobilize
 			}
 		}
 	}
