@@ -39,7 +39,7 @@ namespace NPCProcGen
 			RegisterCustomType(
 				"res://addons/NPCProcGen/Nodes/PrisonArea2D/PrisonArea2D.cs",
 				"res://addons/NPCProcGen/Nodes/PrisonArea2D/Icon.png",
-				"Area2D",
+				"Marker2D",
 				"PrisonArea2D"
 			);
 		}
