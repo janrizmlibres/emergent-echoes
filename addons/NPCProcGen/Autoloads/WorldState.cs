@@ -20,18 +20,14 @@ namespace NPCProcGen.Autoloads
 
 		private bool _isInstantiated = false;
 
-		public List<ActorTag2D> Actors { get; private set; } = new();
-		public List<PrisonArea2D> Prisons { get; private set; } = new();
 		public Dictionary<ActorTag2D, ActorState> ActorState { get; private set; } = new();
 
 		public List<string> GlobalEvents { get; private set; } = new();
 
-		public Dictionary<NPCAgent2D, Crime> Investigations { get; private set; } = new();
-		public Queue<Crime> RecordedCrimes { get; private set; } = new();
-		public List<Crime> UnsolvedCrimes { get; private set; } = new();
-		public List<Crime> SolvedCrimes { get; private set; } = new();
+		public List<Crime> Crimes { get; private set; } = new();
 
 		public List<Node2D> Structures { get; private set; } = new();
+		public List<PrisonMarker2D> Prisons { get; private set; } = new();
 
 		// ? Workplaces and who they belong to (Possibly _structures)
 		// ? Current date (?)
