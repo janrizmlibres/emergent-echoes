@@ -71,11 +71,12 @@ namespace EmergentEchoes.Entities.Actors
             _animationTree.AnimationFinished += OnAnimationFinished;
             _navigationAgent2d.VelocityComputed += OnNavigationAgentVelocityComputed;
 
-            _npcAgent2d.ActionStarted += OnActionStarted;
             _npcAgent2d.ExecutionStarted += OnExecutionStarted;
             _npcAgent2d.ExecutionEnded += OnExecutionEnded;
+            _npcAgent2d.ActionStarted += OnActionStarted;
             _npcAgent2d.StateEntered += OnStateEntered;
             _npcAgent2d.StateExited += OnStateExited;
+            _npcAgent2d.EventTriggered += OnEventTriggered;
 
             SetupTilePositions();
         }
@@ -326,7 +327,7 @@ namespace EmergentEchoes.Entities.Actors
                     satiationIncrease.ToString()
                 );
             }
-            else if (actionState == ActionState.Research)
+            else if (actionState == ActionState.Assess)
             {
                 bool isIndeterminate = data[0].As<bool>();
 
@@ -374,6 +375,25 @@ namespace EmergentEchoes.Entities.Actors
                     ResourceType.Companionship,
                     companionshipIncrease.ToString()
                 );
+            }
+        }
+
+        private void OnEventTriggered(Variant eventType)
+        {
+            EventType type = eventType.As<EventType>();
+
+            if (type == EventType.CrimeWitnessed)
+            {
+                _emoteController.ShowEmoteBubble(Emote.Interrobang);
+            }
+            else if (type == EventType.Detained)
+            {
+                // Immobilize
+                _stateTimer.Stop();
+            }
+            else if (type == EventType.Captured)
+            {
+                RandomizeMainState();
             }
         }
 
