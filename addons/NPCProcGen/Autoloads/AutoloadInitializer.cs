@@ -18,7 +18,7 @@ namespace NPCProcGen.Autoloads
             List<ActorTag2D> actors = new();
             FindActorsInNode(currentScene, actors);
 
-            List<PrisonArea2D> prisons = new();
+            List<PrisonMarker2D> prisons = new();
             FindPrisonsInNode(currentScene, prisons);
 
             Sensor.Initialize(actors, prisons);
@@ -52,11 +52,11 @@ namespace NPCProcGen.Autoloads
             }
         }
 
-        private static void FindPrisonsInNode(Node node, List<PrisonArea2D> prisons)
+        private static void FindPrisonsInNode(Node node, List<PrisonMarker2D> prisons)
         {
             foreach (Node child in node.GetChildren())
             {
-                if (child is PrisonArea2D prison)
+                if (child is PrisonMarker2D prison)
                 {
                     prisons.Add(prison);
                 }
