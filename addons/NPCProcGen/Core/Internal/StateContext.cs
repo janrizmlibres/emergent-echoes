@@ -11,6 +11,7 @@ namespace NPCProcGen.Core.Internal
         public WaitState WaitState { get; set; }
         public FleeState FleeState { get; set; }
 
+        public BaseState StartingState { get; set; }
         public BaseState ApproachState { get; set; }
         public BaseState ContactState { get; set; }
 
