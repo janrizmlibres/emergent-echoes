@@ -40,13 +40,6 @@ namespace NPCProcGen.Core.Traits
             actionCandidates.Add(new(action, weightedScore));
         }
 
-        protected void AddSimpleAction(List<Tuple<BaseAction, float>> actionCandidates,
-            Func<BaseAction> actionCreator, float weight)
-        {
-            BaseAction action = actionCreator();
-            actionCandidates.Add(new(action, weight));
-        }
-
         private BaseAction CreateAction(ActionType actionType, ActorTag2D chosenActor, ResourceType resType)
         {
             if (actionType == ActionType.Theft)
@@ -64,11 +57,6 @@ namespace NPCProcGen.Core.Traits
             throw new ArgumentException("Invalid action type");
         }
 
-        /// <summary>
-        /// Chooses an actor to steal from.
-        /// </summary>
-        /// <param name="type">The resource type to steal.</param>
-        /// <returns>The chosen actor.</returns>
         private ActorTag2D ChooseActor(ResourceType type, ActionType actionType,
             Func<List<ActorTag2D>, ActorTag2D> actorPicker)
         {
@@ -77,23 +65,15 @@ namespace NPCProcGen.Core.Traits
 
             foreach (ActorTag2D actor in peerActors)
             {
-                Vector2? actorLastPos = _actorCtx.Memorizer.GetLastKnownPosition(actor);
-
-                if (actorLastPos == null && !_actorCtx.GetNPCAgent2D().IsActorInRange(actor)) continue;
-                if (actor.IsPlayer() && GD.Randf() > 0.2) continue;
-                if (actor.Sensor.IsUnavailable()) continue;
+                if (!actor.IsValidTarget(_actorCtx.GetNPCAgent2D())) continue;
 
                 if (actionType == ActionType.Petition)
                 {
-                    // Equates to false if the actor is not petitioning (petition resource type is null)
-                    // or if the actor is petitioning for a different resource type.
                     if (actor.Sensor.GetPetitionResourceType() == type) continue;
                     if (!_actorCtx.Memorizer.IsValidPetitionTarget(actor, type)) continue;
                 }
 
-                ResourceManager resMgr = ResourceManager.Instance;
-
-                if (!resMgr.HasResource(actor, type)) continue;
+                if (!ResourceManager.Instance.HasResource(actor, type)) continue;
                 potentialActors.Add(actor);
             }
 
@@ -110,12 +90,8 @@ namespace NPCProcGen.Core.Traits
             return unweightedScore * chosenResource.Weight * _weight;
         }
 
-        /// <summary>
-        /// Evaluates an action based on the given social practice.
-        /// </summary>
-        /// <param name="practice">The social practice to evaluate.</param>
-        /// <returns>A tuple containing the evaluated action and its weight.</returns>
         public abstract Tuple<BaseAction, float> EvaluateAction(SocialPractice practice);
+
         public virtual void Update(double delta) { }
 
         // ! Remove in production
