@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
@@ -7,80 +6,72 @@ using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Core.Components
 {
+    public enum CrimeStatus
+    {
+        Pending,
+        Unsolved,
+        Solved
+    }
+
     public class Crime
     {
-        public NPCAgent2D Investigator
-        {
-            get => _investigator;
-            set
-            {
-                _investigator = value;
-                if (_witnesses.Contains(value))
-                {
-                    MarkSuccessfulWitness(value);
-                }
-            }
-        }
+        public NPCAgent2D Investigator { get; set; }
+        public CrimeStatus Status { get; set; }
 
         public CrimeCategory Category { get; private set; }
         public ActorTag2D Criminal { get; private set; }
-        public ActorTag2D Victim { get; private set; }
+        public List<ActorTag2D> Participants { get; private set; }
 
-        private NPCAgent2D _investigator = null;
-        private readonly List<ActorTag2D> _witnesses;
-        private readonly List<ActorTag2D> _successfulWitnesses = new();
-        private readonly List<ActorTag2D> _failedWitnesses = new();
+        private readonly List<ActorTag2D> _verifiers = new();
+        private readonly List<ActorTag2D> _falsifiers = new();
 
-        public Crime(CrimeCategory category, ActorTag2D criminal, ActorTag2D victim,
-            List<ActorTag2D> witnesses)
+        public Crime(CrimeCategory category, ActorTag2D criminal)
         {
             Category = category;
+            Status = CrimeStatus.Pending;
             Criminal = criminal;
-            Victim = victim;
-            _witnesses = witnesses;
         }
 
-        public Tuple<ActorTag2D, Vector2> GetRandomWitnessData(NPCAgent2D investigator)
+        public bool IsOpen()
         {
-            List<ActorTag2D> shuffledActors = CommonUtils.Shuffle(_witnesses)
-                .Where(actor => investigator.Memorizer.GetLastKnownPosition(actor) != null
-                || investigator.IsActorInRange(actor))
-                .ToList();
+            return Investigator == null && Status == CrimeStatus.Pending;
+        }
 
-            ActorTag2D chosenWitness = shuffledActors
-                .Where(actor => !actor.Sensor.IsUnavailable())
+        public ActorTag2D GetRandomParticipant()
+        {
+            return CommonUtils.Shuffle(Participants.Where(actor => actor.IsValidTarget(Investigator))
+                .ToList())
                 .FirstOrDefault();
+        }
 
-            if (chosenWitness != null)
+        public void ClearParticipant(ActorTag2D actor, bool isSuccess)
+        {
+            if (isSuccess)
             {
-                return new(chosenWitness, investigator.Memorizer.GetLastKnownPosition(chosenWitness).Value);
+                _verifiers.Add(actor);
             }
-
-            return null;
+            else
+            {
+                _falsifiers.Add(actor);
+            }
         }
 
-        public bool HasRemainingWitnesses()
+        public bool IsDeposed()
         {
-            return _successfulWitnesses.Count + _failedWitnesses.Count < _witnesses.Count;
+            DebugTool.Assert(
+                _verifiers.Count + _falsifiers.Count <= Participants.Count,
+                "Interrogations exceed participants count."
+            );
+            return _verifiers.Count + _falsifiers.Count == Participants.Count;
         }
 
-        public void MarkSuccessfulWitness(ActorTag2D actor)
+        public bool IsUnsolvable()
         {
-            _witnesses.Remove(actor);
-            _successfulWitnesses.Add(actor);
-        }
+            float probability = Participants.Count > 6
+                ? _verifiers.Count / (float)Participants.Count
+                : 0.1f + 0.15f * _verifiers.Count;
 
-        public void MarkFailedWitness(ActorTag2D actor)
-        {
-            _witnesses.Remove(actor);
-            _failedWitnesses.Add(actor);
-        }
-
-        public float GetSolveRate()
-        {
-            return _witnesses.Count > 6
-                ? _successfulWitnesses.Count / _witnesses.Count
-                : 0.1f + 0.15f * _successfulWitnesses.Count;
+            return GD.Randf() > probability;
         }
     }
 }
