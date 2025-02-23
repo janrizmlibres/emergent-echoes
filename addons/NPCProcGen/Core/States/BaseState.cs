@@ -5,9 +5,6 @@ using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
-    /// <summary>
-    /// Interface for navigation states.
-    /// </summary>
     public interface INavigationState
     {
         public bool IsNavigating();
@@ -48,12 +45,13 @@ namespace NPCProcGen.Core.States
 
         public void Enter()
         {
+            // TODO: Change to "Redirect"
             if (!Validate()) return;
 
             Subscribe();
-            ExecuteEnterLogic();
+            ExecuteEnter();
 
-            EnterParameters enterParameters = GetEnterParameters();
+            EnterParameters enterParameters = GetEnterData();
 
             GD.Print($"{_actorContext.ActorNode2D.Name} {enterParameters.StateName} Enter");
 
@@ -69,9 +67,9 @@ namespace NPCProcGen.Core.States
         public void Exit()
         {
             Unsubscribe();
-            ExecuteExitLogic();
+            ExecuteExit();
 
-            ExitParameters exitParameters = GetExitParameters();
+            ExitParameters exitParameters = GetExitData();
 
             _actorContext.Sensor.ClearTaskRecord();
 
@@ -89,10 +87,10 @@ namespace NPCProcGen.Core.States
 
         protected virtual bool Validate() => true;
 
-        protected virtual void ExecuteEnterLogic() { }
-        protected virtual void ExecuteExitLogic() { }
+        protected virtual void ExecuteEnter() { }
+        protected virtual void ExecuteExit() { }
 
-        protected abstract EnterParameters GetEnterParameters();
-        protected abstract ExitParameters GetExitParameters();
+        protected abstract EnterParameters GetEnterData();
+        protected abstract ExitParameters GetExitData();
     }
 }
