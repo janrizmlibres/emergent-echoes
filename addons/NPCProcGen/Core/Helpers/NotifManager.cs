@@ -1,4 +1,5 @@
 using System;
+using NPCProcGen.Core.Components;
 
 namespace NPCProcGen.Core.Helpers
 {
@@ -11,13 +12,22 @@ namespace NPCProcGen.Core.Helpers
         private NotifManager() { }
 
         public event Action<ActorTag2D, bool> PetitionAnswered;
+        public event Action<ActorTag2D, Crime> CrimeCommitted;
 
         public event Action<ActorTag2D> InteractionStarted;
         public event Action<ActorTag2D> InteractionEnded;
 
+        public event Action<ActorTag2D> ActorDetained;
+        public event Action<ActorTag2D> ActorCaptured;
+
         public void NotifyPetitionAnswered(ActorTag2D source, bool isAccepted)
         {
             PetitionAnswered?.Invoke(source, isAccepted);
+        }
+
+        public void NotifyCrimeCommitted(ActorTag2D source, Crime crime)
+        {
+            CrimeCommitted?.Invoke(source, crime);
         }
 
         public void NotifyInteractionStarted(ActorTag2D source)
@@ -28,6 +38,16 @@ namespace NPCProcGen.Core.Helpers
         public void NotifyInteractionEnded(ActorTag2D source)
         {
             InteractionEnded?.Invoke(source);
+        }
+
+        public void NotifyActorDetained(ActorTag2D actor)
+        {
+            ActorDetained?.Invoke(actor);
+        }
+
+        public void NotifyActorCaptured(ActorTag2D actor)
+        {
+            ActorCaptured?.Invoke(actor);
         }
     }
 }
