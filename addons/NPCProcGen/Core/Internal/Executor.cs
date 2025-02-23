@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 using NPCProcGen.Core.Actions;
@@ -15,6 +16,7 @@ namespace NPCProcGen.Core.Internal
         public Executor(ActorContext context)
         {
             _actorContext = context;
+            NotifManager.Instance.ActorDetained += OnActorDetained;
         }
 
         public void Update(double delta)
@@ -31,7 +33,7 @@ namespace NPCProcGen.Core.Internal
 
             if (_actions.TryPeek(out BaseAction currentAction))
             {
-                currentAction.InterruptAction();
+                currentAction.Interrupt();
             }
             else
             {
@@ -42,28 +44,37 @@ namespace NPCProcGen.Core.Internal
             action.Run();
         }
 
+        public void TerminateAction()
+        {
+            _actions.Pop().Interrupt();
+            AttemptResume();
+        }
+
         public void FinishAction()
         {
             DebugTool.Assert(_actions.Count > 0, "Actions cannot be null when completing an action");
-
             _actions.Pop().Finish();
+            AttemptResume();
+        }
 
+        private void AttemptResume()
+        {
             if (_actions.TryPeek(out BaseAction action))
             {
                 action.Run();
             }
             else
             {
-                _actorContext.GetNPCAgent2D().OnExecutionEnded();
+                _actorContext.GetNPCAgent2D().StartEvaluationTimer();
                 _actorContext.EmitSignal(NPCAgent2D.SignalName.ExecutionEnded);
             }
         }
 
-        public void TerminateActions()
+        public void TerminateExecution()
         {
             while (_actions.Count > 0)
             {
-                _actions.Pop().InterruptAction();
+                _actions.Pop().Interrupt();
             }
         }
 
@@ -100,7 +111,7 @@ namespace NPCProcGen.Core.Internal
             if (_actions.TryPeek(out BaseAction action))
             {
                 BaseState currentState = action.CurrentState;
-                return (currentState as INavigationState)?.OnNavigationComplete() ?? false; ;
+                return (currentState as INavigationState)?.OnNavigationComplete() ?? false;
             }
             return false;
         }
@@ -119,6 +130,17 @@ namespace NPCProcGen.Core.Internal
             {
                 BaseState currentState = action.CurrentState;
                 (currentState as IActorDetectionState)?.OnActorDetected(actor);
+            }
+        }
+
+        private void OnActorDetained(ActorTag2D actor)
+        {
+            if (actor == null) throw new ArgumentNullException(nameof(actor));
+
+            if (_actions.TryPeek(out BaseAction action))
+            {
+                if ((action as ITargetedAction)?.GetTargetActor() != actor) return;
+                TerminateAction();
             }
         }
     }
