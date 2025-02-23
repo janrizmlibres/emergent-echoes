@@ -57,11 +57,12 @@ path_postprocessing = 1
 avoidance_enabled = true
 radius = 5.0
 
-[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("ActorDetector", "EvaluationTimer", "RearMarker")]
+[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("EvaluationTimer", "ActorDetector", "RearMarker")]
 script = ExtResource("3_x7obk")
-ActorDetector = NodePath("../ActorDetector")
 EvaluationTimer = NodePath("../EvaluationTimer")
-MoneyAmount = 1000
+Survival = 0.4
+Thief = 0.8
+ActorDetector = NodePath("../ActorDetector")
 RearMarker = NodePath("../RearMarker/Marker2D")
 
 [node name="ActorDetector" parent="." instance=ExtResource("7_ctg42")]
