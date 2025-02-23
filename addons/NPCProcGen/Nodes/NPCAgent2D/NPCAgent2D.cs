@@ -5,6 +5,7 @@ using Godot;
 using Godot.Collections;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
+using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
@@ -39,8 +40,6 @@ namespace NPCProcGen
         [Export(PropertyHint.Range, "1,100,")]
         public int CompanionshipAmount { get; set; } = 10;
 
-        [Export]
-        public Area2D ActorDetector { get; set; }
         [Export]
         public Timer EvaluationTimer { get; set; }
 
@@ -78,30 +77,29 @@ namespace NPCProcGen
 
         public Vector2 TargetPosition => Executor.GetTargetPosition();
 
-        private readonly List<ActorTag2D> _nearbyActors = new();
+        private ActorContext _context;
 
         public override void _Ready()
         {
             if (Engine.IsEditorHint()) return;
 
-            ActorContext context = new(this);
+            _context = new(this);
 
-            Sensor = new Sensor(context);
-            Memorizer = new NPCMemorizer(context);
-            Strategizer = new Strategizer(context);
-            Executor = new Executor(context);
+            Sensor = new Sensor(_context);
+            Memorizer = new NPCMemorizer(_context);
+            Strategizer = new Strategizer(_context);
+            Executor = new Executor(_context);
 
-            context.Sensor = Sensor;
-            context.Memorizer = Memorizer;
-            context.Executor = Executor;
+            _context.Sensor = Sensor;
+            _context.Memorizer = Memorizer;
+            _context.Executor = Executor;
 
             ActorDetector.BodyEntered += OnBodyEntered;
             ActorDetector.BodyExited += OnBodyExited;
-
             EvaluationTimer.Timeout += OnEvaluationTimerTimeout;
 
-            // AddTraits(context);
-            AddTraitsStub(context);
+            // AddTraits();
+            AddTraitsStub();
         }
 
         public override void _Process(double delta)
@@ -135,17 +133,10 @@ namespace NPCProcGen
             return CommonUtils.Shuffle(_nearbyActors).FirstOrDefault();
         }
 
-        public override void TriggerInteraction(ActorTag2D target, ActionState _actionState,
+        public override void TriggerInteraction(ActorTag2D target, InteractState state,
             Array<Variant> data)
         {
-            ActorContext context = new(this)
-            {
-                Sensor = Sensor,
-                Memorizer = Memorizer,
-                Executor = Executor
-            };
-
-            InteractAction action = new(context, target);
+            InteractAction action = new(_context, target);
             Executor.AddAction(action);
             EvaluationTimer.Stop();
         }
@@ -153,6 +144,12 @@ namespace NPCProcGen
         public override void StopInteraction()
         {
             Executor.FinishAction();
+        }
+
+        protected override void DetainNPC()
+        {
+            Executor.TerminateExecution();
+            EvaluationTimer.Stop();
         }
 
         public bool IsActive()
@@ -175,15 +172,18 @@ namespace NPCProcGen
             Executor.CompleteConsumption();
         }
 
-        private void AddTraits(ActorContext context)
+        private void AddTraits()
         {
-            Traits.Add(new SurvivalTrait(context, Survival));
+            Traits.Add(new SurvivalTrait(_context, Survival));
 
             if (Thief > 0)
-                Traits.Add(new ThiefTrait(context, Thief));
+                Traits.Add(new ThiefTrait(_context, Thief));
 
             if (Lawful > 0)
-                Traits.Add(new LawfulTrait(context, Lawful));
+            {
+                _context.LawfulModule = new LawfulTrait(_context, Lawful);
+                Traits.Add(_context.LawfulModule);
+            }
         }
 
         private void OnEvaluationTimerTimeout()
@@ -203,45 +203,29 @@ namespace NPCProcGen
             }
             else
             {
-                EvaluationTimer.Start(GD.RandRange(MinWaitTime, MaxWaitTime));
+                StartEvaluationTimer();
             }
         }
 
-        public void OnExecutionEnded()
+        public void StartEvaluationTimer()
         {
             EvaluationTimer.Start(GD.RandRange(MinWaitTime, MaxWaitTime));
         }
 
-        private void OnBodyEntered(Node2D body)
+        protected override void OnNPCActorEntered(ActorTag2D actor)
         {
-            if (GetParent<Node2D>() == body) return;
-
-            ActorTag2D actor = body.GetChildren().OfType<ActorTag2D>().FirstOrDefault();
-
-            if (actor != null)
-            {
-                _nearbyActors.Add(actor);
-                Executor.OnActorDetected(actor);
-            }
-        }
-
-        private void OnBodyExited(Node2D body)
-        {
-            ActorTag2D actor = body.GetChildren().OfType<ActorTag2D>().FirstOrDefault();
-
-            if (actor != null)
-            {
-                Memorizer.UpdateLastKnownPosition(actor, actor.GetParent<Node2D>().GlobalPosition);
-                _nearbyActors.Remove(actor);
-            }
+            Executor.OnActorDetected(actor);
         }
 
         // ! Remove in production
-        private void AddTraitsStub(ActorContext context)
+        private void AddTraitsStub()
         {
-            Traits.Add(new SurvivalTrait(context, Survival));
-            Traits.Add(new ThiefTrait(context, Thief));
-            Traits.Add(new LawfulTrait(context, Lawful));
+            _context.LawfulModule = new LawfulTrait(_context, Lawful);
+
+            Traits.Add(new SurvivalTrait(_context, Survival));
+            Traits.Add(new ThiefTrait(_context, Thief));
+            Traits.Add(_context.LawfulModule);
+
         }
     }
 }
