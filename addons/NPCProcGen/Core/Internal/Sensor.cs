@@ -19,9 +19,8 @@ namespace NPCProcGen.Core.Internal
             _actorCtx = context;
         }
 
-        public static void Initialize(List<ActorTag2D> actors, List<PrisonArea2D> prisons)
+        public static void Initialize(List<ActorTag2D> actors, List<PrisonMarker2D> prisons)
         {
-            _worldState.Actors.AddRange(actors);
             _worldState.Prisons.AddRange(prisons);
 
             foreach (ActorTag2D actor in actors)
@@ -33,7 +32,7 @@ namespace NPCProcGen.Core.Internal
 
         public List<ActorTag2D> GetActors()
         {
-            return _worldState.Actors.ToList();
+            return _worldState.ActorState.Keys.ToList();
         }
 
         public Tuple<ActionType, ActionState> GetTaskRecord()
@@ -64,12 +63,19 @@ namespace NPCProcGen.Core.Internal
 
             return state == ActionState.Talk || state == ActionState.Petition
                 || state == ActionState.Interact || state == ActionState.Flee
-                || state == ActionState.Capture;
+                || state == ActionState.Capture || state == ActionState.Interrogate;
         }
 
         public bool IsUnavailable()
         {
             return _worldState.ActorState[_actorCtx.Actor].IsUnavailable;
+        }
+
+        public void SetAvailability(bool isAvailable)
+        {
+            _worldState.ActorState[_actorCtx.Actor].IsUnavailable = !isAvailable;
+            if (isAvailable) return;
+            _worldState.Crimes.ForEach(crime => crime.Participants.Remove(_actorCtx.Actor));
         }
 
         public ResourceType? GetPetitionResourceType()
@@ -89,44 +95,26 @@ namespace NPCProcGen.Core.Internal
 
         public void RecordCrime(Crime crime)
         {
-            _worldState.RecordedCrimes.Enqueue(crime);
+            _worldState.Crimes.Add(crime);
         }
 
-        public Crime InvestigateCrime()
+        public Crime AssignCase()
         {
-            if (_worldState.RecordedCrimes.TryDequeue(out Crime crime))
+            Crime pendingCrime = _worldState.Crimes.Where(c => c.IsOpen()).FirstOrDefault();
+
+            if (pendingCrime != null)
             {
-                NPCAgent2D investigator = _actorCtx.GetNPCAgent2D();
-                crime.Investigator = investigator;
-                _worldState.Investigations.Add(investigator, crime);
-                return crime;
+                pendingCrime.Investigator = _actorCtx.GetNPCAgent2D();
+                return pendingCrime;
             }
+
             return null;
         }
 
-        public void CloseInvestigation()
+        public PrisonMarker2D GetRandomPrison()
         {
-            Crime crime = RemoveInvestigation();
-            _worldState.UnsolvedCrimes.Add(crime);
-        }
-
-        public void SolveInvestigation()
-        {
-            Crime crime = RemoveInvestigation();
-            _worldState.SolvedCrimes.Add(crime);
-        }
-
-        public PrisonArea2D GetRandomPrison()
-        {
+            DebugTool.Assert(_worldState.Prisons.Count > 0, "No prisons available.");
             return CommonUtils.Shuffle(_worldState.Prisons).First();
-        }
-
-        private Crime RemoveInvestigation()
-        {
-            NPCAgent2D investigator = _actorCtx.GetNPCAgent2D();
-            Crime crime = _worldState.Investigations[investigator];
-            _worldState.Investigations.Remove(investigator);
-            return crime;
         }
     }
 }
