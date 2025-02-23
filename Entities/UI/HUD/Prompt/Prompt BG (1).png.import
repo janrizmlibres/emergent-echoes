@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dnvulmrpxd5v1"
-path="res://.godot/imported/delayer.svg-6f92c97f61b1eb8679428f438e6b08c7.ctex"
+uid="uid://chebn1ujnluva"
+path="res://.godot/imported/Prompt BG (1).png-1b363f2f6996ec156cd82b8f4932ca96.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/beehave/icons/delayer.svg"
-dest_files=["res://.godot/imported/delayer.svg-6f92c97f61b1eb8679428f438e6b08c7.ctex"]
+source_file="res://Entities/UI/HUD/Prompt/Prompt BG (1).png"
+dest_files=["res://.godot/imported/Prompt BG (1).png-1b363f2f6996ec156cd82b8f4932ca96.ctex"]
 
 [params]
 
@@ -32,6 +32,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

@@ -103,7 +103,23 @@ namespace EmergentEchoes.Entities.Actors
 			_state = State.Dormant;
 			_emoteController.Activate();
 		}
+		
+		private void OnInteractionStartedOnNPCAlt(string state, Node2D npc)
+		{
+			if (state == "petitioning")
+			{
+				_emoteController.ShowEmoteBubble(0);
+				npc.GetNode("Blackboard").Call("set_value", "current_state", "petition answered");
+			}
 
+			Vector2 directionToFace = GlobalPosition.DirectionTo(npc.GlobalPosition);
+
+			_animationTree.Set("parameters/Idle/blend_position", directionToFace.X);
+			_animationState.Travel("Idle");
+
+			_state = State.Dormant;
+		}
+		
 		private void OnInteractionEnded()
 		{
 			_state = State.Active;
