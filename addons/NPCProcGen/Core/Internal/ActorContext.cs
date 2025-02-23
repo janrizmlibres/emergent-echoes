@@ -1,10 +1,13 @@
 using Godot;
 using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Traits;
 
 namespace NPCProcGen.Core.Internal
 {
     public class ActorContext
     {
+        public LawfulTrait LawfulModule { get; set; }
+
         public Sensor Sensor { get; set; }
         public Memorizer Memorizer { get; set; }
         public Executor Executor { get; set; }
