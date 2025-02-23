@@ -5,6 +5,11 @@ using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.Actions
 {
+    public interface ITargetedAction
+    {
+        public ActorTag2D GetTargetActor();
+    }
+
     public abstract class BaseAction
     {
         public ActionType ActionType { get; private set; }
@@ -27,7 +32,7 @@ namespace NPCProcGen.Core.Actions
             CurrentState?.Enter();
         }
 
-        public void InterruptAction()
+        public void Interrupt()
         {
             _actorContext.Sensor.ClearTaskRecord();
             CurrentState?.Unsubscribe();
@@ -66,7 +71,6 @@ namespace NPCProcGen.Core.Actions
         }
 
         public virtual void Terminate() { }
-
         protected virtual void ExecuteRun() { }
 
         protected abstract void InitializeStates();
