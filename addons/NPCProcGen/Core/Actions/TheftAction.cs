@@ -4,7 +4,7 @@ using NPCProcGen.Core.States;
 
 namespace NPCProcGen.Core.Actions
 {
-    public class TheftAction : BaseAction
+    public class TheftAction : BaseAction, ITargetedAction
     {
         private readonly ActorTag2D _targetActor;
         private readonly ResourceType _targetResource;
@@ -38,5 +38,6 @@ namespace NPCProcGen.Core.Actions
         }
 
         protected override BaseState GetStartingState() => _searchState;
+        public ActorTag2D GetTargetActor() => _targetActor;
     }
 }

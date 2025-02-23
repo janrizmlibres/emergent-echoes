@@ -5,7 +5,7 @@ using NPCProcGen.Core.States;
 
 namespace NPCProcGen.Core.Actions
 {
-    public class PetitionAction : BaseAction
+    public class PetitionAction : BaseAction, ITargetedAction
     {
         private readonly ActorTag2D _targetActor;
         private readonly ResourceType _targetResource;
@@ -42,5 +42,7 @@ namespace NPCProcGen.Core.Actions
         {
             _actorContext.Sensor.ClearPetitionResourceType();
         }
+
+        public ActorTag2D GetTargetActor() => _targetActor;
     }
 }
