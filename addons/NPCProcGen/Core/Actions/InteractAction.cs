@@ -4,7 +4,7 @@ using NPCProcGen.Core.States;
 
 namespace NPCProcGen.Core.Actions
 {
-    public class InteractAction : BaseAction
+    public class InteractAction : BaseAction, ITargetedAction
     {
         private readonly ActorTag2D _target;
 
@@ -22,5 +22,6 @@ namespace NPCProcGen.Core.Actions
         }
 
         protected override BaseState GetStartingState() => _interactState;
+        public ActorTag2D GetTargetActor() => _target;
     }
 }
