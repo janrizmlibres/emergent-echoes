@@ -17,7 +17,7 @@ namespace NPCProcGen.Core.States
             _target = target;
         }
 
-        protected override EnterParameters GetEnterParameters()
+        protected override EnterParameters GetEnterData()
         {
             return new EnterParameters
             {
@@ -26,7 +26,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override ExitParameters GetExitParameters()
+        protected override ExitParameters GetExitData()
         {
             return new ExitParameters
             {
@@ -34,12 +34,12 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override void ExecuteEnterLogic()
+        protected override void ExecuteEnter()
         {
             NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
         }
 
-        protected override void ExecuteExitLogic()
+        protected override void ExecuteExit()
         {
             NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);
         }

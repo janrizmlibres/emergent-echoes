@@ -23,7 +23,7 @@ namespace NPCProcGen.Core.States
             NotifManager.Instance.InteractionEnded += OnTargetInteractionEnded;
         }
 
-        protected override EnterParameters GetEnterParameters()
+        protected override EnterParameters GetEnterData()
         {
             return new EnterParameters
             {
@@ -32,7 +32,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override ExitParameters GetExitParameters()
+        protected override ExitParameters GetExitData()
         {
             return new ExitParameters
             {

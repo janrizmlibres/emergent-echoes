@@ -16,7 +16,7 @@ namespace NPCProcGen.Core.States
         public FleeState(ActorContext actorContext, StateContext stateContext)
             : base(actorContext, stateContext, ActionState.Flee) { }
 
-        protected override void ExecuteEnterLogic()
+        protected override void ExecuteEnter()
         {
             _fleePosition = CommonUtils.GetRandomPosInCircularArea(
                 _actorContext.ActorNode2D.GlobalPosition,
@@ -25,7 +25,7 @@ namespace NPCProcGen.Core.States
             );
         }
 
-        protected override EnterParameters GetEnterParameters()
+        protected override EnterParameters GetEnterData()
         {
             return new EnterParameters
             {
@@ -34,7 +34,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override ExitParameters GetExitParameters()
+        protected override ExitParameters GetExitData()
         {
             return new ExitParameters
             {

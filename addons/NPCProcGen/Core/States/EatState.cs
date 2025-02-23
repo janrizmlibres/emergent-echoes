@@ -19,7 +19,7 @@ namespace NPCProcGen.Core.States
             _amountToEat = ComputeFoodAmount();
         }
 
-        protected override EnterParameters GetEnterParameters()
+        protected override EnterParameters GetEnterData()
         {
             return new EnterParameters
             {
@@ -28,7 +28,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override ExitParameters GetExitParameters()
+        protected override ExitParameters GetExitData()
         {
             // ! Magic number 10
             int satiationIncrease = _amountToEat * 10;

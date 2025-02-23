@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Autoloads;
@@ -16,15 +14,15 @@ namespace NPCProcGen.Core.States
         private readonly ResourceType _targetResource;
         private readonly float _amountToSteal;
 
-        public StealState(ActorContext actorContext, StateContext stateContext, ActorTag2D target, ResourceType type)
-            : base(actorContext, stateContext, ActionState.Steal)
+        public StealState(ActorContext actorContext, StateContext stateContext, ActorTag2D target,
+            ResourceType type) : base(actorContext, stateContext, ActionState.Steal)
         {
             _targetActor = target;
             _targetResource = type;
             _amountToSteal = ComputeStealAmount();
         }
 
-        protected override EnterParameters GetEnterParameters()
+        protected override EnterParameters GetEnterData()
         {
             return new EnterParameters
             {
@@ -33,7 +31,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override ExitParameters GetExitParameters()
+        protected override ExitParameters GetExitData()
         {
             return new ExitParameters
             {
@@ -45,7 +43,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override void ExecuteEnterLogic()
+        protected override void ExecuteEnter()
         {
             ResourceManager.Instance.TranserResources(
                 _targetActor,
@@ -57,20 +55,10 @@ namespace NPCProcGen.Core.States
             _stateContext.Action.TransitionTo(_stateContext.FleeState);
         }
 
-        protected override void ExecuteExitLogic()
+        protected override void ExecuteExit()
         {
-            List<ActorTag2D> witnesses = _actorContext.GetNPCAgent2D().GetActorsInRange()
-                .Where(actor => actor != _targetActor)
-                .ToList();
-
-            // witnesses.ForEach(actor => actor.EmitSignal(
-            //     ActorTag2D.SignalName.EventTriggered, Variant.From(EventType.CrimeWitnessed)
-            // ));
-
-            GD.Print("Crime witnessed by:");
-            witnesses.ForEach(actor => GD.Print(actor.Owner.Name));
-
-            Crime newCrime = new(CrimeCategory.Theft, _actorContext.Actor, _targetActor, witnesses);
+            Crime newCrime = new(CrimeCategory.Theft, _actorContext.Actor);
+            NotifManager.Instance.NotifyCrimeCommitted(_actorContext.Actor, newCrime);
             _actorContext.Sensor.RecordCrime(newCrime);
         }
 

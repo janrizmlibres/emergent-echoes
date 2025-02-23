@@ -1,17 +1,15 @@
-using System.Linq;
 using Godot;
 using Godot.Collections;
+using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
-using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
-using NPCProcGen.Core.Traits;
 
 namespace NPCProcGen.Core.States
 {
     public class CaptureState : BaseState, INavigationState
     {
         private readonly ActorTag2D _criminal;
-        private Vector2 _targetPosition;
+        private Vector2 _prisonLocation;
 
         public CaptureState(ActorContext actorContext, StateContext stateContext,
             ActorTag2D criminal) : base(actorContext, stateContext, ActionState.Capture)
@@ -19,17 +17,7 @@ namespace NPCProcGen.Core.States
             _criminal = criminal;
         }
 
-        protected override void ExecuteEnterLogic()
-        {
-            PrisonArea2D prisonArea = _actorContext.Sensor.GetRandomPrison();
-            DebugTool.Assert(prisonArea != null, "Prison area not found");
-            _targetPosition = prisonArea.GetRandomPoint();
-
-            // _criminal.Arrest();
-            // _criminal.EmitSignal(ActorTag2D.SignalName.EventTriggered, Variant.From(EventType.Captured));
-        }
-
-        protected override EnterParameters GetEnterParameters()
+        protected override EnterParameters GetEnterData()
         {
             return new EnterParameters
             {
@@ -38,7 +26,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override ExitParameters GetExitParameters()
+        protected override ExitParameters GetExitData()
         {
             return new ExitParameters
             {
@@ -46,14 +34,17 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override void ExecuteExitLogic()
+        protected override void ExecuteEnter()
         {
-            _actorContext.GetNPCAgent2D().Traits
-                .OfType<LawfulTrait>()
-                .FirstOrDefault()?
-                .MarkCrimeAsSolved();
+            PrisonMarker2D prisonMarker = _actorContext.Sensor.GetRandomPrison();
+            _prisonLocation = prisonMarker.GlobalPosition;
+            _criminal.TriggerDetainment();
+        }
 
-            // _criminal.EmitSignal(ActorTag2D.SignalName.EventTriggered, Variant.From(EventType.Released));
+        protected override void ExecuteExit()
+        {
+            _actorContext.LawfulModule.ClearCase(CrimeStatus.Solved);
+            _criminal.TriggerCaptivity();
         }
 
         public bool IsNavigating()
@@ -63,7 +54,7 @@ namespace NPCProcGen.Core.States
 
         public Vector2 GetTargetPosition()
         {
-            return _targetPosition;
+            return _prisonLocation;
         }
 
         public bool OnNavigationComplete()

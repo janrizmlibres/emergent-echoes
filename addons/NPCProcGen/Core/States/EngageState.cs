@@ -13,13 +13,6 @@ namespace NPCProcGen.Core.States
         Omni
     }
 
-    public enum EngageOutcome
-    {
-        TargetBusy,
-        TargetAvailable,
-        DurationExceeded
-    }
-
     public class EngageState : BaseState, INavigationState
     {
         private readonly ActorTag2D _target;
@@ -37,10 +30,10 @@ namespace NPCProcGen.Core.States
 
         public override void Subscribe()
         {
-            NotifManager.Instance.InteractionStarted += CompleteWithTargetBusy;
+            NotifManager.Instance.InteractionStarted += OnInteractionStarted;
         }
 
-        protected override EnterParameters GetEnterParameters()
+        protected override EnterParameters GetEnterData()
         {
             return new EnterParameters
             {
@@ -49,7 +42,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override ExitParameters GetExitParameters()
+        protected override ExitParameters GetExitData()
         {
             return new ExitParameters
             {
@@ -71,22 +64,14 @@ namespace NPCProcGen.Core.States
 
         public override void Unsubscribe()
         {
-            NotifManager.Instance.InteractionStarted -= CompleteWithTargetBusy;
+            NotifManager.Instance.InteractionStarted -= OnInteractionStarted;
         }
 
-        /// <summary>
-        /// Determines whether the agent is currently navigating.
-        /// </summary>
-        /// <returns>True if the agent is navigating; otherwise, false.</returns>
         public bool IsNavigating()
         {
             return true;
         }
 
-        /// <summary>
-        /// Gets the target position for navigation.
-        /// </summary>
-        /// <returns>The global position of the target.</returns>
         public Vector2 GetTargetPosition()
         {
             if (_waypoint == Waypoint.Lateral)
@@ -117,12 +102,16 @@ namespace NPCProcGen.Core.States
             return false;
         }
 
-        private void CompleteWithTargetBusy(ActorTag2D target)
+        private void OnInteractionStarted(ActorTag2D target)
         {
-            if (target == _target)
-            {
-                _stateContext.Action.TransitionTo(_stateContext.WaitState);
-            }
+            if (target != _target) return;
+            _stateContext.Action.TransitionTo(_stateContext.WaitState);
+        }
+
+        private void OnActorDetained(ActorTag2D actor)
+        {
+            if (actor != _target) return;
+            _actorContext.Executor.TerminateAction();
         }
     }
 }

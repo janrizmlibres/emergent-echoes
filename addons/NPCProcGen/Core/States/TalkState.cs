@@ -37,7 +37,7 @@ namespace NPCProcGen.Core.States
             _companionshipIncrease = ComputeCompanionshipIncrease();
         }
 
-        protected override EnterParameters GetEnterParameters()
+        protected override EnterParameters GetEnterData()
         {
             return new EnterParameters
             {
@@ -46,7 +46,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override ExitParameters GetExitParameters()
+        protected override ExitParameters GetExitData()
         {
             return new ExitParameters
             {
@@ -58,7 +58,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override void ExecuteEnterLogic()
+        protected override void ExecuteEnter()
         {
             Array<Variant> data = new() { _target.GetParent<Node2D>() };
 
@@ -66,7 +66,7 @@ namespace NPCProcGen.Core.States
             NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
         }
 
-        protected override void ExecuteExitLogic()
+        protected override void ExecuteExit()
         {
             _target.StopInteraction();
             NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);

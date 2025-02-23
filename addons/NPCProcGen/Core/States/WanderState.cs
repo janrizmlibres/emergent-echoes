@@ -31,12 +31,12 @@ namespace NPCProcGen.Core.States
             _idleTimer = GD.RandRange(MinInterval, MaxInterval);
         }
 
-        protected override void ExecuteEnterLogic()
+        protected override void ExecuteEnter()
         {
             _origin = _actorContext.ActorNode2D.GlobalPosition;
         }
 
-        protected override EnterParameters GetEnterParameters()
+        protected override EnterParameters GetEnterData()
         {
             return new EnterParameters
             {
@@ -45,7 +45,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override ExitParameters GetExitParameters()
+        protected override ExitParameters GetExitData()
         {
             return new ExitParameters
             {

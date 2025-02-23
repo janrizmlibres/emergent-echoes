@@ -42,7 +42,7 @@ namespace NPCProcGen.Core.States
             if (_target.IsPlayer()) NotifManager.Instance.PetitionAnswered -= OnPetitionAnswered;
         }
 
-        protected override EnterParameters GetEnterParameters()
+        protected override EnterParameters GetEnterData()
         {
             return new EnterParameters
             {
@@ -51,7 +51,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override ExitParameters GetExitParameters()
+        protected override ExitParameters GetExitData()
         {
             return new ExitParameters
             {
@@ -66,20 +66,20 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override void ExecuteEnterLogic()
+        protected override void ExecuteEnter()
         {
             Array<Variant> data = new()
             {
-                _target.GetParent<Node2D>(),
+                _actorContext.ActorNode2D,
                 Variant.From(_resourceType),
                 _amount
             };
 
-            _target.TriggerInteraction(_actorContext.Actor, _actionState, data);
+            _target.TriggerInteraction(_actorContext.Actor, (InteractState)_actionState, data);
             NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
         }
 
-        protected override void ExecuteExitLogic()
+        protected override void ExecuteExit()
         {
             _target.StopInteraction();
             NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);
@@ -133,7 +133,12 @@ namespace NPCProcGen.Core.States
 
             if (isAccepted)
             {
-                ResourceManager.Instance.TranserResources(_target, _actorContext.Actor, _resourceType, _amount);
+                ResourceManager.Instance.TranserResources(
+                    _target,
+                    _actorContext.Actor,
+                    _resourceType,
+                    _amount
+                );
                 _target.Memorizer.UpdateLastPetitionResource(_actorContext.Actor, _resourceType);
             }
 

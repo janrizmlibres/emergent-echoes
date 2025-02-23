@@ -39,7 +39,7 @@ namespace NPCProcGen.Core.States
             return true;
         }
 
-        protected override void ExecuteEnterLogic()
+        protected override void ExecuteEnter()
         {
             _seekPosition = CommonUtils.GetRandomPosInCircularArea(
                 _actorContext.ActorNode2D.GlobalPosition,
@@ -47,7 +47,7 @@ namespace NPCProcGen.Core.States
             );
         }
 
-        protected override EnterParameters GetEnterParameters()
+        protected override EnterParameters GetEnterData()
         {
             return new EnterParameters
             {
@@ -56,7 +56,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override ExitParameters GetExitParameters()
+        protected override ExitParameters GetExitData()
         {
             return new ExitParameters
             {
@@ -99,8 +99,8 @@ namespace NPCProcGen.Core.States
 
         public void OnActorDetected(ActorTag2D actor)
         {
-            if (actor.Sensor.IsUnavailable()) return;
-            _actorContext.Executor.FinishAction();
+            if (!actor.CanInteract()) return;
+            _setupInteractStates(actor);
         }
     }
 }

@@ -4,28 +4,26 @@ using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
+using NPCProcGen.Core.Traits;
 
 namespace NPCProcGen.Core.States
 {
     public class InterrogateState : BaseState
     {
-        private const int MinDuration = 10;
-        private const int MaxDuration = 20;
-
-        private readonly Crime _crime;
         private readonly ActorTag2D _target;
-        private float _duration;
+        private readonly Crime _crime;
+
+        private float _duration = 15;
 
         public InterrogateState(ActorContext actorContext, StateContext stateContext,
-            Crime crime, ActorTag2D target)
+            ActorTag2D target, Crime crime)
             : base(actorContext, stateContext, ActionState.Interrogate)
         {
-            _crime = crime;
             _target = target;
-            _duration = GD.RandRange(MinDuration, MaxDuration);
+            _crime = crime;
         }
 
-        protected override EnterParameters GetEnterParameters()
+        protected override EnterParameters GetEnterData()
         {
             return new EnterParameters
             {
@@ -34,7 +32,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override ExitParameters GetExitParameters()
+        protected override ExitParameters GetExitData()
         {
             return new ExitParameters
             {
@@ -42,7 +40,7 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        protected override void ExecuteEnterLogic()
+        protected override void ExecuteEnter()
         {
             Array<Variant> data = new() { _actorContext.ActorNode2D };
 
@@ -50,7 +48,7 @@ namespace NPCProcGen.Core.States
             NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
         }
 
-        protected override void ExecuteExitLogic()
+        protected override void ExecuteExit()
         {
             _target.StopInteraction();
             NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);
@@ -62,23 +60,24 @@ namespace NPCProcGen.Core.States
 
             if (_duration <= 0)
             {
-                CalculateSuccess();
+                ClearParticipant();
+                CheckInvestigationStatus();
                 _actorContext.Executor.FinishAction();
             }
         }
 
-        private void CalculateSuccess()
+        private void ClearParticipant()
         {
             float relationship = _actorContext.Memorizer.GetActorRelationship(_target);
             float successRate = ActorData.GetInterrogationProbability(relationship);
+            _crime.ClearParticipant(_target, GD.Randf() <= successRate);
+        }
 
-            if (GD.Randf() <= successRate)
+        private void CheckInvestigationStatus()
+        {
+            if (_crime.IsDeposed() && !_crime.IsUnsolvable())
             {
-                _crime.MarkSuccessfulWitness(_target);
-            }
-            else
-            {
-                _crime.MarkFailedWitness(_target);
+                _actorContext.LawfulModule.ClearCase(CrimeStatus.Unsolved);
             }
         }
     }
