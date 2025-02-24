@@ -11,5 +11,5 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		
 		return SUCCESS
 	
-	move_actor.emit(Vector2(720, 48))
+	move_actor.emit(Vector2(752, 192))
 	return RUNNING

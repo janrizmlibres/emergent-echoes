@@ -4,7 +4,7 @@ signal move_actor(set_state: String, patrol_location: Vector2)
 
 var current_patrol_index: int = 0
 
-const patrol_locations = [Vector2(720, 48), Vector2(608, 112), Vector2(528, 16), Vector2(352, 48), Vector2(112, 208), Vector2(192, 352), Vector2(336, 416), Vector2(624, 416), Vector2(864, 416), Vector2(896, 160)]	
+const patrol_locations = [Vector2(752, 192), Vector2(400, 176), Vector2(160, 272), Vector2(256, 480), Vector2(400, 432), Vector2(912, 576), Vector2(992, 448), Vector2(864, 240)]	
 	
 func tick(_actor: Node, blackboard: Blackboard) -> int:
 	if blackboard.get_value("current_state") != "patrolling":

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bnmuhsutwyeye"]
+[gd_scene load_steps=11 format=3 uid="uid://bnmuhsutwyeye"]
 
 [ext_resource type="Script" path="res://Entities/Actors/Player/Player.cs" id="1_idj2s"]
 [ext_resource type="Texture2D" uid="uid://pdwuu8j1am22" path="res://Entities/Actors/Player/Art/player_elf.png" id="1_w44yq"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://ddv2dvtqnrekh" path="res://Utilities/Interactions/interacting_component.tscn" id="4_y61k5"]
 [ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="5_04v7w"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="5_hn5bo"]
+[ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="9_m6f4p"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6wwjl"]
 radius = 3.0
@@ -69,3 +70,5 @@ metadata/_edit_lock_ = true
 
 [node name="EmoteController" parent="." instance=ExtResource("5_04v7w")]
 metadata/_edit_lock_ = true
+
+[node name="FloatTextController" parent="." instance=ExtResource("9_m6f4p")]
