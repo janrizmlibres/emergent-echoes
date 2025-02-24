@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://xpm7rofy6voc"]
+[gd_scene load_steps=19 format=3 uid="uid://xpm7rofy6voc"]
 
 [ext_resource type="Script" path="res://MainMenu.cs" id="1_s4qlx"]
 [ext_resource type="Texture2D" uid="uid://byngch822lh17" path="res://Assets/world_pic.png" id="1_stypl"]
@@ -106,6 +106,8 @@ corner_radius_bottom_left = 10
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ghupi"]
 texture = ExtResource("3_vuv57")
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r1h17"]
+
 [node name="MainMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -128,7 +130,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_ee7j6")
-metadata/_edit_lock_ = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -188,9 +189,22 @@ offset_right = 125.0
 offset_bottom = 150.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_ghupi")
-metadata/_edit_lock_ = true
 
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_oukpy")
 autoplay = true
 parameters/looping = true
+
+[node name="MusicController" type="CheckButton" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -98.0
+offset_bottom = 24.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("2_8o3tb")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/focus = SubResource("StyleBoxEmpty_r1h17")
+button_pressed = true
+text = "Music"
