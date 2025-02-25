@@ -1,66 +1,96 @@
 using Godot;
+using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
-    /// <summary>
-    /// Interface for navigation states.
-    /// </summary>
     public interface INavigationState
     {
-        /// <summary>
-        /// Checks if the NPC is navigating.
-        /// </summary>
-        /// <returns>True if navigating, otherwise false.</returns>
         public bool IsNavigating();
-
-        /// <summary>
-        /// Gets the target position for navigation.
-        /// </summary>
-        /// <returns>The target position as a Vector2.</returns>
         public Vector2 GetTargetPosition();
+        public bool OnNavigationComplete();
     }
 
-    /// <summary>
-    /// Abstract base class for NPC states.
-    /// </summary>
+    public interface IActorDetectionState
+    {
+        public void OnActorDetected(ActorTag2D actor);
+    }
+
+    public class EnterParameters
+    {
+        public string StateName { get; set; }
+        public Array<Variant> Data { get; set; }
+    }
+
+    public class ExitParameters
+    {
+        public Array<Variant> Data { get; set; }
+    }
+
     public abstract class BaseState
     {
-        /// <summary>
-        /// The owner NPC agent.
-        /// </summary>
-        protected readonly NPCAgent2D _owner;
-        protected readonly ActionType _actionType;
+        protected readonly ActorContext _actorContext;
+        protected readonly StateContext _stateContext;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BaseState"/> class.
-        /// </summary>
-        /// <param name="owner">The owner NPC agent.</param>
-        public BaseState(NPCAgent2D owner, ActionType action)
+        protected readonly ActionState _actionState;
+
+        public BaseState(ActorContext actorContext, StateContext stateContext, ActionState state)
         {
-            _owner = owner;
-            _actionType = action;
+            _actorContext = actorContext;
+            _stateContext = stateContext;
+
+            _actionState = state;
         }
 
-        /// <summary>
-        /// Called when the state is entered.
-        /// </summary>
-        public virtual void Enter() { }
+        public void Enter()
+        {
+            // TODO: Change to "Redirect"
+            if (!Validate()) return;
 
-        /// <summary>
-        /// Called to update the state.
-        /// </summary>
-        /// <param name="delta">The time elapsed since the last update.</param>
+            Subscribe();
+            ExecuteEnter();
+
+            EnterParameters enterParameters = GetEnterData();
+
+            GD.Print($"{_actorContext.ActorNode2D.Name} {enterParameters.StateName} Enter");
+
+            _actorContext.Sensor.SetTaskRecord(_stateContext.Action.ActionType, _actionState);
+
+            _actorContext.EmitSignal(
+                NPCAgent2D.SignalName.StateEntered,
+                Variant.From(_actionState),
+                enterParameters.Data
+            );
+        }
+
+        public void Exit()
+        {
+            Unsubscribe();
+            ExecuteExit();
+
+            ExitParameters exitParameters = GetExitData();
+
+            _actorContext.Sensor.ClearTaskRecord();
+
+            _actorContext.EmitSignal(
+                NPCAgent2D.SignalName.StateExited,
+                Variant.From(_actionState),
+                exitParameters.Data
+            );
+        }
+
+        public virtual void Subscribe() { }
+        public virtual void Unsubscribe() { }
+
         public virtual void Update(double delta) { }
 
-        /// <summary>
-        /// Called when the state is exited.
-        /// </summary>
-        public virtual void Exit() { }
+        protected virtual bool Validate() => true;
 
-        protected bool IsActionSocial()
-        {
-            return _actionType == ActionType.Petition || _actionType == ActionType.Socialize;
-        }
+        protected virtual void ExecuteEnter() { }
+        protected virtual void ExecuteExit() { }
+
+        protected abstract EnterParameters GetEnterData();
+        protected abstract ExitParameters GetExitData();
     }
 }

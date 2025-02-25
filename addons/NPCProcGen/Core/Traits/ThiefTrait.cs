@@ -20,8 +20,7 @@ namespace NPCProcGen.Core.Traits
         /// <param name="weight">The weight of the trait.</param>
         /// <param name="sensor">The sensor associated with the trait.</param>
         /// <param name="memorizer">The memorizer associated with the trait.</param>
-        public ThiefTrait(NPCAgent2D owner, float weight, Sensor sensor, NPCMemorizer memorizer)
-            : base(owner, weight, sensor, memorizer) { }
+        public ThiefTrait(ActorContext context, float weight) : base(context, weight) { }
 
         /// <summary>
         /// Evaluates an action based on the given social practice.
@@ -49,12 +48,11 @@ namespace NPCProcGen.Core.Traits
 
             foreach (ResourceType type in resourceMgr.TangibleTypes)
             {
-                if (resourceMgr.IsDeficient(_owner, type))
+                if (resourceMgr.IsDeficient(_actorCtx.Actor, type))
                 {
                     EvaluateInteraction(
                         actionCandidates, type,
-                        actor => !_memorizer.IsTrusted(actor),
-                        (_) => null,
+                        peerActors => PickActor(peerActors, type),
                         ActionType.Theft
                     );
                 }
@@ -70,12 +68,25 @@ namespace NPCProcGen.Core.Traits
 
             EvaluateInteraction(
                 actionCandidates, resType,
-                actor => true,
-                (_) => null,
+                peerActors => PickActor(peerActors, resType),
                 ActionType.Theft
             );
 
             return actionCandidates.FirstOrDefault()?.Item1;
+        }
+
+        private ActorTag2D PickActor(List<ActorTag2D> peerActors, ResourceType type)
+        {
+            foreach (ActorTag2D actor in peerActors)
+            {
+                if (!_actorCtx.Memorizer.IsTrusted(actor)
+                    || !ResourceManager.Instance.IsDeficient(actor, type))
+                {
+                    return actor;
+                }
+            }
+
+            return peerActors.FirstOrDefault();
         }
     }
 }

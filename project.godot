@@ -16,7 +16,6 @@ config/features=PackedStringArray("4.3", "C#", "GL Compatibility")
 
 [autoload]
 
-WorldState="*res://addons/NPCProcGen/Autoloads/WorldState.cs"
 BeehaveGlobalMetrics="*res://addons/beehave/metrics/beehave_global_metrics.gd"
 BeehaveGlobalDebugger="*res://addons/beehave/debug/global_debugger.gd"
 

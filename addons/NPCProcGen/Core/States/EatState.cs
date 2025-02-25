@@ -5,67 +5,53 @@ using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
     public class EatState : BaseState
     {
-        public const ActionState ActionStateValue = ActionState.Eat;
-
         private readonly int _amountToEat;
 
-        public event Action CompleteState;
-
-        public EatState(NPCAgent2D owner, ActionType action) : base(owner, action)
+        public EatState(ActorContext actorContext, StateContext stateContext)
+            : base(actorContext, stateContext, ActionState.Eat)
         {
             _amountToEat = ComputeFoodAmount();
         }
 
-        public override void Enter()
+        protected override EnterParameters GetEnterData()
         {
-            GD.Print($"{_owner.Parent.Name} EatState Enter");
-
-            Array<Variant> data = new() { _amountToEat };
-            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
-
-            _owner.NotifManager.ConsumptionComplete += OnConsumptionComplete;
-            CommonUtils.EmitSignal(
-                _owner,
-                NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue),
-                data
-            );
+            return new EnterParameters
+            {
+                StateName = "EatState",
+                Data = new Array<Variant> { _amountToEat }
+            };
         }
 
-        public override void Exit()
+        protected override ExitParameters GetExitData()
         {
-            GD.Print($"{_owner.Parent.Name} EatState Exit");
-            _owner.NotifManager.ConsumptionComplete -= OnConsumptionComplete;
-
             // ! Magic number 10
             int satiationIncrease = _amountToEat * 10;
-            Array<Variant> data = new() { satiationIncrease };
 
-            CommonUtils.EmitSignal(
-                _owner,
-                NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue),
-                data
-            );
+            return new ExitParameters
+            {
+                Data = new Array<Variant>() { satiationIncrease }
+            };
         }
 
-        private void OnConsumptionComplete()
+        public void OnConsumptionComplete()
         {
-            _owner.DeductFood(_amountToEat);
+            _actorContext.Actor.DeductFood(_amountToEat);
             // TODO: Move constant 10 elsewhere
-            ResourceManager.Instance.ModifyResource(_owner, ResourceType.Satiation, _amountToEat * 10);
-            CompleteState?.Invoke();
+            ResourceManager.Instance.ModifyResource(_actorContext.Actor, ResourceType.Satiation, _amountToEat * 10);
+
+            _actorContext.Executor.FinishAction();
         }
 
         private int ComputeFoodAmount()
         {
-            ResourceStat resource = ResourceManager.Instance.GetResource(_owner, ResourceType.Satiation);
-            float foodAmount = ResourceManager.Instance.GetResourceAmount(_owner, ResourceType.Food);
+            ResourceStat resource = ResourceManager.Instance.GetResource(_actorContext.Actor, ResourceType.Satiation);
+            float foodAmount = ResourceManager.Instance.GetResourceAmount(_actorContext.Actor, ResourceType.Food);
             float deficiency = resource.LowerThreshold - resource.Amount;
 
             DebugTool.Assert(foodAmount > 0, "Food amount must be greater than 0.");

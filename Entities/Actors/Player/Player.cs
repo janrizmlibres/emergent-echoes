@@ -1,5 +1,3 @@
-using System.Linq;
-using EmergentEchoes.Utilities;
 using EmergentEchoes.Utilities.Game;
 using EmergentEchoes.Utilities.Game.Enums;
 using Godot;
@@ -19,6 +17,8 @@ namespace EmergentEchoes.Entities.Actors
 
 		private State _state = State.Active;
 
+		private TileMapLayer _tileMapLayer;
+
 		private AnimationTree _animationTree;
 		private AnimationNodeStateMachinePlayback _animationState;
 		private ActorTag2D _actorTag2D;
@@ -26,6 +26,8 @@ namespace EmergentEchoes.Entities.Actors
 
 		public override void _Ready()
 		{
+			_tileMapLayer = GetNode<TileMapLayer>("%WorldLayer");
+
 			_animationTree = GetNode<AnimationTree>("AnimationTree");
 			_animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
 			_actorTag2D = GetNode<ActorTag2D>("ActorTag2D");
@@ -33,6 +35,7 @@ namespace EmergentEchoes.Entities.Actors
 
 			_actorTag2D.InteractionStarted += OnInteractionStarted;
 			_actorTag2D.InteractionEnded += OnInteractionEnded;
+			_actorTag2D.EventTriggered += OnEventTriggered;
 		}
 
 		public override void _PhysicsProcess(double delta)
@@ -121,6 +124,22 @@ namespace EmergentEchoes.Entities.Actors
 		{
 			_state = State.Active;
 			_emoteController.Deactivate();
+		}
+
+		private void OnEventTriggered(Variant eventType)
+		{
+			EventType type = eventType.As<EventType>();
+
+			if (type == EventType.CrimeWitnessed)
+			{
+				_emoteController.ShowEmoteBubble(Emote.Interrobang);
+				return;
+			}
+
+			if (type == EventType.Detained)
+			{
+				// Immobilize
+			}
 		}
 	}
 }

@@ -2,8 +2,10 @@ using System;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Autoloads;
+using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
@@ -12,8 +14,6 @@ namespace NPCProcGen.Core.States
     /// </summary>
     public class TalkState : BaseState
     {
-        public const ActionState ActionStateValue = ActionState.Talk;
-
         private const int MinDuration = 10;
         private const int MaxDuration = 20;
         private const int MinCompanionshipIncrease = 20;
@@ -21,9 +21,7 @@ namespace NPCProcGen.Core.States
 
         private readonly float _companionshipIncrease;
 
-        private readonly ActorTag2D _partner;
-
-        public event Action CompleteState;
+        private readonly ActorTag2D _target;
 
         private float _duration;
 
@@ -31,39 +29,47 @@ namespace NPCProcGen.Core.States
         /// Initializes a new instance of the <see cref="TalkState"/> class.
         /// </summary>
         /// <param name="owner">The owner of the state.</param>
-        public TalkState(NPCAgent2D owner, ActionType action, ActorTag2D partner)
-            : base(owner, action)
+        public TalkState(ActorContext actorContext, StateContext stateContext, ActorTag2D target)
+            : base(actorContext, stateContext, ActionState.Talk)
         {
-            _partner = partner;
+            _target = target;
             _duration = GD.RandRange(MinDuration, MaxDuration);
-            _companionshipIncrease = ComputeIncrease();
+            _companionshipIncrease = ComputeCompanionshipIncrease();
         }
 
-        public override void Enter()
+        protected override EnterParameters GetEnterData()
         {
-            GD.Print($"{_owner.Parent.Name} TalkState Enter");
+            return new EnterParameters
+            {
+                StateName = "TalkState",
+                Data = new Array<Variant> { _target.GetParent<Node2D>() }
+            };
+        }
 
-            Array<Variant> ownerData = new() { _partner.Parent };
-            Array<Variant> partnerData = new() { _owner.Parent };
+        protected override ExitParameters GetExitData()
+        {
+            return new ExitParameters
+            {
+                Data = new Array<Variant>
+                {
+                    _target.GetParent<Node2D>(),
+                    _companionshipIncrease
+                }
+            };
+        }
 
-            _owner.NotifManager.NotifyInteractionStarted();
-            _partner.NotifManager.NotifyInteractionStarted();
+        protected override void ExecuteEnter()
+        {
+            Array<Variant> data = new() { _target.GetParent<Node2D>() };
 
-            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
-            _partner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
+            _target.TriggerInteraction(_actorContext.Actor, _actionState, data);
+            NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
+        }
 
-            CommonUtils.EmitSignal(
-                _owner,
-                NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue),
-                ownerData
-            );
-            CommonUtils.EmitSignal(
-                _partner,
-                ActorTag2D.SignalName.InteractionStarted,
-                Variant.From((InteractState)ActionStateValue),
-                partnerData
-            );
+        protected override void ExecuteExit()
+        {
+            _target.StopInteraction();
+            NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);
         }
 
         public override void Update(double delta)
@@ -72,40 +78,12 @@ namespace NPCProcGen.Core.States
 
             if (_duration <= 0)
             {
-                EndInteraction();
+                ImproveCompanionship();
+                _actorContext.Executor.FinishAction();
             }
         }
 
-        public override void Exit()
-        {
-            _owner.NotifManager.NotifyInteractionEnded();
-            _partner.NotifManager.NotifyInteractionEnded();
-            _partner.Sensor.ClearTaskRecord();
-
-            Array<Variant> data = new()
-            {
-                _partner.Parent,
-                _companionshipIncrease
-            };
-
-            CommonUtils.EmitSignal(
-                _owner,
-                NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue),
-                data
-            );
-            CommonUtils.EmitSignal(_partner, ActorTag2D.SignalName.InteractionEnded);
-
-            if (_partner is NPCAgent2D npc && !npc.IsActive())
-            {
-                CommonUtils.EmitSignal(
-                    _partner,
-                    NPCAgent2D.SignalName.ExecutionEnded
-                );
-            }
-        }
-
-        private float ComputeIncrease()
+        private float ComputeCompanionshipIncrease()
         {
             float scaler = (_duration - MinDuration) / (MaxDuration - MinDuration);
             float increaseRange = MaxCompanionshipIncrease - MinCompanionshipIncrease;
@@ -113,25 +91,21 @@ namespace NPCProcGen.Core.States
             return Math.Clamp(amount, MinCompanionshipIncrease, MaxCompanionshipIncrease);
         }
 
-        private void EndInteraction()
+        private void ImproveCompanionship()
         {
-            // Calculate the amount of companionship to increase based on duration using
-            // linear interpolation
             ResourceManager.Instance.ModifyResource(
-                _owner,
+                _actorContext.Actor,
                 ResourceType.Companionship,
                 _companionshipIncrease
             );
             ResourceManager.Instance.ModifyResource(
-                _partner,
+                _target,
                 ResourceType.Companionship,
                 _companionshipIncrease
             );
 
-            _owner.Memorizer.UpdateRelationship(_partner, 1);
-            _partner.Memorizer.UpdateRelationship(_owner, 1);
-
-            CompleteState?.Invoke();
+            _actorContext.Memorizer.UpdateRelationship(_target, 1);
+            _target.Memorizer.UpdateRelationship(_actorContext.Actor, 1);
         }
     }
 }

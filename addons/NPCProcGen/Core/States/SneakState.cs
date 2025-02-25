@@ -1,47 +1,35 @@
-using System;
 using Godot;
+using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
-using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
     public class SneakState : BaseState, INavigationState
     {
-        public const ActionState ActionStateValue = ActionState.Sneak;
-
         private readonly ActorTag2D _target;
 
-        public event Action CompleteState;
-
-        public SneakState(NPCAgent2D owner, ActionType action, ActorTag2D target) : base(owner, action)
+        public SneakState(ActorContext actorContext, StateContext stateContext, ActorTag2D target)
+            : base(actorContext, stateContext, ActionState.Sneak)
         {
             _target = target;
         }
 
-        public override void Enter()
+        protected override EnterParameters GetEnterData()
         {
-            GD.Print($"{_owner.Parent.Name} SneakState Enter");
-
-            _owner.NotifManager.NavigationComplete += OnNavigationComplete;
-
-            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
-
-            CommonUtils.EmitSignal(
-                _owner,
-                NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue)
-            );
+            return new EnterParameters
+            {
+                StateName = "SneakState",
+                Data = new Array<Variant>()
+            };
         }
 
-        public override void Exit()
+        protected override ExitParameters GetExitData()
         {
-            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
-
-            CommonUtils.EmitSignal(
-                _owner,
-                NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue)
-            );
+            return new ExitParameters
+            {
+                Data = new Array<Variant>()
+            };
         }
 
         public bool IsNavigating()
@@ -54,9 +42,10 @@ namespace NPCProcGen.Core.States
             return _target.GetRearPosition();
         }
 
-        private void OnNavigationComplete()
+        public bool OnNavigationComplete()
         {
-            CompleteState?.Invoke();
+            _stateContext.Action.TransitionTo(_stateContext.ContactState);
+            return true;
         }
     }
 }

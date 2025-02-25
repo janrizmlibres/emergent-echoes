@@ -5,13 +5,12 @@ using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
     public class PetitionState : BaseState
     {
-        public const ActionState ActionStateValue = ActionState.Petition;
-
         private const float NegotiationDuration = 15;
         private const int CompanionshipIncrease = 3;
         private const int CompanionshipDecrease = -1;
@@ -24,47 +23,66 @@ namespace NPCProcGen.Core.States
 
         private float _negotiationTimer = NegotiationDuration;
 
-        public event Action CompleteState;
-
-        public PetitionState(NPCAgent2D owner, ActionType action, ActorTag2D target, ResourceType type)
-            : base(owner, action)
+        public PetitionState(ActorContext actorContext, StateContext stateContext,
+            ActorTag2D target, ResourceType type)
+            : base(actorContext, stateContext, ActionState.Petition)
         {
             _target = target;
             _resourceType = type;
             _amount = CalculateAmount();
         }
 
-        public override void Enter()
+        public override void Subscribe()
         {
-            // GD.Print($"{_owner.Parent.Name} PetitionState Enter");
+            if (_target.IsPlayer()) NotifManager.Instance.PetitionAnswered += OnPetitionAnswered;
+        }
 
-            Array<Variant> ownerData = new() { _target.Parent };
-            Array<Variant> targetData = new()
+        public override void Unsubscribe()
+        {
+            if (_target.IsPlayer()) NotifManager.Instance.PetitionAnswered -= OnPetitionAnswered;
+        }
+
+        protected override EnterParameters GetEnterData()
+        {
+            return new EnterParameters
             {
-                _owner.Parent,
+                StateName = "PetitionState",
+                Data = new Array<Variant> { _target.GetParent<Node2D>() }
+            };
+        }
+
+        protected override ExitParameters GetExitData()
+        {
+            return new ExitParameters
+            {
+                Data = new Array<Variant>
+                {
+                    _target.GetParent<Node2D>(),
+                    Variant.From(_resourceType),
+                    _amount,
+                    _isAccepted,
+                    _isAccepted ? CompanionshipIncrease : CompanionshipDecrease,
+                }
+            };
+        }
+
+        protected override void ExecuteEnter()
+        {
+            Array<Variant> data = new()
+            {
+                _actorContext.ActorNode2D,
                 Variant.From(_resourceType),
-                _amount,
+                _amount
             };
 
-            _owner.NotifManager.PetitionAnswered += OnPetitionAnswered;
-            _owner.NotifManager.NotifyInteractionStarted();
-            _target.NotifManager.NotifyInteractionStarted();
+            _target.TriggerInteraction(_actorContext.Actor, (InteractState)_actionState, data);
+            NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
+        }
 
-            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
-            _target.Sensor.SetTaskRecord(_actionType, ActionStateValue);
-
-            CommonUtils.EmitSignal(
-                _owner,
-                NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue),
-                ownerData
-            );
-            CommonUtils.EmitSignal(
-                _target,
-                ActorTag2D.SignalName.InteractionStarted,
-                Variant.From((InteractState)ActionStateValue),
-                targetData
-            );
+        protected override void ExecuteExit()
+        {
+            _target.StopInteraction();
+            NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);
         }
 
         public override void Update(double delta)
@@ -77,46 +95,10 @@ namespace NPCProcGen.Core.States
             }
         }
 
-        public override void Exit()
-        {
-            _owner.NotifManager.PetitionAnswered -= OnPetitionAnswered;
-            _owner.NotifManager.NotifyInteractionEnded();
-            _target.NotifManager.NotifyInteractionEnded();
-            _target.Sensor.ClearTaskRecord();
-
-            Array<Variant> data = new()
-            {
-                _isAccepted,
-                _target.Parent,
-                Variant.From(_resourceType),
-                _amount,
-                _isAccepted ? CompanionshipIncrease : CompanionshipDecrease,
-            };
-
-            CommonUtils.EmitSignal(
-                _owner,
-                NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue),
-                data
-            );
-            CommonUtils.EmitSignal(
-                _target,
-                ActorTag2D.SignalName.InteractionEnded
-            );
-
-            if (_target is NPCAgent2D npc && !npc.IsActive())
-            {
-                CommonUtils.EmitSignal(
-                    _target,
-                    NPCAgent2D.SignalName.ExecutionEnded
-                );
-            }
-        }
-
         private void DetermineOutcome()
         {
             ResourceStat targetResource = ResourceManager.Instance.GetResource(_target, _resourceType);
-            float relationshipLevel = _owner.Memorizer.GetActorRelationship(_target);
+            float relationshipLevel = _actorContext.Memorizer.GetActorRelationship(_target);
             float baseProbability = ActorData.GetBasePetitionProbability(relationshipLevel);
 
             float excess = targetResource.Amount - targetResource.LowerThreshold;
@@ -133,31 +115,39 @@ namespace NPCProcGen.Core.States
                 (1 - targetResource.Weight) * resourceFactor;
 
             bool isAccepted = GD.Randf() < adjustedProbability;
-            OnPetitionAnswered(isAccepted);
+            OnPetitionAnswered(_target, isAccepted);
         }
 
         private int CalculateAmount()
         {
-            ResourceStat ownerResource = ResourceManager.Instance.GetResource(_owner, _resourceType);
+            ResourceStat ownerResource = ResourceManager.Instance.GetResource(_actorContext.Actor, _resourceType);
             ResourceStat targetResource = ResourceManager.Instance.GetResource(_target, _resourceType);
             return CommonUtils.CalculateSkewedAmount(ownerResource, 0.8f, 2, targetResource.Amount);
         }
 
-        private void OnPetitionAnswered(bool isAccepted)
+        private void OnPetitionAnswered(ActorTag2D source, bool isAccepted)
         {
+            if (source != _target) return;
+
             _isAccepted = isAccepted;
 
             if (isAccepted)
             {
-                ResourceManager.Instance.TranserResources(_target, _owner, _resourceType, _amount);
-                _target.Memorizer.UpdateLastPetitionResource(_owner, _resourceType);
+                ResourceManager.Instance.TranserResources(
+                    _target,
+                    _actorContext.Actor,
+                    _resourceType,
+                    _amount
+                );
+                _target.Memorizer.UpdateLastPetitionResource(_actorContext.Actor, _resourceType);
             }
 
-            _owner.Memorizer.UpdateRelationship(
+            _actorContext.Memorizer.UpdateRelationship(
                 _target,
                 isAccepted ? CompanionshipIncrease : CompanionshipDecrease
             );
-            CompleteState?.Invoke();
+
+            _actorContext.Executor.FinishAction();
         }
     }
 }

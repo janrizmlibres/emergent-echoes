@@ -13,15 +13,7 @@ namespace NPCProcGen.Core.Traits
     /// </summary>
     public class SurvivalTrait : Trait
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SurvivalTrait"/> class.
-        /// </summary>
-        /// <param name="owner">The owner of the trait.</param>
-        /// <param name="weight">The weight of the trait.</param>
-        /// <param name="sensor">The sensor associated with the trait.</param>
-        /// <param name="memorizer">The memorizer associated with the trait.</param>
-        public SurvivalTrait(NPCAgent2D owner, float weight, Sensor sensor, NPCMemorizer memorizer)
-            : base(owner, weight, sensor, memorizer) { }
+        public SurvivalTrait(ActorContext context, float weight) : base(context, weight) { }
 
         /// <summary>
         /// Evaluates an action based on the given social practice.
@@ -45,24 +37,23 @@ namespace NPCProcGen.Core.Traits
 
             foreach (ResourceType type in resourceMgr.TangibleTypes)
             {
-                if (resourceMgr.IsDeficient(_owner, type))
+                if (resourceMgr.IsDeficient(_actorCtx.Actor, type))
                 {
                     EvaluateInteraction(
                         actionCandidates, type,
-                        actor => _memorizer.IsFriendly(actor),
-                        (peerActors) => FindActorWithoutBond(peerActors, type),
+                        (peerActors) => PickActor(peerActors, type),
                         ActionType.Petition
                     );
                 }
             }
 
-            if (resourceMgr.IsDeficient(_owner, ResourceType.Satiation)
-                && resourceMgr.HasResource(_owner, ResourceType.Food))
+            if (resourceMgr.IsDeficient(_actorCtx.Actor, ResourceType.Satiation)
+                && resourceMgr.HasResource(_actorCtx.Actor, ResourceType.Food))
             {
                 AddAction(actionCandidates, ActionType.Eat, ResourceType.Satiation);
             }
 
-            if (resourceMgr.IsDeficient(_owner, ResourceType.Companionship))
+            if (resourceMgr.IsDeficient(_actorCtx.Actor, ResourceType.Companionship))
             {
                 AddAction(
                     actionCandidates,
@@ -83,8 +74,7 @@ namespace NPCProcGen.Core.Traits
             {
                 EvaluateInteraction(
                     actionCandidates, resType,
-                    actor => _memorizer.IsFriendly(actor),
-                    (peerActors) => FindActorWithoutBond(peerActors, resType),
+                    peerActors => PickActor(peerActors, resType),
                     ActionType.Petition
                 );
 
@@ -92,7 +82,7 @@ namespace NPCProcGen.Core.Traits
             }
 
             if (actionType == typeof(EatAction) &&
-                ResourceManager.Instance.HasResource(_owner, ResourceType.Food))
+                ResourceManager.Instance.HasResource(_actorCtx.Actor, ResourceType.Food))
             {
                 AddAction(actionCandidates, ActionType.Eat, ResourceType.Satiation);
                 return actionCandidates.FirstOrDefault()?.Item1;
@@ -112,36 +102,17 @@ namespace NPCProcGen.Core.Traits
             return null;
         }
 
-        private static ActorTag2D FindActorWithoutBond(List<ActorTag2D> peerActors, ResourceType type)
-        {
-            return FindActorWithoutDeficiency(peerActors, type)
-                ?? FindActorWithResource(peerActors, type) ?? null;
-        }
-
-        private static ActorTag2D FindActorWithoutDeficiency(List<ActorTag2D> peerActors, ResourceType type)
+        private ActorTag2D PickActor(List<ActorTag2D> peerActors, ResourceType type)
         {
             foreach (ActorTag2D actor in peerActors)
             {
-                if (!ResourceManager.Instance.IsDeficient(actor, type))
+                if (_actorCtx.Memorizer.IsFriendly(actor) || !ResourceManager.Instance.IsDeficient(actor, type))
                 {
                     return actor;
                 }
             }
 
-            return null;
-        }
-
-        private static ActorTag2D FindActorWithResource(List<ActorTag2D> peerActors, ResourceType type)
-        {
-            foreach (ActorTag2D actor in peerActors)
-            {
-                if (ResourceManager.Instance.HasResource(actor, type))
-                {
-                    return actor;
-                }
-            }
-
-            return null;
+            return peerActors.FirstOrDefault();
         }
     }
 }
