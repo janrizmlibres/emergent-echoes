@@ -87,12 +87,12 @@ namespace EmergentEchoes.Entities.Actors
 
 		private void OnInteractionStarted(Variant state, Array<Variant> data)
 		{
-			InteractState actionState = state.As<InteractState>();
+			// InteractionState actionState = state.As<InteractionState>();
 
-			if (actionState == InteractState.Petition)
-			{
-				_actorTag2D.AnswerPetition(true);
-			}
+			// if (actionState == InteractionState.Petition)
+			// {
+			// 	_actorTag2D.AnswerPetition(true);
+			// }
 
 			Node2D partner = data[0].As<Node2D>();
 			Vector2 directionToFace = GlobalPosition.DirectionTo(partner.GlobalPosition);
@@ -103,7 +103,7 @@ namespace EmergentEchoes.Entities.Actors
 			_state = State.Dormant;
 			_emoteController.Activate();
 		}
-		
+
 		private void OnInteractionStartedOnNPCAlt(string state, Node2D npc)
 		{
 			if (state == "petitioning")
@@ -119,7 +119,7 @@ namespace EmergentEchoes.Entities.Actors
 
 			_state = State.Dormant;
 		}
-		
+
 		private void OnInteractionEnded()
 		{
 			_state = State.Active;
