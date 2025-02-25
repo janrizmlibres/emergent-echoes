@@ -6,11 +6,11 @@ using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
-    public class InteractionState : BaseState
+    public class InteractState : BaseState
     {
         private readonly ActorTag2D _target;
 
-        public InteractionState(ActorContext actorContext, StateContext stateContext,
+        public InteractState(ActorContext actorContext, StateContext stateContext,
             ActorTag2D target)
             : base(actorContext, stateContext, ActionState.Interact)
         {
