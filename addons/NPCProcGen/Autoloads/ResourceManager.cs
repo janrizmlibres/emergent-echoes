@@ -18,9 +18,6 @@ namespace NPCProcGen.Autoloads
 
         public List<ResourceType> TangibleTypes => _tangibleTypes.ToList();
 
-        /// <summary>
-        /// List of tangible resource types.
-        /// </summary>
         private readonly ResourceType[] _tangibleTypes = new[]
         {
             ResourceType.Money,
