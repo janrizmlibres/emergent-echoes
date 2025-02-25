@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://7ykbd3t05bcd"]
+[gd_scene load_steps=16 format=4 uid="uid://7ykbd3t05bcd"]
 
 [ext_resource type="Script" path="res://Stages/Island/World.cs" id="1_2a375"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="2_1qb5f"]
@@ -10,7 +10,6 @@
 [ext_resource type="Script" path="res://Stages/Testing/WorldLayer.cs" id="7_omad2"]
 [ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/Silas/silas.tscn" id="8_0wj5x"]
 [ext_resource type="PackedScene" uid="uid://blrsgvyqgogoa" path="res://Entities/Actors/NPCs/Garreth/garreth.tscn" id="9_cbx2p"]
-[ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/PrisonArea2D/PrisonArea2D.cs" id="11_0bl23"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_d7vs6"]
 vertices = PackedVector2Array(8, 8, -8, 8, -8, -8, 8, -8)
@@ -260,8 +259,6 @@ sources/0 = SubResource("TileSetAtlasSource_k42pd")
 [sub_resource type="LabelSettings" id="LabelSettings_fj47m"]
 font_size = 8
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_es7gn"]
-
 [node name="World" type="Node2D"]
 y_sort_enabled = true
 texture_filter = 1
@@ -324,16 +321,7 @@ text = "Garreth 2"
 label_settings = SubResource("LabelSettings_fj47m")
 horizontal_alignment = 1
 
-[node name="PrisonArea2D" type="Area2D" parent="."]
-position = Vector2(361, 275)
-script = ExtResource("11_0bl23")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PrisonArea2D"]
-shape = SubResource("CircleShape2D_es7gn")
-
 [node name="PrisonBoundary" type="StaticBody2D" parent="."]
-collision_layer = 2
-collision_mask = 0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PrisonBoundary"]
 polygon = PackedVector2Array(343, 233, 331, 265, 326, 265, 338, 233)
