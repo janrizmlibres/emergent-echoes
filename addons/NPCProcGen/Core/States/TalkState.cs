@@ -9,9 +9,6 @@ using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
-    /// <summary>
-    /// Represents the state of talking to another actor.
-    /// </summary>
     public class TalkState : BaseState
     {
         private const int MinDuration = 10;
@@ -25,10 +22,6 @@ namespace NPCProcGen.Core.States
 
         private float _duration;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TalkState"/> class.
-        /// </summary>
-        /// <param name="owner">The owner of the state.</param>
         public TalkState(ActorContext actorContext, StateContext stateContext, ActorTag2D target)
             : base(actorContext, stateContext, ActionState.Talk)
         {
@@ -62,7 +55,7 @@ namespace NPCProcGen.Core.States
         {
             Array<Variant> data = new() { _target.GetParent<Node2D>() };
 
-            _target.TriggerInteraction(_actorContext.Actor, _actionState, data);
+            _target.TriggerInteraction(_actorContext.Actor, (InteractionState)_actionState, data);
             NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
         }
 

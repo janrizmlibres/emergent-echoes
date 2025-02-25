@@ -53,17 +53,22 @@ namespace NPCProcGen.Core.States
 
         protected override ExitParameters GetExitData()
         {
-            return new ExitParameters
+            ExitParameters exitData = new()
             {
-                Data = new Array<Variant>
-                {
-                    _target.GetParent<Node2D>(),
-                    Variant.From(_resourceType),
-                    _amount,
-                    _isAccepted,
-                    _isAccepted ? CompanionshipIncrease : CompanionshipDecrease,
-                }
+                Data = new Array<Variant> { _isAccepted }
             };
+
+            if (_isAccepted)
+            {
+                exitData.Data.Add(Variant.From(_resourceType));
+                exitData.Data.Add(_amount);
+            }
+            else
+            {
+                exitData.Data.Add(CompanionshipDecrease);
+            }
+
+            return exitData;
         }
 
         protected override void ExecuteEnter()
@@ -75,7 +80,7 @@ namespace NPCProcGen.Core.States
                 _amount
             };
 
-            _target.TriggerInteraction(_actorContext.Actor, (InteractState)_actionState, data);
+            _target.TriggerInteraction(_actorContext.Actor, (InteractionState)_actionState, data);
             NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
         }
 
