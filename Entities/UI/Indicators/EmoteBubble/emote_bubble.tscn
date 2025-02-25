@@ -1,7 +1,7 @@
 [gd_scene load_steps=38 format=3 uid="uid://c45btaj8rrou0"]
 
-[ext_resource type="Script" path="res://Entities/UI/Indicators/Emote Bubble/EmoteBubble.cs" id="1_ig6ot"]
-[ext_resource type="Texture2D" uid="uid://bkr5hlk7r2bec" path="res://Entities/UI/Indicators/Emote Bubble/Art/bubble_emotes.png" id="2_q0isf"]
+[ext_resource type="Script" path="res://Entities/UI/Indicators/EmoteBubble/EmoteBubble.cs" id="1_ig6ot"]
+[ext_resource type="Texture2D" uid="uid://bkr5hlk7r2bec" path="res://Entities/UI/Indicators/EmoteBubble/Art/bubble_emotes.png" id="2_q0isf"]
 
 [sub_resource type="Animation" id="Animation_xf20v"]
 length = 0.001
