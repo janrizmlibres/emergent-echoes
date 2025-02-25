@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://dtrwikkl84g03"]
+
+[ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Objects/Sword/Art/sword.png" id="1_orp4t"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_opv3g"]
+size = Vector2(26, 20)
+
+[node name="Sword" type="Area2D"]
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(16, 0)
+rotation = 1.5708
+texture = ExtResource("1_orp4t")
+hframes = 4
+vframes = 3
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(13, -6)
+shape = SubResource("RectangleShape2D_opv3g")
+disabled = true
+metadata/_edit_lock_ = true
