@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using EmergentEchoes.Entities.Hooks;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
-using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
@@ -133,15 +131,14 @@ namespace NPCProcGen
             return CommonUtils.Shuffle(_nearbyActors).FirstOrDefault();
         }
 
-        public override void TriggerInteraction(ActorTag2D target, InteractState state,
-            Array<Variant> data)
+        protected override void ExecuteTriggerInteraction(ActorTag2D target)
         {
             InteractAction action = new(_context, target);
             Executor.AddAction(action);
             EvaluationTimer.Stop();
         }
 
-        public override void StopInteraction()
+        protected override void ExecuteStopInteraction()
         {
             Executor.FinishAction();
         }
@@ -225,7 +222,6 @@ namespace NPCProcGen
             Traits.Add(new SurvivalTrait(_context, Survival));
             Traits.Add(new ThiefTrait(_context, Thief));
             Traits.Add(_context.LawfulModule);
-
         }
     }
 }
