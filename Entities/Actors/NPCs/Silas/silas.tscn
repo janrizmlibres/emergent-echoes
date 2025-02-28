@@ -88,7 +88,7 @@ metadata/_edit_lock_ = true
 [node name="EvaluationTimer" parent="." instance=ExtResource("9_mq0hm")]
 
 [node name="Interactable" parent="." instance=ExtResource("11_ke86i")]
-PrimaryActionDescription = "View Silas"
+PrimaryActionDescription = "View NPC"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
 shape = SubResource("CircleShape2D_xun4g")
