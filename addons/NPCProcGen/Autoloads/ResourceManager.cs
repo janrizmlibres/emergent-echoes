@@ -8,23 +8,14 @@ using NPCProcGen.Core.Helpers;
 
 namespace NPCProcGen.Autoloads
 {
-    /// <summary>
-    /// Manages resources for actors in the game.
-    /// </summary>
-    public partial class ResourceManager : Node
+    public sealed class ResourceManager
     {
         private static readonly Lazy<ResourceManager> _instance = new(() => new ResourceManager());
 
-        /// <summary>
-        /// Gets the singleton instance of the ResourceManager.
-        /// </summary>
         public static ResourceManager Instance => _instance.Value;
 
         private ResourceManager() { }
 
-        /// <summary>
-        /// Gets a list of tangible resource types.
-        /// </summary>
         public List<ResourceType> TangibleTypes => _tangibleTypes.ToList();
 
         /// <summary>
@@ -96,23 +87,17 @@ namespace NPCProcGen.Autoloads
             }
         }
 
-        /// <summary>
-        /// Gets the resource of a specific type for a given actor.
-        /// </summary>
-        /// <param name="actor">The actor to get the resource for.</param>
-        /// <param name="type">The type of resource to get.</param>
-        /// <returns>The resource stat of the specified type for the actor.</returns>
         public ResourceStat GetResource(ActorTag2D actor, ResourceType type)
         {
             DebugTool.Assert(_actorResources.ContainsKey(actor),
-                $"Actor {actor.Parent.Name} not found in resource manager.");
+                $"Actor {actor.GetParent<Node2D>().Name} not found in resource manager.");
             return _actorResources[actor].GetValueOrDefault(type);
         }
 
         public float GetResourceAmount(ActorTag2D actor, ResourceType type)
         {
             DebugTool.Assert(_actorResources.ContainsKey(actor),
-                $"Actor {actor.Parent.Name} not found in resource manager.");
+                $"Actor {actor.GetParent<Node2D>().Name} not found in resource manager.");
             return _actorResources[actor].GetValueOrDefault(type)?.Amount ?? 0;
         }
 
@@ -126,7 +111,7 @@ namespace NPCProcGen.Autoloads
         {
             DebugTool.Assert(
                 _actorResources.ContainsKey(actor),
-                $"Actor {actor.Parent.Name} not found in resource manager."
+                $"Actor {actor.GetParent<Node2D>().Name} not found in resource manager."
             );
             return _actorResources[actor].GetValueOrDefault(type)?.Amount > 0;
         }
@@ -141,7 +126,7 @@ namespace NPCProcGen.Autoloads
         {
             DebugTool.Assert(
                 _actorResources.ContainsKey(actor),
-                $"Actor {actor.Parent.Name} not found in resource manager."
+                $"Actor {actor.GetParent<Node2D>().Name} not found in resource manager."
             );
             return _actorResources[actor].GetValueOrDefault(type)?.IsDeficient() ?? false;
         }
@@ -167,9 +152,6 @@ namespace NPCProcGen.Autoloads
 
             fromResource.Amount -= amount;
             toResource.Amount += amount;
-
-            GD.Print("Transferred " + amount + " " + type.ToString() + " from " + from.Parent.Name
-                + " to " + to.Parent.Name);
         }
 
         public void ModifyResource(ActorTag2D actor, ResourceType type, float amount)

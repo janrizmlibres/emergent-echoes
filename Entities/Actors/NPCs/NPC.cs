@@ -6,6 +6,7 @@ using System.Linq;
 using EmergentEchoes.Utilities.Game.Enums;
 using EmergentEchoes.Utilities.Game;
 using EmergentEchoes.Utilities;
+using EmergentEchoes.Stages.Testing;
 
 namespace EmergentEchoes.Entities.Actors
 {
@@ -24,12 +25,14 @@ namespace EmergentEchoes.Entities.Actors
         public int Friction { get; set; } = 4;
 
         private MainState _mainState = MainState.Idle;
+        private int _maxSpeed;
+        private int _acceleration;
 
         private readonly Array<Vector2I> _validTilePositions = new();
 
         private Timer _stateTimer;
 
-        private TileMapLayer _tileMapLayer;
+        private WorldLayer _tileMapLayer;
         private AnimationTree _animationTree;
         private AnimationNodeStateMachinePlayback _animationState;
         private NavigationAgent2D _navigationAgent2d;
@@ -42,6 +45,9 @@ namespace EmergentEchoes.Entities.Actors
         {
             if (Engine.IsEditorHint()) return;
 
+            _maxSpeed = MaxSpeed;
+            _acceleration = Acceleration;
+
             _stateTimer = new Timer()
             {
                 WaitTime = GD.RandRange(MinInterval, MaxInterval),
@@ -52,7 +58,7 @@ namespace EmergentEchoes.Entities.Actors
             _stateTimer.Timeout += RandomizeMainState;
             AddChild(_stateTimer);
 
-            _tileMapLayer = GetNode<TileMapLayer>("%TileMapLayer");
+            _tileMapLayer = GetNode<WorldLayer>("%WorldLayer");
 
             _animationTree = GetNode<AnimationTree>("AnimationTree");
             _animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
@@ -67,10 +73,10 @@ namespace EmergentEchoes.Entities.Actors
 
             _npcAgent2d.ExecutionStarted += OnExecutionStarted;
             _npcAgent2d.ExecutionEnded += OnExecutionEnded;
-            _npcAgent2d.InteractionStarted += OnInteractionStarted;
-            _npcAgent2d.InteractionEnded += OnInteractionEnded;
-            _npcAgent2d.ActionStateEntered += OnActionStateEntered;
-            _npcAgent2d.ActionStateExited += OnActionStateExited;
+            _npcAgent2d.ActionStarted += OnActionStarted;
+            _npcAgent2d.StateEntered += OnStateEntered;
+            _npcAgent2d.StateExited += OnStateExited;
+            _npcAgent2d.EventTriggered += OnEventTriggered;
 
             SetupTilePositions();
         }
@@ -139,7 +145,7 @@ namespace EmergentEchoes.Entities.Actors
         {
             Vector2 destination = _navigationAgent2d.GetNextPathPosition();
             Vector2 direction = GlobalPosition.DirectionTo(destination);
-            _navigationAgent2d.Velocity = Velocity.MoveToward(direction * MaxSpeed, Acceleration);
+            _navigationAgent2d.Velocity = Velocity.MoveToward(direction * _maxSpeed, _acceleration);
 
             HandleAnimation();
         }
@@ -200,6 +206,32 @@ namespace EmergentEchoes.Entities.Actors
             return Vector2.Zero;
         }
 
+        private void AddActorObstacles(Node2D partner)
+        {
+            _tileMapLayer.Obstacles.Add(this);
+            _tileMapLayer.Obstacles.Add(partner);
+            _tileMapLayer.NotifyRuntimeTileDataUpdate();
+        }
+
+        private void RemoveActorObstacles(Node2D partner)
+        {
+            _tileMapLayer.Obstacles.Remove(this);
+            _tileMapLayer.Obstacles.Remove(partner);
+            _tileMapLayer.NotifyRuntimeTileDataUpdate();
+        }
+
+        private void AddSingleObstacle()
+        {
+            _tileMapLayer.Obstacles.Add(this);
+            _tileMapLayer.NotifyRuntimeTileDataUpdate();
+        }
+
+        private void RemoveSingleObstacle()
+        {
+            _tileMapLayer.Obstacles.Remove(this);
+            _tileMapLayer.NotifyRuntimeTileDataUpdate();
+        }
+
         private void OnAnimationFinished(StringName animName)
         {
             if (animName.ToString().Contains("eat"))
@@ -213,12 +245,15 @@ namespace EmergentEchoes.Entities.Actors
             Velocity = safeVelocity;
         }
 
-        private void OnExecutionStarted(Variant action)
+        private void OnExecutionStarted()
         {
-            ActionType actionType = action.As<ActionType>();
-
             _mainState = MainState.Procedural;
             _stateTimer.Stop();
+        }
+
+        private void OnActionStarted(Variant action)
+        {
+            ActionType actionType = action.As<ActionType>();
 
             if (actionType == ActionType.Theft)
             {
@@ -235,41 +270,42 @@ namespace EmergentEchoes.Entities.Actors
             RandomizeMainState();
         }
 
-        private void OnInteractionStarted(Variant state, Array<Variant> data)
-        {
-            _stateTimer.Stop();
-
-            Node2D partner = data[0].As<Node2D>();
-            FacePartner(partner);
-        }
-
-        private void OnInteractionEnded()
-        {
-            _mainState = MainState.Procedural;
-            _emoteController.Deactivate();
-        }
-
-        private void OnActionStateEntered(Variant state, Array<Variant> data)
+        private void OnStateEntered(Variant state, Array<Variant> data)
         {
             ActionState actionState = state.As<ActionState>();
 
-            if (actionState == ActionState.Talk || actionState == ActionState.Petition)
+            _maxSpeed = actionState == ActionState.Engage ? MaxSpeed + 10 : MaxSpeed;
+            _acceleration = actionState == ActionState.Engage ? Acceleration + 2 : Acceleration;
+
+            if (actionState == ActionState.Talk || actionState == ActionState.Petition
+                || actionState == ActionState.Interact || actionState == ActionState.Interrogate)
             {
                 Node2D partner = data[0].As<Node2D>();
                 FacePartner(partner);
             }
+
+            if (actionState == ActionState.Talk || actionState == ActionState.Petition
+                || actionState == ActionState.Interrogate)
+            {
+                Node2D partner = data[0].As<Node2D>();
+                AddActorObstacles(partner);
+            }
         }
 
-        private void OnActionStateExited(Variant state, Array<Variant> data)
+        private void OnStateExited(Variant state, Array<Variant> data)
         {
             ActionState actionState = state.As<ActionState>();
+
+            _maxSpeed = MaxSpeed;
+            _acceleration = Acceleration;
 
             if (actionState == ActionState.Steal)
             {
                 float amountStolen = data[1].As<float>();
                 _floatTextController.ShowFloatText(ResourceType.Money, amountStolen.ToString(), false);
             }
-            else if (actionState == ActionState.Talk || actionState == ActionState.Petition)
+            else if (actionState == ActionState.Talk || actionState == ActionState.Petition
+                || actionState == ActionState.Interact || actionState == ActionState.Interrogate)
             {
                 _mainState = MainState.Procedural;
                 _emoteController.Deactivate();
@@ -291,15 +327,31 @@ namespace EmergentEchoes.Entities.Actors
                     satiationIncrease.ToString()
                 );
             }
+            else if (actionState == ActionState.Assess)
+            {
+                bool isIndeterminate = data[0].As<bool>();
+
+                if (isIndeterminate)
+                {
+                    _emoteController.ShowEmoteBubble(Emote.Dizzy);
+                }
+            }
+
+            if (actionState == ActionState.Petition || actionState == ActionState.Talk
+                || actionState == ActionState.Interrogate)
+            {
+                Node2D partner = data[0].As<Node2D>();
+                RemoveActorObstacles(partner);
+            }
 
             if (actionState == ActionState.Petition)
             {
-                bool isAccepted = data[0].As<bool>();
+                bool isAccepted = data[3].As<bool>();
 
                 if (isAccepted)
                 {
-                    ResourceType type = data[2].As<ResourceType>();
-                    int amountPetitioned = data[3].As<int>();
+                    ResourceType type = data[1].As<ResourceType>();
+                    int amountPetitioned = data[2].As<int>();
                     _floatTextController.ShowFloatText(type, amountPetitioned.ToString());
                 }
                 else
@@ -314,17 +366,34 @@ namespace EmergentEchoes.Entities.Actors
             else if (actionState == ActionState.Talk)
             {
                 Node2D partner = data[0].As<Node2D>();
-
-                if (partner is not NPC) return;
-
-                float companionshipIncrease = data[1].As<float>();
                 NPC npc = partner as NPC;
 
-                npc.ShowFloatText(ResourceType.Companionship, companionshipIncrease.ToString());
+                float companionshipIncrease = data[1].As<float>();
+
+                npc?.ShowFloatText(ResourceType.Companionship, companionshipIncrease.ToString());
                 _floatTextController.ShowFloatText(
                     ResourceType.Companionship,
                     companionshipIncrease.ToString()
                 );
+            }
+        }
+
+        private void OnEventTriggered(Variant eventType)
+        {
+            EventType type = eventType.As<EventType>();
+
+            if (type == EventType.CrimeWitnessed)
+            {
+                _emoteController.ShowEmoteBubble(Emote.Interrobang);
+            }
+            else if (type == EventType.Detained)
+            {
+                // Immobilize
+                _stateTimer.Stop();
+            }
+            else if (type == EventType.Captured)
+            {
+                RandomizeMainState();
             }
         }
 

@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dpxhow08l8gq"
+path="res://.godot/imported/Beats A.ogg-df812926098a3d23ca44815a4ae5d02e.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/ogg-short-loopable-background-music/Beats A.ogg"
+dest_files=["res://.godot/imported/Beats A.ogg-df812926098a3d23ca44815a4ae5d02e.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

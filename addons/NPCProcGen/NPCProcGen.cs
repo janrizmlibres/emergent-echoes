@@ -6,50 +6,68 @@ namespace NPCProcGen
 	[Tool]
 	public partial class NPCProcGen : EditorPlugin
 	{
-		private string _npcAgent2DName = "NPCAgent2D";
-		private string _actorTag2DName = "ActorTag2D";
-
-		private string _worldStateName = "WorldState";
-		private string _resourceMngrName = "ResourceManager";
-
 		public override void _EnterTree()
 		{
 			RegisterCustomType(
 				"res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs",
 				"res://addons/NPCProcGen/Nodes/NPCAgent2D/Icon.png",
-				_npcAgent2DName
+				"Node",
+				"NPCAgent2D"
 			);
 
 			RegisterCustomType(
 				"res://addons/NPCProcGen/Nodes/ActorTag2D/ActorTag2D.cs",
 				"res://addons/NPCProcGen/Nodes/ActorTag2D/Icon.png",
-				_actorTag2DName
+				"Node",
+				"ActorTag2D"
+			);
+
+			RegisterCustomType(
+				"res://addons/NPCProcGen/Nodes/ShopMarker2D/ShopMarker2D.cs",
+				"res://addons/NPCProcGen/Nodes/ShopMarker2D/Icon.png",
+				"Marker2D",
+				"ShopMarker2D"
+			);
+
+			RegisterCustomType(
+				"res://addons/NPCProcGen/Nodes/CropMarker2D/CropMarker2D.cs",
+				"res://addons/NPCProcGen/Nodes/CropMarker2D/Icon.png",
+				"Marker2D",
+				"CropMarker2D"
+			);
+
+			RegisterCustomType(
+				"res://addons/NPCProcGen/Nodes/PrisonArea2D/PrisonArea2D.cs",
+				"res://addons/NPCProcGen/Nodes/PrisonArea2D/Icon.png",
+				"Marker2D",
+				"PrisonArea2D"
 			);
 		}
 
-		private void RegisterCustomType(string scriptPath, string iconPath, string name)
+		private void RegisterCustomType(string scriptPath, string iconPath, string baseName, string name)
 		{
 			Script script = GD.Load<Script>(scriptPath);
 			Texture2D texture = GD.Load<Texture2D>(iconPath);
-			AddCustomType(name, "Node", script, texture);
+			AddCustomType(name, baseName, script, texture);
 		}
 
 		public override void _ExitTree()
 		{
-			RemoveCustomType(_npcAgent2DName);
-			RemoveCustomType(_actorTag2DName);
+			RemoveCustomType("NPCAgent2D");
+			RemoveCustomType("ActorTag2D");
+			RemoveCustomType("ShopMarker2D");
+			RemoveCustomType("CropMarker2D");
+			RemoveCustomType("PrisonArea2D");
 		}
 
 		public override void _EnablePlugin()
 		{
-			AddAutoloadSingleton(_worldStateName, "res://addons/NPCProcGen/Autoloads/WorldState.cs");
-			// AddAutoloadSingleton(_resourceMngrName, "res://addons/NPCProcGen/Autoloads/ResourceManager.cs");
+			// AddAutoloadSingleton("Initializer", "res://addons/NPCProcGen/Autoloads/AutoloadInitializer.cs");
 		}
 
 		public override void _DisablePlugin()
 		{
-			RemoveAutoloadSingleton(_worldStateName);
-			// RemoveAutoloadSingleton(_resourceMngrName);
+			// RemoveAutoloadSingleton("Initializer");
 		}
 	}
 }

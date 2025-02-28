@@ -2,25 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using Godot.Collections;
 using NPCProcGen.Core.Components;
 
 namespace NPCProcGen.Core.Helpers
 {
-    /// <summary>
-    /// Provides common utility functions.
-    /// </summary>
     public static class CommonUtils
     {
         public const float PositionOffset = 12;
 
-        /// <summary>
-        /// Gets a random position within a circular area.
-        /// </summary>
-        /// <param name="center">The center of the circular area.</param>
-        /// <param name="radius">The radius of the circular area.</param>
-        /// <param name="minRadius">The optional minimum radius.</param>
-        /// <returns>A random position within the circular area.</returns>
+        public static void EmitSignal(ActorTag2D actor, StringName signalName, params Variant[] args)
+        {
+            Error result = actor.EmitSignal(signalName, args);
+            DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+        }
+
         public static Vector2 GetRandomPosInCircularArea(Vector2 center, float radius,
             float? minRadius = null)
         {
@@ -56,30 +51,6 @@ namespace NPCProcGen.Core.Helpers
             petitionAmount = Math.Max(petitionAmount, minRaise);
 
             return (int)Math.Floor(petitionAmount);
-        }
-
-        public static void EmitSignal(ActorTag2D actor, StringName signalName, Variant? type = null,
-            Array<Variant> data = null)
-        {
-            Error result = DelegateEmit();
-
-            Error DelegateEmit()
-            {
-                if (data != null)
-                {
-                    DebugTool.Assert(type != null, "Variant parameter must not be null");
-                    return actor.EmitSignal(signalName, type.Value, data);
-                }
-
-                if (type != null)
-                {
-                    return actor.EmitSignal(signalName, type.Value);
-                }
-
-                return actor.EmitSignal(signalName);
-            }
-
-            DebugTool.Assert(result != Error.Unavailable, "Signal parameters are invalid");
         }
 
         public static List<T> Shuffle<T>(List<T> list)

@@ -9,10 +9,14 @@ namespace NPCProcGen.Core.Internal
 {
     public class Memorizer
     {
-        /// <summary>
-        /// Dictionary to store actor data.
-        /// </summary>
         protected readonly Dictionary<ActorTag2D, ActorData> _actorData = new();
+
+        private readonly ActorContext _context;
+
+        public Memorizer(ActorContext context)
+        {
+            _context = context;
+        }
 
         public virtual void Initialize(List<ActorTag2D> actors)
         {
@@ -22,7 +26,7 @@ namespace NPCProcGen.Core.Internal
             }
         }
 
-        public void Update(double delta)
+        public virtual void Update(double delta)
         {
             foreach (ActorData actorData in _actorData.Values)
             {
@@ -34,9 +38,8 @@ namespace NPCProcGen.Core.Internal
 
         public void UpdateRelationship(ActorTag2D actor, float amount)
         {
-            DebugTool.Assert(_actorData.ContainsKey(actor), $"Actor {actor.Parent.Name} not found in memorizer.");
+            DebugTool.Assert(_actorData.ContainsKey(actor), $"Actor {_context.ActorNode2D.Name} not found in memorizer.");
             _actorData[actor].Relationship += amount;
-            GD.Print($"Updated relationship with {actor.Parent.Name} by {amount}. New relationship: {_actorData[actor].Relationship}");
         }
 
         public List<ActorTag2D> GetPeerActors() => _actorData.Keys.ToList();
@@ -50,15 +53,10 @@ namespace NPCProcGen.Core.Internal
         public virtual bool IsValidPetitionTarget(ActorTag2D actor, ResourceType type) => false;
     }
 
-    /// <summary>
-    /// The Memorizer class is responsible for managing long-term and short-term memories of actors.
-    /// </summary>
     public class NPCMemorizer : Memorizer
     {
-        /// <summary>
-        /// Initializes the memorizer with a list of actors.
-        /// </summary>
-        /// <param name="actors">The list of actors to initialize.</param>
+        public NPCMemorizer(ActorContext context) : base(context) { }
+
         public override void Initialize(List<ActorTag2D> actors)
         {
             foreach (ActorTag2D actor in actors)
@@ -67,11 +65,6 @@ namespace NPCProcGen.Core.Internal
             }
         }
 
-        /// <summary>
-        /// Gets the last known location of the specified actor.
-        /// </summary>
-        /// <param name="actor">The actor to get the location for.</param>
-        /// <returns>The last known location of the actor, or null if not found.</returns>
         public override Vector2? GetLastKnownPosition(ActorTag2D actor)
         {
             DebugTool.Assert(_actorData[actor] is NPCActorData, "Actor data is not of type NPCActorData.");

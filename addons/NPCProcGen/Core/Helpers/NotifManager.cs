@@ -1,62 +1,53 @@
 using System;
+using NPCProcGen.Core.Components;
 
 namespace NPCProcGen.Core.Helpers
 {
-    /// <summary>
-    /// Manages notifications for navigation completion and actor detection.
-    /// </summary>
-    public class NotifManager
+    public sealed class NotifManager
     {
-        /// <summary>
-        /// Event triggered when navigation is complete.
-        /// </summary>
-        public event Action NavigationComplete;
-        public event Action<bool> PetitionAnswered;
-        public event Action ConsumptionComplete;
+        private static readonly Lazy<NotifManager> _instance = new(() => new NotifManager());
 
-        /// <summary>
-        /// Event triggered when an actor is detected.
-        /// </summary>
-        public event Action<ActorTag2D> ActorDetected;
+        public static NotifManager Instance => _instance.Value;
 
-        public event Action InteractionStarted;
-        public event Action InteractionEnded;
+        private NotifManager() { }
 
-        /// <summary>
-        /// Notifies subscribers that navigation is complete.
-        /// </summary>
-        public void NotifyNavigationComplete()
+        public event Action<ActorTag2D, bool> PetitionAnswered;
+        public event Action<ActorTag2D, Crime> CrimeCommitted;
+
+        public event Action<ActorTag2D> InteractionStarted;
+        public event Action<ActorTag2D> InteractionEnded;
+
+        public event Action<ActorTag2D> ActorDetained;
+        public event Action<ActorTag2D> ActorCaptured;
+
+        public void NotifyPetitionAnswered(ActorTag2D source, bool isAccepted)
         {
-            NavigationComplete?.Invoke();
+            PetitionAnswered?.Invoke(source, isAccepted);
         }
 
-        public void NotifyPetitionAnswered(bool isAccepted)
+        public void NotifyCrimeCommitted(ActorTag2D source, Crime crime)
         {
-            PetitionAnswered?.Invoke(isAccepted);
+            CrimeCommitted?.Invoke(source, crime);
         }
 
-        public void NotifyConsumptionComplete()
+        public void NotifyInteractionStarted(ActorTag2D source)
         {
-            ConsumptionComplete?.Invoke();
+            InteractionStarted?.Invoke(source);
         }
 
-        /// <summary>
-        /// Notifies subscribers that an actor has been detected.
-        /// </summary>
-        /// <param name="target">The detected actor.</param>
-        public void NotifyActorDetected(ActorTag2D target)
+        public void NotifyInteractionEnded(ActorTag2D source)
         {
-            ActorDetected?.Invoke(target);
+            InteractionEnded?.Invoke(source);
         }
 
-        public void NotifyInteractionStarted()
+        public void NotifyActorDetained(ActorTag2D actor)
         {
-            InteractionStarted?.Invoke();
+            ActorDetained?.Invoke(actor);
         }
 
-        public void NotifyInteractionEnded()
+        public void NotifyActorCaptured(ActorTag2D actor)
         {
-            InteractionEnded?.Invoke();
+            ActorCaptured?.Invoke(actor);
         }
     }
 }
