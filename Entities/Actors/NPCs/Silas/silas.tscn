@@ -1,20 +1,23 @@
-[gd_scene load_steps=12 format=3 uid="uid://diiesf6ffioa7"]
+[gd_scene load_steps=14 format=3 uid="uid://diiesf6ffioa7"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/NPC.cs" id="1_scutl"]
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_5inc2"]
-[ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="3_2sln6"]
+[ext_resource type="AnimationLibrary" path="res://Entities/Actors/actor_anim_library.res" id="3_2sln6"]
 [ext_resource type="PackedScene" uid="uid://bccwhdlbu5ny0" path="res://Entities/Hooks/FoodAnchor/food_anchor.tscn" id="3_kx0md"]
 [ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_x7obk"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="5_2y03f"]
-[ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="5_2y03f"]
 [ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="5_6ilnl"]
 [ext_resource type="PackedScene" uid="uid://bgcerqofqnnn6" path="res://Entities/Hooks/actor_detector.tscn" id="7_ctg42"]
-[ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="8_hr3nq"]
+[ext_resource type="PackedScene" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="8_hr3nq"]
 [ext_resource type="PackedScene" uid="uid://ljm1capb63sh" path="res://Entities/Hooks/EvaluationTimer/evaluation_timer.tscn" id="9_mq0hm"]
+[ext_resource type="PackedScene" path="res://Utilities/Interactions/interactable.tscn" id="11_ke86i"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30oj8"]
 radius = 3.0
 height = 10.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xun4g"]
+radius = 21.0238
 
 [node name="Silas" type="CharacterBody2D"]
 texture_filter = 1
@@ -58,12 +61,10 @@ path_postprocessing = 1
 avoidance_enabled = true
 radius = 5.0
 
-[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("EvaluationTimer", "ActorDetector", "RearMarker")]
+[node name="NPCAgent2D" type="Node" parent="." node_paths=PackedStringArray("RearMarker")]
 script = ExtResource("3_x7obk")
-EvaluationTimer = NodePath("../EvaluationTimer")
 Survival = 0.4
 Thief = 0.8
-ActorDetector = NodePath("../ActorDetector")
 RearMarker = NodePath("../RearMarker/Marker2D")
 
 [node name="ActorDetector" parent="." instance=ExtResource("7_ctg42")]
@@ -85,3 +86,9 @@ metadata/_edit_lock_ = true
 metadata/_edit_lock_ = true
 
 [node name="EvaluationTimer" parent="." instance=ExtResource("9_mq0hm")]
+
+[node name="Interactable" parent="." instance=ExtResource("11_ke86i")]
+PrimaryActionDescription = "View Silas"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
+shape = SubResource("CircleShape2D_xun4g")
