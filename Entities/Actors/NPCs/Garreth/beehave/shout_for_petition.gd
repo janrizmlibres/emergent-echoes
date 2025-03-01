@@ -10,15 +10,14 @@ func before_run(actor: Node, blackboard: Blackboard) -> void:
 	timer.start() 
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
-	if blackboard.get_value("current_state") != "shouting":
+	if blackboard.get_value("current_state") == "shouting" || blackboard.get_value("current_state") == "surveying":
+		if chances >= 5:
+			chances = 0
+			blackboard.set_value("current_state", "patrolling")
+			return SUCCESS
+		return RUNNING
+	else:
 		return FAILURE
-	
-	if chances >= 5:
-		chances = 0
-		blackboard.set_value("current_state", "patrolling")
-		return SUCCESS
-		
-	return RUNNING
 
 func _on_timer_timeout() -> void:
 	timer.start()

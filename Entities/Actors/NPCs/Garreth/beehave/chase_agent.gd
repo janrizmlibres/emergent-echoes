@@ -5,10 +5,17 @@ signal move_actor(patrol_location: Vector2)
 @onready var blackboard_object = $"../../../../Blackboard"
 @onready var emote_controller = $"../../../../EmoteController"
 
+@export var max_distance: float = 150.0
+
 var actor_near = false
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
 	if blackboard.get_value("current_state") != "chasing":
+		return FAILURE
+		
+	if actor.position.distance_to(blackboard.get_value("last_patrol_location")) > max_distance:
+		emote_controller.ShowEmoteBubble(10)
+		blackboard.set_value("current_state", "failed petition")
 		return FAILURE
 		
 	if actor_near:

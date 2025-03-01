@@ -9,6 +9,9 @@ func _process(delta: float) -> void:
 		blackboard.set_value("current_state", "patrolling")
 
 func _on_npc_alt_detector_body_entered(body: Node2D) -> void:
+	if blackboard.get_value("current_state") == "surveying":
+		return
+		
 	if blackboard.get_value("current_state") != "shouting":
 		return
 

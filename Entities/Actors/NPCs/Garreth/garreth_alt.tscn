@@ -85,7 +85,7 @@ shape = SubResource("CircleShape2D_ajai6")
 script = ExtResource("12_77cs2")
 blackboard = {
 "current_state": "idle",
-"last_patrol_location": Vector2(464, 240)
+"last_patrol_location": Vector2(672, 384)
 }
 
 [node name="Timer" type="Timer" parent="."]
@@ -110,6 +110,9 @@ actor = NodePath("..")
 [node name="SelectorComposite" type="Node" parent="GarrethBehaviour"]
 script = ExtResource("5_x35se")
 
+[node name="Resume Patrol" type="Node" parent="GarrethBehaviour/SelectorComposite"]
+script = ExtResource("19_76401")
+
 [node name="Patrol" type="Node" parent="GarrethBehaviour/SelectorComposite"]
 script = ExtResource("6_6gfsl")
 
@@ -131,13 +134,10 @@ script = ExtResource("17_8186l")
 [node name="Ask For Petition" type="Node" parent="GarrethBehaviour/SelectorComposite/Petitioning"]
 script = ExtResource("18_e4j5f")
 
-[node name="Resume Patrol" type="Node" parent="GarrethBehaviour/SelectorComposite/Petitioning"]
-script = ExtResource("19_76401")
-
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="body_entered" from="PetitionArea" to="GarrethBehaviour/SelectorComposite/Petitioning/Chase Agent" method="_on_petition_area_body_entered"]
 [connection signal="body_entered" from="NpcAltDetector" to="Personality" method="_on_npc_alt_detector_body_entered"]
 [connection signal="timeout" from="Timer" to="GarrethBehaviour/SelectorComposite/Patrol/Shout For Petition" method="_on_timer_timeout"]
+[connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Resume Patrol" to="." method="move_actor"]
 [connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Patrol/Patrol Action" to="." method="move_actor"]
 [connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Petitioning/Chase Agent" to="." method="move_actor"]
-[connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Petitioning/Resume Patrol" to="." method="move_actor"]
