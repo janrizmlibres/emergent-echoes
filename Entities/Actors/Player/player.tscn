@@ -27,18 +27,18 @@ hframes = 8
 vframes = 10
 frame = 8
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_6wwjl")
+metadata/_edit_lock_ = true
+
 [node name="FoodAnchor" parent="." instance=ExtResource("4_blde1")]
 visible = false
 
 [node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="."]
 position = Vector2(0, -1)
 radius = 2.0
-metadata/_edit_lock_ = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -1)
-rotation = 1.5708
-shape = SubResource("CapsuleShape2D_6wwjl")
 metadata/_edit_lock_ = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
