@@ -9,13 +9,15 @@ func _process(delta: float) -> void:
 		blackboard.set_value("current_state", "patrolling")
 
 func _on_npc_alt_detector_body_entered(body: Node2D) -> void:
+	print(body.get_name())
+	if body.get_name() == "GarrethAlt":
+		blackboard.set_value("current_state", "going back home")
+		return
+		
 	if blackboard.get_value("current_state") == "chasing":
 		return
 		
 	if body.get_name() == "SilasAlt":
-		return
-	
-	if body.get_name() == "GarrethAlt":
 		return
 	
 	if body.get_node_or_null("ActorTag2D") or body.get_node_or_null("NpcAltDetector"):
