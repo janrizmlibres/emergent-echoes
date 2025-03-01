@@ -9,8 +9,8 @@ func _process(delta: float) -> void:
 		blackboard.set_value("current_state", "patrolling")
 
 func _on_npc_alt_detector_body_entered(body: Node2D) -> void:
-	print(body.get_name())
 	if body.get_name() == "GarrethAlt":
+		emote_controller.ShowEmoteBubble(10)
 		blackboard.set_value("current_state", "going back home")
 		return
 		
