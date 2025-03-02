@@ -43,6 +43,7 @@ namespace NPCProcGen.Core.Actions
         public void Update(double delta)
         {
             CurrentState?.Update(delta);
+            ExecuteUpdate(delta);
         }
 
         public void Run()
@@ -71,6 +72,7 @@ namespace NPCProcGen.Core.Actions
 
         public virtual void Terminate() { }
         protected virtual void ExecuteRun() { }
+        protected virtual void ExecuteUpdate(double delta) { }
 
         protected abstract void InitializeStates();
     }
