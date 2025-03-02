@@ -9,6 +9,7 @@ namespace NPCProcGen.Core.Helpers
     public static class CommonUtils
     {
         public const float PositionOffset = 12;
+        public const int FoodSatiation = 10;
 
         public static List<T> Shuffle<T>(List<T> list)
         {
