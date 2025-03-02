@@ -24,7 +24,7 @@ func _on_npc_alt_detector_body_entered(body: Node2D) -> void:
 	if body.get_name() == "SilasAlt":
 		return
 	
-	if body.get_node_or_null("FoodAnchor") or body.get_node_or_null("NpcAltDetector"):
+	if body.get_node_or_null("FoodAnchor"):
 		print("i should chase the mf'er")
 		
 		blackboard.set_value("actor", body)
