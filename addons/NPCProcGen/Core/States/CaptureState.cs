@@ -2,6 +2,7 @@ using Godot;
 using Godot.Collections;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
@@ -22,7 +23,7 @@ namespace NPCProcGen.Core.States
             return new EnterParameters
             {
                 StateName = "CaptureState",
-                Data = new Array<Variant> { _criminal }
+                Data = new Array<Variant> { _criminal.GetParent().Name }
             };
         }
 
@@ -30,13 +31,13 @@ namespace NPCProcGen.Core.States
         {
             return new ExitParameters
             {
-                Data = new Array<Variant> { _criminal }
+                Data = new Array<Variant>()
             };
         }
 
         protected override void ExecuteEnter()
         {
-            PrisonMarker2D prisonMarker = _actorContext.Sensor.GetRandomPrison();
+            PrisonMarker2D prisonMarker = Sensor.GetRandomPrison();
             _prisonLocation = prisonMarker.GlobalPosition;
             _criminal.TriggerDetainment();
         }
@@ -44,7 +45,7 @@ namespace NPCProcGen.Core.States
         protected override void ExecuteExit()
         {
             _actorContext.LawfulModule.ClearCase(CrimeStatus.Solved);
-            _criminal.TriggerCaptivity();
+            _criminal.TriggerCaptivity(_prisonLocation);
         }
 
         public bool IsNavigating()
@@ -54,7 +55,10 @@ namespace NPCProcGen.Core.States
 
         public Vector2 GetTargetPosition()
         {
-            return _prisonLocation;
+            return CommonUtils.GetOmnidirectionalWaypoint(
+                _actorContext.ActorNode2D.GlobalPosition,
+                _prisonLocation
+            );
         }
 
         public bool OnNavigationComplete()

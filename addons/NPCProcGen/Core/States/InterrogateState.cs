@@ -4,7 +4,6 @@ using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
-using NPCProcGen.Core.Traits;
 
 namespace NPCProcGen.Core.States
 {
@@ -28,7 +27,7 @@ namespace NPCProcGen.Core.States
             return new EnterParameters
             {
                 StateName = "InterrogateState",
-                Data = new Array<Variant> { _target.GetParent<Node2D>() }
+                Data = new Array<Variant>()
             };
         }
 
@@ -42,14 +41,22 @@ namespace NPCProcGen.Core.States
 
         protected override void ExecuteEnter()
         {
-            Array<Variant> data = new() { _actorContext.ActorNode2D };
+            Array<Variant> data = new() { _target.GetParent<Node2D>() };
 
-            _target.TriggerInteraction(_actorContext.Actor, _actionState, data);
+            _actorContext.EmitSignal(
+                ActorTag2D.SignalName.InteractionStarted,
+                Variant.From((InteractionState)_actionState),
+                data
+            );
+
+            data[0] = _actorContext.ActorNode2D;
+            _target.TriggerInteraction(_actorContext.Actor, (InteractionState)_actionState, data);
             NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
         }
 
         protected override void ExecuteExit()
         {
+            _actorContext.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
             _target.StopInteraction();
             NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);
         }

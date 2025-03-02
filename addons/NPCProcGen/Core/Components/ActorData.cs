@@ -78,7 +78,7 @@ namespace NPCProcGen.Core.Components
             }
         }
 
-        public ResourceType? LastPetitionResource
+        public ResourceType LastPetitionResource
         {
             get => _lastPetitionResource;
             set
@@ -89,7 +89,7 @@ namespace NPCProcGen.Core.Components
         }
 
         private Vector2? _lastKnownPosition = null;
-        private ResourceType? _lastPetitionResource = null;
+        private ResourceType _lastPetitionResource = ResourceType.None;
 
         private float _decayTimer = DecayDuration;
         private float _petitionTimer = PetitionInterval;
@@ -107,13 +107,13 @@ namespace NPCProcGen.Core.Components
                 LastKnownPosition = null;
             }
 
-            if (_lastPetitionResource == null) return;
+            if (_lastPetitionResource == ResourceType.None) return;
 
             _petitionTimer -= (float)delta;
 
             if (_petitionTimer <= 0)
             {
-                LastPetitionResource = null;
+                LastPetitionResource = ResourceType.None;
             }
         }
 

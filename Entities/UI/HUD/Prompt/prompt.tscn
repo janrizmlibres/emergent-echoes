@@ -19,7 +19,7 @@ transform = Transform2D(0.67, 0, 0, 0.55, 0, 0)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 480.0
-offset_bottom = 384.0
+offset_bottom = 327.0
 
 [node name="BlackOverlay" type="ColorRect" parent="Prompt"]
 layout_mode = 1

@@ -19,7 +19,7 @@ public partial class Chest : StaticBody2D
 		if (_actorTag == null) return;
 		if (Gold <= 0) return;
 
-		ResourceManager.Instance.ModifyResource(_actorTag, ResourceType.Money, GoldAmount);
+		ResourceManager.Instance.ModifyResource(ResourceType.Money, GoldAmount, _actorTag);
 		Gold -= GoldAmount;
 		_label.Text = "Gold: " + Gold;
 	}
@@ -28,10 +28,10 @@ public partial class Chest : StaticBody2D
 	{
 		if (_actorTag == null) return;
 
-		if (ResourceManager.Instance.GetResourceAmount(_actorTag, ResourceType.Money) < GoldAmount)
+		if (ResourceManager.Instance.GetResourceAmount(ResourceType.Money, _actorTag) < GoldAmount)
 			return;
 
-		ResourceManager.Instance.ModifyResource(_actorTag, ResourceType.Money, -GoldAmount);
+		ResourceManager.Instance.ModifyResource(ResourceType.Money, -GoldAmount, _actorTag);
 		Gold += GoldAmount;
 		_label.Text = "Gold: " + Gold;
 	}

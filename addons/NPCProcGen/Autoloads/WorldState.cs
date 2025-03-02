@@ -28,6 +28,7 @@ namespace NPCProcGen.Autoloads
 
 		public List<Node2D> Structures { get; private set; } = new();
 		public List<PrisonMarker2D> Prisons { get; private set; } = new();
+		public List<CropMarker2D> CropTiles { get; private set; } = new();
 
 		// ? Workplaces and who they belong to (Possibly _structures)
 		// ? Current date (?)

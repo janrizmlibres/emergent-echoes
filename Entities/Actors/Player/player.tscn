@@ -1,75 +1,29 @@
-[gd_scene load_steps=11 format=3 uid="uid://bnmuhsutwyeye"]
+[gd_scene load_steps=4 format=3 uid="uid://bnmuhsutwyeye"]
 
+[ext_resource type="PackedScene" uid="uid://dca6ru8aaidgk" path="res://Entities/Actors/actor.tscn" id="1_15eeh"]
 [ext_resource type="Script" path="res://Entities/Actors/Player/Player.cs" id="1_idj2s"]
-[ext_resource type="Texture2D" uid="uid://pdwuu8j1am22" path="res://Entities/Actors/Player/Art/player_elf.png" id="1_w44yq"]
 [ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/ActorTag2D/ActorTag2D.cs" id="3_tiunm"]
-[ext_resource type="PackedScene" uid="uid://bccwhdlbu5ny0" path="res://Entities/Hooks/FoodAnchor/food_anchor.tscn" id="4_blde1"]
-[ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="4_t03r2"]
-[ext_resource type="PackedScene" uid="uid://ddv2dvtqnrekh" path="res://Utilities/Interactions/interacting_component.tscn" id="4_y61k5"]
-[ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="5_04v7w"]
-[ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="5_hn5bo"]
-[ext_resource type="PackedScene" uid="uid://bgcerqofqnnn6" path="res://Entities/Hooks/actor_detector.tscn" id="7_0j4tv"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6wwjl"]
-radius = 3.0
-height = 10.0
-
-[node name="Player" type="CharacterBody2D"]
-texture_filter = 1
-motion_mode = 1
+[node name="Player" instance=ExtResource("1_15eeh")]
 script = ExtResource("1_idj2s")
-metadata/_edit_group_ = true
+MaxSpeed = 80
+Acceleration = 10
+Friction = 10
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -10)
-texture = ExtResource("1_w44yq")
-hframes = 8
-vframes = 10
-frame = 8
+[node name="AnimationTree" parent="." index="10"]
+parameters/Harvest/blend_position = 0
 
-[node name="FoodAnchor" parent="." instance=ExtResource("4_blde1")]
-visible = false
-
-[node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="."]
+[node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="." index="13"]
 position = Vector2(0, -1)
-radius = 2.0
+radius = 6.0
 metadata/_edit_lock_ = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -1)
-rotation = 1.5708
-shape = SubResource("CapsuleShape2D_6wwjl")
-metadata/_edit_lock_ = true
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": ExtResource("4_t03r2")
-}
-
-[node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = ExtResource("5_hn5bo")
-anim_player = NodePath("../AnimationPlayer")
-parameters/Eat/blend_position = 1.0
-parameters/Idle/blend_position = 1.0
-parameters/Move/blend_position = 1.0
-
-[node name="ActorTag2D" type="Node" parent="." node_paths=PackedStringArray("ActorDetector", "RearMarker")]
+[node name="ActorTag2D" type="Node" parent="." index="14" node_paths=PackedStringArray("ActorDetector", "RearMarker")]
 script = ExtResource("3_tiunm")
-MoneyAmount = 500
 ActorDetector = NodePath("../ActorDetector")
 RearMarker = NodePath("../RearMarker/Marker2D")
 
-[node name="ActorDetector" parent="." instance=ExtResource("7_0j4tv")]
+[node name="DebugLabel" parent="." index="15" node_paths=PackedStringArray("Actor")]
+Actor = NodePath("../ActorTag2D")
 
-[node name="RearMarker" type="Node2D" parent="."]
-rotation = 3.14159
-metadata/_edit_lock_ = true
-
-[node name="Marker2D" type="Marker2D" parent="RearMarker"]
-position = Vector2(-10, 0)
-
-[node name="InteractingComponent" parent="." instance=ExtResource("4_y61k5")]
-metadata/_edit_lock_ = true
-
-[node name="EmoteController" parent="." instance=ExtResource("5_04v7w")]
-metadata/_edit_lock_ = true
+[editable path="CarryProp"]

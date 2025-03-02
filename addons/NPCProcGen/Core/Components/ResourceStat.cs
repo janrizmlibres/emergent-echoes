@@ -1,30 +1,17 @@
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Internal;
 using System;
-using System.Collections.Generic;
 
 namespace NPCProcGen.Core.Components
 {
-    /// <summary>
-    /// Represents the statistics of a resource.
-    /// </summary>
     public class ResourceStat
     {
-        // * Decay rate per second
-        private const float DecayRate = 0.1f;
-
-        private static readonly Dictionary<
-            ResourceType,
-            (float MinLow, float MaxLow, float MinHigh, float MaxHigh)
-        > _thresholdValues = new()
-        {
-            { ResourceType.Money, (100, 500, 1000, 5000) },
-            { ResourceType.Food, (5, 10, 50, 100) },
-            { ResourceType.Satiation, (15, 25, 70, 90) },
-            { ResourceType.Companionship, (10, 20, 60, 80) },
-        };
+        private const float TotalFoodLowerMultiplier = 2.5f;
+        private const float TotalFoodUpperMultiplier = 5.5f;
 
         public ResourceType Type { get; private set; }
 
+        private float _amount;
         public float Amount
         {
             get => _amount;
@@ -32,6 +19,12 @@ namespace NPCProcGen.Core.Components
             {
                 _amount = Math.Clamp(value, 0, GetMaxValue());
                 _amount = (float)(IsInteger() ? Math.Floor(_amount) : _amount);
+
+                bool IsInteger()
+                {
+                    return Type == ResourceType.Money || Type == ResourceType.Food
+                        || Type == ResourceType.TotalFood;
+                }
             }
         }
 
@@ -41,24 +34,51 @@ namespace NPCProcGen.Core.Components
 
         public int UpperThreshold { get; private set; }
 
-        private float _amount;
-
-        public ResourceStat(ResourceType type, float value, float weight)
+        public ResourceStat(ResourceType type, float amount, float weight)
         {
             Type = type;
-            Amount = value;
+            Amount = amount;
             Weight = weight;
 
-            (float MinLow, float MaxLow, float MinHigh, float MaxHigh) = _thresholdValues[type];
-            LowerThreshold = (int)(MinLow + Weight * (MaxLow - MinLow));
-            UpperThreshold = (int)(MinHigh + Weight * (MaxHigh - MinHigh));
+            (LowerThreshold, UpperThreshold) = GetThresholdValues();
+
+            (int, int) GetThresholdValues()
+            {
+                return Type switch
+                {
+                    ResourceType.Money => (20, 1000),
+                    ResourceType.Food => (5, 30),
+                    ResourceType.Satiation => (5, 90),
+                    ResourceType.Companionship => (10, 90),
+                    ResourceType.Duty => (30, 70),
+                    ResourceType.TotalFood => GetTotalFoodThresholds(),
+                    ResourceType.None => (0, 0),
+                    _ => throw new ArgumentOutOfRangeException(Type.ToString()),
+                };
+            }
+
+            (int, int) GetTotalFoodThresholds()
+            {
+                int actorCount = Sensor.GetActorCount();
+                LowerThreshold = (int)Math.Ceiling(actorCount * TotalFoodLowerMultiplier);
+                UpperThreshold = (int)Math.Ceiling(actorCount * TotalFoodUpperMultiplier);
+                return (LowerThreshold, UpperThreshold);
+            }
         }
 
         public void Update(double delta)
         {
-            if (CanDecay())
+            Amount -= (float)(GetDecayRate() * delta);
+
+            float GetDecayRate()
             {
-                Amount -= (float)(DecayRate * delta);
+                if (Type == ResourceType.Duty)
+                    return Sensor.HasCrime() ? 0.1f : -0.1f;
+
+                if (Type == ResourceType.Satiation || Type == ResourceType.Companionship)
+                    return 0.1f;
+
+                return 0;
             }
         }
 
@@ -67,53 +87,29 @@ namespace NPCProcGen.Core.Components
             return Type == ResourceType.Money ? 10 : 1;
         }
 
-        private float GetMaxValue()
+        public float GetMaxValue()
         {
             return Type switch
             {
-                ResourceType.Money => 1000000,
-                ResourceType.Food => 1000,
+                ResourceType.None => 0,
+                ResourceType.Money => 10000,
+                ResourceType.Food => 100,
                 ResourceType.Satiation => 100,
                 ResourceType.Companionship => 100,
+                ResourceType.Duty => 100,
+                ResourceType.TotalFood => float.MaxValue,
                 _ => throw new ArgumentOutOfRangeException(),
             };
         }
 
-        private bool CanDecay()
-        {
-            return Type == ResourceType.Satiation || Type == ResourceType.Companionship;
-        }
-
-        private bool IsInteger()
-        {
-            return Type == ResourceType.Money || Type == ResourceType.Food;
-        }
-
-        /// <summary>
-        /// Determines whether the resource amount is imbalanced.
-        /// </summary>
-        /// <returns><c>true</c> if the resource amount is imbalanced; otherwise, <c>false</c>.</returns>
-        public bool IsImbalanced()
-        {
-            return IsDeficient() || IsSurplus();
-        }
-
-        /// <summary>
-        /// Determines whether the resource amount is deficient.
-        /// </summary>
-        /// <returns><c>true</c> if the resource amount is deficient; otherwise, <c>false</c>.</returns>
         public bool IsDeficient()
         {
-            return _amount < LowerThreshold;
+            return Amount < LowerThreshold;
         }
 
-        /// <summary>
-        /// Determines whether the resource amount is saturated.
-        /// </summary>
-        /// <returns><c>true</c> if the resource amount is saturated; otherwise, <c>false</c>.</returns>
-        public bool IsSurplus()
+        public bool IsUnbounded()
         {
-            return _amount > UpperThreshold;
+            return Type == ResourceType.TotalFood;
         }
     }
 }
