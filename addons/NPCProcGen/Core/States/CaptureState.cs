@@ -37,7 +37,7 @@ namespace NPCProcGen.Core.States
 
         protected override void ExecuteEnter()
         {
-            PrisonMarker2D prisonMarker = _actorContext.Sensor.GetRandomPrison();
+            PrisonMarker2D prisonMarker = Sensor.GetRandomPrison();
             _prisonLocation = prisonMarker.GlobalPosition;
             _criminal.TriggerDetainment();
         }
