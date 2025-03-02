@@ -35,7 +35,7 @@ namespace NPCProcGen.Core.States
             return new EnterParameters
             {
                 StateName = "TalkState",
-                Data = new Array<Variant> { _target.GetParent<Node2D>() }
+                Data = new Array<Variant>()
             };
         }
 
@@ -55,12 +55,20 @@ namespace NPCProcGen.Core.States
         {
             Array<Variant> data = new() { _target.GetParent<Node2D>() };
 
+            _actorContext.EmitSignal(
+                ActorTag2D.SignalName.InteractionStarted,
+                Variant.From((InteractionState)_actionState),
+                data
+            );
+
+            data[0] = _actorContext.ActorNode2D;
             _target.TriggerInteraction(_actorContext.Actor, (InteractionState)_actionState, data);
             NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
         }
 
         protected override void ExecuteExit()
         {
+            _actorContext.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
             _target.StopInteraction();
             NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);
         }
@@ -87,14 +95,14 @@ namespace NPCProcGen.Core.States
         private void ImproveCompanionship()
         {
             ResourceManager.Instance.ModifyResource(
-                _actorContext.Actor,
                 ResourceType.Companionship,
-                _companionshipIncrease
+                _companionshipIncrease,
+                _actorContext.Actor
             );
             ResourceManager.Instance.ModifyResource(
-                _target,
                 ResourceType.Companionship,
-                _companionshipIncrease
+                _companionshipIncrease,
+                _target
             );
 
             _actorContext.Memorizer.UpdateRelationship(_target, 1);
