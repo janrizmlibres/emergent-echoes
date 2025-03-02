@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pdwuu8j1am22"
-path="res://.godot/imported/player_elf.png-0fe7a12107db18465a57d87d5f1113a9.ctex"
+uid="uid://c4yk4o5mx8jr6"
+path="res://.godot/imported/hero_elf.png-c2943583e8917a3ee6aa69116a841a63.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entities/Actors/Player/Art/player_elf.png"
-dest_files=["res://.godot/imported/player_elf.png-0fe7a12107db18465a57d87d5f1113a9.ctex"]
+source_file="res://Entities/Actors/Player/Art/hero_elf.png"
+dest_files=["res://.godot/imported/hero_elf.png-c2943583e8917a3ee6aa69116a841a63.ctex"]
 
 [params]
 
