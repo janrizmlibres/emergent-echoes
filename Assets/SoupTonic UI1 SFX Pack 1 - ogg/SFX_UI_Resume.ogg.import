@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://byf4ndvjuwrmb"
+path="res://.godot/imported/SFX_UI_Resume.ogg-eaaba19cd61094ddaa16de0773de3367.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/SoupTonic UI1 SFX Pack 1 - ogg/SFX_UI_Resume.ogg"
+dest_files=["res://.godot/imported/SFX_UI_Resume.ogg-eaaba19cd61094ddaa16de0773de3367.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
