@@ -38,9 +38,6 @@ namespace NPCProcGen
         [Export(PropertyHint.Range, "1,100,")]
         public int CompanionshipAmount { get; set; } = 10;
 
-        [Export]
-        public Timer EvaluationTimer { get; set; }
-
         [ExportGroup("Traits")]
 
         [Export(PropertyHint.Range, "0.01,1,0.01")]
@@ -60,14 +57,14 @@ namespace NPCProcGen
 
         [ExportGroup("Resource Weights")]
 
-        [Export(PropertyHint.Range, "0,1,0.01")]
-        public float Money { get; set; } = 0.5f;
-        [Export(PropertyHint.Range, "0,1,0.01")]
-        public float Food { get; set; } = 0.5f;
-        [Export(PropertyHint.Range, "0,1,0.01")]
-        public float Satiation { get; set; } = 0.5f;
-        [Export(PropertyHint.Range, "0,1,0.01")]
-        public float Companionship { get; set; } = 0.5f;
+        [Export(PropertyHint.Range, "0.01,1,0.01")]
+        public float Money { get; set; } = 0.1f;
+        [Export(PropertyHint.Range, "0.01,1,0.01")]
+        public float Food { get; set; } = 0.1f;
+        [Export(PropertyHint.Range, "0.01,1,0.01")]
+        public float Satiation { get; set; } = 0.1f;
+        [Export(PropertyHint.Range, "0.01,1,0.01")]
+        public float Companionship { get; set; } = 0.1f;
 
         public List<Trait> Traits { get; private set; } = new();
         public Strategizer Strategizer { get; private set; }
@@ -76,6 +73,7 @@ namespace NPCProcGen
         public Vector2 TargetPosition => Executor.GetTargetPosition();
 
         private ActorContext _context;
+        private Timer _evaluationTimer;
 
         public override void _Ready()
         {
@@ -94,10 +92,18 @@ namespace NPCProcGen
 
             ActorDetector.BodyEntered += OnBodyEntered;
             ActorDetector.BodyExited += OnBodyExited;
-            EvaluationTimer.Timeout += OnEvaluationTimerTimeout;
 
-            // AddTraits();
-            AddTraitsStub();
+            _evaluationTimer = new Timer()
+            {
+                WaitTime = GD.RandRange(MinWaitTime, MaxWaitTime),
+                OneShot = true,
+                Autostart = true,
+            };
+            _evaluationTimer.Timeout += OnEvaluationTimerTimeout;
+            AddChild(_evaluationTimer);
+
+            AddTraits();
+            // AddTraitsStub();
         }
 
         public override void _Process(double delta)
@@ -135,7 +141,7 @@ namespace NPCProcGen
         {
             InteractAction action = new(_context, target);
             Executor.AddAction(action);
-            EvaluationTimer.Stop();
+            _evaluationTimer.Stop();
         }
 
         protected override void ExecuteStopInteraction()
@@ -146,7 +152,7 @@ namespace NPCProcGen
         protected override void DetainNPC()
         {
             Executor.TerminateExecution();
-            EvaluationTimer.Stop();
+            _evaluationTimer.Stop();
         }
 
         public bool IsActive()
@@ -169,6 +175,16 @@ namespace NPCProcGen
             Executor.CompleteConsumption();
         }
 
+        public void CompletePlanting()
+        {
+            Executor.CompletePlanting();
+        }
+
+        public void CompleteHarvest()
+        {
+            Executor.CompleteHarvest();
+        }
+
         private void AddTraits()
         {
             Traits.Add(new SurvivalTrait(_context, Survival));
@@ -185,13 +201,13 @@ namespace NPCProcGen
 
         private void OnEvaluationTimerTimeout()
         {
-            BaseAction action = Strategizer.EvaluateActionStub(
-                typeof(SurvivalTrait),
-                typeof(PetitionAction),
-                ResourceType.Money
-            );
+            // BaseAction action = Strategizer.EvaluateActionStub(
+            //     typeof(SurvivalTrait),
+            //     typeof(PetitionAction),
+            //     ResourceType.Money
+            // );
 
-            // BaseAction action = Strategizer.EvaluateAction(SocialPractice.Proactive);
+            BaseAction action = Strategizer.EvaluateAction(SocialPractice.Proactive);
 
             if (action != null)
             {
@@ -206,7 +222,7 @@ namespace NPCProcGen
 
         public void StartEvaluationTimer()
         {
-            EvaluationTimer.Start(GD.RandRange(MinWaitTime, MaxWaitTime));
+            _evaluationTimer.Start(GD.RandRange(MinWaitTime, MaxWaitTime));
         }
 
         protected override void OnNPCActorEntered(ActorTag2D actor)

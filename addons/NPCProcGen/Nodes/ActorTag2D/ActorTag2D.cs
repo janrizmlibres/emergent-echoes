@@ -11,6 +11,7 @@ using System.Linq;
 namespace NPCProcGen
 {
     [Tool]
+    [GlobalClass]
     public partial class ActorTag2D : Node
     {
         [Signal]
@@ -104,17 +105,17 @@ namespace NPCProcGen
 
         public int GetFoodAmount()
         {
-            return (int)ResourceManager.Instance.GetResource(this, ResourceType.Food).Amount;
+            return (int)ResourceManager.Instance.GetResource(ResourceType.Food, this).Amount;
         }
 
         public void AddFood(int amount)
         {
-            ResourceManager.Instance.ModifyResource(this, ResourceType.Food, amount);
+            ResourceManager.Instance.ModifyResource(ResourceType.Food, amount, this);
         }
 
         public void DeductFood(int amount)
         {
-            ResourceManager.Instance.ModifyResource(this, ResourceType.Food, -amount);
+            ResourceManager.Instance.ModifyResource(ResourceType.Food, -amount, this);
         }
 
         public bool IsPlayer()
