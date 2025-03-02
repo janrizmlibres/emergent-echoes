@@ -20,7 +20,7 @@ namespace NPCProcGen.Core.Components
 
         public CrimeCategory Category { get; private set; }
         public ActorTag2D Criminal { get; private set; }
-        public List<ActorTag2D> Participants { get; private set; }
+        public List<ActorTag2D> Participants { get; private set; } = new();
 
         private readonly List<ActorTag2D> _verifiers = new();
         private readonly List<ActorTag2D> _falsifiers = new();
