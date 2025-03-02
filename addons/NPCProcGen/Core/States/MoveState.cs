@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
@@ -7,12 +8,13 @@ namespace NPCProcGen.Core.States
 {
     public class MoveState : BaseState, INavigationState
     {
-        private Vector2 _movePosition;
+        private Vector2 _targetPosition;
 
-        public MoveState(ActorContext actorContext, StateContext stateContext, Vector2 movePosition)
+        public MoveState(ActorContext actorContext, StateContext stateContext,
+            Vector2 targetPosition)
             : base(actorContext, stateContext, ActionState.Move)
         {
-            _movePosition = movePosition;
+            _targetPosition = targetPosition;
         }
 
         protected override EnterParameters GetEnterData()
@@ -32,22 +34,14 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        /// <summary>
-        /// Determines whether the agent is currently navigating.
-        /// </summary>
-        /// <returns>True if the agent is navigating; otherwise, false.</returns>
         public bool IsNavigating()
         {
             return true;
         }
 
-        /// <summary>
-        /// Gets the target position for navigation.
-        /// </summary>
-        /// <returns>The global position of the target.</returns>
         public Vector2 GetTargetPosition()
         {
-            return _movePosition;
+            return _targetPosition;
         }
 
         public bool OnNavigationComplete()
