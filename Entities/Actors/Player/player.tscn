@@ -53,10 +53,10 @@ parameters/Eat/blend_position = 1.0
 parameters/Idle/blend_position = 1.0
 parameters/Move/blend_position = 1.0
 
-[node name="ActorTag2D" type="Node" parent="." node_paths=PackedStringArray("RearMarker")]
+[node name="ActorTag2D" type="Node" parent="."]
 script = ExtResource("3_tiunm")
-MoneyAmount = 500
-RearMarker = NodePath("../RearMarker/Marker2D")
+
+[node name="Marker2D" type="Marker2D" parent="ActorTag2D"]
 
 [node name="RearMarker" type="Node2D" parent="."]
 rotation = 3.14159
