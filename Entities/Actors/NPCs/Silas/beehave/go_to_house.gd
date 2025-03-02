@@ -8,7 +8,6 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		
 	if actor.navigation_agent_2d.is_navigation_finished():
 		blackboard.set_value("current_state", "idle")
-		
 		return SUCCESS
 	
 	move_actor.emit(Vector2(752, 192))

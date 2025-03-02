@@ -10,7 +10,7 @@ func before_run(actor: Node, blackboard: Blackboard) -> void:
 func tick(actor: Node, blackboard: Blackboard) -> int:
 	if blackboard.get_value("current_state") != "patrolling":
 		return FAILURE
-		
+			
 	if timeout:
 		timeout = false
 		return SUCCESS

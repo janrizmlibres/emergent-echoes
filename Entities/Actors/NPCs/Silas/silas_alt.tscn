@@ -93,7 +93,7 @@ script = ExtResource("16_8orm2")
 blackboard = {
 "current_state": "idle",
 "food_inventory": 10,
-"is_full": 100,
+"is_full": 20,
 "money": 100
 }
 
@@ -107,9 +107,8 @@ script = ExtResource("9_3lm7t")
 [node name="Physiological" type="Node" parent="."]
 script = ExtResource("10_e21mu")
 
-[node name="PhysciologicalTimer" type="Timer" parent="."]
-wait_time = 60.0
-one_shot = true
+[node name="HungerTimer" type="Timer" parent="."]
+wait_time = 10.0
 
 [node name="FoodAnchor" parent="." instance=ExtResource("10_3iu71")]
 visible = false
@@ -124,6 +123,9 @@ script = ExtResource("5_a23i0")
 
 [node name="Go To House" type="Node" parent="SilasBehaviour/SelectorComposite"]
 script = ExtResource("15_yth3l")
+
+[node name="Eat Food" type="Node" parent="SilasBehaviour/SelectorComposite"]
+script = ExtResource("21_oqw3x")
 
 [node name="On Patrol" type="Node" parent="SilasBehaviour/SelectorComposite"]
 script = ExtResource("6_1ro2l")
@@ -146,17 +148,12 @@ script = ExtResource("12_q20m7")
 [node name="Steal Money From Actor" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
 script = ExtResource("13_q0u1v")
 
-[node name="Eat Food" type="Node" parent="SilasBehaviour/SelectorComposite"]
-script = ExtResource("6_1ro2l")
-
-[node name="Eat Food" type="Node" parent="SilasBehaviour/SelectorComposite/Eat Food"]
-script = ExtResource("21_oqw3x")
-
+[connection signal="animation_finished" from="AnimationTree" to="SilasBehaviour/SelectorComposite/Eat Food" method="_on_animation_tree_animation_finished"]
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="body_entered" from="StealArea" to="SilasBehaviour/SelectorComposite/On Steal/Chase Actor" method="_on_steal_area_body_entered"]
 [connection signal="body_entered" from="NpcAltDetector" to="Personality" method="_on_npc_alt_detector_body_entered"]
 [connection signal="timeout" from="Timer" to="SilasBehaviour/SelectorComposite/On Patrol/Wait For 5 Sec" method="_on_timer_timeout"]
-[connection signal="timeout" from="PhysciologicalTimer" to="Physiological" method="_on_physciological_timer_timeout"]
+[connection signal="timeout" from="HungerTimer" to="Physiological" method="hunger_decay_timeout"]
 [connection signal="move_actor" from="SilasBehaviour/SelectorComposite/Go To House" to="." method="move_actor"]
 [connection signal="move_actor" from="SilasBehaviour/SelectorComposite/On Patrol/Patrol Action" to="." method="move_actor"]
 [connection signal="move_actor" from="SilasBehaviour/SelectorComposite/On Steal/Chase Actor" to="." method="move_actor"]

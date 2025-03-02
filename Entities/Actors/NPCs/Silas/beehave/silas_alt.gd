@@ -33,6 +33,9 @@ func _physics_process(_delta: float) -> void:
 			
 		handle_animation()
 		move_and_slide()
+	else:
+		
+		velocity = velocity.move_toward(Vector2.ZERO, FRICTION)
 
 func handle_animation() -> void:
 	if velocity.x != 0:
