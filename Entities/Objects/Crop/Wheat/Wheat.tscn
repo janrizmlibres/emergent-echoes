@@ -1,8 +1,8 @@
 [gd_scene load_steps=11 format=3 uid="uid://bbvfg1jotmlna"]
 
-[ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Objects/Crops/Wheat/Art/Basic_Plants.png" id="1_mx2ts"]
-[ext_resource type="Script" path="res://Entities/Objects/Crops/Wheat/Wheat.cs" id="1_rb2hj"]
-[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Game Components/interactable.tscn" id="2_3lbrb"]
+[ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Objects/Crop/Art/crops.png" id="1_mx2ts"]
+[ext_resource type="Script" path="res://Entities/Objects/Crop/Wheat/Wheat.cs" id="1_rb2hj"]
+[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Interactions/interactable.tscn" id="2_3lbrb"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2137r"]
 atlas = ExtResource("1_mx2ts")
