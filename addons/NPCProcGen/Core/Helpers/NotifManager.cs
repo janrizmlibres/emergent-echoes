@@ -12,6 +12,7 @@ namespace NPCProcGen.Core.Helpers
         private NotifManager() { }
 
         public event Action<ActorTag2D, bool> PetitionAnswered;
+
         public event Action<ActorTag2D, Crime> CrimeCommitted;
 
         public event Action<ActorTag2D> InteractionStarted;
