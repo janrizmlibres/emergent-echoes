@@ -17,6 +17,9 @@ namespace NPCProcGen.Core.Components.Enums
         Interact,
         Assess,
         Interrogate,
-        Capture
+        Capture,
+        FindTile,
+        Plant,
+        Harvest
     }
 }
