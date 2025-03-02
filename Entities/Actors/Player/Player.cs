@@ -1,4 +1,3 @@
-using EmergentEchoes.Utilities.Game;
 using EmergentEchoes.Utilities.Game.Enums;
 using Godot;
 using Godot.Collections;
@@ -7,32 +6,19 @@ using NPCProcGen.Core.Components.Enums;
 
 namespace EmergentEchoes.Entities.Actors
 {
-	public partial class Player : CharacterBody2D
+	public partial class Player : Actor
 	{
 		public enum State { Active, Dormant }
 
-		[Export] private int MaxSpeed { get; set; } = 80;
-		[Export] private int Acceleration { get; set; } = 10;
-		[Export] private int Friction { get; set; } = 10;
-
 		private State _state = State.Active;
 
-		private TileMapLayer _tileMapLayer;
-
-		private AnimationTree _animationTree;
-		private AnimationNodeStateMachinePlayback _animationState;
 		private ActorTag2D _actorTag2D;
-		private EmoteController _emoteController;
 
 		public override void _Ready()
 		{
-			_tileMapLayer = GetNode<TileMapLayer>("%WorldLayer");
+			base._Ready();
 
-			_animationTree = GetNode<AnimationTree>("AnimationTree");
-			_animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
 			_actorTag2D = GetNode<ActorTag2D>("ActorTag2D");
-			_emoteController = GetNode<EmoteController>("EmoteController");
-
 			_actorTag2D.InteractionStarted += OnInteractionStarted;
 			_actorTag2D.InteractionEnded += OnInteractionEnded;
 			_actorTag2D.EventTriggered += OnEventTriggered;
@@ -87,13 +73,6 @@ namespace EmergentEchoes.Entities.Actors
 
 		private void OnInteractionStarted(Variant state, Array<Variant> data)
 		{
-			InteractState actionState = state.As<InteractState>();
-
-			if (actionState == InteractState.Petition)
-			{
-				_actorTag2D.AnswerPetition(true);
-			}
-
 			Node2D partner = data[0].As<Node2D>();
 			Vector2 directionToFace = GlobalPosition.DirectionTo(partner.GlobalPosition);
 
@@ -103,7 +82,7 @@ namespace EmergentEchoes.Entities.Actors
 			_state = State.Dormant;
 			_emoteController.Activate();
 		}
-		
+
 		private void OnInteractionStartedOnNPCAlt(string state, Node2D npc)
 		{
 			if (state == "petitioning")
@@ -119,14 +98,14 @@ namespace EmergentEchoes.Entities.Actors
 
 			_state = State.Dormant;
 		}
-		
+
 		private void OnInteractionEnded()
 		{
 			_state = State.Active;
 			_emoteController.Deactivate();
 		}
 
-		private void OnEventTriggered(Variant eventType)
+		private void OnEventTriggered(Variant eventType, Array<Variant> data)
 		{
 			EventType type = eventType.As<EventType>();
 

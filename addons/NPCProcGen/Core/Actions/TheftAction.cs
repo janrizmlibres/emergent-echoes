@@ -9,8 +9,6 @@ namespace NPCProcGen.Core.Actions
         private readonly ActorTag2D _targetActor;
         private readonly ResourceType _targetResource;
 
-        private SearchState _searchState;
-
         public TheftAction(ActorContext context, ActorTag2D target, ResourceType type)
             : base(context, ActionType.Theft)
         {
@@ -20,12 +18,11 @@ namespace NPCProcGen.Core.Actions
 
         protected override void InitializeStates()
         {
-            _searchState = new SearchState(
+            _stateContext.StartingState = new SearchState(
                 _actorContext,
                 _stateContext,
                 _targetActor
             );
-
             _stateContext.WanderState = new(_actorContext, _stateContext, _targetActor);
             _stateContext.ApproachState = new SneakState(_actorContext, _stateContext, _targetActor);
             _stateContext.ContactState = new StealState(
@@ -37,7 +34,6 @@ namespace NPCProcGen.Core.Actions
             _stateContext.FleeState = new(_actorContext, _stateContext);
         }
 
-        protected override BaseState GetStartingState() => _searchState;
         public ActorTag2D GetTargetActor() => _targetActor;
     }
 }

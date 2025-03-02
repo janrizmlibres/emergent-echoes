@@ -10,7 +10,7 @@ namespace EmergentEchoes.Utilities.Game
 		private const float Spread = Mathf.Pi / 2;
 
 		private readonly static PackedScene _floatingTextScene =
-			GD.Load<PackedScene>("res://Entities/UI/Indicators/Floating Text/floating_text.tscn");
+			GD.Load<PackedScene>("res://Entities/UI/Indicators/FloatingText/floating_text.tscn");
 
 		private static Vector2 _travel = new(0, -10);
 

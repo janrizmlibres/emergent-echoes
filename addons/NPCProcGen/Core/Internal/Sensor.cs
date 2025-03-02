@@ -19,9 +19,11 @@ namespace NPCProcGen.Core.Internal
             _actorCtx = context;
         }
 
-        public static void Initialize(List<ActorTag2D> actors, List<PrisonMarker2D> prisons)
+        public static void Initialize(List<ActorTag2D> actors, List<PrisonMarker2D> prisons,
+            List<CropMarker2D> cropTiles)
         {
             _worldState.Prisons.AddRange(prisons);
+            _worldState.CropTiles.AddRange(cropTiles);
 
             foreach (ActorTag2D actor in actors)
             {
@@ -30,9 +32,74 @@ namespace NPCProcGen.Core.Internal
             }
         }
 
-        public List<ActorTag2D> GetActors()
+        public static void Update(double delta)
+        {
+            _worldState.CropTiles.ForEach(tile => tile.Update(delta));
+        }
+
+        public static int GetActorCount()
+        {
+            return _worldState.ActorState.Keys.ToList().Count;
+        }
+
+        public static List<ActorTag2D> GetActors()
         {
             return _worldState.ActorState.Keys.ToList();
+        }
+
+        public static void RecordCrime(Crime crime)
+        {
+            _worldState.Crimes.Add(crime);
+        }
+
+        public static bool HasCrime()
+        {
+            return _worldState.Crimes.Count > 0;
+        }
+
+        public static PrisonMarker2D GetRandomPrison()
+        {
+            DebugTool.Assert(_worldState.Prisons.Count > 0, "No prisons available.");
+            return CommonUtils.Shuffle(_worldState.Prisons).First();
+        }
+
+        public static bool HasMatureCropTile()
+        {
+            return _worldState.CropTiles.Any(tile => tile.Status == CropStatus.Grown);
+        }
+
+        public static bool HasAvailableCropTile()
+        {
+            return _worldState.CropTiles.Any(tile => tile.Status == CropStatus.Dormant);
+        }
+
+        public CropMarker2D GetMatureCropTile()
+        {
+            DebugTool.Assert(_worldState.CropTiles.Count > 0, "No crop tiles available.");
+
+            List<CropMarker2D> cropTiles = _worldState.CropTiles
+                .Where(tile => tile.Status == CropStatus.Grown)
+                .ToList();
+
+            return cropTiles.OrderBy(DistanceToActor).FirstOrDefault();
+        }
+
+        public CropMarker2D GetAvailableCropTile()
+        {
+            DebugTool.Assert(_worldState.CropTiles.Count > 0, "No crop tiles available.");
+
+            List<CropMarker2D> cropTiles = _worldState.CropTiles
+                .Where(tile => tile.Status == CropStatus.Dormant)
+                .ToList();
+
+            return cropTiles.OrderBy(DistanceToActor).FirstOrDefault();
+        }
+
+        private float DistanceToActor(CropMarker2D tile)
+        {
+            return tile.GlobalPosition.DistanceTo(
+                _actorCtx.ActorNode2D.GlobalPosition
+            );
         }
 
         public Tuple<ActionType, ActionState> GetTaskRecord()
@@ -78,7 +145,7 @@ namespace NPCProcGen.Core.Internal
             _worldState.Crimes.ForEach(crime => crime.Participants.Remove(_actorCtx.Actor));
         }
 
-        public ResourceType? GetPetitionResourceType()
+        public ResourceType GetPetitionResourceType()
         {
             return _worldState.ActorState[_actorCtx.Actor].CurrentPetitionResourceType;
         }
@@ -93,11 +160,6 @@ namespace NPCProcGen.Core.Internal
             SetPetitionResourceType(ResourceType.None);
         }
 
-        public void RecordCrime(Crime crime)
-        {
-            _worldState.Crimes.Add(crime);
-        }
-
         public Crime AssignCase()
         {
             Crime pendingCrime = _worldState.Crimes.Where(c => c.IsOpen()).FirstOrDefault();
@@ -109,12 +171,6 @@ namespace NPCProcGen.Core.Internal
             }
 
             return null;
-        }
-
-        public PrisonMarker2D GetRandomPrison()
-        {
-            DebugTool.Assert(_worldState.Prisons.Count > 0, "No prisons available.");
-            return CommonUtils.Shuffle(_worldState.Prisons).First();
         }
     }
 }

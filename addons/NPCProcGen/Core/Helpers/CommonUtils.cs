@@ -9,11 +9,23 @@ namespace NPCProcGen.Core.Helpers
     public static class CommonUtils
     {
         public const float PositionOffset = 12;
+        public const int FoodSatiation = 10;
+
+        public static List<T> Shuffle<T>(List<T> list)
+        {
+            return list.OrderBy(_ => GD.Randi()).ToList();
+        }
 
         public static void EmitSignal(ActorTag2D actor, StringName signalName, params Variant[] args)
         {
             Error result = actor.EmitSignal(signalName, args);
             DebugTool.Assert(result != Error.Unavailable, "Signal emitted error");
+        }
+
+        public static Vector2 GetOmnidirectionalWaypoint(Vector2 origin, Vector2 target)
+        {
+            Vector2 directionToOrigin = target.DirectionTo(origin);
+            return target + directionToOrigin * PositionOffset;
         }
 
         public static Vector2 GetRandomPosInCircularArea(Vector2 center, float radius,
@@ -51,11 +63,6 @@ namespace NPCProcGen.Core.Helpers
             petitionAmount = Math.Max(petitionAmount, minRaise);
 
             return (int)Math.Floor(petitionAmount);
-        }
-
-        public static List<T> Shuffle<T>(List<T> list)
-        {
-            return list.OrderBy(_ => GD.Randi()).ToList();
         }
     }
 }

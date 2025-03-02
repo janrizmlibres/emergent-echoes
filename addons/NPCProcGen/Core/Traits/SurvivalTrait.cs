@@ -15,54 +15,28 @@ namespace NPCProcGen.Core.Traits
     {
         public SurvivalTrait(ActorContext context, float weight) : base(context, weight) { }
 
-        /// <summary>
-        /// Evaluates an action based on the given social practice.
-        /// </summary>
-        /// <param name="practice">The social practice to evaluate.</param>
-        /// <returns>A tuple containing the evaluated action and its weight.</returns>
-        public override Tuple<BaseAction, float> EvaluateAction(SocialPractice practice)
+        protected override void EvaluateProactiveAction()
         {
-            if (practice == SocialPractice.Proactive)
+            ResourceManager resMgr = ResourceManager.Instance;
+
+            foreach (ResourceType type in resMgr.TangibleTypes)
             {
-                return EvaluateProactiveAction();
-            }
-
-            return null;
-        }
-
-        private Tuple<BaseAction, float> EvaluateProactiveAction()
-        {
-            ResourceManager resourceMgr = ResourceManager.Instance;
-            List<Tuple<BaseAction, float>> actionCandidates = new();
-
-            foreach (ResourceType type in resourceMgr.TangibleTypes)
-            {
-                if (resourceMgr.IsDeficient(_actorCtx.Actor, type))
-                {
-                    EvaluateInteraction(
-                        actionCandidates, type,
-                        (peerActors) => PickActor(peerActors, type),
-                        ActionType.Petition
-                    );
-                }
-            }
-
-            if (resourceMgr.IsDeficient(_actorCtx.Actor, ResourceType.Satiation)
-                && resourceMgr.HasResource(_actorCtx.Actor, ResourceType.Food))
-            {
-                AddAction(actionCandidates, ActionType.Eat, ResourceType.Satiation);
-            }
-
-            if (resourceMgr.IsDeficient(_actorCtx.Actor, ResourceType.Companionship))
-            {
-                AddAction(
-                    actionCandidates,
-                    ActionType.Socialize,
-                    ResourceType.Companionship
+                EvaluateInteraction(
+                    type,
+                    (peerActors) => PickActor(peerActors, type),
+                    ActionType.Petition
                 );
             }
 
-            return actionCandidates.OrderByDescending(action => action.Item2).FirstOrDefault();
+            if (resMgr.HasResource(ResourceType.Food, _actorCtx.Actor))
+            {
+                AddAction(ActionType.Eat, ResourceType.Satiation);
+            }
+
+            AddAction(
+                ActionType.Socialize,
+                ResourceType.Companionship
+            );
         }
 
         // ! Remove in production
@@ -73,7 +47,7 @@ namespace NPCProcGen.Core.Traits
             if (actionType == typeof(PetitionAction))
             {
                 EvaluateInteraction(
-                    actionCandidates, resType,
+                    resType,
                     peerActors => PickActor(peerActors, resType),
                     ActionType.Petition
                 );
@@ -82,16 +56,15 @@ namespace NPCProcGen.Core.Traits
             }
 
             if (actionType == typeof(EatAction) &&
-                ResourceManager.Instance.HasResource(_actorCtx.Actor, ResourceType.Food))
+                ResourceManager.Instance.HasResource(ResourceType.Food, _actorCtx.Actor))
             {
-                AddAction(actionCandidates, ActionType.Eat, ResourceType.Satiation);
+                AddAction(ActionType.Eat, ResourceType.Satiation);
                 return actionCandidates.FirstOrDefault()?.Item1;
             }
 
             if (actionType == typeof(SocializeAction))
             {
                 AddAction(
-                    actionCandidates,
                     ActionType.Socialize,
                     ResourceType.Companionship
                 );
@@ -106,7 +79,8 @@ namespace NPCProcGen.Core.Traits
         {
             foreach (ActorTag2D actor in peerActors)
             {
-                if (_actorCtx.Memorizer.IsFriendly(actor) || !ResourceManager.Instance.IsDeficient(actor, type))
+                if (_actorCtx.Memorizer.IsFriendly(actor)
+                    || !ResourceManager.Instance.IsDeficient(type, actor))
                 {
                     return actor;
                 }

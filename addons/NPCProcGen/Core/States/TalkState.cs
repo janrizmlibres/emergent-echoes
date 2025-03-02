@@ -9,9 +9,6 @@ using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
-    /// <summary>
-    /// Represents the state of talking to another actor.
-    /// </summary>
     public class TalkState : BaseState
     {
         private const int MinDuration = 10;
@@ -25,10 +22,6 @@ namespace NPCProcGen.Core.States
 
         private float _duration;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TalkState"/> class.
-        /// </summary>
-        /// <param name="owner">The owner of the state.</param>
         public TalkState(ActorContext actorContext, StateContext stateContext, ActorTag2D target)
             : base(actorContext, stateContext, ActionState.Talk)
         {
@@ -42,7 +35,7 @@ namespace NPCProcGen.Core.States
             return new EnterParameters
             {
                 StateName = "TalkState",
-                Data = new Array<Variant> { _target.GetParent<Node2D>() }
+                Data = new Array<Variant>()
             };
         }
 
@@ -62,12 +55,20 @@ namespace NPCProcGen.Core.States
         {
             Array<Variant> data = new() { _target.GetParent<Node2D>() };
 
-            _target.TriggerInteraction(_actorContext.Actor, _actionState, data);
+            _actorContext.EmitSignal(
+                ActorTag2D.SignalName.InteractionStarted,
+                Variant.From((InteractionState)_actionState),
+                data
+            );
+
+            data[0] = _actorContext.ActorNode2D;
+            _target.TriggerInteraction(_actorContext.Actor, (InteractionState)_actionState, data);
             NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
         }
 
         protected override void ExecuteExit()
         {
+            _actorContext.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
             _target.StopInteraction();
             NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);
         }
@@ -94,14 +95,14 @@ namespace NPCProcGen.Core.States
         private void ImproveCompanionship()
         {
             ResourceManager.Instance.ModifyResource(
-                _actorContext.Actor,
                 ResourceType.Companionship,
-                _companionshipIncrease
+                _companionshipIncrease,
+                _actorContext.Actor
             );
             ResourceManager.Instance.ModifyResource(
-                _target,
                 ResourceType.Companionship,
-                _companionshipIncrease
+                _companionshipIncrease,
+                _target
             );
 
             _actorContext.Memorizer.UpdateRelationship(_target, 1);

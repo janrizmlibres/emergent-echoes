@@ -1,0 +1,156 @@
+[gd_scene load_steps=15 format=3 uid="uid://dca6ru8aaidgk"]
+
+[ext_resource type="Texture2D" uid="uid://c4yk4o5mx8jr6" path="res://Entities/Actors/Player/Art/hero_elf.png" id="1_0mpyb"]
+[ext_resource type="Script" path="res://Entities/Actors/Actor.cs" id="1_8atlb"]
+[ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Objects/Crop/Art/crops.png" id="3_fhexf"]
+[ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Objects/Sword/Art/sword.png" id="4_8vutq"]
+[ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="5_3jllg"]
+[ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="6_c4mth"]
+[ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="7_k0erk"]
+[ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="9_epc3o"]
+[ext_resource type="Script" path="res://Entities/Debugging/DebugLabel/DebugLabel.cs" id="10_afexo"]
+[ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="10_snfxc"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_y2fxp"]
+radius = 3.0
+height = 10.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_opv3g"]
+size = Vector2(26, 20)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ajlvy"]
+radius = 70.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_t5hyo"]
+line_spacing = 0.0
+font_size = 6
+
+[node name="Actor" type="CharacterBody2D"]
+collision_mask = 3
+motion_mode = 1
+script = ExtResource("1_8atlb")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -10)
+texture = ExtResource("1_0mpyb")
+hframes = 8
+vframes = 6
+frame = 8
+metadata/_edit_lock_ = true
+
+[node name="SeedProp" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -21)
+texture = ExtResource("3_fhexf")
+hframes = 6
+vframes = 2
+frame = 6
+metadata/_edit_lock_ = true
+
+[node name="HarvestProp" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(0, -3)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("3_fhexf")
+hframes = 6
+vframes = 2
+frame = 11
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(0, -1)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_y2fxp")
+metadata/_edit_lock_ = true
+
+[node name="Weapon" type="Area2D" parent="."]
+visible = false
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Weapon"]
+position = Vector2(16, 0)
+rotation = 1.5708
+texture = ExtResource("4_8vutq")
+hframes = 4
+vframes = 3
+frame = 4
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Weapon"]
+position = Vector2(13, -6)
+shape = SubResource("RectangleShape2D_opv3g")
+disabled = true
+metadata/_edit_lock_ = true
+
+[node name="ActorDetector" type="Area2D" parent="."]
+visible = false
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ActorDetector"]
+shape = SubResource("CircleShape2D_ajlvy")
+metadata/_edit_lock_ = true
+
+[node name="EatProp" type="Node2D" parent="."]
+visible = false
+texture_filter = 1
+position = Vector2(0, -5)
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="EatProp"]
+position = Vector2(9, 0)
+texture = ExtResource("3_fhexf")
+hframes = 6
+vframes = 2
+frame = 11
+metadata/_edit_lock_ = true
+
+[node name="CarryProp" parent="." instance=ExtResource("5_3jllg")]
+visible = false
+
+[node name="RearMarker" type="Node2D" parent="."]
+rotation = 3.14159
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
+
+[node name="Marker2D" type="Marker2D" parent="RearMarker"]
+position = Vector2(-10, 0)
+metadata/_edit_lock_ = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": ExtResource("6_c4mth")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = ExtResource("7_k0erk")
+anim_player = NodePath("../AnimationPlayer")
+parameters/Attack/blend_position = 1.0
+parameters/Eat/blend_position = 1.0
+parameters/Harvest/blend_position = 1.0
+parameters/Idle/blend_position = 1.0
+parameters/Move/blend_position = 1.0
+
+[node name="EmoteController" parent="." instance=ExtResource("9_epc3o")]
+
+[node name="FloatTextController" parent="." instance=ExtResource("10_snfxc")]
+
+[node name="DebugLabel" type="Label" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -37.0
+offset_right = 20.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 0
+label_settings = SubResource("LabelSettings_t5hyo")
+script = ExtResource("10_afexo")
+
+[editable path="CarryProp"]

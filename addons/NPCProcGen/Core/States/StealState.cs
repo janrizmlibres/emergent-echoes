@@ -59,14 +59,14 @@ namespace NPCProcGen.Core.States
         {
             Crime newCrime = new(CrimeCategory.Theft, _actorContext.Actor);
             NotifManager.Instance.NotifyCrimeCommitted(_actorContext.Actor, newCrime);
-            _actorContext.Sensor.RecordCrime(newCrime);
+            Sensor.RecordCrime(newCrime);
         }
 
         private float ComputeStealAmount()
         {
             ResourceManager resMgr = ResourceManager.Instance;
-            ResourceStat ownerResource = resMgr.GetResource(_actorContext.Actor, _targetResource);
-            ResourceStat targetResource = resMgr.GetResource(_targetActor, _targetResource);
+            ResourceStat ownerResource = resMgr.GetResource(_targetResource, _actorContext.Actor);
+            ResourceStat targetResource = resMgr.GetResource(_targetResource, _actorContext.Actor);
             return CommonUtils.CalculateSkewedAmount(ownerResource, 0.5f, 2, targetResource.Amount);
         }
     }

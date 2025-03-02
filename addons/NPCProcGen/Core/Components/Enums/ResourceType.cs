@@ -7,5 +7,7 @@ namespace NPCProcGen.Core.Components.Enums
         Satiation,
         Companionship,
         Food,
+        TotalFood,
+        Duty,
     }
 }
