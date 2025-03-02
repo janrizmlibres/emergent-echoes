@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jn6pbqmsasut"
-path="res://.godot/imported/team.png-cf748307cc6fc02ab82a1d6fe9fcf344.ctex"
+uid="uid://ctb5b3ex5i2t1"
+path="res://.godot/imported/money.png-b8edecb8b9414b8ab3d4816bf38031d4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entities/UI/Indicators/FloatingText/Art/team.png"
-dest_files=["res://.godot/imported/team.png-cf748307cc6fc02ab82a1d6fe9fcf344.ctex"]
+source_file="res://Entities/UI/Indicators/FloatingText/Art/money.png"
+dest_files=["res://.godot/imported/money.png-b8edecb8b9414b8ab3d4816bf38031d4.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ctb5b3ex5i2t1"
-path="res://.godot/imported/coin.png-1cb968190d8549ee8812fa932485452d.ctex"
+uid="uid://jn6pbqmsasut"
+path="res://.godot/imported/companionship.png-5f794bafce645873e51d8d485fabd173.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entities/UI/Indicators/FloatingText/Art/coin.png"
-dest_files=["res://.godot/imported/coin.png-1cb968190d8549ee8812fa932485452d.ctex"]
+source_file="res://Entities/UI/Indicators/FloatingText/Art/companionship.png"
+dest_files=["res://.godot/imported/companionship.png-5f794bafce645873e51d8d485fabd173.ctex"]
 
 [params]
 

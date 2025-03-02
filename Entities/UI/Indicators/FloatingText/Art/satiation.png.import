@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://lc1pc0t4shjh"
-path="res://.godot/imported/cutlery.png-4213cdcaeba5f26bb891369cd24b3cff.ctex"
+path="res://.godot/imported/satiation.png-7194417cc1857cc9b48506d7d9e71f70.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entities/UI/Indicators/FloatingText/Art/cutlery.png"
-dest_files=["res://.godot/imported/cutlery.png-4213cdcaeba5f26bb891369cd24b3cff.ctex"]
+source_file="res://Entities/UI/Indicators/FloatingText/Art/satiation.png"
+dest_files=["res://.godot/imported/satiation.png-7194417cc1857cc9b48506d7d9e71f70.ctex"]
 
 [params]
 
