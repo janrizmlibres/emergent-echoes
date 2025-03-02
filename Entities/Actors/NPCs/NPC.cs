@@ -2,74 +2,52 @@ using Godot;
 using Godot.Collections;
 using NPCProcGen;
 using NPCProcGen.Core.Components.Enums;
-using System.Linq;
 using EmergentEchoes.Utilities.Game.Enums;
-using EmergentEchoes.Utilities.Game;
 using EmergentEchoes.Utilities;
 using EmergentEchoes.Stages.Testing;
-using EmergentEchoes.Entities.Hooks.CarryAnchor;
+using System.Collections.Generic;
+using System;
 
 namespace EmergentEchoes.Entities.Actors
 {
-    public partial class NPC : CharacterBody2D
+    public partial class NPC : Actor
     {
-        private enum MainState { Idle, Wander, Procedural, Eat, Detained }
+        private enum MainState { Idle, Wander, Procedural, Eat, Harvest, Attack }
 
-        private const float MinInterval = 1;
-        private const float MaxInterval = 3;
+        private const float MinStateInterval = 3;
+        private const float MaxStateInterval = 5;
 
-        [Export]
-        public int MaxSpeed { get; set; } = 40;
-        [Export]
-        public int Acceleration { get; set; } = 8;
-        [Export]
-        public int Friction { get; set; } = 4;
+        private readonly List<MainState> _passiveStates = new()
+        {
+            MainState.Idle,
+            MainState.Wander
+        };
 
         private MainState _mainState = MainState.Idle;
         private int _maxSpeed;
         private int _acceleration;
 
         private readonly Array<Vector2I> _validTilePositions = new();
-        private Node2D _captor;
 
-        private WorldLayer _tileMapLayer;
-        private CarryAnchor _carryAnchor;
-        private AnimationTree _animationTree;
-        private AnimationNodeStateMachinePlayback _animationState;
+        private WorldLayer _worldLayer;
         private NavigationAgent2D _navigationAgent2d;
         private NPCAgent2D _npcAgent2d;
         private Timer _stateTimer;
 
-        private EmoteController _emoteController;
-        private FloatTextController _floatTextController;
-
         public override void _Ready()
         {
-            if (Engine.IsEditorHint()) return;
+            base._Ready();
 
             _maxSpeed = MaxSpeed;
             _acceleration = Acceleration;
 
-            _stateTimer = new Timer()
-            {
-                WaitTime = GD.RandRange(MinInterval, MaxInterval),
-                OneShot = true,
-                Autostart = true
-            };
-
-            _stateTimer.Timeout += RandomizeMainState;
-            AddChild(_stateTimer);
-
-            _tileMapLayer = GetNode<WorldLayer>("%WorldLayer");
-            _carryAnchor = GetNode<CarryAnchor>("CarryAnchor");
-
-            _animationTree = GetNode<AnimationTree>("AnimationTree");
-            _animationState = (AnimationNodeStateMachinePlayback)_animationTree.Get("parameters/playback");
+            _worldLayer = GetNode<WorldLayer>("%WorldLayer");
             _navigationAgent2d = GetNode<NavigationAgent2D>("NavigationAgent2D");
             _npcAgent2d = GetNode<NPCAgent2D>("NPCAgent2D");
+            _stateTimer = GetNode<Timer>("StateTimer");
 
-            _emoteController = GetNode<EmoteController>("EmoteController");
-            _floatTextController = GetNode<FloatTextController>("FloatTextController");
+            _stateTimer.Timeout += RandomizeMainState;
+            _stateTimer.Start(GD.RandRange(MinStateInterval, MaxStateInterval));
 
             _animationTree.AnimationFinished += OnAnimationFinished;
             _navigationAgent2d.VelocityComputed += OnNavigationAgentVelocityComputed;
@@ -88,11 +66,11 @@ namespace EmergentEchoes.Entities.Actors
 
         private void SetupTilePositions()
         {
-            Array<Vector2I> usedCells = _tileMapLayer.GetUsedCells();
+            Array<Vector2I> usedCells = _worldLayer.GetUsedCells();
 
             foreach (Vector2I cell in usedCells)
             {
-                TileData tileData = _tileMapLayer.GetCellTileData(cell);
+                TileData tileData = _worldLayer.GetCellTileData(cell);
 
                 if (tileData != null && (bool)tileData.GetCustomData("isNavigatable"))
                 {
@@ -119,8 +97,6 @@ namespace EmergentEchoes.Entities.Actors
                 case MainState.Eat:
                     _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
                     _animationState.Travel("Eat");
-                    break;
-                case MainState.Detained:
                     break;
             }
 
@@ -185,19 +161,19 @@ namespace EmergentEchoes.Entities.Actors
 
         private void RandomizeMainState()
         {
-            _mainState = CoreHelpers.ShuffleEnum<MainState>().Where((x) =>
-                x != MainState.Procedural && x != MainState.Eat
-            ).First();
+            _mainState = CoreHelpers.ShuffleList(_passiveStates)[0];
 
             switch (_mainState)
             {
                 case MainState.Idle:
-                    _stateTimer.Start(GD.RandRange(MinInterval, MaxInterval));
+                    _stateTimer.Start(GD.RandRange(MinStateInterval, MaxStateInterval));
                     break;
                 case MainState.Wander:
                     Vector2 wanderTarget = PickTargetPosition();
                     _navigationAgent2d.TargetPosition = wanderTarget;
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -207,7 +183,7 @@ namespace EmergentEchoes.Entities.Actors
             {
                 int randomIdx = (int)(GD.Randi() % _validTilePositions.Count);
                 Vector2I chosenCell = _validTilePositions[randomIdx];
-                return _tileMapLayer.MapToLocal(chosenCell);
+                return _worldLayer.MapToLocal(chosenCell);
             }
 
             return Vector2.Zero;
@@ -234,6 +210,8 @@ namespace EmergentEchoes.Entities.Actors
 
         private void OnExecutionEnded()
         {
+            _maxSpeed = MaxSpeed;
+            _acceleration = Acceleration;
             RandomizeMainState();
         }
 
@@ -256,18 +234,26 @@ namespace EmergentEchoes.Entities.Actors
         {
             ActionState actionState = state.As<ActionState>();
 
+            _maxSpeed = MaxSpeed;
+            _acceleration = Acceleration;
+
             switch (actionState)
             {
                 case ActionState.Capture:
                     OnCaptureEntered(data);
                     break;
+                case ActionState.FindTile:
+                    OnFindTileEntered();
+                    break;
+                case ActionState.Plant:
+                    OnPlantEntered(data);
+                    break;
+                case ActionState.Harvest:
+                    OnHarvestEntered(data);
+                    break;
                 case ActionState.Engage:
                     _maxSpeed = MaxSpeed + 10;
                     _acceleration = Acceleration + 2;
-                    break;
-                default:
-                    _maxSpeed = MaxSpeed;
-                    _acceleration = Acceleration;
                     break;
             }
         }
@@ -275,8 +261,27 @@ namespace EmergentEchoes.Entities.Actors
         private void OnCaptureEntered(Array<Variant> data)
         {
             StringName actorName = data[0].As<StringName>();
-            _carryAnchor.SetTexture(actorName);
-            _carryAnchor.Visible = true;
+            _carryProp.SetTexture(actorName);
+            _carryProp.Visible = true;
+        }
+
+        private void OnFindTileEntered()
+        {
+            _seedProp.Visible = true;
+        }
+
+        private void OnPlantEntered(Array<Variant> data)
+        {
+            CropMarker2D cropMarker = data[0].As<CropMarker2D>();
+            _seedProp.Visible = false;
+            EmitSignal(nameof(CropPlanted), cropMarker);
+            _npcAgent2d.CompletePlanting();
+        }
+
+        private void OnHarvestEntered(Array<Variant> data)
+        {
+            CropMarker2D cropMarker = data[0].As<CropMarker2D>();
+            // Play harvest animation
         }
 
         private void OnStateExited(Variant state, Array<Variant> data)
@@ -297,16 +302,13 @@ namespace EmergentEchoes.Entities.Actors
                 case ActionState.Eat:
                     OnEatExited(data);
                     break;
-                case ActionState.Assess:
-                    OnAssessExited(data);
-                    break;
                 case ActionState.Talk:
                     OnTalkExited(data);
                     break;
                 case ActionState.Capture:
-                    _carryAnchor.Visible = false;
+                    _carryProp.Visible = false;
                     break;
-                default:
+                case ActionState.Engage:
                     _maxSpeed = MaxSpeed;
                     _acceleration = Acceleration;
                     break;
@@ -356,13 +358,6 @@ namespace EmergentEchoes.Entities.Actors
             );
         }
 
-        private void OnAssessExited(Array<Variant> data)
-        {
-            bool isIndeterminate = data[0].As<bool>();
-            if (!isIndeterminate) return;
-            _emoteController.ShowEmoteBubble(Emote.Dizzy);
-        }
-
         private void OnTalkExited(Array<Variant> data)
         {
             Node2D partner = data[0].As<Node2D>();
@@ -382,8 +377,8 @@ namespace EmergentEchoes.Entities.Actors
             Node2D partner = data[0].As<Node2D>();
             FacePartner(partner);
 
-            _tileMapLayer.Obstacles.Add(this);
-            _tileMapLayer.NotifyRuntimeTileDataUpdate();
+            _worldLayer.Obstacles.Add(this);
+            _worldLayer.NotifyRuntimeTileDataUpdate();
         }
 
         private void FacePartner(Node2D partner)
@@ -402,8 +397,8 @@ namespace EmergentEchoes.Entities.Actors
             _mainState = MainState.Procedural;
             _emoteController.Deactivate();
 
-            _tileMapLayer.Obstacles.Remove(this);
-            _tileMapLayer.NotifyRuntimeTileDataUpdate();
+            _worldLayer.Obstacles.Remove(this);
+            _worldLayer.NotifyRuntimeTileDataUpdate();
         }
 
         private void OnEventTriggered(Variant @event, Array<Variant> data)
@@ -427,7 +422,6 @@ namespace EmergentEchoes.Entities.Actors
         private void OnDetained()
         {
             Visible = false;
-            _mainState = MainState.Detained;
             _stateTimer.Stop();
         }
 
