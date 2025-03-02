@@ -9,6 +9,8 @@ namespace NPCProcGen.Core.Components.Enums
         Interact,
         Assess,
         Interrogate,
-        Pursuit
+        Pursuit,
+        Plant,
+        Harvest
     }
 }
