@@ -1,3 +1,4 @@
+using Godot;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Traits;
@@ -7,9 +8,6 @@ using System.Linq;
 
 namespace NPCProcGen.Core.Internal
 {
-    /// <summary>
-    /// The Strategizer class is responsible for evaluating and selecting actions based on traits.
-    /// </summary>
     public class Strategizer
     {
         private readonly ActorContext _context;
@@ -19,11 +17,6 @@ namespace NPCProcGen.Core.Internal
             _context = context;
         }
 
-        /// <summary>
-        /// Evaluates and selects the best action based on the given social practice.
-        /// </summary>
-        /// <param name="practice">The social practice to evaluate actions for.</param>
-        /// <returns>The best action based on the traits, or null if no action is suitable.</returns>
         public BaseAction EvaluateAction(SocialPractice practice)
         {
             NPCAgent2D npcActor = _context.Actor as NPCAgent2D;
@@ -33,7 +26,8 @@ namespace NPCProcGen.Core.Internal
                 .Where(action => action != null)
                 .OrderByDescending(action => action.Item2);
 
-            return actions.Any() ? actions.First().Item1 : null;
+            Tuple<BaseAction, float> bestAction = actions.FirstOrDefault();
+            return bestAction != null && GD.Randf() <= bestAction.Item2 ? bestAction.Item1 : null;
         }
 
         public BaseAction EvaluateActionStub(Type traitType, Type actionType, ResourceType resType)
