@@ -5,18 +5,22 @@ extends ActionLeaf
 var timeout = false
 
 func before_run(actor: Node, blackboard: Blackboard) -> void:
-	timer.start() 
+	if blackboard.get_value("current_state") == "waiting":
+		timer.start() 
+		return
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
-	if blackboard.get_value("current_state") != "patrolling":
+	if blackboard.get_value("current_state") != "waiting":
 		return FAILURE
 			
 	if timeout:
 		timeout = false
+		blackboard.set_value("current_state", "patrolling")
 		return SUCCESS
 		
 	return RUNNING
 
 func _on_timer_timeout() -> void:
 	timeout = true
+	timer.stop()
 	pass # Replace with function body.

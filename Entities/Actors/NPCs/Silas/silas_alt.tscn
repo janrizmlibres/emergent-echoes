@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://etlq2q1jbury"]
+[gd_scene load_steps=28 format=3 uid="uid://etlq2q1jbury"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/silas_alt.gd" id="1_17b4c"]
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_hdw1b"]
@@ -10,17 +10,20 @@
 [ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="5_l6iaq"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_1ro2l"]
 [ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="6_vcruu"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/has_the_agent_arrived.gd" id="8_4ytb8"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/is_the_agent_idle.gd" id="8_4ytb8"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/personality.gd" id="9_3lm7t"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/patrol_action.gd" id="9_58j85"]
 [ext_resource type="PackedScene" uid="uid://bccwhdlbu5ny0" path="res://Entities/Hooks/FoodAnchor/food_anchor.tscn" id="10_3iu71"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/physiological.gd" id="10_e21mu"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/physiological.gd" id="10_e21mu"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/chase_actor.gd" id="12_q20m7"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/steal_money_from_actor.gd" id="13_q0u1v"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/wait_for_5_sec.gd" id="13_sovwx"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/go_to_house.gd" id="15_yth3l"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="16_8orm2"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/eat_food.gd" id="21_oqw3x"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/is_the_food_resource_low.gd" id="17_gn6mj"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/go_to_market.gd" id="18_e1h5y"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/buy_food.gd" id="19_qbsuj"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/eat_food.gd" id="21_oqw3x"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30oj8"]
 radius = 3.0
@@ -91,13 +94,15 @@ shape = SubResource("CircleShape2D_5724d")
 [node name="Blackboard" type="Node" parent="."]
 script = ExtResource("16_8orm2")
 blackboard = {
+"agent_arrived": false,
 "current_state": "idle",
-"food_inventory": 10,
-"is_full": 20,
+"food_inventory": 5,
+"is_full": 50,
 "money": 100
 }
 
 [node name="Timer" type="Timer" parent="."]
+process_callback = 0
 wait_time = 5.0
 one_shot = true
 
@@ -108,7 +113,7 @@ script = ExtResource("9_3lm7t")
 script = ExtResource("10_e21mu")
 
 [node name="HungerTimer" type="Timer" parent="."]
-wait_time = 10.0
+wait_time = 30.0
 
 [node name="FoodAnchor" parent="." instance=ExtResource("10_3iu71")]
 visible = false
@@ -127,10 +132,22 @@ script = ExtResource("15_yth3l")
 [node name="Eat Food" type="Node" parent="SilasBehaviour/SelectorComposite"]
 script = ExtResource("21_oqw3x")
 
+[node name="Buy Food" type="Node" parent="SilasBehaviour/SelectorComposite"]
+script = ExtResource("6_1ro2l")
+
+[node name="Is The Food Resource Low" type="Node" parent="SilasBehaviour/SelectorComposite/Buy Food"]
+script = ExtResource("17_gn6mj")
+
+[node name="Go To Market" type="Node" parent="SilasBehaviour/SelectorComposite/Buy Food"]
+script = ExtResource("18_e1h5y")
+
+[node name="Buy Food" type="Node" parent="SilasBehaviour/SelectorComposite/Buy Food"]
+script = ExtResource("19_qbsuj")
+
 [node name="On Patrol" type="Node" parent="SilasBehaviour/SelectorComposite"]
 script = ExtResource("6_1ro2l")
 
-[node name="Has The Agent Arrived" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol"]
+[node name="Is The Agent Idle" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol"]
 script = ExtResource("8_4ytb8")
 
 [node name="Wait For 5 Sec" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol"]
@@ -155,5 +172,6 @@ script = ExtResource("13_q0u1v")
 [connection signal="timeout" from="Timer" to="SilasBehaviour/SelectorComposite/On Patrol/Wait For 5 Sec" method="_on_timer_timeout"]
 [connection signal="timeout" from="HungerTimer" to="Physiological" method="hunger_decay_timeout"]
 [connection signal="move_actor" from="SilasBehaviour/SelectorComposite/Go To House" to="." method="move_actor"]
+[connection signal="move_actor" from="SilasBehaviour/SelectorComposite/Buy Food/Go To Market" to="." method="move_actor"]
 [connection signal="move_actor" from="SilasBehaviour/SelectorComposite/On Patrol/Patrol Action" to="." method="move_actor"]
 [connection signal="move_actor" from="SilasBehaviour/SelectorComposite/On Steal/Chase Actor" to="." method="move_actor"]

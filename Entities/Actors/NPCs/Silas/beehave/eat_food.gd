@@ -5,16 +5,16 @@ extends ActionLeaf
 @onready var blackboard = $"../../../Blackboard"
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
-	
-	if blackboard.get_value("current_state") == "eat food":
+	if blackboard.get_value("current_state") == "hungry":
 		actor.npc_active = false
 		animation_state.travel("Eat")
 		blackboard.set_value("current_state", "eating")
 		return RUNNING
-	
+		
 	if blackboard.get_value("current_state") == "done eating":
 		actor.npc_active = true
 		actor.handle_animation()
+		
 		blackboard.set_value("current_state", "idle")
 		return SUCCESS
 	

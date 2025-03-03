@@ -3,6 +3,7 @@ extends CharacterBody2D
 @onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
 @onready var animation_tree: AnimationTree = $AnimationTree
 @onready var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/playback")
+@onready var blackboard = $Blackboard
 
 @export var FRICTION: int = 4
 @export var movement_speed: int = 60
@@ -19,6 +20,7 @@ func _physics_process(_delta: float) -> void:
 		navigation_agent_2d.target_position = current_location
 		
 		if navigation_agent_2d.is_navigation_finished():
+			blackboard.set_value("agent_arrived", true)
 			npc_active = false
 			velocity = velocity.move_toward(Vector2.ZERO, FRICTION)
 		else:
@@ -34,7 +36,7 @@ func _physics_process(_delta: float) -> void:
 		handle_animation()
 		move_and_slide()
 	else:
-		
+		handle_animation()
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION)
 
 func handle_animation() -> void:
