@@ -10,7 +10,7 @@
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_6gfsl"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/personality.gd" id="7_rs2tg"]
 [ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="8_btyao"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/has_the_agent_arrived.gd" id="9_7j1tl"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/Is The Agent Idle.gd" id="9_7j1tl"]
 [ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="9_7sty6"]
 [ext_resource type="PackedScene" uid="uid://bccwhdlbu5ny0" path="res://Entities/Hooks/FoodAnchor/food_anchor.tscn" id="10_wrbgc"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/patrol_action.gd" id="11_8k8tp"]
@@ -84,8 +84,12 @@ shape = SubResource("CircleShape2D_ajai6")
 [node name="Blackboard" type="Node" parent="."]
 script = ExtResource("12_77cs2")
 blackboard = {
+"actor_arrived": false,
 "current_state": "idle",
-"last_patrol_location": Vector2(672, 384)
+"food_inventory": 10,
+"is_full": 100,
+"last_patrol_location": Vector2(672, 384),
+"money": 100
 }
 
 [node name="Timer" type="Timer" parent="."]
@@ -116,7 +120,7 @@ script = ExtResource("19_76401")
 [node name="Patrol" type="Node" parent="GarrethBehaviour/SelectorComposite"]
 script = ExtResource("6_6gfsl")
 
-[node name="Has The Agent Arrived" type="Node" parent="GarrethBehaviour/SelectorComposite/Patrol"]
+[node name="Is The Agent Idle" type="Node" parent="GarrethBehaviour/SelectorComposite/Patrol"]
 script = ExtResource("9_7j1tl")
 
 [node name="Shout For Petition" type="Node" parent="GarrethBehaviour/SelectorComposite/Patrol"]
