@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=4 uid="uid://cjssfmoebcnbd"]
+[gd_scene load_steps=10 format=4 uid="uid://cjssfmoebcnbd"]
 
 [ext_resource type="Script" path="res://Stages/Island/World.cs" id="1_1qqpa"]
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://forestcombined.tres" id="2_4crdb"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://Stages/Island/ground_layer.gd" id="4_cixm6"]
 [ext_resource type="PackedScene" uid="uid://bnmuhsutwyeye" path="res://Entities/Actors/Player/player.tscn" id="4_l5eot"]
 [ext_resource type="PackedScene" uid="uid://etlq2q1jbury" path="res://Entities/Actors/NPCs/Silas/silas_alt.tscn" id="6_whi4o"]
+[ext_resource type="PackedScene" uid="uid://cah40uac4xp4m" path="res://Stages/Testing/position_pin.tscn" id="9_2o6g4"]
 [ext_resource type="PackedScene" uid="uid://c46vvjqepxr5c" path="res://Entities/Actors/NPCs/Garreth/garreth_alt.tscn" id="10_os2lh"]
 
 [node name="World" type="Node2D"]
@@ -69,6 +70,9 @@ motion_mode = 1
 [node name="SilasAlt" parent="." instance=ExtResource("6_whi4o")]
 z_index = 1
 position = Vector2(864, 240)
+
+[node name="Area2D" parent="." instance=ExtResource("9_2o6g4")]
+position = Vector2(480, 496)
 
 [editable path="Camera2D"]
 [editable path="Player"]
