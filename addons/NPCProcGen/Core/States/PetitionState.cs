@@ -47,40 +47,53 @@ namespace NPCProcGen.Core.States
             return new EnterParameters
             {
                 StateName = "PetitionState",
-                Data = new Array<Variant> { _target.GetParent<Node2D>() }
+                Data = new Array<Variant>()
             };
         }
 
         protected override ExitParameters GetExitData()
         {
-            return new ExitParameters
+            ExitParameters exitData = new()
             {
-                Data = new Array<Variant>
-                {
-                    _target.GetParent<Node2D>(),
-                    Variant.From(_resourceType),
-                    _amount,
-                    _isAccepted,
-                    _isAccepted ? CompanionshipIncrease : CompanionshipDecrease,
-                }
+                Data = new Array<Variant> { _isAccepted }
             };
+
+            if (_isAccepted)
+            {
+                exitData.Data.Add(Variant.From(_resourceType));
+                exitData.Data.Add(_amount);
+            }
+            else
+            {
+                exitData.Data.Add(CompanionshipDecrease);
+            }
+
+            return exitData;
         }
 
         protected override void ExecuteEnter()
         {
             Array<Variant> data = new()
             {
-                _actorContext.ActorNode2D,
+                _target.GetParent<Node2D>(),
                 Variant.From(_resourceType),
                 _amount
             };
 
-            _target.TriggerInteraction(_actorContext.Actor, (InteractState)_actionState, data);
+            _actorContext.EmitSignal(
+                ActorTag2D.SignalName.InteractionStarted,
+                Variant.From((InteractionState)_actionState),
+                data
+            );
+
+            data[0] = _actorContext.ActorNode2D;
+            _target.TriggerInteraction(_actorContext.Actor, (InteractionState)_actionState, data);
             NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
         }
 
         protected override void ExecuteExit()
         {
+            _actorContext.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
             _target.StopInteraction();
             NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);
         }
@@ -97,7 +110,7 @@ namespace NPCProcGen.Core.States
 
         private void DetermineOutcome()
         {
-            ResourceStat targetResource = ResourceManager.Instance.GetResource(_target, _resourceType);
+            ResourceStat targetResource = ResourceManager.Instance.GetResource(_resourceType, _target);
             float relationshipLevel = _actorContext.Memorizer.GetActorRelationship(_target);
             float baseProbability = ActorData.GetBasePetitionProbability(relationshipLevel);
 
@@ -120,8 +133,8 @@ namespace NPCProcGen.Core.States
 
         private int CalculateAmount()
         {
-            ResourceStat ownerResource = ResourceManager.Instance.GetResource(_actorContext.Actor, _resourceType);
-            ResourceStat targetResource = ResourceManager.Instance.GetResource(_target, _resourceType);
+            ResourceStat ownerResource = ResourceManager.Instance.GetResource(_resourceType, _actorContext.Actor);
+            ResourceStat targetResource = ResourceManager.Instance.GetResource(_resourceType, _target);
             return CommonUtils.CalculateSkewedAmount(ownerResource, 0.8f, 2, targetResource.Amount);
         }
 

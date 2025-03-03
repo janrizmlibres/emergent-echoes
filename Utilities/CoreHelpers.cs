@@ -11,5 +11,10 @@ namespace EmergentEchoes.Utilities
         {
             return Enum.GetValues(typeof(T)).OfType<T>().OrderBy(_ => GD.Randi());
         }
+
+        public static List<T> ShuffleList<T>(List<T> list)
+        {
+            return list.OrderBy(_ => GD.Randi()).ToList();
+        }
     }
 }

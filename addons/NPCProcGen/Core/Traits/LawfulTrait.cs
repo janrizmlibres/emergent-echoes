@@ -20,72 +20,61 @@ namespace NPCProcGen.Core.Traits
         public override void Update(double delta)
         {
             if (AssignedCase == null) return;
-
             _investigationTimer -= (float)delta;
         }
 
-        public override Tuple<BaseAction, float> EvaluateAction(SocialPractice practice)
+        protected override void EvaluateProactiveAction()
         {
-            if (practice == SocialPractice.Proactive)
+            if (_investigationTimer <= 0)
             {
-                return EvaluateProactiveAction();
+                AttemptResolveCase();
+                return;
             }
-
-            return null;
-        }
-
-        private Tuple<BaseAction, float> EvaluateProactiveAction()
-        {
-            if (_investigationTimer <= 0) return AttemptResolveCase();
 
             if (AssignedCase == null)
             {
-                return StartNewInvestigation();
+                StartNewInvestigation();
+                return;
             }
 
-            return ResumeInvestigation();
+            ResumeInvestigation();
         }
 
-        private Tuple<BaseAction, float> StartNewInvestigation()
+        private void StartNewInvestigation()
         {
             AssignedCase = _actorCtx.Sensor.AssignCase();
-            if (AssignedCase == null) return null;
+            if (AssignedCase == null) return;
 
             _investigationTimer = InvestigationDuration;
 
-            BaseAction action = new AssessAction(_actorCtx);
-            return new(action, _weight);
+            AddAction(ActionType.Assess, ResourceType.Duty);
         }
 
-        private Tuple<BaseAction, float> ResumeInvestigation()
+        private void ResumeInvestigation()
         {
             ActorTag2D target = AssignedCase.GetRandomParticipant();
 
             if (target != null)
             {
-                BaseAction interrogateAction = new InterrogateAction(_actorCtx, target, AssignedCase);
-                return new(interrogateAction, _weight);
+                AddAction(ActionType.Interrogate, ResourceType.Duty, target, AssignedCase);
+                return;
             }
 
             if (AssignedCase.IsDeposed())
             {
-                BaseAction pursuitAction = new PursuitAction(_actorCtx);
-                return new(pursuitAction, _weight);
+                AddAction(ActionType.Pursuit, ResourceType.Duty);
             }
-
-            return null;
         }
 
-        private Tuple<BaseAction, float> AttemptResolveCase()
+        private void AttemptResolveCase()
         {
             if (AssignedCase.IsUnsolvable())
             {
                 ClearCase(CrimeStatus.Unsolved);
-                return null;
+                return;
             }
 
-            BaseAction pursuitAction = new PursuitAction(_actorCtx);
-            return new(pursuitAction, _weight);
+            AddAction(ActionType.Pursuit, ResourceType.Duty);
         }
 
         public void ClearCase(CrimeStatus status)

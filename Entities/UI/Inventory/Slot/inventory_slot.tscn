@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Entities/UI/Inventory/Slot/InventorySlot.cs" id="1_weent"]
 [ext_resource type="Texture2D" uid="uid://155f33mds1eh" path="res://Entities/UI/Inventory/Slot/Art/inventory_slot_bg.png" id="2_d5b83"]
-[ext_resource type="Texture2D" uid="uid://ctb5b3ex5i2t1" path="res://Entities/UI/Indicators/Floating Text/Art/coin.png" id="2_evswi"]
+[ext_resource type="Texture2D" uid="uid://ctb5b3ex5i2t1" path="res://Entities/UI/Indicators/FloatingText/Art/money.png" id="2_evswi"]
 [ext_resource type="FontFile" uid="uid://cvj72gjhqsumb" path="res://Assets/Fonts/floating_font.ttf" id="3_4kvec"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_cym0x"]

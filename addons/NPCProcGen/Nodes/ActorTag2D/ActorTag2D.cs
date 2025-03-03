@@ -11,6 +11,7 @@ using System.Linq;
 namespace NPCProcGen
 {
     [Tool]
+    [GlobalClass]
     public partial class ActorTag2D : Node
     {
         [Signal]
@@ -19,7 +20,7 @@ namespace NPCProcGen
         public delegate void InteractionEndedEventHandler();
 
         [Signal]
-        public delegate void EventTriggeredEventHandler(Variant eventType);
+        public delegate void EventTriggeredEventHandler(Variant eventType, Array<Variant> data);
 
         [Export(PropertyHint.Range, "0,1000000,")]
         public int MoneyAmount { get; set; } = 100;
@@ -92,11 +93,9 @@ namespace NPCProcGen
 
         public Vector2 GetOmniDirectionalWaypoint(ActorTag2D initiator)
         {
-            Node2D parent = GetParent<Node2D>();
-
-            Vector2 directionToInitiator = parent.GlobalPosition
-                .DirectionTo(initiator.GetParent<Node2D>().GlobalPosition);
-            return parent.GlobalPosition + directionToInitiator * CommonUtils.PositionOffset;
+            Vector2 origin = initiator.GetParent<Node2D>().GlobalPosition;
+            Vector2 target = GetParent<Node2D>().GlobalPosition;
+            return CommonUtils.GetOmnidirectionalWaypoint(origin, target);
         }
 
         public void AnswerPetition(bool isAccepted)
@@ -106,17 +105,17 @@ namespace NPCProcGen
 
         public int GetFoodAmount()
         {
-            return (int)ResourceManager.Instance.GetResource(this, ResourceType.Food).Amount;
+            return (int)ResourceManager.Instance.GetResource(ResourceType.Food, this).Amount;
         }
 
         public void AddFood(int amount)
         {
-            ResourceManager.Instance.ModifyResource(this, ResourceType.Food, amount);
+            ResourceManager.Instance.ModifyResource(ResourceType.Food, amount, this);
         }
 
         public void DeductFood(int amount)
         {
-            ResourceManager.Instance.ModifyResource(this, ResourceType.Food, -amount);
+            ResourceManager.Instance.ModifyResource(ResourceType.Food, -amount, this);
         }
 
         public bool IsPlayer()
@@ -141,11 +140,10 @@ namespace NPCProcGen
             return true;
         }
 
-        public virtual void TriggerInteraction(ActorTag2D target, InteractState state,
+        public void TriggerInteraction(ActorTag2D target, InteractionState state,
             Array<Variant> data)
         {
-            NotifManager.Instance.NotifyInteractionStarted(this);
-            Sensor.SetTaskRecord(ActionType.Interact, ActionState.Interact);
+            ExecuteTriggerInteraction(target);
 
             CommonUtils.EmitSignal(
                 this,
@@ -155,11 +153,22 @@ namespace NPCProcGen
             );
         }
 
-        public virtual void StopInteraction()
+        public void StopInteraction()
+        {
+            ExecuteStopInteraction();
+            CommonUtils.EmitSignal(this, SignalName.InteractionEnded);
+        }
+
+        protected virtual void ExecuteTriggerInteraction(ActorTag2D target)
+        {
+            NotifManager.Instance.NotifyInteractionStarted(this);
+            Sensor.SetTaskRecord(ActionType.Interact, ActionState.Interact);
+        }
+
+        protected virtual void ExecuteStopInteraction()
         {
             NotifManager.Instance.NotifyInteractionEnded(this);
             Sensor.ClearTaskRecord();
-            CommonUtils.EmitSignal(this, SignalName.InteractionEnded);
         }
 
         public virtual void TriggerDetainment()
@@ -176,14 +185,15 @@ namespace NPCProcGen
             );
         }
 
-        public virtual void TriggerCaptivity()
+        public virtual void TriggerCaptivity(Vector2 releaseLocation)
         {
             NotifManager.Instance.NotifyActorCaptured(this);
 
             CommonUtils.EmitSignal(
                 this,
                 SignalName.EventTriggered,
-                Variant.From(EventType.Captured)
+                Variant.From(EventType.Captured),
+                new Array<Variant> { releaseLocation }
             );
         }
 

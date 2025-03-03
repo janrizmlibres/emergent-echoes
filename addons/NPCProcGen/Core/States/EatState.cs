@@ -30,8 +30,7 @@ namespace NPCProcGen.Core.States
 
         protected override ExitParameters GetExitData()
         {
-            // ! Magic number 10
-            int satiationIncrease = _amountToEat * 10;
+            int satiationIncrease = _amountToEat * CommonUtils.FoodSatiation;
 
             return new ExitParameters
             {
@@ -41,17 +40,26 @@ namespace NPCProcGen.Core.States
 
         public void OnConsumptionComplete()
         {
-            _actorContext.Actor.DeductFood(_amountToEat);
-            // TODO: Move constant 10 elsewhere
-            ResourceManager.Instance.ModifyResource(_actorContext.Actor, ResourceType.Satiation, _amountToEat * 10);
+            ResourceManager.Instance.ModifyResource(
+                ResourceType.Satiation,
+                _amountToEat * CommonUtils.FoodSatiation,
+                _actorContext.Actor
+            );
 
+            _actorContext.Actor.DeductFood(_amountToEat);
             _actorContext.Executor.FinishAction();
         }
 
         private int ComputeFoodAmount()
         {
-            ResourceStat resource = ResourceManager.Instance.GetResource(_actorContext.Actor, ResourceType.Satiation);
-            float foodAmount = ResourceManager.Instance.GetResourceAmount(_actorContext.Actor, ResourceType.Food);
+            ResourceManager resMgr = ResourceManager.Instance;
+
+            ResourceStat resource = resMgr.GetResource(
+                ResourceType.Satiation,
+                _actorContext.Actor
+            );
+
+            float foodAmount = resMgr.GetResourceAmount(ResourceType.Food, _actorContext.Actor);
             float deficiency = resource.LowerThreshold - resource.Amount;
 
             DebugTool.Assert(foodAmount > 0, "Food amount must be greater than 0.");

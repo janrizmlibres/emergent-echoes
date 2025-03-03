@@ -76,6 +76,8 @@ namespace NPCProcGen.Core.Internal
             {
                 _actions.Pop().Interrupt();
             }
+
+            _actorContext.EmitSignal(NPCAgent2D.SignalName.ExecutionEnded);
         }
 
         public Vector2 GetTargetPosition()
@@ -121,6 +123,22 @@ namespace NPCProcGen.Core.Internal
             if (_actions.TryPeek(out BaseAction action))
             {
                 (action.CurrentState as EatState)?.OnConsumptionComplete();
+            }
+        }
+
+        public void CompletePlanting()
+        {
+            if (_actions.TryPeek(out BaseAction action))
+            {
+                (action.CurrentState as PlantState)?.OnPlantingComplete();
+            }
+        }
+
+        public void CompleteHarvest()
+        {
+            if (_actions.TryPeek(out BaseAction action))
+            {
+                (action.CurrentState as HarvestState)?.OnHarvestComplete();
             }
         }
 

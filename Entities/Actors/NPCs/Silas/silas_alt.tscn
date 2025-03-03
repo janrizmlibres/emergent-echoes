@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://etlq2q1jbury"]
+[gd_scene load_steps=22 format=3 uid="uid://etlq2q1jbury"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/silas_alt.gd" id="1_17b4c"]
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_hdw1b"]
@@ -13,7 +13,6 @@
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/has_the_agent_arrived.gd" id="8_4ytb8"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/personality.gd" id="9_3lm7t"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/patrol_action.gd" id="9_58j85"]
-[ext_resource type="PackedScene" uid="uid://bccwhdlbu5ny0" path="res://Entities/Hooks/FoodAnchor/food_anchor.tscn" id="10_3iu71"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/chase_actor.gd" id="12_q20m7"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/steal_money_from_actor.gd" id="13_q0u1v"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/wait_for_5_sec.gd" id="13_sovwx"]
@@ -55,7 +54,9 @@ libraries = {
 [node name="AnimationTree" type="AnimationTree" parent="."]
 tree_root = ExtResource("4_5m5fc")
 anim_player = NodePath("../AnimationPlayer")
+parameters/Attack/blend_position = 0
 parameters/Eat/blend_position = 0
+parameters/Harvest/blend_position = 0
 parameters/Idle/blend_position = 0.0
 parameters/Move/blend_position = 0
 
@@ -98,9 +99,6 @@ one_shot = true
 
 [node name="Personality" type="Node" parent="."]
 script = ExtResource("9_3lm7t")
-
-[node name="FoodAnchor" parent="." instance=ExtResource("10_3iu71")]
-visible = false
 
 [node name="SilasBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("4_vmoef")

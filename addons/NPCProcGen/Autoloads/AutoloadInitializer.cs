@@ -4,64 +4,38 @@ using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Autoloads
 {
-    /// <summary>
-    /// Provides initialization methods for autoloaded singletons.
-    /// </summary>
     public static class AutoloadInitializer
     {
-        /// <summary>
-        /// Initializes the WorldState and ResourceManager with actors found in the current scene.
-        /// </summary>
-        /// <param name="currentScene">The current scene node.</param>
         public static void Init(Node currentScene)
         {
             List<ActorTag2D> actors = new();
-            FindActorsInNode(currentScene, actors);
-
             List<PrisonMarker2D> prisons = new();
-            FindPrisonsInNode(currentScene, prisons);
+            List<CropMarker2D> cropTiles = new();
 
-            Sensor.Initialize(actors, prisons);
+            FindNodesRecursive(currentScene);
+
+            Sensor.Initialize(actors, prisons, cropTiles);
             ResourceManager.Instance.Initialize(actors);
 
-            // ! Remove temporary debug code in production
-            // GD.Print("Actors in WorldState:");
-            // foreach (ActorTag2D actor in WorldState.Instance.Actors)
-            // {
-            //     GD.Print(actor.Parent.Name);
-            // }
-
-            // ResourceManager.Instance.PrintActors();
-        }
-
-        /// <summary>
-        /// Recursively finds all ActorTag2D nodes in the given node and its children.
-        /// </summary>
-        /// <param name="node">The node to search.</param>
-        /// <param name="Actors">The list to populate with found ActorTag2D nodes.</param>
-        private static void FindActorsInNode(Node node, List<ActorTag2D> Actors)
-        {
-            foreach (Node child in node.GetChildren())
+            void FindNodesRecursive(Node currentNode)
             {
-                if (child is ActorTag2D actor)
+                foreach (Node child in currentNode.GetChildren())
                 {
-                    Actors.Add(actor);
+                    switch (child)
+                    {
+                        case ActorTag2D actor:
+                            actors.Add(actor);
+                            break;
+                        case PrisonMarker2D prison:
+                            prisons.Add(prison);
+                            break;
+                        case CropMarker2D cropTile:
+                            cropTiles.Add(cropTile);
+                            break;
+                    }
+
+                    FindNodesRecursive(child);
                 }
-
-                FindActorsInNode(child, Actors);
-            }
-        }
-
-        private static void FindPrisonsInNode(Node node, List<PrisonMarker2D> prisons)
-        {
-            foreach (Node child in node.GetChildren())
-            {
-                if (child is PrisonMarker2D prison)
-                {
-                    prisons.Add(prison);
-                }
-
-                FindPrisonsInNode(child, prisons);
             }
         }
     }

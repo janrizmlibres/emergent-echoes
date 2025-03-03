@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://ljm1capb63sh"]
-
-[ext_resource type="Script" path="res://Entities/Hooks/EvaluationTimer/EvaluationTimer.cs" id="1_xfnvv"]
-
-[node name="EvaluationTimer" type="Timer"]
-one_shot = true
-autostart = true
-script = ExtResource("1_xfnvv")
