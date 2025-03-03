@@ -4,6 +4,7 @@ using Godot;
 using Godot.Collections;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Actions;
+using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
@@ -33,15 +34,15 @@ namespace NPCProcGen
         private const int MaxWaitTime = 20;
 
         [Export(PropertyHint.Range, "1,100,")]
-        public int SatiationAmount { get; set; } = 15;
+        public int SatiationAmount { get; set; } = 70;
 
         [Export(PropertyHint.Range, "1,100,")]
-        public int CompanionshipAmount { get; set; } = 10;
+        public int CompanionshipAmount { get; set; } = 70;
 
         [ExportGroup("Traits")]
 
         [Export(PropertyHint.Range, "0.01,1,0.01")]
-        public float Survival { get; set; } = 0.1f;
+        public float Survival { get; set; } = 0.5f;
         [Export(PropertyHint.Range, "0,1,0.01")]
         public float Thief { get; set; } = 0;
         [Export(PropertyHint.Range, "0,1,0.01")]
@@ -58,13 +59,13 @@ namespace NPCProcGen
         [ExportGroup("Resource Weights")]
 
         [Export(PropertyHint.Range, "0.01,1,0.01")]
-        public float Money { get; set; } = 0.1f;
+        public float Money { get; set; } = 0.5f;
         [Export(PropertyHint.Range, "0.01,1,0.01")]
-        public float Food { get; set; } = 0.1f;
+        public float Food { get; set; } = 0.5f;
         [Export(PropertyHint.Range, "0.01,1,0.01")]
-        public float Satiation { get; set; } = 0.1f;
+        public float Satiation { get; set; } = 0.5f;
         [Export(PropertyHint.Range, "0.01,1,0.01")]
-        public float Companionship { get; set; } = 0.1f;
+        public float Companionship { get; set; } = 0.5f;
 
         public List<Trait> Traits { get; private set; } = new();
         public Strategizer Strategizer { get; private set; }
@@ -106,7 +107,7 @@ namespace NPCProcGen
             // AddTraitsStub();
         }
 
-        public override void _Process(double delta)
+        public override void _PhysicsProcess(double delta)
         {
             if (Engine.IsEditorHint()) return;
 
@@ -147,6 +148,12 @@ namespace NPCProcGen
         protected override void ExecuteStopInteraction()
         {
             Executor.FinishAction();
+        }
+
+        protected override void ExecuteOnCrimeCommitted(ActorTag2D criminal, Crime crime)
+        {
+            _context.LawfulModule?.PursueCriminal(criminal, crime);
+            _evaluationTimer.Stop();
         }
 
         protected override void DetainNPC()
@@ -197,6 +204,9 @@ namespace NPCProcGen
                 _context.LawfulModule = new LawfulTrait(_context, Lawful);
                 Traits.Add(_context.LawfulModule);
             }
+
+            if (Farmer > 0)
+                Traits.Add(new FarmerTrait(_context, Farmer));
         }
 
         private void OnEvaluationTimerTimeout()

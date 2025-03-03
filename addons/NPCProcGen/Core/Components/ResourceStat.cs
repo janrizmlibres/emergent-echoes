@@ -6,8 +6,8 @@ namespace NPCProcGen.Core.Components
 {
     public class ResourceStat
     {
-        private const float TotalFoodLowerMultiplier = 2.5f;
-        private const float TotalFoodUpperMultiplier = 5.5f;
+        private const int FoodLowerThreshold = 5;
+        private const int FoodUpperThreshold = 20;
 
         public ResourceType Type { get; private set; }
 
@@ -47,10 +47,10 @@ namespace NPCProcGen.Core.Components
                 return Type switch
                 {
                     ResourceType.Money => (20, 1000),
-                    ResourceType.Food => (5, 30),
+                    ResourceType.Food => (FoodLowerThreshold, FoodUpperThreshold),
                     ResourceType.Satiation => (5, 90),
                     ResourceType.Companionship => (10, 90),
-                    ResourceType.Duty => (30, 70),
+                    ResourceType.Duty => (30, 90),
                     ResourceType.TotalFood => GetTotalFoodThresholds(),
                     ResourceType.None => (0, 0),
                     _ => throw new ArgumentOutOfRangeException(Type.ToString()),
@@ -60,23 +60,23 @@ namespace NPCProcGen.Core.Components
             (int, int) GetTotalFoodThresholds()
             {
                 int actorCount = Sensor.GetActorCount();
-                LowerThreshold = (int)Math.Ceiling(actorCount * TotalFoodLowerMultiplier);
-                UpperThreshold = (int)Math.Ceiling(actorCount * TotalFoodUpperMultiplier);
+                LowerThreshold = (int)MathF.Ceiling(actorCount * FoodLowerThreshold);
+                UpperThreshold = (int)MathF.Ceiling(actorCount * FoodUpperThreshold);
                 return (LowerThreshold, UpperThreshold);
             }
         }
 
         public void Update(double delta)
         {
-            Amount -= (float)(GetDecayRate() * delta);
+            Amount -= GetDecayRate() * (float)delta;
 
             float GetDecayRate()
             {
                 if (Type == ResourceType.Duty)
-                    return Sensor.HasCrime() ? 0.1f : -0.1f;
+                    return Sensor.HasCrime() ? 0.01f : -0.01f;
 
                 if (Type == ResourceType.Satiation || Type == ResourceType.Companionship)
-                    return 0.1f;
+                    return 0.01f;
 
                 return 0;
             }

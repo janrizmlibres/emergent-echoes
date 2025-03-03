@@ -17,20 +17,23 @@ namespace NPCProcGen.Core.States
     {
         private readonly ActorTag2D _target;
         private readonly Waypoint _waypoint;
+        private readonly bool _isInvasive;
 
         private bool _isTargetReached = false;
         private float _navigationTimer = 15;
 
         public EngageState(ActorContext actorContext, StateContext stateContext, ActorTag2D target,
-            Waypoint waypoint) : base(actorContext, stateContext, ActionState.Engage)
+            Waypoint waypoint, bool isInvasive = false)
+            : base(actorContext, stateContext, ActionState.Engage)
         {
             _target = target;
             _waypoint = waypoint;
+            _isInvasive = isInvasive;
         }
 
         public override void Subscribe()
         {
-            NotifManager.Instance.InteractionStarted += OnInteractionStarted;
+            if (!_isInvasive) NotifManager.Instance.InteractionStarted += OnInteractionStarted;
         }
 
         protected override EnterParameters GetEnterData()
@@ -64,7 +67,7 @@ namespace NPCProcGen.Core.States
 
         public override void Unsubscribe()
         {
-            NotifManager.Instance.InteractionStarted -= OnInteractionStarted;
+            if (!_isInvasive) NotifManager.Instance.InteractionStarted -= OnInteractionStarted;
         }
 
         public bool IsNavigating()

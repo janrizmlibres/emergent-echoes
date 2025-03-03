@@ -18,7 +18,7 @@ namespace NPCProcGen.Core.Helpers
         public event Action<ActorTag2D> InteractionStarted;
         public event Action<ActorTag2D> InteractionEnded;
 
-        public event Action<ActorTag2D> ActorDetained;
+        public event Action<ActorTag2D, ActorTag2D> ActorDetained;
         public event Action<ActorTag2D> ActorCaptured;
 
         public void NotifyPetitionAnswered(ActorTag2D source, bool isAccepted)
@@ -41,9 +41,9 @@ namespace NPCProcGen.Core.Helpers
             InteractionEnded?.Invoke(source);
         }
 
-        public void NotifyActorDetained(ActorTag2D actor)
+        public void NotifyActorDetained(ActorTag2D actor, ActorTag2D captor)
         {
-            ActorDetained?.Invoke(actor);
+            ActorDetained?.Invoke(actor, captor);
         }
 
         public void NotifyActorCaptured(ActorTag2D actor)

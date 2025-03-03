@@ -1,12 +1,11 @@
 using Godot;
-using Godot.Collections;
 using NPCProcGen;
 using NPCProcGen.Core.Components.Enums;
 using EmergentEchoes.Utilities.Game.Enums;
 using EmergentEchoes.Utilities;
-using EmergentEchoes.Stages.Testing;
 using System.Collections.Generic;
 using System;
+using Godot.Collections;
 
 namespace EmergentEchoes.Entities.Actors
 {
@@ -16,6 +15,8 @@ namespace EmergentEchoes.Entities.Actors
 
         private const float MinStateInterval = 3;
         private const float MaxStateInterval = 5;
+
+        public Array<Vector2I> ValidTilePositions { get; private set; } = new();
 
         private readonly List<MainState> _passiveStates = new()
         {
@@ -27,9 +28,6 @@ namespace EmergentEchoes.Entities.Actors
         private int _maxSpeed;
         private int _acceleration;
 
-        private readonly Array<Vector2I> _validTilePositions = new();
-
-        private WorldLayer _worldLayer;
         private NavigationAgent2D _navigationAgent2d;
         private NPCAgent2D _npcAgent2d;
         private Timer _stateTimer;
@@ -41,7 +39,6 @@ namespace EmergentEchoes.Entities.Actors
             _maxSpeed = MaxSpeed;
             _acceleration = Acceleration;
 
-            _worldLayer = GetNode<WorldLayer>("%WorldLayer");
             _navigationAgent2d = GetNode<NavigationAgent2D>("NavigationAgent2D");
             _npcAgent2d = GetNode<NPCAgent2D>("NPCAgent2D");
             _stateTimer = GetNode<Timer>("StateTimer");
@@ -57,26 +54,6 @@ namespace EmergentEchoes.Entities.Actors
             _npcAgent2d.ActionStarted += OnActionStarted;
             _npcAgent2d.StateEntered += OnStateEntered;
             _npcAgent2d.StateExited += OnStateExited;
-            _npcAgent2d.InteractionStarted += OnInteractionStarted;
-            _npcAgent2d.InteractionEnded += OnInteractionEnded;
-            _npcAgent2d.EventTriggered += OnEventTriggered;
-
-            SetupTilePositions();
-        }
-
-        private void SetupTilePositions()
-        {
-            Array<Vector2I> usedCells = _worldLayer.GetUsedCells();
-
-            foreach (Vector2I cell in usedCells)
-            {
-                TileData tileData = _worldLayer.GetCellTileData(cell);
-
-                if (tileData != null && (bool)tileData.GetCustomData("isNavigatable"))
-                {
-                    _validTilePositions.Add(cell);
-                }
-            }
         }
 
         public override void _PhysicsProcess(double delta)
@@ -86,7 +63,10 @@ namespace EmergentEchoes.Entities.Actors
             switch (_mainState)
             {
                 case MainState.Idle:
-                    StopMoving();
+                case MainState.Eat:
+                case MainState.Harvest:
+                case MainState.Attack:
+                    StopMoving(_mainState.ToString());
                     break;
                 case MainState.Wander:
                     HandleWanderState();
@@ -94,18 +74,9 @@ namespace EmergentEchoes.Entities.Actors
                 case MainState.Procedural:
                     HandleProceduralState();
                     break;
-                case MainState.Eat:
-                    _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
-                    _animationState.Travel("Eat");
-                    break;
             }
 
             MoveAndSlide();
-        }
-
-        public void ShowFloatText(ResourceType resType, string text)
-        {
-            _floatTextController.ShowFloatText(resType, text);
         }
 
         private void HandleWanderState()
@@ -126,17 +97,17 @@ namespace EmergentEchoes.Entities.Actors
             if (_navigationAgent2d.IsNavigationFinished())
             {
                 _npcAgent2d.CompleteNavigation();
-                StopMoving();
+                StopMoving("Idle");
                 return;
             }
 
             MoveCharacter();
         }
 
-        private void StopMoving()
+        private void StopMoving(StringName animName)
         {
             _navigationAgent2d.Velocity = Velocity.MoveToward(Vector2.Zero, Friction);
-            _animationState.Travel("Idle");
+            _animationState.Travel(animName);
         }
 
         private void MoveCharacter()
@@ -152,8 +123,7 @@ namespace EmergentEchoes.Entities.Actors
         {
             if (Velocity.X != 0)
             {
-                _animationTree.Set("parameters/Idle/blend_position", Velocity.X);
-                _animationTree.Set("parameters/Move/blend_position", Velocity.X);
+                SetBlendPositionParams(Velocity.X);
             }
 
             _animationState.Travel("Move");
@@ -179,11 +149,11 @@ namespace EmergentEchoes.Entities.Actors
 
         private Vector2 PickTargetPosition()
         {
-            if (_validTilePositions.Count > 0)
+            if (ValidTilePositions.Count > 0)
             {
-                int randomIdx = (int)(GD.Randi() % _validTilePositions.Count);
-                Vector2I chosenCell = _validTilePositions[randomIdx];
-                return _worldLayer.MapToLocal(chosenCell);
+                int randomIdx = (int)(GD.Randi() % ValidTilePositions.Count);
+                Vector2I chosenCell = ValidTilePositions[randomIdx];
+                return WorldLayer.MapToLocal(chosenCell);
             }
 
             return Vector2.Zero;
@@ -191,9 +161,14 @@ namespace EmergentEchoes.Entities.Actors
 
         private void OnAnimationFinished(StringName animName)
         {
-            if (animName.ToString().Contains("eat"))
+            switch (animName.ToString())
             {
-                _npcAgent2d.CompleteConsumption();
+                case string name when name.Contains("eat"):
+                    _npcAgent2d.CompleteConsumption();
+                    break;
+                case string name when name.Contains("harvest"):
+                    _npcAgent2d.CompleteHarvest();
+                    break;
             }
         }
 
@@ -272,16 +247,18 @@ namespace EmergentEchoes.Entities.Actors
 
         private void OnPlantEntered(Array<Variant> data)
         {
-            CropMarker2D cropMarker = data[0].As<CropMarker2D>();
             _seedProp.Visible = false;
-            EmitSignal(nameof(CropPlanted), cropMarker);
+
+            CropMarker2D cropMarker = data[0].As<CropMarker2D>();
+            EmitSignal(Actor.SignalName.CropPlanted, cropMarker);
             _npcAgent2d.CompletePlanting();
         }
 
         private void OnHarvestEntered(Array<Variant> data)
         {
             CropMarker2D cropMarker = data[0].As<CropMarker2D>();
-            // Play harvest animation
+            EmitSignal(Actor.SignalName.CropHarvested, cropMarker);
+            _mainState = MainState.Harvest;
         }
 
         private void OnStateExited(Variant state, Array<Variant> data)
@@ -306,7 +283,7 @@ namespace EmergentEchoes.Entities.Actors
                     OnTalkExited(data);
                     break;
                 case ActionState.Capture:
-                    _carryProp.Visible = false;
+                    OnCaptureExited(data);
                     break;
                 case ActionState.Engage:
                     _maxSpeed = MaxSpeed;
@@ -360,77 +337,25 @@ namespace EmergentEchoes.Entities.Actors
 
         private void OnTalkExited(Array<Variant> data)
         {
-            Node2D partner = data[0].As<Node2D>();
-            NPC npc = partner as NPC;
-
             float companionshipIncrease = data[1].As<float>();
 
-            npc?.ShowFloatText(ResourceType.Companionship, companionshipIncrease.ToString());
             _floatTextController.ShowFloatText(
                 ResourceType.Companionship,
                 companionshipIncrease.ToString()
             );
         }
 
-        private void OnInteractionStarted(Variant state, Array<Variant> data)
+        private void OnCaptureExited(Array<Variant> data)
         {
-            Node2D partner = data[0].As<Node2D>();
-            FacePartner(partner);
-
-            _worldLayer.Obstacles.Add(this);
-            _worldLayer.NotifyRuntimeTileDataUpdate();
+            int dutyIncrease = data[0].As<int>();
+            _carryProp.Visible = false;
+            _floatTextController.ShowFloatText(ResourceType.Duty, dutyIncrease.ToString());
         }
 
-        private void FacePartner(Node2D partner)
-        {
-            Vector2 directionToFace = GlobalPosition.DirectionTo(partner.GlobalPosition);
+        protected override void ExecuteInteractionStarted() => _mainState = MainState.Idle;
+        protected override void ExecuteInteractionEnded() => _mainState = MainState.Procedural;
 
-            _animationTree.Set("parameters/Idle/blend_position", directionToFace.X);
-            _animationState.Travel("Idle");
-
-            _mainState = MainState.Idle;
-            _emoteController.Activate();
-        }
-
-        private void OnInteractionEnded()
-        {
-            _mainState = MainState.Procedural;
-            _emoteController.Deactivate();
-
-            _worldLayer.Obstacles.Remove(this);
-            _worldLayer.NotifyRuntimeTileDataUpdate();
-        }
-
-        private void OnEventTriggered(Variant @event, Array<Variant> data)
-        {
-            EventType eventType = @event.As<EventType>();
-
-            switch (eventType)
-            {
-                case EventType.CrimeWitnessed:
-                    _emoteController.ShowEmoteBubble(Emote.Interrobang);
-                    break;
-                case EventType.Detained:
-                    OnDetained();
-                    break;
-                case EventType.Captured:
-                    OnCaptured(data);
-                    break;
-            }
-        }
-
-        private void OnDetained()
-        {
-            Visible = false;
-            _stateTimer.Stop();
-        }
-
-        private void OnCaptured(Array<Variant> data)
-        {
-            Vector2 releaseLocation = data[0].As<Vector2>();
-            GlobalPosition = releaseLocation;
-            Visible = true;
-            RandomizeMainState();
-        }
+        protected override void ExecuteDetained() => _stateTimer.Stop();
+        protected override void ExecuteCaptured() => RandomizeMainState();
     }
 }

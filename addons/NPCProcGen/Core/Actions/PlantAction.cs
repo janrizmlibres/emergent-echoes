@@ -20,14 +20,14 @@ namespace NPCProcGen.Core.Actions
             _plantTimer -= (float)delta;
         }
 
-        private void SetupNextPlanting()
+        private bool SetupNextPlanting()
         {
             CropMarker2D cropMarker = _actorContext.Sensor.GetAvailableCropTile();
 
             if (_plantTimer <= 0 || cropMarker == null)
             {
                 _actorContext.Executor.FinishAction();
-                return;
+                return false;
             }
 
             _stateContext.StartingState = new FindTileState(
@@ -43,6 +43,8 @@ namespace NPCProcGen.Core.Actions
             {
                 OnComplete = () => SetupNextPlanting()
             };
+
+            return true;
         }
     }
 }

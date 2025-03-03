@@ -73,6 +73,12 @@ namespace NPCProcGen.Core.Internal
             return _worldState.CropTiles.Any(tile => tile.Status == CropStatus.Dormant);
         }
 
+        public static Crime GetOpenCase()
+        {
+            Crime pendingCrime = _worldState.Crimes.Where(c => c.IsOpen()).FirstOrDefault();
+            return pendingCrime;
+        }
+
         public CropMarker2D GetMatureCropTile()
         {
             DebugTool.Assert(_worldState.CropTiles.Count > 0, "No crop tiles available.");
@@ -158,19 +164,6 @@ namespace NPCProcGen.Core.Internal
         public void ClearPetitionResourceType()
         {
             SetPetitionResourceType(ResourceType.None);
-        }
-
-        public Crime AssignCase()
-        {
-            Crime pendingCrime = _worldState.Crimes.Where(c => c.IsOpen()).FirstOrDefault();
-
-            if (pendingCrime != null)
-            {
-                pendingCrime.Investigator = _actorCtx.GetNPCAgent2D();
-                return pendingCrime;
-            }
-
-            return null;
         }
     }
 }

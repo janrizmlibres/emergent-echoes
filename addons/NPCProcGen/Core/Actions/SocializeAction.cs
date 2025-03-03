@@ -32,7 +32,7 @@ namespace NPCProcGen.Core.Actions
             _stateContext.WaitState = new(_actorContext, _stateContext, _target);
             _stateContext.ContactState = new TalkState(_actorContext, _stateContext, _target);
 
-            TransitionTo(_stateContext.ApproachState);
+            _stateContext.ApproachTarget(_target);
         }
 
         public ActorTag2D GetTargetActor() => _target;

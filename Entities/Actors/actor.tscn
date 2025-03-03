@@ -26,7 +26,6 @@ line_spacing = 0.0
 font_size = 6
 
 [node name="Actor" type="CharacterBody2D"]
-collision_mask = 3
 motion_mode = 1
 script = ExtResource("1_8atlb")
 

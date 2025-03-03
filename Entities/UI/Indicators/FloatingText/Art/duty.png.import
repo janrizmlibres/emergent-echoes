@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bni44g000tsk4"
-path="res://.godot/imported/gnome_.png-74dcf25d94f119c3fdd37cea8a26abc5.ctex"
+uid="uid://bjs34tu500ui6"
+path="res://.godot/imported/duty.png-0c0b2bc03157a288e21ad6c90beb6550.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entities/Actors/NPCs/Pimble/Art/gnome_.png"
-dest_files=["res://.godot/imported/gnome_.png-74dcf25d94f119c3fdd37cea8a26abc5.ctex"]
+source_file="res://Entities/UI/Indicators/FloatingText/Art/duty.png"
+dest_files=["res://.godot/imported/duty.png-0c0b2bc03157a288e21ad6c90beb6550.ctex"]
 
 [params]
 

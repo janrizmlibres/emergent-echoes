@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
@@ -35,7 +36,7 @@ namespace NPCProcGen.Core.States
         {
             return new ExitParameters
             {
-                Data = new Array<Variant> { _target.GetParent<Node2D>() }
+                Data = new Array<Variant> { CommonUtils.DutyIncrease }
             };
         }
 
@@ -56,6 +57,13 @@ namespace NPCProcGen.Core.States
 
         protected override void ExecuteExit()
         {
+            EvaluateParticipant();
+            ResourceManager.Instance.ModifyResource(
+                ResourceType.Companionship,
+                CommonUtils.DutyIncrease,
+                _actorContext.Actor
+            );
+
             _actorContext.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
             _target.StopInteraction();
             NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);
@@ -67,25 +75,15 @@ namespace NPCProcGen.Core.States
 
             if (_duration <= 0)
             {
-                ClearParticipant();
-                CheckInvestigationStatus();
                 _actorContext.Executor.FinishAction();
             }
         }
 
-        private void ClearParticipant()
+        private void EvaluateParticipant()
         {
             float relationship = _actorContext.Memorizer.GetActorRelationship(_target);
             float successRate = ActorData.GetInterrogationProbability(relationship);
             _crime.ClearParticipant(_target, GD.Randf() <= successRate);
-        }
-
-        private void CheckInvestigationStatus()
-        {
-            if (_crime.IsDeposed() && !_crime.IsUnsolvable())
-            {
-                _actorContext.LawfulModule.ClearCase(CrimeStatus.Unsolved);
-            }
         }
     }
 }

@@ -3,7 +3,6 @@ using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Traits;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace NPCProcGen.Core.Internal
@@ -21,13 +20,11 @@ namespace NPCProcGen.Core.Internal
         {
             NPCAgent2D npcActor = _context.Actor as NPCAgent2D;
 
-            IEnumerable<Tuple<BaseAction, float>> actions = npcActor.Traits
+            return npcActor.Traits
                 .Select(trait => trait.EvaluateAction(practice))
-                .Where(action => action != null)
-                .OrderByDescending(action => action.Item2);
-
-            Tuple<BaseAction, float> bestAction = actions.FirstOrDefault();
-            return bestAction != null && GD.Randf() <= bestAction.Item2 ? bestAction.Item1 : null;
+                .Where(eval => eval != null)
+                .Where(eval => GD.Randf() <= eval.Item2)
+                .MaxBy(eval => eval.Item2)?.Item1;
         }
 
         public BaseAction EvaluateActionStub(Type traitType, Type actionType, ResourceType resType)
