@@ -29,6 +29,9 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	return RUNNING 
 
 func _on_petition_area_body_entered(body: Node2D) -> void:
+	if blackboard_object.get_value("current_state") != "chasing":
+		return
+		
 	if body.get_name() == "GarrethAlt":
 		return
 		

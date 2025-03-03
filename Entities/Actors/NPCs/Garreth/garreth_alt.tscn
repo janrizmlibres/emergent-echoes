@@ -84,7 +84,7 @@ shape = SubResource("CircleShape2D_ajai6")
 [node name="Blackboard" type="Node" parent="."]
 script = ExtResource("12_77cs2")
 blackboard = {
-"actor_arrived": false,
+"agent_arrived": false,
 "current_state": "idle",
 "food_inventory": 10,
 "is_full": 100,
