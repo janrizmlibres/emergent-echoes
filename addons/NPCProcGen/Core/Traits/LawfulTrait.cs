@@ -74,7 +74,7 @@ namespace NPCProcGen.Core.Traits
 
             if (target != null)
             {
-                ActionParams actionParams = new()
+                ActionEvalParams actionParams = new()
                 {
                     TargetActor = target,
                     Crime = AssignedCase,
@@ -94,7 +94,7 @@ namespace NPCProcGen.Core.Traits
         {
             if (!AssignedCase.IsSolvable())
             {
-                ActionParams actionParams = new() { CaseClosed = true };
+                ActionEvalParams actionParams = new() { CaseClosed = true };
                 AddAction(ActionType.Assess, ResourceType.Duty, actionParams);
                 return;
             }

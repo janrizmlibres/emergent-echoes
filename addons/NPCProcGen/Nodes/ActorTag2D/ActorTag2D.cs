@@ -5,6 +5,7 @@ using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
+using NPCProcGen.Core.Traits;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -198,9 +199,15 @@ namespace NPCProcGen
             );
         }
 
-        private void OnCrimeCommitted(ActorTag2D criminal, Crime crime)
+        private void OnCrimeCommitted(ActorTag2D criminal, ActorTag2D victim, Crime crime)
         {
             if (criminal == this) return;
+
+            if (victim is NPCAgent2D npc && npc == this
+                && npc.Traits.Any(t => t is LawfulTrait))
+            {
+                return;
+            }
 
             ExecuteOnCrimeCommitted(criminal, crime);
 

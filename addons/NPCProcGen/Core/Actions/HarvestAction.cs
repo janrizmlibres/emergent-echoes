@@ -21,21 +21,24 @@ namespace NPCProcGen.Core.Actions
             _harvestTimer -= (float)delta;
         }
 
-        private void SetupNextHarvest()
+        private bool SetupNextHarvest()
         {
             CropMarker2D cropMarker = _actorContext.Sensor.GetMatureCropTile();
 
             if (_harvestTimer <= 0 || cropMarker == null)
             {
                 _actorContext.Executor.FinishAction();
-                return;
+                return false;
             }
 
             _stateContext.StartingState = new MoveState(
                 _actorContext,
                 _stateContext,
                 cropMarker.Position
-            );
+            )
+            {
+                OnComplete = () => _stateContext.Action.TransitionTo(_stateContext.ContactState)
+            };
             _stateContext.ContactState = new HarvestState(
                 _actorContext,
                 _stateContext,
@@ -44,6 +47,8 @@ namespace NPCProcGen.Core.Actions
             {
                 OnComplete = () => SetupNextHarvest()
             };
+
+            return true;
         }
     }
 }

@@ -3,6 +3,7 @@ using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Traits;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NPCProcGen.Core.Internal
@@ -20,11 +21,24 @@ namespace NPCProcGen.Core.Internal
         {
             NPCAgent2D npcActor = _context.Actor as NPCAgent2D;
 
-            return npcActor.Traits
+            List<(BaseAction, float)> evaluations = npcActor.Traits
                 .Select(trait => trait.EvaluateAction(practice))
                 .Where(eval => eval != null)
                 .Where(eval => GD.Randf() <= eval.Item2)
-                .MaxBy(eval => eval.Item2)?.Item1;
+                .Select(eval => (eval.Item1, (float)Math.Round(eval.Item2, 2)))
+                .ToList();
+
+            if (!evaluations.Any())
+                return null;
+
+            var maxWeight = evaluations.Max(eval => eval.Item2);
+            var maxWeightedItems = evaluations
+                .Where(eval => eval.Item2 == maxWeight)
+                .ToList();
+
+            return maxWeightedItems.Any()
+                ? maxWeightedItems[(int)(GD.Randi() % maxWeightedItems.Count)].Item1
+                : null;
         }
 
         public BaseAction EvaluateActionStub(Type traitType, Type actionType, ResourceType resType)

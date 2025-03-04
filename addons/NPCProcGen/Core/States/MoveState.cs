@@ -8,6 +8,8 @@ namespace NPCProcGen.Core.States
 {
     public class MoveState : BaseState, INavigationState
     {
+        public Action OnComplete { get; set; }
+
         private Vector2 _targetPosition;
 
         public MoveState(ActorContext actorContext, StateContext stateContext,
@@ -46,7 +48,15 @@ namespace NPCProcGen.Core.States
 
         public bool OnNavigationComplete()
         {
-            _actorContext.Executor.FinishAction();
+            if (OnComplete != null)
+            {
+                OnComplete.Invoke();
+            }
+            else
+            {
+                _actorContext.Executor.FinishAction();
+            }
+
             return true;
         }
     }

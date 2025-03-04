@@ -11,7 +11,7 @@ using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.Traits
 {
-    public class ActionParams
+    public class ActionEvalParams
     {
         public ActorTag2D TargetActor { get; set; }
         public ActorTag2D Criminal { get; set; }
@@ -56,7 +56,7 @@ namespace NPCProcGen.Core.Traits
             ActorTag2D chosenActor = ChooseActor();
             if (chosenActor == null) return;
 
-            ActionParams actionParams = new() { TargetActor = chosenActor };
+            ActionEvalParams actionParams = new() { TargetActor = chosenActor };
             AddAction(actionType, resType, actionParams);
 
             ActorTag2D ChooseActor()
@@ -86,7 +86,7 @@ namespace NPCProcGen.Core.Traits
         }
 
         protected void AddAction(ActionType actionType, ResourceType resType,
-            ActionParams @params = null)
+            ActionEvalParams @params = null)
         {
             float weightedScore = CalculateWeight();
             BaseAction action = CreateAction();

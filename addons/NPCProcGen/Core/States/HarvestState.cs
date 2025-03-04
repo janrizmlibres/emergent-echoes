@@ -8,9 +8,9 @@ namespace NPCProcGen.Core.States
 {
     public class HarvestState : BaseState
     {
-        private readonly CropMarker2D _cropMarker;
+        public Func<bool> OnComplete { get; set; }
 
-        public Action OnComplete { get; set; }
+        private readonly CropMarker2D _cropMarker;
 
         public HarvestState(ActorContext actorContext, StateContext stateContext,
             CropMarker2D cropMarker) : base(actorContext, stateContext, ActionState.Harvest)
@@ -39,8 +39,10 @@ namespace NPCProcGen.Core.States
         {
             _cropMarker.Status = CropStatus.Dormant;
 
-            OnComplete?.Invoke();
-            _stateContext.Action.TransitionTo(_stateContext.StartingState);
+            if (OnComplete?.Invoke() ?? false)
+            {
+                _stateContext.Action.TransitionTo(_stateContext.StartingState);
+            }
         }
     }
 }

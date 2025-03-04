@@ -226,6 +226,9 @@ namespace EmergentEchoes.Entities.Actors
                 case ActionState.Harvest:
                     OnHarvestEntered(data);
                     break;
+                case ActionState.Assess:
+                    _emoteController.Activate();
+                    break;
                 case ActionState.Engage:
                     _maxSpeed = MaxSpeed + 10;
                     _acceleration = Acceleration + 2;
@@ -284,6 +287,9 @@ namespace EmergentEchoes.Entities.Actors
                     break;
                 case ActionState.Capture:
                     OnCaptureExited(data);
+                    break;
+                case ActionState.Assess:
+                    _emoteController.Deactivate();
                     break;
                 case ActionState.Engage:
                     _maxSpeed = MaxSpeed;

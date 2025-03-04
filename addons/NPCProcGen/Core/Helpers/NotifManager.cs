@@ -13,7 +13,7 @@ namespace NPCProcGen.Core.Helpers
 
         public event Action<ActorTag2D, bool> PetitionAnswered;
 
-        public event Action<ActorTag2D, Crime> CrimeCommitted;
+        public event Action<ActorTag2D, ActorTag2D, Crime> CrimeCommitted;
 
         public event Action<ActorTag2D> InteractionStarted;
         public event Action<ActorTag2D> InteractionEnded;
@@ -26,9 +26,9 @@ namespace NPCProcGen.Core.Helpers
             PetitionAnswered?.Invoke(source, isAccepted);
         }
 
-        public void NotifyCrimeCommitted(ActorTag2D source, Crime crime)
+        public void NotifyCrimeCommitted(ActorTag2D source, ActorTag2D victim, Crime crime)
         {
-            CrimeCommitted?.Invoke(source, crime);
+            CrimeCommitted?.Invoke(source, victim, crime);
         }
 
         public void NotifyInteractionStarted(ActorTag2D source)

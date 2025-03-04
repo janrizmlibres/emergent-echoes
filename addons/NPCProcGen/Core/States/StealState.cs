@@ -58,7 +58,11 @@ namespace NPCProcGen.Core.States
         protected override void ExecuteExit()
         {
             Crime newCrime = new(CrimeCategory.Theft, _actorContext.Actor);
-            NotifManager.Instance.NotifyCrimeCommitted(_actorContext.Actor, newCrime);
+            NotifManager.Instance.NotifyCrimeCommitted(
+                _actorContext.Actor,
+                _targetActor,
+                newCrime
+            );
             Sensor.RecordCrime(newCrime);
         }
 
@@ -66,7 +70,7 @@ namespace NPCProcGen.Core.States
         {
             ResourceManager resMgr = ResourceManager.Instance;
             ResourceStat ownerResource = resMgr.GetResource(_targetResource, _actorContext.Actor);
-            ResourceStat targetResource = resMgr.GetResource(_targetResource, _actorContext.Actor);
+            ResourceStat targetResource = resMgr.GetResource(_targetResource, _targetActor);
             return CommonUtils.CalculateSkewedAmount(ownerResource, 0.5f, 2, targetResource.Amount);
         }
     }
