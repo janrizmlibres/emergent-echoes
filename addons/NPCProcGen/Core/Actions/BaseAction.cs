@@ -1,91 +1,76 @@
 using NPCProcGen.Core.States;
 using Godot;
-using System;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Internal;
+using Godot.Collections;
 
 namespace NPCProcGen.Core.Actions
 {
-    /// <summary>
-    /// Abstract base class for actions performed by an NPC agent.
-    /// </summary>
+    public interface ITargetedAction
+    {
+        public ActorTag2D GetTargetActor();
+    }
+
     public abstract class BaseAction
     {
-        /// <summary>
-        /// The NPC agent that owns this action.
-        /// </summary>
-        protected readonly NPCAgent2D _owner;
+        public ActionType ActionType { get; private set; }
+        public BaseState CurrentState { get; private set; }
 
-        /// <summary>
-        /// The current state of the action.
-        /// </summary>
-        protected BaseState _currentState;
+        protected readonly ActorContext _actorContext;
+        protected readonly StateContext _stateContext;
 
-        /// <summary>
-        /// Event triggered when the action is complete.
-        /// </summary>
-        public event Action ActionComplete;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BaseAction"/> class.
-        /// </summary>
-        /// <param name="owner">The NPC agent that owns this action.</param>
-        public BaseAction(NPCAgent2D owner)
+        public BaseAction(ActorContext context, ActionType actionType)
         {
-            _owner = owner;
+            _stateContext = new(this);
+            _actorContext = context;
+            ActionType = actionType;
         }
 
-        /// <summary>
-        /// Transitions to a new state.
-        /// </summary>
-        /// <param name="newState">The new state to transition to.</param>
-        protected void TransitionTo(BaseState newState)
+        public void TransitionTo(BaseState newState)
         {
-            _currentState?.Exit();
-            _currentState = newState;
-            _currentState?.Enter();
+            CurrentState?.Exit();
+            CurrentState = newState;
+            CurrentState?.Enter();
         }
 
-        /// <summary>
-        /// Completes the current action.
-        /// </summary>
-        /// <param name="actionType">The type of action that was completed.</param>
-        protected void CompleteAction()
+        public void Interrupt()
         {
+            _actorContext.Sensor.ClearTaskRecord();
+            CurrentState?.Unsubscribe();
+            CurrentState = null;
+            Terminate();
+        }
+
+        public void Update(double delta)
+        {
+            CurrentState?.Update(delta);
+            ExecuteUpdate(delta);
+        }
+
+        public void Run()
+        {
+            InitializeStates();
+            ExecuteRun();
+
+            _actorContext.EmitSignal(
+                NPCAgent2D.SignalName.ActionStarted,
+                Variant.From(ActionType)
+            );
+
+            TransitionTo(_stateContext.StartingState);
+        }
+
+        public void Finish()
+        {
+            _actorContext.EmitSignal(NPCAgent2D.SignalName.ActionEnded);
             TransitionTo(null);
-            ActionComplete?.Invoke();
-            _owner.EmitSignal(NPCAgent2D.SignalName.ExecutionEnded);
-
-            _owner.Sensor.ClearTaskRecord();
-            _owner.Sensor.ClearPetitionResourceType();
+            Terminate();
         }
 
-        /// <summary>
-        /// Gets the target position for the current action.
-        /// </summary>
-        /// <returns>The target position as a <see cref="Vector2"/>.</returns>
-        public Vector2 GetTargetPosition()
-        {
-            return (_currentState as INavigationState)?.GetTargetPosition() ?? _owner.Parent.GlobalPosition;
-        }
+        public virtual void Terminate() { }
+        protected virtual void ExecuteRun() { }
+        protected virtual void ExecuteUpdate(double delta) { }
 
-        /// <summary>
-        /// Determines whether the NPC is currently navigating.
-        /// </summary>
-        /// <returns><c>true</c> if the NPC is navigating; otherwise, <c>false</c>.</returns>
-        public bool IsNavigating()
-        {
-            return _currentState is INavigationState state && state.IsNavigating();
-        }
-
-        /// <summary>
-        /// Updates the action.
-        /// </summary>
-        /// <param name="delta">The time elapsed since the last update.</param>
-        public abstract void Update(double delta);
-
-        /// <summary>
-        /// Runs the action.
-        /// </summary>
-        public abstract void Run();
+        protected abstract void InitializeStates();
     }
 }

@@ -1,103 +1,120 @@
 using System;
 using Godot;
+using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.States
 {
+    public enum Waypoint
+    {
+        Lateral,
+        Omni
+    }
+
     public class EngageState : BaseState, INavigationState
     {
-        public const ActionState ActionStateValue = ActionState.Engage;
-
         private readonly ActorTag2D _target;
         private readonly Waypoint _waypoint;
+        private readonly bool _isInvasive;
 
-        /// <summary>
-        /// Event triggered when the state is completed.
-        /// </summary>
-        public event Action<bool> CompleteState;
+        private bool _isTargetReached = false;
+        private float _navigationTimer = 15;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MoveState"/> class with a target node.
-        /// </summary>
-        /// <param name="owner">The NPC agent owning this state.</param>
-        /// <param name="target">The target node to move to.</param>
-        /// <param name="lastKnownPosition">The last known position of the target.</param>
-        public EngageState(NPCAgent2D owner, ActionType action, ActorTag2D target,
-            Waypoint waypoint) : base(owner, action)
+        public EngageState(ActorContext actorContext, StateContext stateContext, ActorTag2D target,
+            Waypoint waypoint, bool isInvasive = false)
+            : base(actorContext, stateContext, ActionState.Engage)
         {
             _target = target;
             _waypoint = waypoint;
+            _isInvasive = isInvasive;
         }
 
-        /// <summary>
-        /// Called when the state is entered.
-        /// </summary>
-        public override void Enter()
+        public override void Subscribe()
         {
-            GD.Print($"{_owner.Parent.Name} EngageState Enter");
-
-            _owner.NotifManager.NavigationComplete += OnNavigationComplete;
-            _target.NotifManager.InteractionStarted += OnTargetInteractionStarted;
-
-            _owner.Sensor.SetTaskRecord(_actionType, ActionStateValue);
-
-            CommonUtils.EmitSignal(
-                _owner,
-                NPCAgent2D.SignalName.ActionStateEntered,
-                Variant.From(ActionStateValue)
-            );
+            if (!_isInvasive) NotifManager.Instance.InteractionStarted += OnInteractionStarted;
         }
 
-        /// <summary>
-        /// Called when the state is exited.
-        /// </summary>
-        public override void Exit()
+        protected override EnterParameters GetEnterData()
         {
-            _owner.NotifManager.NavigationComplete -= OnNavigationComplete;
-            _target.NotifManager.InteractionStarted -= OnTargetInteractionStarted;
-
-            CommonUtils.EmitSignal(
-                _owner,
-                NPCAgent2D.SignalName.ActionStateExited,
-                Variant.From(ActionStateValue)
-            );
+            return new EnterParameters
+            {
+                StateName = "EngageState",
+                Data = new Array<Variant>()
+            };
         }
 
-        /// <summary>
-        /// Determines whether the agent is currently navigating.
-        /// </summary>
-        /// <returns>True if the agent is navigating; otherwise, false.</returns>
+        protected override ExitParameters GetExitData()
+        {
+            return new ExitParameters
+            {
+                Data = new Array<Variant>()
+            };
+        }
+
+        public override void Update(double delta)
+        {
+            if (!_isTargetReached) return;
+
+            _navigationTimer -= (float)delta;
+
+            if (_navigationTimer <= 0)
+            {
+                _actorContext.Executor.FinishAction();
+            }
+        }
+
+        public override void Unsubscribe()
+        {
+            if (!_isInvasive) NotifManager.Instance.InteractionStarted -= OnInteractionStarted;
+        }
+
         public bool IsNavigating()
         {
             return true;
         }
 
-        /// <summary>
-        /// Gets the target position for navigation.
-        /// </summary>
-        /// <returns>The global position of the target.</returns>
         public Vector2 GetTargetPosition()
         {
             if (_waypoint == Waypoint.Lateral)
-                return _target.GetLateralWaypoint(_owner);
+                return _target.GetLateralWaypoint(_actorContext.Actor);
 
             if (_waypoint == Waypoint.Omni)
-                return _target.GetOmniDirectionalWaypoint(_owner);
+                return _target.GetOmniDirectionalWaypoint(_actorContext.Actor);
 
             throw new InvalidOperationException("Invalid waypoint type.");
         }
 
-        private void OnTargetInteractionStarted()
+        public bool OnNavigationComplete()
         {
-            bool isTargetBusy = true;
-            CompleteState?.Invoke(isTargetBusy);
+            _isTargetReached = true;
+
+            // Get current position and target waypoint
+            Vector2 currentPos = _actorContext.ActorNode2D.GlobalPosition;
+            Vector2 targetWaypoint = GetTargetPosition();
+
+            // Verify we're actually at the waypoint (within reasonable distance)
+            float distanceToWaypoint = currentPos.DistanceTo(targetWaypoint);
+            if (distanceToWaypoint < 5) // Adjust threshold as needed
+            {
+                _stateContext.Action.TransitionTo(_stateContext.ContactState);
+                return true;
+            }
+
+            return false;
         }
 
-        private void OnNavigationComplete()
+        private void OnInteractionStarted(ActorTag2D target)
         {
-            bool isTargetBusy = false;
-            CompleteState?.Invoke(isTargetBusy);
+            if (target != _target) return;
+            _stateContext.Action.TransitionTo(_stateContext.WaitState);
+        }
+
+        private void OnActorDetained(ActorTag2D actor)
+        {
+            if (actor != _target) return;
+            _actorContext.Executor.TerminateAction();
         }
     }
 }

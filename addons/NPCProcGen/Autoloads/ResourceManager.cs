@@ -1,86 +1,71 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Godot;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
-using NPCProcGen.Core.Helpers;
+using NPCProcGen.Core.Traits;
 
 namespace NPCProcGen.Autoloads
 {
-    /// <summary>
-    /// Manages resources for actors in the game.
-    /// </summary>
-    public partial class ResourceManager : Node
+    using ResourceDict = Dictionary<ActorTag2D, Dictionary<ResourceType, ResourceStat>>;
+
+    public sealed class ResourceManager
     {
         private static readonly Lazy<ResourceManager> _instance = new(() => new ResourceManager());
 
-        /// <summary>
-        /// Gets the singleton instance of the ResourceManager.
-        /// </summary>
         public static ResourceManager Instance => _instance.Value;
 
         private ResourceManager() { }
 
-        /// <summary>
-        /// Gets a list of tangible resource types.
-        /// </summary>
-        public List<ResourceType> TangibleTypes => _tangibleTypes.ToList();
-
-        /// <summary>
-        /// List of tangible resource types.
-        /// </summary>
         private readonly ResourceType[] _tangibleTypes = new[]
         {
             ResourceType.Money,
             ResourceType.Food
         };
+        public List<ResourceType> TangibleTypes => _tangibleTypes.ToList();
 
-        public static List<ResourceType> GetResourceTypes()
-        {
-            return Enum.GetValues(typeof(ResourceType)).Cast<ResourceType>().ToList();
-        }
+        private readonly ResourceDict _actorResources = new();
+        private ResourceStat _totalFood;
 
-        public static bool IsTangible(ResourceType type)
-        {
-            return type == ResourceType.Money || type == ResourceType.Food;
-        }
-
-        /// <summary>
-        /// Dictionary to store resources for each actor.
-        /// </summary>
-        private readonly Dictionary<ActorTag2D, Dictionary<ResourceType, ResourceStat>> _actorResources = new();
-
-        /// <summary>
-        /// Initializes the resource manager with a list of actors.
-        /// </summary>
-        /// <param name="actors">The list of actors to initialize.</param>
         public void Initialize(List<ActorTag2D> actors)
         {
+            _totalFood = new ResourceStat(ResourceType.TotalFood, 1, 1);
+
             foreach (ActorTag2D actor in actors)
             {
                 Dictionary<ResourceType, ResourceStat> resources = new();
+                _totalFood.Amount += actor.FoodAmount;
 
-                if (actor is NPCAgent2D npc)
+                if (actor.IsPlayer())
                 {
-                    resources[ResourceType.Money] = new ResourceStat(ResourceType.Money,
-                        npc.MoneyAmount, npc.Money);
-                    resources[ResourceType.Food] = new ResourceStat(ResourceType.Food,
-                        npc.FoodAmount, npc.Food);
-                    resources[ResourceType.Satiation] = new ResourceStat(ResourceType.Satiation,
-                        npc.SatiationAmount, npc.Satiation);
-                    resources[ResourceType.Companionship] = new ResourceStat(ResourceType.Companionship,
-                        npc.CompanionshipAmount, npc.Companionship);
+                    AddResource(ResourceType.Money, actor.MoneyAmount, 1);
+                    AddResource(ResourceType.Food, actor.FoodAmount, 1);
                 }
                 else
                 {
-                    resources[ResourceType.Money] = new ResourceStat(
-                        ResourceType.Money, actor.MoneyAmount, 1);
-                    resources[ResourceType.Food] = new ResourceStat(
-                        ResourceType.Food, actor.FoodAmount, 1);
+                    NPCAgent2D npc = actor as NPCAgent2D;
+
+                    AddResource(ResourceType.Money, npc.MoneyAmount, npc.Money);
+                    AddResource(ResourceType.Food, npc.FoodAmount, npc.Food);
+                    AddResource(ResourceType.Satiation, npc.SatiationAmount, npc.Satiation);
+                    AddResource(
+                        ResourceType.Companionship,
+                        npc.CompanionshipAmount,
+                        npc.Companionship
+                    );
+
+                    if (npc.Traits.Any(t => t is LawfulTrait))
+                    {
+                        AddResource(ResourceType.Duty, 100, 1);
+                    }
                 }
 
                 _actorResources[actor] = resources;
+
+                void AddResource(ResourceType type, float value, float weight)
+                {
+                    resources[type] = new ResourceStat(type, value, weight);
+                }
             }
         }
 
@@ -96,88 +81,58 @@ namespace NPCProcGen.Autoloads
             }
         }
 
-        /// <summary>
-        /// Gets the resource of a specific type for a given actor.
-        /// </summary>
-        /// <param name="actor">The actor to get the resource for.</param>
-        /// <param name="type">The type of resource to get.</param>
-        /// <returns>The resource stat of the specified type for the actor.</returns>
-        public ResourceStat GetResource(ActorTag2D actor, ResourceType type)
+        public ResourceStat GetResource(ResourceType type, ActorTag2D actor)
         {
-            DebugTool.Assert(_actorResources.ContainsKey(actor),
-                $"Actor {actor.Parent.Name} not found in resource manager.");
+            if (type == ResourceType.TotalFood) return _totalFood;
+            if (actor == null) throw new ArgumentNullException(nameof(actor));
             return _actorResources[actor].GetValueOrDefault(type);
         }
 
-        public float GetResourceAmount(ActorTag2D actor, ResourceType type)
+        public float GetResourceAmount(ResourceType type, ActorTag2D actor)
         {
-            DebugTool.Assert(_actorResources.ContainsKey(actor),
-                $"Actor {actor.Parent.Name} not found in resource manager.");
-            return _actorResources[actor].GetValueOrDefault(type)?.Amount ?? 0;
+            return GetResource(type, actor)?.Amount ?? 0;
         }
 
-        /// <summary>
-        /// Checks if a given actor has a specific resource.
-        /// </summary>
-        /// <param name="actor">The actor to check.</param>
-        /// <param name="type">The type of resource to check for.</param>
-        /// <returns>True if the actor has the resource, otherwise false.</returns>
-        public bool HasResource(ActorTag2D actor, ResourceType type)
+        public bool HasResource(ResourceType type, ActorTag2D actor)
         {
-            DebugTool.Assert(
-                _actorResources.ContainsKey(actor),
-                $"Actor {actor.Parent.Name} not found in resource manager."
-            );
-            return _actorResources[actor].GetValueOrDefault(type)?.Amount > 0;
+            return GetResourceAmount(type, actor) > 0;
         }
 
-        /// <summary>
-        /// Checks if a given actor is deficient in a specific resource.
-        /// </summary>
-        /// <param name="actor">The actor to check.</param>
-        /// <param name="type">The type of resource to check for deficiency.</param>
-        /// <returns>True if the actor is deficient in the resource, otherwise false.</returns>
-        public bool IsDeficient(ActorTag2D actor, ResourceType type)
+        public bool IsDeficient(ResourceType type, ActorTag2D actor)
         {
-            DebugTool.Assert(
-                _actorResources.ContainsKey(actor),
-                $"Actor {actor.Parent.Name} not found in resource manager."
-            );
-            return _actorResources[actor].GetValueOrDefault(type)?.IsDeficient() ?? false;
+            return GetResource(type, actor)?.IsDeficient() ?? false;
         }
 
-        /// <summary>
-        /// Transfers resources from one actor to another.
-        /// </summary>
-        /// <param name="from">The actor to transfer resources from.</param>
-        /// <param name="to">The actor to transfer resources to.</param>
-        /// <param name="type">The type of resource to transfer.</param>
-        /// <param name="amount">The amount of resource to transfer.</param>
-        public void TranserResources(ActorTag2D from, ActorTag2D to, ResourceType type, float amount)
+        public void ModifyResource(ResourceType type, float amount, ActorTag2D actor)
         {
-            ResourceStat fromResource = _actorResources[from].GetValueOrDefault(type);
-            ResourceStat toResource = _actorResources[to].GetValueOrDefault(type);
-
-            if (fromResource == null || toResource == null) return;
-
-            if (fromResource.Amount < amount)
+            if (type == ResourceType.TotalFood)
             {
-                amount = fromResource.Amount;
+                _totalFood.Amount += amount;
+                return;
             }
 
-            fromResource.Amount -= amount;
-            toResource.Amount += amount;
+            if (actor == null) throw new ArgumentNullException(nameof(actor));
 
-            GD.Print("Transferred " + amount + " " + type.ToString() + " from " + from.Parent.Name
-                + " to " + to.Parent.Name);
-        }
-
-        public void ModifyResource(ActorTag2D actor, ResourceType type, float amount)
-        {
             if (_actorResources[actor].TryGetValue(type, out ResourceStat resource))
             {
                 resource.Amount += amount;
             }
+        }
+
+        public void TranserResources(ActorTag2D from, ActorTag2D to, ResourceType type, float amount)
+        {
+            if (type == ResourceType.TotalFood)
+            {
+                throw new ArgumentException("Cannot transfer total food");
+            }
+
+            ResourceStat fromResource = GetResource(type, from);
+            ResourceStat toResource = GetResource(type, to);
+
+            if (fromResource == null || toResource == null) return;
+
+            fromResource.Amount -= amount;
+            toResource.Amount += amount;
         }
     }
 }

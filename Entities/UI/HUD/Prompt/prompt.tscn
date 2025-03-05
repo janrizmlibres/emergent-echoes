@@ -1,12 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://c3s3r5aucrjod"]
+[gd_scene load_steps=10 format=3 uid="uid://c3s3r5aucrjod"]
 
-[ext_resource type="Texture2D" uid="uid://n3fp5jjp8t6" path="res://Entities/UI/HUD/Prompt/Prompt BG.png" id="1_7ruhv"]
+[ext_resource type="Texture2D" uid="uid://chebn1ujnluva" path="res://Entities/UI/HUD/Prompt/Prompt BG (1).png" id="1_t75cs"]
 [ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/PressStart2P-Regular.ttf" id="2_jkvan"]
 [ext_resource type="Script" path="res://Entities/UI/HUD/Prompt/Scripts/NpcName.cs" id="3_ibojn"]
 [ext_resource type="FontFile" uid="uid://brdooo1e25vgt" path="res://Assets/Fonts/PixelifySans-VariableFont_wght.ttf" id="3_tt8x5"]
 [ext_resource type="Script" path="res://Entities/UI/HUD/Prompt/Scripts/NpcDescription.cs" id="5_ax7q8"]
 [ext_resource type="Script" path="res://Entities/UI/HUD/Prompt/Scripts/Traits.cs" id="6_dplg3"]
 [ext_resource type="PackedScene" uid="uid://c0ee67a3a37o5" path="res://Entities/UI/HUD/Status Bar/heart_bar/heart_bar.tscn" id="7_qdw11"]
+[ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="8_3b0bo"]
+[ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="9_tb52g"]
 
 [node name="DescriptionPrompt" type="CanvasLayer"]
 layer = 10
@@ -17,7 +19,7 @@ transform = Transform2D(0.67, 0, 0, 0.55, 0, 0)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 480.0
-offset_bottom = 384.0
+offset_bottom = 327.0
 
 [node name="BlackOverlay" type="ColorRect" parent="Prompt"]
 layout_mode = 1
@@ -30,19 +32,19 @@ color = Color(0, 0, 0, 0.392157)
 
 [node name="TextureRect" type="TextureRect" parent="Prompt"]
 layout_mode = 0
-offset_left = 56.0
+offset_left = 17.194
 offset_top = 31.1818
-offset_right = 993.0
+offset_right = 1132.19
 offset_bottom = 686.182
 scale = Vector2(0.4, 0.4)
 size_flags_vertical = 4
-texture = ExtResource("1_7ruhv")
+texture = ExtResource("1_t75cs")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Prompt"]
 layout_mode = 0
-offset_left = 92.0
+offset_left = 68.1194
 offset_top = 55.1818
-offset_right = 395.0
+offset_right = 418.119
 offset_bottom = 269.182
 theme_override_constants/separation = 14
 
@@ -56,7 +58,7 @@ horizontal_alignment = 1
 script = ExtResource("3_ibojn")
 
 [node name="NPCDescription" type="Label" parent="Prompt/VBoxContainer"]
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_tt8x5")
@@ -89,12 +91,11 @@ script = ExtResource("6_dplg3")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Prompt"]
 layout_mode = 0
-offset_left = 101.493
-offset_top = 192.727
-offset_right = 341.493
-offset_bottom = 232.727
+offset_left = 76.5075
+offset_top = 193.0
+offset_right = 400.507
+offset_bottom = 233.0
 theme_override_constants/separation = 70
-alignment = 1
 
 [node name="HeartBar1" parent="Prompt/HBoxContainer" instance=ExtResource("7_qdw11")]
 layout_mode = 2
@@ -107,3 +108,20 @@ layout_mode = 2
 
 [node name="HeartBar4" parent="Prompt/HBoxContainer" instance=ExtResource("7_qdw11")]
 layout_mode = 2
+
+[node name="HeartBar5" parent="Prompt/HBoxContainer" instance=ExtResource("7_qdw11")]
+layout_mode = 2
+
+[node name="Silas" type="Sprite2D" parent="."]
+position = Vector2(100, 232.727)
+texture = ExtResource("9_tb52g")
+hframes = 8
+vframes = 6
+frame = 4
+
+[node name="Garreth" type="Sprite2D" parent="."]
+position = Vector2(168.657, 232.727)
+texture = ExtResource("8_3b0bo")
+hframes = 8
+vframes = 6
+frame = 5

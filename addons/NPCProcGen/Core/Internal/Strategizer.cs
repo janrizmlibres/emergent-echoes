@@ -1,49 +1,37 @@
+using Godot;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Traits;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace NPCProcGen.Core.Internal
 {
-    /// <summary>
-    /// The Strategizer class is responsible for evaluating and selecting actions based on traits.
-    /// </summary>
     public class Strategizer
     {
-        /// <summary>
-        /// List of traits associated with the strategizer.
-        /// </summary>
-        private readonly List<Trait> _traits = new();
+        private readonly ActorContext _context;
 
-        /// <summary>
-        /// Adds a trait to the strategizer.
-        /// </summary>
-        /// <param name="trait">The trait to be added.</param>
-        public void AddTrait(Trait trait)
+        public Strategizer(ActorContext context)
         {
-            _traits.Add(trait);
+            _context = context;
         }
 
-        /// <summary>
-        /// Evaluates and selects the best action based on the given social practice.
-        /// </summary>
-        /// <param name="practice">The social practice to evaluate actions for.</param>
-        /// <returns>The best action based on the traits, or null if no action is suitable.</returns>
         public BaseAction EvaluateAction(SocialPractice practice)
         {
-            IEnumerable<Tuple<BaseAction, float>> actions = _traits
-                .Select(trait => trait.EvaluateAction(practice))
-                .Where(action => action != null)
-                .OrderByDescending(action => action.Item2);
+            NPCAgent2D npcActor = _context.Actor as NPCAgent2D;
 
-            return actions.Any() ? actions.First().Item1 : null;
+            return npcActor.Traits
+                .Select(trait => trait.EvaluateAction(practice))
+                .Where(eval => eval != null)
+                .Where(eval => GD.Randf() <= eval.Item2)
+                .MaxBy(eval => eval.Item2)?.Item1;
         }
 
         public BaseAction EvaluateActionStub(Type traitType, Type actionType, ResourceType resType)
         {
-            foreach (Trait trait in _traits)
+            NPCAgent2D agent = _context.GetNPCAgent2D();
+
+            foreach (Trait trait in agent.Traits)
             {
                 if (trait.GetType() == traitType)
                 {

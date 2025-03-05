@@ -1,10 +1,10 @@
 [gd_resource type="TileSet" load_steps=12 format=3 uid="uid://bkc116dgwvju8"]
 
-[ext_resource type="Texture2D" uid="uid://cfpqdbj0kpb4m" path="res://Stages/Island/Areas/Cave/Art/cave_ [bridgeAnimatedTiles].png" id="1_y8i7t"]
-[ext_resource type="Texture2D" uid="uid://dkyucpqfgka0w" path="res://Stages/Island/Areas/Cave/Art/cave_ [fencesAndWalls].png" id="2_syc6k"]
-[ext_resource type="Texture2D" uid="uid://b36jmxt64pb74" path="res://Stages/Island/Areas/Cave/Art/cave_ [resources].png" id="3_tn74t"]
-[ext_resource type="Texture2D" uid="uid://dhgru2q1ckgjg" path="res://Stages/Island/Areas/Cave/Art/cave_.png" id="4_7r7ut"]
-[ext_resource type="Texture2D" uid="uid://bkkkbf574diwo" path="res://Stages/Island/Areas/Cave/Art/railway_.png" id="5_d0j6o"]
+[ext_resource type="Texture2D" uid="uid://cfpqdbj0kpb4m" path="res://Stages/Island/Art/Cave/cave_ [bridgeAnimatedTiles].png" id="1_y8i7t"]
+[ext_resource type="Texture2D" uid="uid://dkyucpqfgka0w" path="res://Stages/Island/Art/Cave/cave_ [fencesAndWalls].png" id="2_syc6k"]
+[ext_resource type="Texture2D" uid="uid://b36jmxt64pb74" path="res://Stages/Island/Art/Cave/cave_ [resources].png" id="3_tn74t"]
+[ext_resource type="Texture2D" uid="uid://dhgru2q1ckgjg" path="res://Stages/Island/Art/Cave/cave_.png" id="4_7r7ut"]
+[ext_resource type="Texture2D" uid="uid://bkkkbf574diwo" path="res://Stages/Island/Art/Cave/railway_.png" id="5_d0j6o"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yra2v"]
 texture = ExtResource("1_y8i7t")

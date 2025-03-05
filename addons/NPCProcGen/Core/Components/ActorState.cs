@@ -6,6 +6,7 @@ namespace NPCProcGen.Core.Components
     public class ActorState
     {
         public Tuple<ActionType, ActionState> CurrentTask { get; set; }
-        public ResourceType? CurrentPetitionResourceType { get; set; }
+        public ResourceType CurrentPetitionResourceType { get; set; } = ResourceType.None;
+        public bool IsUnavailable { get; set; } = false;
     }
 }

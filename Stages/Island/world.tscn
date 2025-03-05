@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="1_pp8dq"]
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://forestcombined.tres" id="2_jcyte"]
 [ext_resource type="PackedScene" uid="uid://bnmuhsutwyeye" path="res://Entities/Actors/Player/player.tscn" id="2_ne4id"]
-[ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/Silas/silas.tscn" id="4_gun4a"]
+[ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/npc.tscn" id="4_gun4a"]
 [ext_resource type="PackedScene" uid="uid://blrsgvyqgogoa" path="res://Entities/Actors/NPCs/Garreth/garreth.tscn" id="5_5sidg"]
 
 [sub_resource type="CSharpScript" id="CSharpScript_mabam"]
@@ -90,8 +90,8 @@ position = Vector2(551, 333)
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Ysort/Player"]
 remote_path = NodePath("../../../Camera2D")
 
-[node name="Garreth" parent="Ysort" instance=ExtResource("5_5sidg")]
-position = Vector2(600, 363)
+[node name="Garreth" parent="." instance=ExtResource("5_5sidg")]
+position = Vector2(229, 260)
 
 [editable path="Camera2D"]
 [editable path="Ysort/Player"]

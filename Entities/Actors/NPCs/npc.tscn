@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3 uid="uid://diiesf6ffioa7"]
+
+[ext_resource type="PackedScene" uid="uid://dca6ru8aaidgk" path="res://Entities/Actors/actor.tscn" id="1_r1c1o"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/NPC.cs" id="1_scutl"]
+[ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_x7obk"]
+[ext_resource type="Texture2D" uid="uid://u36eed1tu2hk" path="res://Entities/Actors/NPCs/Tobin/Art/tobin.png" id="4_a6455"]
+
+[node name="NPC" instance=ExtResource("1_r1c1o")]
+script = ExtResource("1_scutl")
+
+[node name="NPCAgent2D" type="Node" parent="." index="0" node_paths=PackedStringArray("ActorDetector", "RearMarker")]
+script = ExtResource("3_x7obk")
+ActorDetector = NodePath("../ActorDetector")
+RearMarker = NodePath("../RearMarker/Marker2D")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." index="1"]
+path_desired_distance = 4.0
+target_desired_distance = 2.0
+simplify_path = true
+avoidance_enabled = true
+radius = 5.0
+debug_enabled = true
+
+[node name="Sprite2D" parent="." index="2"]
+texture = ExtResource("4_a6455")
+
+[node name="RearMarker" parent="." index="10"]
+visible = false
+
+[node name="AnimationTree" parent="." index="12"]
+parameters/Harvest/blend_position = 0
+
+[node name="StateTimer" type="Timer" parent="." index="15"]
+one_shot = true
+
+[node name="DebugLabel" parent="." index="16" node_paths=PackedStringArray("Actor")]
+Actor = NodePath("../NPCAgent2D")
+
+[editable path="CarryProp"]

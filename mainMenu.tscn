@@ -1,0 +1,167 @@
+[gd_scene load_steps=23 format=3 uid="uid://xpm7rofy6voc"]
+
+[ext_resource type="Script" path="res://MainMenu.cs" id="1_s4qlx"]
+[ext_resource type="Texture2D" uid="uid://byngch822lh17" path="res://Assets/world_pic.png" id="1_stypl"]
+[ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/PressStart2P-Regular.ttf" id="2_8o3tb"]
+[ext_resource type="Theme" uid="uid://debfb0bqgb1kc" path="res://Assets/menu.tres" id="3_eo53n"]
+[ext_resource type="Texture2D" uid="uid://cvquecdsaxooi" path="res://Assets/GameLogo.png" id="3_vuv57"]
+[ext_resource type="AudioStream" uid="uid://babisdiss53js" path="res://Assets/SoupTonic UI1 SFX Pack 1 - ogg/SFX_UI_Confirm.ogg" id="4_5q760"]
+[ext_resource type="Texture2D" uid="uid://dfgkdmq1nmyye" path="res://Assets/Button/Rect-Medium/Hover@3x.png" id="5_ycbdc"]
+[ext_resource type="Texture2D" uid="uid://b1uuo8ipbp26k" path="res://Assets/Button/Rect-Medium/Default@3x.png" id="6_pr7k5"]
+[ext_resource type="AudioStream" uid="uid://dof8yujiukale" path="res://Assets/emergent echoes main menu.mp3" id="9_7hlb0"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ee7j6"]
+texture = ExtResource("1_stypl")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_m4mgr"]
+texture = ExtResource("6_pr7k5")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c1q3v"]
+bg_color = Color(1, 1, 1, 0.678431)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_30rnd"]
+texture = ExtResource("5_ycbdc")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p0ilb"]
+bg_color = Color(0.683077, 0.683077, 0.683077, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+anti_aliasing = false
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wue7i"]
+texture = ExtResource("6_pr7k5")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mg82k"]
+texture = ExtResource("6_pr7k5")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vgjgq"]
+bg_color = Color(1, 1, 1, 0.678431)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dak63"]
+texture = ExtResource("5_ycbdc")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gdrtf"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wc8ln"]
+texture = ExtResource("6_pr7k5")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ghupi"]
+texture = ExtResource("3_vuv57")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bqg7u"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_s4qlx")
+metadata/_edit_lock_ = true
+
+[node name="Panel" type="Panel" parent="."]
+modulate = Color(0.464235, 0.464235, 0.464235, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ee7j6")
+metadata/_edit_lock_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -123.0
+offset_top = -51.0
+offset_right = 115.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 8
+metadata/_edit_lock_ = true
+
+[node name="StartButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/align_to_largest_stylebox = 1
+theme_override_fonts/font = ExtResource("2_8o3tb")
+theme_override_font_sizes/font_size = 12
+theme_override_styles/focus = SubResource("StyleBoxTexture_m4mgr")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_c1q3v")
+theme_override_styles/hover = SubResource("StyleBoxTexture_30rnd")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_p0ilb")
+theme_override_styles/normal = SubResource("StyleBoxTexture_wue7i")
+text = "Start Game"
+metadata/_edit_lock_ = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="HBoxContainer/StartButton"]
+stream = ExtResource("4_5q760")
+
+[node name="ExitButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/align_to_largest_stylebox = 1
+theme_override_fonts/font = ExtResource("2_8o3tb")
+theme_override_font_sizes/font_size = 12
+theme_override_styles/focus = SubResource("StyleBoxTexture_mg82k")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_vgjgq")
+theme_override_styles/hover = SubResource("StyleBoxTexture_dak63")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_gdrtf")
+theme_override_styles/normal = SubResource("StyleBoxTexture_wc8ln")
+action_mode = 0
+text = "Exit Game"
+metadata/_edit_lock_ = true
+
+[node name="Panel2" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -125.0
+offset_right = 125.0
+offset_bottom = 150.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ghupi")
+metadata/_edit_lock_ = true
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_7hlb0")
+parameters/looping = true
+
+[node name="MusicController" type="Button" parent="."]
+layout_mode = 0
+offset_left = 288.0
+offset_top = 13.0
+offset_right = 303.0
+offset_bottom = 28.0
+theme = ExtResource("3_eo53n")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_bqg7u")

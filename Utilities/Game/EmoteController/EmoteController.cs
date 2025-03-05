@@ -11,7 +11,7 @@ namespace EmergentEchoes.Utilities.Game
         private const float MaxBubbleInterval = 5;
 
         private readonly static PackedScene _emoteBubbleScene =
-            GD.Load<PackedScene>("res://Entities/UI/Indicators/Emote Bubble/emote_bubble.tscn");
+            GD.Load<PackedScene>("res://Entities/UI/Indicators/EmoteBubble/emote_bubble.tscn");
 
         private EmoteBubble _emoteBubble;
 

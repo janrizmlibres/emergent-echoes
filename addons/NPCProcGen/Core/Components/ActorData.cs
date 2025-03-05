@@ -34,6 +34,20 @@ namespace NPCProcGen.Core.Components
             };
         }
 
+        public static float GetInterrogationProbability(float relationshipLevel)
+        {
+            return relationshipLevel switch
+            {
+                <= -26 => 0.30f,
+                <= -16 => 0.50f,
+                <= -6 => 0.70f,
+                <= 4 => 0.90f,
+                <= 14 => 0.92f,
+                <= 24 => 0.95f,
+                _ => 1.00f,
+            };
+        }
+
         public bool IsFriendly() => _relationship >= 5;
         public bool IsTrusted() => _relationship >= 15;
         public bool IsClose() => _relationship >= 25;
@@ -64,7 +78,7 @@ namespace NPCProcGen.Core.Components
             }
         }
 
-        public ResourceType? LastPetitionResource
+        public ResourceType LastPetitionResource
         {
             get => _lastPetitionResource;
             set
@@ -75,21 +89,13 @@ namespace NPCProcGen.Core.Components
         }
 
         private Vector2? _lastKnownPosition = null;
-        private ResourceType? _lastPetitionResource = null;
+        private ResourceType _lastPetitionResource = ResourceType.None;
 
         private float _decayTimer = DecayDuration;
         private float _petitionTimer = PetitionInterval;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ActorData"/> class.
-        /// </summary>
-        /// <param name="actor">The actor associated with this data.</param>
         public NPCActorData(ActorTag2D actor) : base(actor) { }
 
-        /// <summary>
-        /// Updates the actor data.
-        /// </summary>
-        /// <param name="delta">The time elapsed since the last update.</param>
         public override void Update(double delta)
         {
             if (_lastKnownPosition == null) return;
@@ -98,18 +104,16 @@ namespace NPCProcGen.Core.Components
 
             if (_decayTimer <= 0)
             {
-                GD.Print($"{_actor.Parent.Name}'s last known position has decayed.");
-                _lastKnownPosition = null;
+                LastKnownPosition = null;
             }
 
-            if (_lastPetitionResource == null) return;
+            if (_lastPetitionResource == ResourceType.None) return;
 
             _petitionTimer -= (float)delta;
 
             if (_petitionTimer <= 0)
             {
-                GD.Print($"{_actor.Parent.Name}'s last petition was forgotten.");
-                _lastPetitionResource = null;
+                LastPetitionResource = ResourceType.None;
             }
         }
 
