@@ -10,7 +10,7 @@ namespace NPCProcGen.Core.Actions
 
         protected override void InitializeStates()
         {
-            _stateContext.StartingState = new EatState(_actorContext, _stateContext);
+            StateContext.StartingState = new EatState(ActorContext, StateContext);
         }
     }
 }

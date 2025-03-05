@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://diiesf6ffioa7"]
 
 [ext_resource type="PackedScene" uid="uid://dca6ru8aaidgk" path="res://Entities/Actors/actor.tscn" id="1_r1c1o"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/NPC.cs" id="1_scutl"]
-[ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_x7obk"]
+[ext_resource type="Script" uid="uid://gl3gs60775ud" path="res://Entities/Actors/NPCs/NPC.cs" id="1_scutl"]
+[ext_resource type="Script" uid="uid://u2djuuj5e76w" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_x7obk"]
 [ext_resource type="Texture2D" uid="uid://u36eed1tu2hk" path="res://Entities/Actors/NPCs/Tobin/Art/tobin.png" id="4_a6455"]
 
 [node name="NPC" instance=ExtResource("1_r1c1o")]
@@ -19,7 +19,6 @@ target_desired_distance = 2.0
 simplify_path = true
 avoidance_enabled = true
 radius = 5.0
-debug_enabled = true
 
 [node name="Sprite2D" parent="." index="2"]
 texture = ExtResource("4_a6455")

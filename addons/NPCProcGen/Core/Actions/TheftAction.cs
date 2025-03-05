@@ -18,20 +18,20 @@ namespace NPCProcGen.Core.Actions
 
         protected override void InitializeStates()
         {
-            _stateContext.StartingState = new SearchState(
-                _actorContext,
-                _stateContext,
+            StateContext.StartingState = new SearchState(
+                ActorContext,
+                StateContext,
                 _targetActor
             );
-            _stateContext.WanderState = new(_actorContext, _stateContext, _targetActor);
-            _stateContext.ApproachState = new SneakState(_actorContext, _stateContext, _targetActor);
-            _stateContext.ContactState = new StealState(
-                _actorContext,
-                _stateContext,
+            StateContext.WanderState = new(ActorContext, StateContext, _targetActor);
+            StateContext.ApproachState = new SneakState(ActorContext, StateContext, _targetActor);
+            StateContext.ContactState = new StealState(
+                ActorContext,
+                StateContext,
                 _targetActor,
                 _targetResource
             );
-            _stateContext.FleeState = new(_actorContext, _stateContext);
+            StateContext.FleeState = new(ActorContext, StateContext);
         }
 
         public ActorTag2D GetTargetActor() => _targetActor;

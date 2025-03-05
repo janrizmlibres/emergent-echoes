@@ -1,3 +1,4 @@
+// ReSharper disable once CheckNamespace
 namespace NPCProcGen.Core.Components.Enums
 {
     public enum ActionType

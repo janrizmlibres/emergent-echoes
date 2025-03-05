@@ -55,22 +55,22 @@ namespace NPCProcGen.Core.States
         {
             Array<Variant> data = new() { _target.GetParent<Node2D>() };
 
-            _actorContext.EmitSignal(
+            ActorContext.EmitSignal(
                 ActorTag2D.SignalName.InteractionStarted,
                 Variant.From((InteractionState)_actionState),
                 data
             );
 
-            data[0] = _actorContext.ActorNode2D;
-            _target.TriggerInteraction(_actorContext.Actor, (InteractionState)_actionState, data);
-            NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
+            data[0] = ActorContext.ActorNode2D;
+            _target.TriggerInteraction(ActorContext.Actor, (InteractionState)_actionState, data);
+            NotifManager.Instance.NotifyInteractionStarted(ActorContext.Actor);
         }
 
         protected override void ExecuteExit()
         {
-            _actorContext.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
+            ActorContext.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
             _target.StopInteraction();
-            NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);
+            NotifManager.Instance.NotifyInteractionEnded(ActorContext.Actor);
         }
 
         public override void Update(double delta)
@@ -80,7 +80,7 @@ namespace NPCProcGen.Core.States
             if (_duration <= 0)
             {
                 ImproveCompanionship();
-                _actorContext.Executor.FinishAction();
+                ActorContext.Executor.FinishAction();
             }
         }
 
@@ -97,7 +97,7 @@ namespace NPCProcGen.Core.States
             ResourceManager.Instance.ModifyResource(
                 ResourceType.Companionship,
                 _companionshipIncrease,
-                _actorContext.Actor
+                ActorContext.Actor
             );
             ResourceManager.Instance.ModifyResource(
                 ResourceType.Companionship,
@@ -105,8 +105,8 @@ namespace NPCProcGen.Core.States
                 _target
             );
 
-            _actorContext.Memorizer.UpdateRelationship(_target, 1);
-            _target.Memorizer.UpdateRelationship(_actorContext.Actor, 1);
+            ActorContext.Memorizer.UpdateRelationship(_target, 1);
+            _target.Memorizer.UpdateRelationship(ActorContext.Actor, 1);
         }
     }
 }

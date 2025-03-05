@@ -120,22 +120,22 @@ namespace NPCProcGen
 
         public bool IsActorInRange(ActorTag2D actor)
         {
-            return _nearbyActors.Contains(actor);
+            return NearbyActors.Contains(actor);
         }
 
         public bool IsAnyActorInRange()
         {
-            return _nearbyActors.Any();
+            return NearbyActors.Any();
         }
 
         public List<ActorTag2D> GetActorsInRange()
         {
-            return _nearbyActors.ToList();
+            return NearbyActors.ToList();
         }
 
         public ActorTag2D GetRandomActorInRange()
         {
-            return CommonUtils.Shuffle(_nearbyActors).FirstOrDefault();
+            return CommonUtils.Shuffle(NearbyActors).FirstOrDefault();
         }
 
         protected override void ExecuteTriggerInteraction(ActorTag2D target)

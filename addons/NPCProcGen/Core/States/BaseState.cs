@@ -3,6 +3,7 @@ using Godot.Collections;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Internal;
 
+// ReSharper disable once CheckNamespace
 namespace NPCProcGen.Core.States
 {
     public interface INavigationState
@@ -25,23 +26,15 @@ namespace NPCProcGen.Core.States
 
     public class ExitParameters
     {
-        public Array<Variant> Data { get; set; }
+        public Array<Variant> Data { get; init; }
     }
 
-    public abstract class BaseState
+    public abstract class BaseState(ActorContext actorContext, StateContext stateContext, ActionState state)
     {
-        protected readonly ActorContext _actorContext;
-        protected readonly StateContext _stateContext;
+        protected readonly ActorContext ActorContext = actorContext;
+        protected readonly StateContext StateContext = stateContext;
 
-        protected readonly ActionState _actionState;
-
-        public BaseState(ActorContext actorContext, StateContext stateContext, ActionState state)
-        {
-            _actorContext = actorContext;
-            _stateContext = stateContext;
-
-            _actionState = state;
-        }
+        protected readonly ActionState _actionState = state;
 
         public void Enter()
         {
@@ -53,11 +46,11 @@ namespace NPCProcGen.Core.States
 
             EnterParameters enterParameters = GetEnterData();
 
-            GD.Print($"{_actorContext.ActorNode2D.Name} {enterParameters.StateName} Enter");
+            GD.Print($"{ActorContext.ActorNode2D.Name} {enterParameters.StateName} Enter");
 
-            _actorContext.Sensor.SetTaskRecord(_stateContext.Action.ActionType, _actionState);
+            ActorContext.Sensor.SetTaskRecord(StateContext.Action.ActionType, _actionState);
 
-            _actorContext.EmitSignal(
+            ActorContext.EmitSignal(
                 NPCAgent2D.SignalName.StateEntered,
                 Variant.From(_actionState),
                 enterParameters.Data
@@ -71,16 +64,22 @@ namespace NPCProcGen.Core.States
 
             ExitParameters exitParameters = GetExitData();
 
-            _actorContext.Sensor.ClearTaskRecord();
+            ActorContext.Sensor.ClearTaskRecord();
 
-            _actorContext.EmitSignal(
+            ActorContext.EmitSignal(
                 NPCAgent2D.SignalName.StateExited,
                 Variant.From(_actionState),
                 exitParameters.Data
             );
         }
 
-        public virtual void Subscribe() { }
+        public bool IsInteractive()
+        {
+            return _actionState is ActionState.Petition or ActionState.Talk
+                or ActionState.Interact or ActionState.Interrogate;            
+        }
+
+        protected virtual void Subscribe() { }
         public virtual void Unsubscribe() { }
 
         public virtual void Update(double delta) { }

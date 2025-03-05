@@ -44,7 +44,7 @@ namespace NPCProcGen.Core.States
 
         public bool OnNavigationComplete()
         {
-            _stateContext.Action.TransitionTo(_stateContext.ContactState);
+            StateContext.Action.TransitionTo(StateContext.ContactState);
             return true;
         }
     }

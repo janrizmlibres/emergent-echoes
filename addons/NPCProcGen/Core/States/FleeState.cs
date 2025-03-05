@@ -19,7 +19,7 @@ namespace NPCProcGen.Core.States
         protected override void ExecuteEnter()
         {
             _fleePosition = CommonUtils.GetRandomPosInCircularArea(
-                _actorContext.ActorNode2D.GlobalPosition,
+                ActorContext.ActorNode2D.GlobalPosition,
                 MaxDistance,
                 MinDistance
             );
@@ -54,7 +54,7 @@ namespace NPCProcGen.Core.States
 
         public bool OnNavigationComplete()
         {
-            _actorContext.Executor.FinishAction();
+            ActorContext.Executor.FinishAction();
             return true;
         }
     }

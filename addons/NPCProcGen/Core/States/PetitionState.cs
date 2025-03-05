@@ -7,6 +7,7 @@ using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 
+// ReSharper disable once CheckNamespace
 namespace NPCProcGen.Core.States
 {
     public class PetitionState : BaseState
@@ -32,7 +33,7 @@ namespace NPCProcGen.Core.States
             _amount = CalculateAmount();
         }
 
-        public override void Subscribe()
+        protected override void Subscribe()
         {
             if (_target.IsPlayer()) NotifManager.Instance.PetitionAnswered += OnPetitionAnswered;
         }
@@ -47,7 +48,7 @@ namespace NPCProcGen.Core.States
             return new EnterParameters
             {
                 StateName = "PetitionState",
-                Data = new Array<Variant>()
+                Data = []
             };
         }
 
@@ -55,7 +56,7 @@ namespace NPCProcGen.Core.States
         {
             ExitParameters exitData = new()
             {
-                Data = new Array<Variant> { _isAccepted }
+                Data = [_isAccepted]
             };
 
             if (_isAccepted)
@@ -73,29 +74,29 @@ namespace NPCProcGen.Core.States
 
         protected override void ExecuteEnter()
         {
-            Array<Variant> data = new()
-            {
+            Array<Variant> data =
+            [
                 _target.GetParent<Node2D>(),
                 Variant.From(_resourceType),
                 _amount
-            };
+            ];
 
-            _actorContext.EmitSignal(
+            ActorContext.EmitSignal(
                 ActorTag2D.SignalName.InteractionStarted,
                 Variant.From((InteractionState)_actionState),
                 data
             );
 
-            data[0] = _actorContext.ActorNode2D;
-            _target.TriggerInteraction(_actorContext.Actor, (InteractionState)_actionState, data);
-            NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
+            data[0] = ActorContext.ActorNode2D;
+            _target.TriggerInteraction(ActorContext.Actor, (InteractionState)_actionState, data);
+            NotifManager.Instance.NotifyInteractionStarted(ActorContext.Actor);
         }
 
         protected override void ExecuteExit()
         {
-            _actorContext.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
+            ActorContext.EmitSignal(ActorTag2D.SignalName.InteractionEnded);
             _target.StopInteraction();
-            NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);
+            NotifManager.Instance.NotifyInteractionEnded(ActorContext.Actor);
         }
 
         public override void Update(double delta)
@@ -111,7 +112,7 @@ namespace NPCProcGen.Core.States
         private void DetermineOutcome()
         {
             ResourceStat targetResource = ResourceManager.Instance.GetResource(_resourceType, _target);
-            float relationshipLevel = _actorContext.Memorizer.GetActorRelationship(_target);
+            float relationshipLevel = ActorContext.Memorizer.GetActorRelationship(_target);
             float baseProbability = ActorData.GetBasePetitionProbability(relationshipLevel);
 
             float excess = targetResource.Amount - targetResource.LowerThreshold;
@@ -133,7 +134,7 @@ namespace NPCProcGen.Core.States
 
         private int CalculateAmount()
         {
-            ResourceStat ownerResource = ResourceManager.Instance.GetResource(_resourceType, _actorContext.Actor);
+            ResourceStat ownerResource = ResourceManager.Instance.GetResource(_resourceType, ActorContext.Actor);
             ResourceStat targetResource = ResourceManager.Instance.GetResource(_resourceType, _target);
             return CommonUtils.CalculateSkewedAmount(ownerResource, 0.8f, 2, targetResource.Amount);
         }
@@ -148,19 +149,19 @@ namespace NPCProcGen.Core.States
             {
                 ResourceManager.Instance.TranserResources(
                     _target,
-                    _actorContext.Actor,
+                    ActorContext.Actor,
                     _resourceType,
                     _amount
                 );
-                _target.Memorizer.UpdateLastPetitionResource(_actorContext.Actor, _resourceType);
+                _target.Memorizer.UpdateLastPetitionResource(ActorContext.Actor, _resourceType);
             }
 
-            _actorContext.Memorizer.UpdateRelationship(
+            ActorContext.Memorizer.UpdateRelationship(
                 _target,
                 isAccepted ? CompanionshipIncrease : CompanionshipDecrease
             );
 
-            _actorContext.Executor.FinishAction();
+            ActorContext.Executor.FinishAction();
         }
     }
 }

@@ -22,22 +22,22 @@ namespace NPCProcGen.Core.Actions
 
         private bool SetupNextPlanting()
         {
-            CropMarker2D cropMarker = _actorContext.Sensor.GetAvailableCropTile();
+            CropMarker2D cropMarker = ActorContext.Sensor.GetAvailableCropTile();
 
             if (_plantTimer <= 0 || cropMarker == null)
             {
-                _actorContext.Executor.FinishAction();
+                ActorContext.Executor.FinishAction();
                 return false;
             }
 
-            _stateContext.StartingState = new FindTileState(
-                _actorContext,
-                _stateContext,
+            StateContext.StartingState = new FindTileState(
+                ActorContext,
+                StateContext,
                 cropMarker
             );
-            _stateContext.ContactState = new PlantState(
-                _actorContext,
-                _stateContext,
+            StateContext.ContactState = new PlantState(
+                ActorContext,
+                StateContext,
                 cropMarker
             )
             {

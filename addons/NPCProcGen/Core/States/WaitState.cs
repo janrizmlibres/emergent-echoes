@@ -18,7 +18,7 @@ namespace NPCProcGen.Core.States
             _target = target;
         }
 
-        public override void Subscribe()
+        protected override void Subscribe()
         {
             NotifManager.Instance.InteractionEnded += OnTargetInteractionEnded;
         }
@@ -53,7 +53,7 @@ namespace NPCProcGen.Core.States
         public Vector2 GetTargetPosition()
         {
             Vector2 directionToInitiator = _target.GetParent<Node2D>().GlobalPosition.DirectionTo(
-                _actorContext.ActorNode2D.GlobalPosition
+                ActorContext.ActorNode2D.GlobalPosition
             );
             return _target.GetParent<Node2D>().GlobalPosition + directionToInitiator * WaitDistance;
         }
@@ -66,7 +66,7 @@ namespace NPCProcGen.Core.States
         private void OnTargetInteractionEnded(ActorTag2D target)
         {
             if (target != _target) return;
-            _stateContext.Action.TransitionTo(_stateContext.ApproachState);
+            StateContext.Action.TransitionTo(StateContext.ApproachState);
         }
     }
 }

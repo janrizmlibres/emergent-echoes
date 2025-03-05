@@ -67,10 +67,11 @@ namespace EmergentEchoes.Entities.Actors
 			ExecuteInteractionStarted();
 			FacePartner();
 			_emoteController.Activate();
+			return;
 
 			void FacePartner()
 			{
-				Node2D partner = data[0].As<Node2D>();
+				var partner = data[0].As<Node2D>();
 				Vector2 directionToFace = GlobalPosition.DirectionTo(partner.GlobalPosition);
 				_animationTree.Set("parameters/Idle/blend_position", directionToFace.X);
 			}

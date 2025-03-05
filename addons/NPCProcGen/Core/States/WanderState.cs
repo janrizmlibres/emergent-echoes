@@ -33,7 +33,7 @@ namespace NPCProcGen.Core.States
 
         protected override void ExecuteEnter()
         {
-            _origin = _actorContext.ActorNode2D.GlobalPosition;
+            _origin = ActorContext.ActorNode2D.GlobalPosition;
         }
 
         protected override EnterParameters GetEnterData()
@@ -60,7 +60,7 @@ namespace NPCProcGen.Core.States
             if (_durationTimer <= 0)
             {
                 _durationReached = true;
-                _actorContext.Executor.FinishAction();
+                ActorContext.Executor.FinishAction();
                 return;
             }
 
@@ -96,7 +96,7 @@ namespace NPCProcGen.Core.States
         {
             if (target == _target)
             {
-                _stateContext.ApproachTarget(_target);
+                StateContext.ApproachTarget(_target);
             }
         }
     }

@@ -1,11 +1,11 @@
 using Godot;
-using Godot.Collections;
 using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 
+// ReSharper disable once CheckNamespace
 namespace NPCProcGen.Core.States
 {
     public class StealState : BaseState
@@ -27,7 +27,7 @@ namespace NPCProcGen.Core.States
             return new EnterParameters
             {
                 StateName = "StealState",
-                Data = new Array<Variant>()
+                Data = []
             };
         }
 
@@ -35,11 +35,11 @@ namespace NPCProcGen.Core.States
         {
             return new ExitParameters
             {
-                Data = new Array<Variant>()
-                {
+                Data =
+                [
                     Variant.From(_targetResource),
                     _amountToSteal
-                }
+                ]
             };
         }
 
@@ -47,19 +47,19 @@ namespace NPCProcGen.Core.States
         {
             ResourceManager.Instance.TranserResources(
                 _targetActor,
-                _actorContext.Actor,
+                ActorContext.Actor,
                 _targetResource,
                 _amountToSteal
             );
 
-            _stateContext.Action.TransitionTo(_stateContext.FleeState);
+            StateContext.Action.TransitionTo(StateContext.FleeState);
         }
 
         protected override void ExecuteExit()
         {
-            Crime newCrime = new(CrimeCategory.Theft, _actorContext.Actor);
+            Crime newCrime = new(CrimeCategory.Theft, ActorContext.Actor);
             NotifManager.Instance.NotifyCrimeCommitted(
-                _actorContext.Actor,
+                ActorContext.Actor,
                 _targetActor,
                 newCrime
             );
@@ -69,7 +69,7 @@ namespace NPCProcGen.Core.States
         private float ComputeStealAmount()
         {
             ResourceManager resMgr = ResourceManager.Instance;
-            ResourceStat ownerResource = resMgr.GetResource(_targetResource, _actorContext.Actor);
+            ResourceStat ownerResource = resMgr.GetResource(_targetResource, ActorContext.Actor);
             ResourceStat targetResource = resMgr.GetResource(_targetResource, _targetActor);
             return CommonUtils.CalculateSkewedAmount(ownerResource, 0.5f, 2, targetResource.Amount);
         }

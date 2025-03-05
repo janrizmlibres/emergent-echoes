@@ -22,12 +22,12 @@ namespace NPCProcGen.Core.Actions
 
         protected override void InitializeStates()
         {
-            _stateContext.StartingState = new SearchState(_actorContext, _stateContext, _target);
-            _stateContext.WanderState = new(_actorContext, _stateContext, _target);
-            _stateContext.ApproachState = new EngageState(_actorContext, _stateContext, _target,
+            StateContext.StartingState = new SearchState(ActorContext, StateContext, _target);
+            StateContext.WanderState = new(ActorContext, StateContext, _target);
+            StateContext.ApproachState = new EngageState(ActorContext, StateContext, _target,
                 Waypoint.Lateral);
-            _stateContext.WaitState = new(_actorContext, _stateContext, _target);
-            _stateContext.ContactState = new InterrogateState(_actorContext, _stateContext, _target,
+            StateContext.WaitState = new(ActorContext, StateContext, _target);
+            StateContext.ContactState = new InterrogateState(ActorContext, StateContext, _target,
                 _crime);
         }
 

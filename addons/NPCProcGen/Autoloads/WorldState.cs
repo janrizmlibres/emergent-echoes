@@ -3,6 +3,7 @@ using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Helpers;
 using System.Collections.Generic;
 
+// ReSharper disable once CheckNamespace
 namespace NPCProcGen.Autoloads
 {
 	public partial class WorldState : Node
@@ -22,13 +23,13 @@ namespace NPCProcGen.Autoloads
 
 		public Dictionary<ActorTag2D, ActorState> ActorState { get; private set; } = new();
 
-		public List<string> GlobalEvents { get; private set; } = new();
+		public List<string> GlobalEvents { get; private set; } = [];
 
-		public List<Crime> Crimes { get; private set; } = new();
+		public List<Crime> Crimes { get; private set; } = [];
 
 		public List<Node2D> Structures { get; private set; } = new();
-		public List<PrisonMarker2D> Prisons { get; private set; } = new();
-		public List<CropMarker2D> CropTiles { get; private set; } = new();
+		public List<PrisonMarker2D> Prisons { get; private set; } = [];
+		public List<CropMarker2D> CropTiles { get; private set; } = [];
 
 		// ? Workplaces and who they belong to (Possibly _structures)
 		// ? Current date (?)

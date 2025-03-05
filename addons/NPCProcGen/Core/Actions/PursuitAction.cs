@@ -19,15 +19,15 @@ namespace NPCProcGen.Core.Actions
 
         protected override void InitializeStates()
         {
-            _stateContext.ApproachState = new EngageState(_actorContext, _stateContext, _target,
+            StateContext.ApproachState = new EngageState(ActorContext, StateContext, _target,
                 Waypoint.Omni, true);
-            _stateContext.ContactState = new CaptureState(
-                _actorContext,
-                _stateContext,
+            StateContext.ContactState = new CaptureState(
+                ActorContext,
+                StateContext,
                 _target,
                 _crime
             );
-            _stateContext.StartingState = _stateContext.ApproachState;
+            StateContext.StartingState = StateContext.ApproachState;
         }
 
         public ActorTag2D GetTargetActor() => _target;

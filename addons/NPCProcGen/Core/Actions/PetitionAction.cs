@@ -3,41 +3,33 @@ using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Internal;
 using NPCProcGen.Core.States;
 
+// ReSharper disable once CheckNamespace
 namespace NPCProcGen.Core.Actions
 {
-    public class PetitionAction : BaseAction, ITargetedAction
+    public class PetitionAction(ActorContext context, ActorTag2D target, ResourceType type)
+        : BaseAction(context, ActionType.Petition), ITargetedAction
     {
-        private readonly ActorTag2D _targetActor;
-        private readonly ResourceType _targetResource;
-
-        public PetitionAction(ActorContext context, ActorTag2D target, ResourceType type)
-            : base(context, ActionType.Petition)
-        {
-            _targetActor = target;
-            _targetResource = type;
-        }
-
         protected override void InitializeStates()
         {
-            _stateContext.StartingState = new SearchState(_actorContext, _stateContext, _targetActor);
-            _stateContext.WanderState = new(_actorContext, _stateContext, _targetActor);
-            _stateContext.ApproachState = new EngageState(_actorContext, _stateContext, _targetActor,
+            StateContext.StartingState = new SearchState(ActorContext, StateContext, target);
+            StateContext.WanderState = new WanderState(ActorContext, StateContext, target);
+            StateContext.ApproachState = new EngageState(ActorContext, StateContext, target,
                 Waypoint.Lateral);
-            _stateContext.WaitState = new(_actorContext, _stateContext, _targetActor);
-            _stateContext.ContactState = new PetitionState(_actorContext, _stateContext, _targetActor,
-                _targetResource);
+            StateContext.WaitState = new WaitState(ActorContext, StateContext, target);
+            StateContext.ContactState = new PetitionState(ActorContext, StateContext, target,
+                type);
         }
 
         protected override void ExecuteRun()
         {
-            _actorContext.Sensor.SetPetitionResourceType(_targetResource);
+            ActorContext.Sensor.SetPetitionResourceType(type);
         }
 
-        public override void Terminate()
+        protected override void Terminate()
         {
-            _actorContext.Sensor.ClearPetitionResourceType();
+            ActorContext.Sensor.ClearPetitionResourceType();
         }
 
-        public ActorTag2D GetTargetActor() => _targetActor;
+        public ActorTag2D GetTargetActor() => target;
     }
 }

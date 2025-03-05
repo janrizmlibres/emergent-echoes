@@ -31,7 +31,7 @@ namespace NPCProcGen.Core.States
             _isInvasive = isInvasive;
         }
 
-        public override void Subscribe()
+        protected override void Subscribe()
         {
             if (!_isInvasive) NotifManager.Instance.InteractionStarted += OnInteractionStarted;
         }
@@ -61,7 +61,7 @@ namespace NPCProcGen.Core.States
 
             if (_navigationTimer <= 0)
             {
-                _actorContext.Executor.FinishAction();
+                ActorContext.Executor.FinishAction();
             }
         }
 
@@ -78,10 +78,10 @@ namespace NPCProcGen.Core.States
         public Vector2 GetTargetPosition()
         {
             if (_waypoint == Waypoint.Lateral)
-                return _target.GetLateralWaypoint(_actorContext.Actor);
+                return _target.GetLateralWaypoint(ActorContext.Actor);
 
             if (_waypoint == Waypoint.Omni)
-                return _target.GetOmniDirectionalWaypoint(_actorContext.Actor);
+                return _target.GetOmniDirectionalWaypoint(ActorContext.Actor);
 
             throw new InvalidOperationException("Invalid waypoint type.");
         }
@@ -91,14 +91,14 @@ namespace NPCProcGen.Core.States
             _isTargetReached = true;
 
             // Get current position and target waypoint
-            Vector2 currentPos = _actorContext.ActorNode2D.GlobalPosition;
+            Vector2 currentPos = ActorContext.ActorNode2D.GlobalPosition;
             Vector2 targetWaypoint = GetTargetPosition();
 
             // Verify we're actually at the waypoint (within reasonable distance)
             float distanceToWaypoint = currentPos.DistanceTo(targetWaypoint);
             if (distanceToWaypoint < 5) // Adjust threshold as needed
             {
-                _stateContext.Action.TransitionTo(_stateContext.ContactState);
+                StateContext.Action.TransitionTo(StateContext.ContactState);
                 return true;
             }
 
@@ -108,13 +108,13 @@ namespace NPCProcGen.Core.States
         private void OnInteractionStarted(ActorTag2D target)
         {
             if (target != _target) return;
-            _stateContext.Action.TransitionTo(_stateContext.WaitState);
+            StateContext.Action.TransitionTo(StateContext.WaitState);
         }
 
         private void OnActorDetained(ActorTag2D actor)
         {
             if (actor != _target) return;
-            _actorContext.Executor.TerminateAction();
+            ActorContext.Executor.TerminateAction();
         }
     }
 }

@@ -9,6 +9,7 @@ using NPCProcGen.Core.Traits;
 using System.Collections.Generic;
 using System.Linq;
 
+// ReSharper disable once CheckNamespace
 namespace NPCProcGen
 {
     [Tool]
@@ -38,7 +39,7 @@ namespace NPCProcGen
 
         public Memorizer Memorizer { get; protected set; }
 
-        protected readonly List<ActorTag2D> _nearbyActors = new();
+        protected readonly List<ActorTag2D> NearbyActors = [];
 
         public ActorTag2D()
         {
@@ -202,6 +203,8 @@ namespace NPCProcGen
         private void OnCrimeCommitted(ActorTag2D criminal, ActorTag2D victim, Crime crime)
         {
             if (criminal == this) return;
+            
+            ExecuteOnCrimeCommitted(criminal, crime);
 
             if (victim is NPCAgent2D npc && npc == this
                 && npc.Traits.Any(t => t is LawfulTrait))
@@ -209,18 +212,14 @@ namespace NPCProcGen
                 return;
             }
 
-            ExecuteOnCrimeCommitted(criminal, crime);
-
-            if (_nearbyActors.Contains(criminal))
-            {
-                crime.Participants.Add(this);
-
-                CommonUtils.EmitSignal(
-                    this,
-                    SignalName.EventTriggered,
-                    Variant.From(EventType.CrimeWitnessed)
-                );
-            }
+            if (!NearbyActors.Contains(criminal)) return;
+            
+            crime.Participants.Add(this);
+            CommonUtils.EmitSignal(
+                this,
+                SignalName.EventTriggered,
+                Variant.From(EventType.CrimeWitnessed)
+            );
         }
 
         protected virtual void ExecuteOnCrimeCommitted(ActorTag2D criminal, Crime crime) { }
@@ -231,11 +230,9 @@ namespace NPCProcGen
 
             ActorTag2D actor = body.GetChildren().OfType<ActorTag2D>().FirstOrDefault();
 
-            if (actor != null)
-            {
-                _nearbyActors.Add(actor);
-                OnNPCActorEntered(actor);
-            }
+            if (actor == null) return;
+            NearbyActors.Add(actor);
+            OnNPCActorEntered(actor);
         }
 
         protected void OnBodyExited(Node2D body)
@@ -248,7 +245,7 @@ namespace NPCProcGen
             {
                 Vector2 rememberedPosition = actor.GetParent<Node2D>().GlobalPosition;
                 Memorizer.UpdateLastKnownPosition(actor, rememberedPosition);
-                _nearbyActors.Remove(actor);
+                NearbyActors.Remove(actor);
             }
         }
 

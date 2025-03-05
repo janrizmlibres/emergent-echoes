@@ -43,11 +43,11 @@ namespace NPCProcGen.Core.States
             ResourceManager.Instance.ModifyResource(
                 ResourceType.Satiation,
                 _amountToEat * CommonUtils.FoodSatiation,
-                _actorContext.Actor
+                ActorContext.Actor
             );
 
-            _actorContext.Actor.DeductFood(_amountToEat);
-            _actorContext.Executor.FinishAction();
+            ActorContext.Actor.DeductFood(_amountToEat);
+            ActorContext.Executor.FinishAction();
         }
 
         private int ComputeFoodAmount()
@@ -56,10 +56,10 @@ namespace NPCProcGen.Core.States
 
             ResourceStat resource = resMgr.GetResource(
                 ResourceType.Satiation,
-                _actorContext.Actor
+                ActorContext.Actor
             );
 
-            float foodAmount = resMgr.GetResourceAmount(ResourceType.Food, _actorContext.Actor);
+            float foodAmount = resMgr.GetResourceAmount(ResourceType.Food, ActorContext.Actor);
             float deficiency = resource.LowerThreshold - resource.Amount;
 
             DebugTool.Assert(foodAmount > 0, "Food amount must be greater than 0.");

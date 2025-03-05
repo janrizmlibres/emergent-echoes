@@ -6,6 +6,7 @@ using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.States;
 
+// ReSharper disable once CheckNamespace
 namespace NPCProcGen.Core.Internal
 {
     public class Executor
@@ -17,7 +18,9 @@ namespace NPCProcGen.Core.Internal
         public Executor(ActorContext context)
         {
             _actorContext = context;
+            
             NotifManager.Instance.ActorDetained += OnActorDetained;
+            NotifManager.Instance.InteractionInterrupted += OnInteractionInterrupted;
         }
 
         public void Update(double delta)
@@ -47,7 +50,7 @@ namespace NPCProcGen.Core.Internal
             }
 
             _actions.Push(action);
-            action.Run();
+            action!.Run();
         }
 
         public void TerminateAction()
@@ -88,14 +91,10 @@ namespace NPCProcGen.Core.Internal
 
         public Vector2 GetTargetPosition()
         {
-            if (_actions.TryPeek(out BaseAction action))
-            {
-                BaseState currentState = action.CurrentState;
-                return (currentState as INavigationState)?.GetTargetPosition()
-                    ?? _actorContext.ActorNode2D.GlobalPosition;
-            }
-
-            return _actorContext.ActorNode2D.GlobalPosition;
+            if (!_actions.TryPeek(out BaseAction action)) return _actorContext.ActorNode2D.GlobalPosition;
+            BaseState currentState = action.CurrentState;
+            return (currentState as INavigationState)?.GetTargetPosition() 
+                   ?? _actorContext.ActorNode2D.GlobalPosition;
         }
 
         public bool HasAction()
@@ -105,23 +104,16 @@ namespace NPCProcGen.Core.Internal
 
         public bool IsNavigationRequired()
         {
-            if (_actions.TryPeek(out BaseAction action))
-            {
-                BaseState currentState = action.CurrentState;
-                return currentState is INavigationState state && state.IsNavigating();
-            }
-
-            return false;
+            if (!_actions.TryPeek(out BaseAction action)) return false;
+            BaseState currentState = action.CurrentState;
+            return currentState is INavigationState state && state.IsNavigating();
         }
 
         public bool CompleteNavigation()
         {
-            if (_actions.TryPeek(out BaseAction action))
-            {
-                BaseState currentState = action.CurrentState;
-                return (currentState as INavigationState)?.OnNavigationComplete() ?? false;
-            }
-            return false;
+            if (!_actions.TryPeek(out BaseAction action)) return false;
+            BaseState currentState = action.CurrentState;
+            return (currentState as INavigationState)?.OnNavigationComplete() ?? false;
         }
 
         public void CompleteConsumption()
@@ -150,23 +142,29 @@ namespace NPCProcGen.Core.Internal
 
         public void OnActorDetected(ActorTag2D actor)
         {
-            if (_actions.TryPeek(out BaseAction action))
-            {
-                BaseState currentState = action.CurrentState;
-                (currentState as IActorDetectionState)?.OnActorDetected(actor);
-            }
+            if (!_actions.TryPeek(out BaseAction action)) return;
+            BaseState currentState = action.CurrentState;
+            (currentState as IActorDetectionState)?.OnActorDetected(actor);
         }
 
         private void OnActorDetained(ActorTag2D actor, ActorTag2D captor)
         {
-            if (actor == null) throw new ArgumentNullException(nameof(actor));
+            ArgumentNullException.ThrowIfNull(actor);
+        
             if (captor == _actorContext.Actor) return;
-
-            if (_actions.TryPeek(out BaseAction action))
-            {
-                if ((action as ITargetedAction)?.GetTargetActor() != actor) return;
-                TerminateAction();
-            }
+            if (!_actions.TryPeek(out BaseAction action)) return;
+            if ((action as ITargetedAction)?.GetTargetActor() != actor) return;
+        
+            TerminateAction();
+        }
+        
+        private void OnInteractionInterrupted(ActorTag2D actor)
+        {
+            if (actor == _actorContext.Actor) return;
+            if (!_actions.TryPeek(out BaseAction action)) return;
+            if (!action.IsInteractive() || !action.CurrentState.IsInteractive()) return; 
+            
+            TerminateAction();
         }
     }
 }

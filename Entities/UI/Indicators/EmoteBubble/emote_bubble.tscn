@@ -1,6 +1,6 @@
 [gd_scene load_steps=38 format=3 uid="uid://c45btaj8rrou0"]
 
-[ext_resource type="Script" path="res://Entities/UI/Indicators/EmoteBubble/EmoteBubble.cs" id="1_ig6ot"]
+[ext_resource type="Script" uid="uid://1nav0csro404" path="res://Entities/UI/Indicators/EmoteBubble/EmoteBubble.cs" id="1_ig6ot"]
 [ext_resource type="Texture2D" uid="uid://bkr5hlk7r2bec" path="res://Entities/UI/Indicators/EmoteBubble/Art/bubble_emotes.png" id="2_q0isf"]
 
 [sub_resource type="Animation" id="Animation_xf20v"]
@@ -20,7 +20,7 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_emkk2"]
 _data = {
-"RESET": SubResource("Animation_xf20v")
+&"RESET": SubResource("Animation_xf20v")
 }
 
 [sub_resource type="Animation" id="Animation_x3mx0"]
@@ -58,8 +58,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_hmljg"]
 _data = {
-"deflate": SubResource("Animation_x3mx0"),
-"inflate": SubResource("Animation_20hpw")
+&"deflate": SubResource("Animation_x3mx0"),
+&"inflate": SubResource("Animation_20hpw")
 }
 
 [sub_resource type="Animation" id="Animation_skrmu"]
@@ -97,8 +97,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4vwpw"]
 _data = {
-"deflate": SubResource("Animation_skrmu"),
-"inflate": SubResource("Animation_ow8sh")
+&"deflate": SubResource("Animation_skrmu"),
+&"inflate": SubResource("Animation_ow8sh")
 }
 
 [sub_resource type="Animation" id="Animation_7v3qm"]
@@ -137,8 +137,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_06oac"]
 _data = {
-"deflate": SubResource("Animation_7v3qm"),
-"inflate": SubResource("Animation_r4enl")
+&"deflate": SubResource("Animation_7v3qm"),
+&"inflate": SubResource("Animation_r4enl")
 }
 
 [sub_resource type="Animation" id="Animation_735t8"]
@@ -177,8 +177,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_38lik"]
 _data = {
-"deflate": SubResource("Animation_735t8"),
-"inflate": SubResource("Animation_r2itd")
+&"deflate": SubResource("Animation_735t8"),
+&"inflate": SubResource("Animation_r2itd")
 }
 
 [sub_resource type="Animation" id="Animation_yl46i"]
@@ -217,8 +217,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_iaybi"]
 _data = {
-"deflate": SubResource("Animation_yl46i"),
-"inflate": SubResource("Animation_xiw51")
+&"deflate": SubResource("Animation_yl46i"),
+&"inflate": SubResource("Animation_xiw51")
 }
 
 [sub_resource type="Animation" id="Animation_i7dtn"]
@@ -257,8 +257,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_mgtrl"]
 _data = {
-"deflate": SubResource("Animation_i7dtn"),
-"inflate": SubResource("Animation_vlc4m")
+&"deflate": SubResource("Animation_i7dtn"),
+&"inflate": SubResource("Animation_vlc4m")
 }
 
 [sub_resource type="Animation" id="Animation_ge84t"]
@@ -296,8 +296,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_lsfg4"]
 _data = {
-"deflate": SubResource("Animation_ge84t"),
-"inflate": SubResource("Animation_sg4k1")
+&"deflate": SubResource("Animation_ge84t"),
+&"inflate": SubResource("Animation_sg4k1")
 }
 
 [sub_resource type="Animation" id="Animation_oefiy"]
@@ -336,8 +336,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_wranp"]
 _data = {
-"deflate": SubResource("Animation_oefiy"),
-"inflate": SubResource("Animation_vof7w")
+&"deflate": SubResource("Animation_oefiy"),
+&"inflate": SubResource("Animation_vof7w")
 }
 
 [sub_resource type="Animation" id="Animation_31tx5"]
@@ -376,8 +376,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ckeyp"]
 _data = {
-"deflate": SubResource("Animation_31tx5"),
-"inflate": SubResource("Animation_klrfn")
+&"deflate": SubResource("Animation_31tx5"),
+&"inflate": SubResource("Animation_klrfn")
 }
 
 [sub_resource type="Animation" id="Animation_hhieo"]
@@ -416,8 +416,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_5t30i"]
 _data = {
-"deflate": SubResource("Animation_hhieo"),
-"inflate": SubResource("Animation_113jg")
+&"deflate": SubResource("Animation_hhieo"),
+&"inflate": SubResource("Animation_113jg")
 }
 
 [sub_resource type="Animation" id="Animation_ftsrc"]
@@ -456,8 +456,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_l2fu6"]
 _data = {
-"deflate": SubResource("Animation_ftsrc"),
-"inflate": SubResource("Animation_rbca0")
+&"deflate": SubResource("Animation_ftsrc"),
+&"inflate": SubResource("Animation_rbca0")
 }
 
 [node name="EmoteBubble" type="Node2D"]

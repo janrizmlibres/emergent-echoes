@@ -12,9 +12,9 @@ namespace NPCProcGen.Core.Actions
 
         protected override void InitializeStates()
         {
-            _stateContext.StartingState = new SeekState(
-                _actorContext,
-                _stateContext,
+            StateContext.StartingState = new SeekState(
+                ActorContext,
+                StateContext,
                 SetupInteractStates
             );
         }
@@ -23,16 +23,16 @@ namespace NPCProcGen.Core.Actions
         {
             _target = target;
 
-            _stateContext.ApproachState = new EngageState(
-                _actorContext,
-                _stateContext,
+            StateContext.ApproachState = new EngageState(
+                ActorContext,
+                StateContext,
                 _target,
                 Waypoint.Lateral
             );
-            _stateContext.WaitState = new(_actorContext, _stateContext, _target);
-            _stateContext.ContactState = new TalkState(_actorContext, _stateContext, _target);
+            StateContext.WaitState = new(ActorContext, StateContext, _target);
+            StateContext.ContactState = new TalkState(ActorContext, StateContext, _target);
 
-            _stateContext.ApproachTarget(_target);
+            StateContext.ApproachTarget(_target);
         }
 
         public ActorTag2D GetTargetActor() => _target;

@@ -54,7 +54,7 @@ namespace NPCProcGen.Core.States
             }
             else
             {
-                _actorContext.Executor.FinishAction();
+                ActorContext.Executor.FinishAction();
             }
 
             return true;

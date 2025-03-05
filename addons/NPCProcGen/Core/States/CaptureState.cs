@@ -44,7 +44,7 @@ namespace NPCProcGen.Core.States
         {
             PrisonMarker2D prisonMarker = Sensor.GetRandomPrison();
             _prisonLocation = prisonMarker.GlobalPosition;
-            _criminal.TriggerDetainment(_actorContext.Actor);
+            _criminal.TriggerDetainment(ActorContext.Actor);
         }
 
         protected override void ExecuteExit()
@@ -52,7 +52,7 @@ namespace NPCProcGen.Core.States
             ResourceManager.Instance.ModifyResource(
                 ResourceType.Companionship,
                 CommonUtils.DutyIncrease,
-                _actorContext.Actor
+                ActorContext.Actor
             );
 
             _crime.Status = CrimeStatus.Solved;
@@ -67,14 +67,14 @@ namespace NPCProcGen.Core.States
         public Vector2 GetTargetPosition()
         {
             return CommonUtils.GetOmnidirectionalWaypoint(
-                _actorContext.ActorNode2D.GlobalPosition,
+                ActorContext.ActorNode2D.GlobalPosition,
                 _prisonLocation
             );
         }
 
         public bool OnNavigationComplete()
         {
-            _actorContext.Executor.FinishAction();
+            ActorContext.Executor.FinishAction();
             return true;
         }
     }

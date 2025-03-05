@@ -13,7 +13,7 @@ namespace NPCProcGen.Core.Actions
         private readonly Crime _crime;
         private readonly bool _caseClosed;
 
-        public AssessAction(ActorContext context, Crime crime, bool caseClosed)
+        public AssessAction(ActorContext context, Crime crime, bool caseClosed = false)
             : base(context, ActionType.Assess)
         {
             _crime = crime;
@@ -22,9 +22,9 @@ namespace NPCProcGen.Core.Actions
 
         protected override void InitializeStates()
         {
-            _stateContext.StartingState = new AssessState(
-                _actorContext,
-                _stateContext,
+            StateContext.StartingState = new AssessState(
+                ActorContext,
+                StateContext,
                 _crime,
                 _caseClosed
             );

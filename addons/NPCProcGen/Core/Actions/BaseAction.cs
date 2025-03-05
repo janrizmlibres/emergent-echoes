@@ -2,8 +2,8 @@ using NPCProcGen.Core.States;
 using Godot;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Internal;
-using Godot.Collections;
 
+// ReSharper disable once CheckNamespace
 namespace NPCProcGen.Core.Actions
 {
     public interface ITargetedAction
@@ -16,13 +16,13 @@ namespace NPCProcGen.Core.Actions
         public ActionType ActionType { get; private set; }
         public BaseState CurrentState { get; private set; }
 
-        protected readonly ActorContext _actorContext;
-        protected readonly StateContext _stateContext;
+        protected readonly ActorContext ActorContext;
+        protected readonly StateContext StateContext;
 
-        public BaseAction(ActorContext context, ActionType actionType)
+        protected BaseAction(ActorContext context, ActionType actionType)
         {
-            _stateContext = new(this);
-            _actorContext = context;
+            StateContext = new StateContext(this);
+            ActorContext = context;
             ActionType = actionType;
         }
 
@@ -35,7 +35,7 @@ namespace NPCProcGen.Core.Actions
 
         public void Interrupt()
         {
-            _actorContext.Sensor.ClearTaskRecord();
+            ActorContext.Sensor.ClearTaskRecord();
             CurrentState?.Unsubscribe();
             CurrentState = null;
             Terminate();
@@ -52,22 +52,28 @@ namespace NPCProcGen.Core.Actions
             InitializeStates();
             ExecuteRun();
 
-            _actorContext.EmitSignal(
+            ActorContext.EmitSignal(
                 NPCAgent2D.SignalName.ActionStarted,
                 Variant.From(ActionType)
             );
 
-            TransitionTo(_stateContext.StartingState);
+            TransitionTo(StateContext.StartingState);
         }
 
         public void Finish()
         {
-            _actorContext.EmitSignal(NPCAgent2D.SignalName.ActionEnded);
+            ActorContext.EmitSignal(NPCAgent2D.SignalName.ActionEnded);
             TransitionTo(null);
             Terminate();
         }
 
-        public virtual void Terminate() { }
+        public bool IsInteractive()
+        {
+            return ActionType is ActionType.Petition or ActionType.Socialize
+                or ActionType.Interrogate or ActionType.Interact;
+        }
+
+        protected virtual void Terminate() { }
         protected virtual void ExecuteRun() { }
         protected virtual void ExecuteUpdate(double delta) { }
 

@@ -4,25 +4,21 @@ using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 
+// ReSharper disable once CheckNamespace
 namespace NPCProcGen.Core.States
 {
-    public class InteractState : BaseState
+    public class InteractState(
+        ActorContext actorContext,
+        StateContext stateContext,
+        ActorTag2D target)
+        : BaseState(actorContext, stateContext, ActionState.Interact)
     {
-        private readonly ActorTag2D _target;
-
-        public InteractState(ActorContext actorContext, StateContext stateContext,
-            ActorTag2D target)
-            : base(actorContext, stateContext, ActionState.Interact)
-        {
-            _target = target;
-        }
-
         protected override EnterParameters GetEnterData()
         {
             return new EnterParameters
             {
                 StateName = "InteractionState",
-                Data = new Array<Variant> { _target.GetParent<Node2D>() }
+                Data = [target.GetParent<Node2D>()]
             };
         }
 
@@ -30,18 +26,18 @@ namespace NPCProcGen.Core.States
         {
             return new ExitParameters
             {
-                Data = new Array<Variant>()
+                Data = []
             };
         }
 
         protected override void ExecuteEnter()
         {
-            NotifManager.Instance.NotifyInteractionStarted(_actorContext.Actor);
+            NotifManager.Instance.NotifyInteractionStarted(ActorContext.Actor);
         }
 
         protected override void ExecuteExit()
         {
-            NotifManager.Instance.NotifyInteractionEnded(_actorContext.Actor);
+            NotifManager.Instance.NotifyInteractionEnded(ActorContext.Actor);
         }
     }
 }

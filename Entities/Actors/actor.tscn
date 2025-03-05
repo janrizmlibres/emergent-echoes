@@ -1,14 +1,14 @@
 [gd_scene load_steps=15 format=3 uid="uid://dca6ru8aaidgk"]
 
 [ext_resource type="Texture2D" uid="uid://c4yk4o5mx8jr6" path="res://Entities/Actors/Player/Art/hero_elf.png" id="1_0mpyb"]
-[ext_resource type="Script" path="res://Entities/Actors/Actor.cs" id="1_8atlb"]
+[ext_resource type="Script" uid="uid://blfvynliil6fc" path="res://Entities/Actors/Actor.cs" id="1_8atlb"]
 [ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Objects/Crop/Art/crops.png" id="3_fhexf"]
 [ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Objects/Sword/Art/sword.png" id="4_8vutq"]
 [ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="5_3jllg"]
 [ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="6_c4mth"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="7_k0erk"]
 [ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="9_epc3o"]
-[ext_resource type="Script" path="res://Entities/Debugging/DebugLabel/DebugLabel.cs" id="10_afexo"]
+[ext_resource type="Script" uid="uid://cumi34sfiskei" path="res://Entities/Debugging/DebugLabel/DebugLabel.cs" id="10_afexo"]
 [ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="10_snfxc"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_y2fxp"]
@@ -121,7 +121,7 @@ metadata/_edit_lock_ = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": ExtResource("6_c4mth")
+&"": ExtResource("6_c4mth")
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]

@@ -1,24 +1,23 @@
 [gd_scene load_steps=23 format=3 uid="uid://etlq2q1jbury"]
 
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/silas_alt.gd" id="1_17b4c"]
+[ext_resource type="Script" uid="uid://w6yuqmlt1gmv" path="res://Entities/Actors/NPCs/Silas/beehave/silas_alt.gd" id="1_17b4c"]
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_hdw1b"]
 [ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="3_tr4bx"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="4_5m5fc"]
 [ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Interactions/npc_alt_detector.tscn" id="4_acgvc"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_vmoef"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="5_a23i0"]
+[ext_resource type="Script" uid="uid://blrdewkdnaqko" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_vmoef"]
+[ext_resource type="Script" uid="uid://da7dilp6bsad1" path="res://addons/beehave/nodes/composites/selector.gd" id="5_a23i0"]
 [ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="5_l6iaq"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_1ro2l"]
+[ext_resource type="Script" uid="uid://jkjjfjmarxvp" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_1ro2l"]
 [ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="6_vcruu"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/has_the_agent_arrived.gd" id="8_4ytb8"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/personality.gd" id="9_3lm7t"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/patrol_action.gd" id="9_58j85"]
-[ext_resource type="PackedScene" uid="uid://bccwhdlbu5ny0" path="res://Entities/Hooks/FoodAnchor/food_anchor.tscn" id="10_3iu71"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/chase_actor.gd" id="12_q20m7"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/steal_money_from_actor.gd" id="13_q0u1v"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/wait_for_5_sec.gd" id="13_sovwx"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Silas/beehave/go_to_house.gd" id="15_yth3l"]
-[ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="16_8orm2"]
+[ext_resource type="Script" uid="uid://cdqmnte3ak3lq" path="res://Entities/Actors/NPCs/Silas/beehave/has_the_agent_arrived.gd" id="8_4ytb8"]
+[ext_resource type="Script" uid="uid://8cytira1ccd5" path="res://Entities/Actors/NPCs/Silas/beehave/personality.gd" id="9_3lm7t"]
+[ext_resource type="Script" uid="uid://cb5dl1hfewv46" path="res://Entities/Actors/NPCs/Silas/beehave/patrol_action.gd" id="9_58j85"]
+[ext_resource type="Script" uid="uid://85xxfaoddiyf" path="res://Entities/Actors/NPCs/Silas/beehave/chase_actor.gd" id="12_q20m7"]
+[ext_resource type="Script" uid="uid://dwk5f80ndoub2" path="res://Entities/Actors/NPCs/Silas/beehave/steal_money_from_actor.gd" id="13_q0u1v"]
+[ext_resource type="Script" uid="uid://vusfa58yl2mo" path="res://Entities/Actors/NPCs/Silas/beehave/wait_for_5_sec.gd" id="13_sovwx"]
+[ext_resource type="Script" uid="uid://tm0vq0d4cvkb" path="res://Entities/Actors/NPCs/Silas/beehave/go_to_house.gd" id="15_yth3l"]
+[ext_resource type="Script" uid="uid://dontyot4q6jrr" path="res://addons/beehave/blackboard.gd" id="16_8orm2"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30oj8"]
 radius = 3.0
@@ -29,6 +28,9 @@ size = Vector2(24, 30)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5724d"]
 radius = 44.0454
+
+[sub_resource type="Resource" id="Resource_aie5d"]
+metadata/__load_path__ = "res://Entities/Hooks/FoodAnchor/food_anchor.tscn"
 
 [node name="SilasAlt" type="CharacterBody2D"]
 texture_filter = 1
@@ -99,7 +101,7 @@ one_shot = true
 [node name="Personality" type="Node" parent="."]
 script = ExtResource("9_3lm7t")
 
-[node name="FoodAnchor" parent="." instance=ExtResource("10_3iu71")]
+[node name="FoodAnchor" parent="."]
 visible = false
 
 [node name="SilasBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]

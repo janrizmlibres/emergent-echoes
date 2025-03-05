@@ -41,7 +41,7 @@ namespace NPCProcGen.Core.States
 
             if (OnComplete?.Invoke() ?? false)
             {
-                _stateContext.Action.TransitionTo(_stateContext.StartingState);
+                StateContext.Action.TransitionTo(StateContext.StartingState);
             }
         }
     }

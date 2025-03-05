@@ -16,7 +16,7 @@ namespace NPCProcGen.Core.Actions
 
         protected override void InitializeStates()
         {
-            _stateContext.StartingState = new InteractState(_actorContext, _stateContext, _target);
+            StateContext.StartingState = new InteractState(ActorContext, StateContext, _target);
         }
 
         public ActorTag2D GetTargetActor() => _target;

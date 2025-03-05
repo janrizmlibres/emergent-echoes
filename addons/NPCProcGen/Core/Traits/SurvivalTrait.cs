@@ -12,7 +12,7 @@ namespace NPCProcGen.Core.Traits
 
         protected override void EvaluateProactiveAction()
         {
-            ResourceManager resMgr = ResourceManager.Instance;
+            var resMgr = ResourceManager.Instance;
 
             foreach (ResourceType type in resMgr.TangibleTypes)
             {

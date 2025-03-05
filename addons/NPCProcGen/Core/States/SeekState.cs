@@ -27,7 +27,7 @@ namespace NPCProcGen.Core.States
 
         protected override bool Validate()
         {
-            NPCAgent2D agent = _actorContext.GetNPCAgent2D();
+            NPCAgent2D agent = ActorContext.GetNPCAgent2D();
 
             if (agent.IsAnyActorInRange())
             {
@@ -42,7 +42,7 @@ namespace NPCProcGen.Core.States
         protected override void ExecuteEnter()
         {
             _seekPosition = CommonUtils.GetRandomPosInCircularArea(
-                _actorContext.ActorNode2D.GlobalPosition,
+                ActorContext.ActorNode2D.GlobalPosition,
                 SeekRadius
             );
         }
@@ -73,7 +73,7 @@ namespace NPCProcGen.Core.States
             if (_idleTimer <= 0)
             {
                 _seekPosition = CommonUtils.GetRandomPosInCircularArea(
-                    _actorContext.ActorNode2D.GlobalPosition,
+                    ActorContext.ActorNode2D.GlobalPosition,
                     SeekRadius
                 );
                 _idleTimer = IdleDuration;

@@ -16,6 +16,7 @@ namespace NPCProcGen.Core.Helpers
         public event Action<ActorTag2D, ActorTag2D, Crime> CrimeCommitted;
 
         public event Action<ActorTag2D> InteractionStarted;
+        public event Action<ActorTag2D> InteractionInterrupted;
         public event Action<ActorTag2D> InteractionEnded;
 
         public event Action<ActorTag2D, ActorTag2D> ActorDetained;
@@ -29,6 +30,11 @@ namespace NPCProcGen.Core.Helpers
         public void NotifyCrimeCommitted(ActorTag2D source, ActorTag2D victim, Crime crime)
         {
             CrimeCommitted?.Invoke(source, victim, crime);
+        }
+        
+        public void NotifyInterruptedInteraction(ActorTag2D source)
+        {
+            InteractionInterrupted?.Invoke(source);
         }
 
         public void NotifyInteractionStarted(ActorTag2D source)

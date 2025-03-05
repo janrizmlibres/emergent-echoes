@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bk10dt7i8uqo6"]
 
-[ext_resource type="Script" path="res://Entities/Props/CarryProp/CarryProp.cs" id="1_12t75"]
+[ext_resource type="Script" uid="uid://gmnpp1s5rktd" path="res://Entities/Props/CarryProp/CarryProp.cs" id="1_12t75"]
 [ext_resource type="Texture2D" uid="uid://4mb1lonkqpsb" path="res://Entities/Actors/Data/tobin_texture.tres" id="2_3vnma"]
 
 [node name="CarryProp" type="Node2D"]

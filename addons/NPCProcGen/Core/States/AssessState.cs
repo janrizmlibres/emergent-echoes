@@ -56,7 +56,7 @@ namespace NPCProcGen.Core.States
             ResourceManager.Instance.ModifyResource(
                 ResourceType.Duty,
                 CommonUtils.DutyIncrease,
-                _actorContext.Actor
+                ActorContext.Actor
             );
         }
 
@@ -66,7 +66,7 @@ namespace NPCProcGen.Core.States
 
             if (_duration <= 0)
             {
-                _actorContext.Executor.FinishAction();
+                ActorContext.Executor.FinishAction();
             }
         }
     }

@@ -13,9 +13,9 @@ namespace EmergentEchoes.Stages.Island
 {
 	public partial class World : Node2D
 	{
-		private readonly List<Crop> _crops = new();
+		private readonly List<Crop> _crops = [];
 
-		private PackedScene cropScene = ResourceLoader.Load<PackedScene>(
+		private PackedScene _cropScene = ResourceLoader.Load<PackedScene>(
 			"res://Entities/Objects/Crop/crop.tscn"
 		);
 
@@ -23,7 +23,7 @@ namespace EmergentEchoes.Stages.Island
 		{
 			AutoloadInitializer.Init(this);
 
-			WorldLayer worldLayer = GetNode<WorldLayer>("WorldLayer");
+			var worldLayer = GetNode<WorldLayer>("WorldLayer");
 			Array<Vector2I> validTiles = GetValidTilePositions(worldLayer);
 
 			List<Actor> actors = GetTree().GetNodesInGroup("Actors").OfType<Actor>().ToList();
@@ -63,14 +63,15 @@ namespace EmergentEchoes.Stages.Island
 
 		private void OnCropPlanted(CropMarker2D cropMarker)
 		{
-			Crop crop = cropScene.Instantiate<Crop>();
+			var crop = _cropScene.Instantiate<Crop>();
 			cropMarker.AddChild(crop);
 			_crops.Add(crop);
 		}
 
 		private void OnCropHarvested(CropMarker2D cropMarker)
 		{
-			Crop crop = cropMarker.GetChild<Crop>(0);
+			var crop = cropMarker.GetChild<Crop>(0);
+			_crops.Remove(crop);
 			crop.QueueFree();
 		}
 	}

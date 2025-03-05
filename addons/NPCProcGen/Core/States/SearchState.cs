@@ -18,17 +18,17 @@ namespace NPCProcGen.Core.States
 
         protected override bool Validate()
         {
-            if (_actorContext.GetNPCAgent2D().IsActorInRange(_target))
+            if (ActorContext.GetNPCAgent2D().IsActorInRange(_target))
             {
-                _stateContext.ApproachTarget(_target);
+                StateContext.ApproachTarget(_target);
                 return false;
             }
 
-            Vector2? lastPosition = _actorContext.Memorizer.GetLastKnownPosition(_target);
+            Vector2? lastPosition = ActorContext.Memorizer.GetLastKnownPosition(_target);
 
             if (lastPosition == null)
             {
-                _actorContext.Executor.FinishAction();
+                ActorContext.Executor.FinishAction();
                 return false;
             }
 
@@ -65,7 +65,7 @@ namespace NPCProcGen.Core.States
 
         public bool OnNavigationComplete()
         {
-            _stateContext.Action.TransitionTo(_stateContext.WanderState);
+            StateContext.Action.TransitionTo(StateContext.WanderState);
             return true;
         }
 
@@ -73,7 +73,7 @@ namespace NPCProcGen.Core.States
         {
             if (target == _target)
             {
-                _stateContext.ApproachTarget(_target);
+                StateContext.ApproachTarget(_target);
             }
         }
     }

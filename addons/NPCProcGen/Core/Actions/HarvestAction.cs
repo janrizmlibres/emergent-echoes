@@ -23,25 +23,25 @@ namespace NPCProcGen.Core.Actions
 
         private bool SetupNextHarvest()
         {
-            CropMarker2D cropMarker = _actorContext.Sensor.GetMatureCropTile();
+            CropMarker2D cropMarker = ActorContext.Sensor.GetMatureCropTile();
 
             if (_harvestTimer <= 0 || cropMarker == null)
             {
-                _actorContext.Executor.FinishAction();
+                ActorContext.Executor.FinishAction();
                 return false;
             }
 
-            _stateContext.StartingState = new MoveState(
-                _actorContext,
-                _stateContext,
-                cropMarker.Position
+            StateContext.StartingState = new MoveState(
+                ActorContext,
+                StateContext,
+                cropMarker.GlobalPosition
             )
             {
-                OnComplete = () => _stateContext.Action.TransitionTo(_stateContext.ContactState)
+                OnComplete = () => StateContext.Action.TransitionTo(StateContext.ContactState)
             };
-            _stateContext.ContactState = new HarvestState(
-                _actorContext,
-                _stateContext,
+            StateContext.ContactState = new HarvestState(
+                ActorContext,
+                StateContext,
                 cropMarker
             )
             {

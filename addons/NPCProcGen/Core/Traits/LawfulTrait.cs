@@ -1,6 +1,7 @@
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.Traits
@@ -49,7 +50,8 @@ namespace NPCProcGen.Core.Traits
 
             if (!AssignedCase.AssessmentDone)
             {
-                AddAction(ActionType.Assess, ResourceType.Duty);
+                ActionEvalParams actionParams = new() { Crime = AssignedCase };
+                AddAction(ActionType.Assess, ResourceType.Duty, actionParams);
                 return;
             }
 
@@ -66,6 +68,7 @@ namespace NPCProcGen.Core.Traits
         {
             PursuitAction action = new(_actorCtx, criminal, crime);
             _actorCtx.Executor.AddAction(action);
+            NotifManager.Instance.NotifyInterruptedInteraction(_actorCtx.Actor);
         }
 
         private void ResumeInvestigation()
@@ -94,7 +97,11 @@ namespace NPCProcGen.Core.Traits
         {
             if (!AssignedCase.IsSolvable())
             {
-                ActionEvalParams actionParams = new() { CaseClosed = true };
+                ActionEvalParams actionParams = new()
+                {
+                    Crime = AssignedCase,
+                    CaseClosed = true
+                };
                 AddAction(ActionType.Assess, ResourceType.Duty, actionParams);
                 return;
             }
