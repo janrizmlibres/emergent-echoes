@@ -75,8 +75,6 @@ public partial class InteractingComponent : Node2D
 		_canInteract = false;
 		_interactLabel.Hide();
 		
-		
-
 		_canInteract = true;
 	}
 }
