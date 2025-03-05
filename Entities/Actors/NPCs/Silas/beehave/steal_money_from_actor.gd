@@ -11,8 +11,10 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	return SUCCESS
 
 func after_run(actor: Node, blackboard: Blackboard) -> void:
-	float_text_controller.ShowFloatText(0, "100", false)
+	float_text_controller.ShowFloatText(0, "10", false)
+	blackboard.set_value("money", blackboard.get_value("money") + 10)
+	
 	emote_controller.ShowEmoteBubble(5)
 	
 	blackboard.get_value("actor").get_node_or_null("Blackboard").set_value("money", blackboard.get_value("actor").get_node_or_null("Blackboard").get_value("money") - 10)
-	blackboard.set_value("money", blackboard.get_value("money") + 10)
+	
