@@ -1,11 +1,14 @@
-[gd_scene load_steps=28 format=3 uid="uid://c46vvjqepxr5c"]
+[gd_scene load_steps=31 format=3 uid="uid://c46vvjqepxr5c"]
 
 [ext_resource type="Script" uid="uid://karntkdpbtuc" path="res://Entities/Actors/NPCs/Garreth/beehave/garreth_alt.gd" id="1_0w5gq"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_ykyr2"]
 [ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="3_hjw3h"]
+[ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Objects/Crop/Art/crops.png" id="3_v3cxx"]
 [ext_resource type="Script" uid="uid://bmqjw1xe63sui" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_s0dao"]
 [ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Interactions/npc_alt_detector.tscn" id="4_t4ib7"]
+[ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="4_vvu4n"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="4_vx0j5"]
+[ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Objects/Sword/Art/sword.png" id="5_dt2xc"]
 [ext_resource type="Script" uid="uid://cr55e3ervhmig" path="res://addons/beehave/nodes/composites/selector.gd" id="5_x35se"]
 [ext_resource type="Script" uid="uid://mtuuxj1jd0m2" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_6gfsl"]
 [ext_resource type="Script" uid="uid://cody1kvr17cm1" path="res://Entities/Actors/NPCs/Garreth/beehave/personality.gd" id="7_rs2tg"]
@@ -24,6 +27,9 @@
 [ext_resource type="Script" uid="uid://de0uw4x8bwrbx" path="res://Entities/Actors/NPCs/Garreth/beehave/resume_patrol.gd" id="19_76401"]
 [ext_resource type="Script" uid="uid://kwmt5grb7ehy" path="res://Entities/Actors/NPCs/Garreth/beehave/buy_food.gd" id="19_eeoai"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ktkfp"]
+size = Vector2(26, 20)
+
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0
 height = 10.0
@@ -33,9 +39,6 @@ size = Vector2(24, 30)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ajai6"]
 radius = 44.0
-
-[sub_resource type="Resource" id="Resource_ol8fo"]
-metadata/__load_path__ = "res://Entities/Hooks/FoodAnchor/food_anchor.tscn"
 
 [node name="GarrethAlt" type="CharacterBody2D"]
 texture_filter = 1
@@ -49,19 +52,78 @@ hframes = 8
 vframes = 6
 frame = 8
 
+[node name="SeedProp" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -21)
+texture = ExtResource("3_v3cxx")
+hframes = 6
+vframes = 2
+frame = 6
+metadata/_edit_lock_ = true
+
+[node name="HarvestProp" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(0, -3)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("3_v3cxx")
+hframes = 6
+vframes = 2
+frame = 11
+metadata/_edit_lock_ = true
+
+[node name="EatProp" type="Node2D" parent="."]
+visible = false
+texture_filter = 1
+position = Vector2(0, -5)
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="EatProp"]
+position = Vector2(9, 0)
+texture = ExtResource("3_v3cxx")
+hframes = 6
+vframes = 2
+frame = 11
+metadata/_edit_lock_ = true
+
+[node name="CarryProp" parent="." instance=ExtResource("4_vvu4n")]
+visible = false
+
+[node name="Weapon" type="Area2D" parent="."]
+visible = false
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Weapon"]
+position = Vector2(16, 0)
+rotation = 1.5708
+texture = ExtResource("5_dt2xc")
+hframes = 4
+vframes = 3
+frame = 4
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Weapon"]
+position = Vector2(13, -6)
+shape = SubResource("RectangleShape2D_ktkfp")
+disabled = true
+metadata/_edit_lock_ = true
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_tfsnf")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": ExtResource("3_hjw3h")
+&"": ExtResource("3_hjw3h")
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
 tree_root = ExtResource("4_vx0j5")
 anim_player = NodePath("../AnimationPlayer")
+parameters/Attack/blend_position = 0
 parameters/Eat/blend_position = 0
+parameters/Harvest/blend_position = 0
 parameters/Idle/blend_position = 0
 parameters/Move/blend_position = 0
 
@@ -115,9 +177,6 @@ script = ExtResource("7_rs2tg")
 [node name="EmoteController" parent="." instance=ExtResource("8_btyao")]
 
 [node name="FloatTextController" parent="." instance=ExtResource("9_7sty6")]
-
-[node name="FoodAnchor" parent="."]
-visible = false
 
 [node name="GarrethBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("4_s0dao")
@@ -176,3 +235,5 @@ script = ExtResource("18_e4j5f")
 [connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Buy Food/Go To Market" to="." method="move_actor"]
 [connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Patrol/Patrol Action" to="." method="move_actor"]
 [connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Petitioning/Chase Agent" to="." method="move_actor"]
+
+[editable path="CarryProp"]
