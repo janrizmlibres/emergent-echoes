@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=4 uid="uid://bggj07uc8a2hg"]
 
-[ext_resource type="Script" path="res://Stages/Island/World.cs" id="1_1w1a2"]
+[ext_resource type="Script" uid="uid://bectnmxrpw1ch" path="res://Stages/Island/World.cs" id="1_1w1a2"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="2_j4bhs"]
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://forestcombined.tres" id="3_56thr"]
 [ext_resource type="PackedScene" uid="uid://bnmuhsutwyeye" path="res://Entities/Actors/Player/player.tscn" id="4_plruf"]

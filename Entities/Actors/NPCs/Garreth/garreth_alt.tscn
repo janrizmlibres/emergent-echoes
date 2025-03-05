@@ -1,29 +1,28 @@
 [gd_scene load_steps=28 format=3 uid="uid://c46vvjqepxr5c"]
 
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/garreth_alt.gd" id="1_0w5gq"]
+[ext_resource type="Script" uid="uid://karntkdpbtuc" path="res://Entities/Actors/NPCs/Garreth/beehave/garreth_alt.gd" id="1_0w5gq"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_ykyr2"]
 [ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="3_hjw3h"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_s0dao"]
+[ext_resource type="Script" uid="uid://bmqjw1xe63sui" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_s0dao"]
 [ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Interactions/npc_alt_detector.tscn" id="4_t4ib7"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="4_vx0j5"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="5_x35se"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_6gfsl"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/personality.gd" id="7_rs2tg"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/physiological.gd" id="7_ushby"]
+[ext_resource type="Script" uid="uid://cr55e3ervhmig" path="res://addons/beehave/nodes/composites/selector.gd" id="5_x35se"]
+[ext_resource type="Script" uid="uid://mtuuxj1jd0m2" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_6gfsl"]
+[ext_resource type="Script" uid="uid://cody1kvr17cm1" path="res://Entities/Actors/NPCs/Garreth/beehave/personality.gd" id="7_rs2tg"]
+[ext_resource type="Script" uid="uid://bysexhtn0u2vc" path="res://Entities/Actors/NPCs/Garreth/beehave/physiological.gd" id="7_ushby"]
 [ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="8_btyao"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/Is The Agent Idle.gd" id="9_7j1tl"]
+[ext_resource type="Script" uid="uid://ceqhy6041g2kg" path="res://Entities/Actors/NPCs/Garreth/beehave/Is The Agent Idle.gd" id="9_7j1tl"]
 [ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="9_7sty6"]
-[ext_resource type="PackedScene" uid="uid://bccwhdlbu5ny0" path="res://Entities/Hooks/FoodAnchor/food_anchor.tscn" id="10_wrbgc"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/patrol_action.gd" id="11_8k8tp"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/shout_for_petition.gd" id="11_hcrvy"]
-[ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="12_77cs2"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/eat_food.gd" id="15_evk6g"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/is_the_food_resource_low.gd" id="17_62b24"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/chase_agent.gd" id="17_8186l"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/ask_for_petition.gd" id="18_e4j5f"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/go_to_market.gd" id="18_huo0b"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/resume_patrol.gd" id="19_76401"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/buy_food.gd" id="19_eeoai"]
+[ext_resource type="Script" uid="uid://drvl0ch3ngsy4" path="res://Entities/Actors/NPCs/Garreth/beehave/patrol_action.gd" id="11_8k8tp"]
+[ext_resource type="Script" uid="uid://df8gmwihjxif7" path="res://Entities/Actors/NPCs/Garreth/beehave/shout_for_petition.gd" id="11_hcrvy"]
+[ext_resource type="Script" uid="uid://bgxm0q2ycclid" path="res://addons/beehave/blackboard.gd" id="12_77cs2"]
+[ext_resource type="Script" uid="uid://gwojr7topmnw" path="res://Entities/Actors/NPCs/Garreth/beehave/eat_food.gd" id="15_evk6g"]
+[ext_resource type="Script" uid="uid://baxrohffjrq07" path="res://Entities/Actors/NPCs/Garreth/beehave/is_the_food_resource_low.gd" id="17_62b24"]
+[ext_resource type="Script" uid="uid://ccocc43ysrl8o" path="res://Entities/Actors/NPCs/Garreth/beehave/chase_agent.gd" id="17_8186l"]
+[ext_resource type="Script" uid="uid://2d30pyjtp7c6" path="res://Entities/Actors/NPCs/Garreth/beehave/ask_for_petition.gd" id="18_e4j5f"]
+[ext_resource type="Script" uid="uid://otmluk2mhrrq" path="res://Entities/Actors/NPCs/Garreth/beehave/go_to_market.gd" id="18_huo0b"]
+[ext_resource type="Script" uid="uid://de0uw4x8bwrbx" path="res://Entities/Actors/NPCs/Garreth/beehave/resume_patrol.gd" id="19_76401"]
+[ext_resource type="Script" uid="uid://kwmt5grb7ehy" path="res://Entities/Actors/NPCs/Garreth/beehave/buy_food.gd" id="19_eeoai"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0
@@ -34,6 +33,9 @@ size = Vector2(24, 30)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ajai6"]
 radius = 44.0
+
+[sub_resource type="Resource" id="Resource_ol8fo"]
+metadata/__load_path__ = "res://Entities/Hooks/FoodAnchor/food_anchor.tscn"
 
 [node name="GarrethAlt" type="CharacterBody2D"]
 texture_filter = 1
@@ -114,7 +116,7 @@ script = ExtResource("7_rs2tg")
 
 [node name="FloatTextController" parent="." instance=ExtResource("9_7sty6")]
 
-[node name="FoodAnchor" parent="." instance=ExtResource("10_wrbgc")]
+[node name="FoodAnchor" parent="."]
 visible = false
 
 [node name="GarrethBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
