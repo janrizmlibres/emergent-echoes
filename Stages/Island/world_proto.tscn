@@ -301,9 +301,16 @@ remote_path = NodePath("../../Camera2D")
 
 [node name="Silas" parent="." instance=ExtResource("4_gun4a")]
 position = Vector2(272, 162)
+MaxSpeed = 40
+Acceleration = 8
+Friction = 4
 
 [node name="Garreth" parent="." instance=ExtResource("5_5sidg")]
 position = Vector2(229, 260)
+MaxSpeed = 40
+Acceleration = 8
+Friction = 4
 
 [editable path="Camera2D"]
 [editable path="Player"]
+[editable path="Player/CarryProp"]

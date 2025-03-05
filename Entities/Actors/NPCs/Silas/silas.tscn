@@ -4,6 +4,9 @@
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_bkbxt"]
 
 [node name="Silas" instance=ExtResource("1_p7u50")]
+MaxSpeed = 40
+Acceleration = 8
+Friction = 4
 
 [node name="NPCAgent2D" parent="." index="0"]
 Survival = 0.4
