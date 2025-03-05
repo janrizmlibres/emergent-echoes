@@ -4,4 +4,7 @@
 
 [node name="Toblin" instance=ExtResource("1_fusmq")]
 
+[node name="Interactable" parent="." index="17"]
+PrimaryActionDescription = "View Toblin"
+
 [editable path="CarryProp"]

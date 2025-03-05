@@ -11,4 +11,7 @@ Farmer = 1.0
 [node name="Sprite2D" parent="." index="2"]
 texture = ExtResource("2_xaarx")
 
+[node name="Interactable" parent="." index="17"]
+PrimaryActionDescription = "View Pimble"
+
 [editable path="CarryProp"]

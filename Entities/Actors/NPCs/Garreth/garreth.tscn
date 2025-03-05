@@ -1,21 +1,31 @@
-[gd_scene load_steps=3 format=3 uid="uid://c0o0ox45oqj1h"]
+[gd_scene load_steps=5 format=3 uid="uid://c0o0ox45oqj1h"]
 
 [ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_bfh3u"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_m84m3"]
+[ext_resource type="PackedScene" uid="uid://c3s3r5aucrjod" path="res://Entities/UI/HUD/Prompt/prompt.tscn" id="3_7ptt5"]
+[ext_resource type="Script" uid="uid://b5ya23kh35v2o" path="res://Entities/UI/HUD/Prompt/Scripts/GarrethPrompt.cs" id="4_jlis0"]
 
 [node name="Garreth" instance=ExtResource("1_bfh3u")]
-MaxSpeed = 40
-Acceleration = 8
-Friction = 4
 
 [node name="NPCAgent2D" parent="." index="0"]
+SatiationAmount = 15
+CompanionshipAmount = 10
 Survival = 0.4
 Lawful = 1.0
+MoneyAmount = 100
+FoodAmount = 5
 
 [node name="NavigationAgent2D" parent="." index="1"]
 navigation_layers = 3
 
 [node name="Sprite2D" parent="." index="2"]
 texture = ExtResource("2_m84m3")
+
+[node name="Interactable" parent="." index="17"]
+PrimaryActionDescription = "View Garreth"
+
+[node name="DescriptionPrompt" parent="." index="18" instance=ExtResource("3_7ptt5")]
+visible = false
+script = ExtResource("4_jlis0")
 
 [editable path="CarryProp"]

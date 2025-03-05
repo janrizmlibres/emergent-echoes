@@ -1,18 +1,28 @@
-[gd_scene load_steps=3 format=3 uid="uid://ct27a7iqtaqs2"]
+[gd_scene load_steps=5 format=3 uid="uid://ct27a7iqtaqs2"]
 
 [ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_p7u50"]
 [ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_bkbxt"]
+[ext_resource type="PackedScene" uid="uid://c3s3r5aucrjod" path="res://Entities/UI/HUD/Prompt/prompt.tscn" id="3_sprwr"]
+[ext_resource type="Script" uid="uid://brjjape4mana7" path="res://Entities/UI/HUD/Prompt/Scripts/SilasPrompt.cs" id="4_8j1os"]
 
 [node name="Silas" instance=ExtResource("1_p7u50")]
-MaxSpeed = 40
-Acceleration = 8
-Friction = 4
 
 [node name="NPCAgent2D" parent="." index="0"]
+SatiationAmount = 15
+CompanionshipAmount = 10
 Survival = 0.4
 Thief = 0.6
+MoneyAmount = 100
+FoodAmount = 5
 
 [node name="Sprite2D" parent="." index="2"]
 texture = ExtResource("2_bkbxt")
+
+[node name="Interactable" parent="." index="17"]
+PrimaryActionDescription = "View Silas"
+
+[node name="DescriptionPrompt" parent="." index="18" instance=ExtResource("3_sprwr")]
+visible = false
+script = ExtResource("4_8j1os")
 
 [editable path="CarryProp"]

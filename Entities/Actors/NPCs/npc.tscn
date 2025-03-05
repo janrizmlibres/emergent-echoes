@@ -1,9 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://diiesf6ffioa7"]
+[gd_scene load_steps=7 format=3 uid="uid://diiesf6ffioa7"]
 
 [ext_resource type="PackedScene" uid="uid://dca6ru8aaidgk" path="res://Entities/Actors/actor.tscn" id="1_r1c1o"]
 [ext_resource type="Script" uid="uid://deyp47gqckq56" path="res://Entities/Actors/NPCs/NPC.cs" id="1_scutl"]
 [ext_resource type="Script" uid="uid://wbvg6olqk38i" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_x7obk"]
 [ext_resource type="Texture2D" uid="uid://u36eed1tu2hk" path="res://Entities/Actors/NPCs/Tobin/Art/tobin.png" id="4_a6455"]
+[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Interactions/interactable.tscn" id="5_lbp4f"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jlstl"]
+radius = 20.0
 
 [node name="NPC" instance=ExtResource("1_r1c1o")]
 script = ExtResource("1_scutl")
@@ -35,5 +39,11 @@ one_shot = true
 
 [node name="DebugLabel" parent="." index="16" node_paths=PackedStringArray("Actor")]
 Actor = NodePath("../NPCAgent2D")
+
+[node name="Interactable" parent="." index="17" instance=ExtResource("5_lbp4f")]
+PrimaryActionDescription = "View SIlas"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable" index="0"]
+shape = SubResource("CircleShape2D_jlstl")
 
 [editable path="CarryProp"]

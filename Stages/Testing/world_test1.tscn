@@ -667,9 +667,16 @@ script = ExtResource("9_3lr7n")
 
 [node name="Player" parent="." groups=["Actors"] instance=ExtResource("7_mu6ya")]
 position = Vector2(174, 165)
+MaxSpeed = 40
+Acceleration = 8
+Friction = 4
 
 [node name="AnimationTree" parent="Player" index="10"]
 parameters/Attack/blend_position = 0
+
+[node name="ActorTag2D" parent="Player" index="14"]
+MoneyAmount = 100
+FoodAmount = 5
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
 remote_path = NodePath("../../Camera2D")
@@ -704,7 +711,6 @@ Capacity = 2
 [node name="ShopMarker2D" type="Marker2D" parent="."]
 position = Vector2(296, 312)
 script = ExtResource("16_7krdg")
-Direction = 3
 
 [node name="GeneralNavRegion" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("NavigationPolygon_0kads")
