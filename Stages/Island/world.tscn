@@ -4,7 +4,7 @@
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://forestcombined.tres" id="2_jcyte"]
 [ext_resource type="PackedScene" uid="uid://bnmuhsutwyeye" path="res://Entities/Actors/Player/player.tscn" id="2_ne4id"]
 [ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/npc.tscn" id="4_gun4a"]
-[ext_resource type="PackedScene" uid="uid://blrsgvyqgogoa" path="res://Entities/Actors/NPCs/Garreth/garreth.tscn" id="5_5sidg"]
+[ext_resource type="PackedScene" uid="uid://c0o0ox45oqj1h" path="res://Entities/Actors/NPCs/Garreth/garreth.tscn" id="5_5sidg"]
 
 [sub_resource type="CSharpScript" id="CSharpScript_mabam"]
 script/source = "using Godot;

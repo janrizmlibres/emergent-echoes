@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://d077ssc0c3wto"]
 
-[ext_resource type="Script" path="res://Entities/UI/Indicators/FloatingText/FloatingText.cs" id="1_rdrfv"]
+[ext_resource type="Script" uid="uid://bw023dq8escxr" path="res://Entities/UI/Indicators/FloatingText/FloatingText.cs" id="1_rdrfv"]
 [ext_resource type="Texture2D" uid="uid://jn6pbqmsasut" path="res://Entities/UI/Indicators/FloatingText/Art/companionship.png" id="2_h1438"]
 [ext_resource type="LabelSettings" uid="uid://c84y7knhdw36u" path="res://Entities/UI/Indicators/FloatingText/Data/normal_label.tres" id="3_qex6n"]
 
