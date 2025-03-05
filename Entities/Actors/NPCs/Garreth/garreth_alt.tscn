@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://c46vvjqepxr5c"]
+[gd_scene load_steps=28 format=3 uid="uid://c46vvjqepxr5c"]
 
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/garreth_alt.gd" id="1_0w5gq"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_ykyr2"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="5_x35se"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_6gfsl"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/personality.gd" id="7_rs2tg"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/physiological.gd" id="7_ushby"]
 [ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="8_btyao"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/Is The Agent Idle.gd" id="9_7j1tl"]
 [ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="9_7sty6"]
@@ -16,9 +17,13 @@
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/patrol_action.gd" id="11_8k8tp"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/shout_for_petition.gd" id="11_hcrvy"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="12_77cs2"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/eat_food.gd" id="15_evk6g"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/is_the_food_resource_low.gd" id="17_62b24"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/chase_agent.gd" id="17_8186l"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/ask_for_petition.gd" id="18_e4j5f"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/go_to_market.gd" id="18_huo0b"]
 [ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/resume_patrol.gd" id="19_76401"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Garreth/beehave/buy_food.gd" id="19_eeoai"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0
@@ -96,6 +101,12 @@ blackboard = {
 wait_time = 3.0
 one_shot = true
 
+[node name="HungerTimer" type="Timer" parent="."]
+wait_time = 10.0
+
+[node name="Physiological" type="Node" parent="."]
+script = ExtResource("7_ushby")
+
 [node name="Personality" type="Node" parent="."]
 script = ExtResource("7_rs2tg")
 
@@ -116,6 +127,21 @@ script = ExtResource("5_x35se")
 
 [node name="Resume Patrol" type="Node" parent="GarrethBehaviour/SelectorComposite"]
 script = ExtResource("19_76401")
+
+[node name="Eat Food" type="Node" parent="GarrethBehaviour/SelectorComposite"]
+script = ExtResource("15_evk6g")
+
+[node name="Buy Food" type="Node" parent="GarrethBehaviour/SelectorComposite"]
+script = ExtResource("6_6gfsl")
+
+[node name="Is The Food Resource Low" type="Node" parent="GarrethBehaviour/SelectorComposite/Buy Food"]
+script = ExtResource("17_62b24")
+
+[node name="Go To Market" type="Node" parent="GarrethBehaviour/SelectorComposite/Buy Food"]
+script = ExtResource("18_huo0b")
+
+[node name="Buy Food" type="Node" parent="GarrethBehaviour/SelectorComposite/Buy Food"]
+script = ExtResource("19_eeoai")
 
 [node name="Patrol" type="Node" parent="GarrethBehaviour/SelectorComposite"]
 script = ExtResource("6_6gfsl")
@@ -138,10 +164,13 @@ script = ExtResource("17_8186l")
 [node name="Ask For Petition" type="Node" parent="GarrethBehaviour/SelectorComposite/Petitioning"]
 script = ExtResource("18_e4j5f")
 
+[connection signal="animation_finished" from="AnimationTree" to="GarrethBehaviour/SelectorComposite/Eat Food" method="_on_animation_tree_animation_finished"]
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="body_entered" from="PetitionArea" to="GarrethBehaviour/SelectorComposite/Petitioning/Chase Agent" method="_on_petition_area_body_entered"]
 [connection signal="body_entered" from="NpcAltDetector" to="Personality" method="_on_npc_alt_detector_body_entered"]
 [connection signal="timeout" from="Timer" to="GarrethBehaviour/SelectorComposite/Patrol/Shout For Petition" method="_on_timer_timeout"]
+[connection signal="timeout" from="HungerTimer" to="Physiological" method="hunger_decay_timeout"]
 [connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Resume Patrol" to="." method="move_actor"]
+[connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Buy Food/Go To Market" to="." method="move_actor"]
 [connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Patrol/Patrol Action" to="." method="move_actor"]
 [connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Petitioning/Chase Agent" to="." method="move_actor"]

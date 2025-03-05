@@ -16,7 +16,10 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		return RUNNING
 	elif blackboard.get_value("current_state") == "petition answered":
 		emote_controller.ShowEmoteBubble(5)
-		float_text_controller.ShowFloatText(0, "100", true)
+		
+		float_text_controller.ShowFloatText(0, "10", true)
+		blackboard.set_value("money", blackboard.get_value("money") + 10)
+		
 		blackboard.set_value("current_state", "done petitioning")
 		return SUCCESS
 	
