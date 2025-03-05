@@ -1,4 +1,8 @@
+using Godot;
+using Godot.Collections;
+using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 using NPCProcGen.Core.States;
 
@@ -6,11 +10,24 @@ namespace NPCProcGen.Core.Actions
 {
     public class AssessAction : BaseAction
     {
-        public AssessAction(ActorContext context) : base(context, ActionType.Assess) { }
+        private readonly Crime _crime;
+        private readonly bool _caseClosed;
+
+        public AssessAction(ActorContext context, Crime crime, bool caseClosed)
+            : base(context, ActionType.Assess)
+        {
+            _crime = crime;
+            _caseClosed = caseClosed;
+        }
 
         protected override void InitializeStates()
         {
-            _stateContext.StartingState = new AssessState(_actorContext, _stateContext);
+            _stateContext.StartingState = new AssessState(
+                _actorContext,
+                _stateContext,
+                _crime,
+                _caseClosed
+            );
         }
     }
 }

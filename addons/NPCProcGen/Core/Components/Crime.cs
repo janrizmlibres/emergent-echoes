@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
@@ -15,15 +16,33 @@ namespace NPCProcGen.Core.Components
 
     public class Crime
     {
+        public event Action OnCrimeClosed;
+
         public NPCAgent2D Investigator { get; set; }
-        public CrimeStatus Status { get; set; }
+        public bool AssessmentDone { get; set; } = false;
+
+        private CrimeStatus _status;
+        public CrimeStatus Status
+        {
+            get => _status;
+            set
+            {
+                _status = value;
+
+                if (value == CrimeStatus.Solved || value == CrimeStatus.Unsolved)
+                {
+                    OnCrimeClosed?.Invoke();
+                    OnCrimeClosed = null;
+                }
+            }
+        }
 
         public CrimeCategory Category { get; private set; }
         public ActorTag2D Criminal { get; private set; }
         public List<ActorTag2D> Participants { get; private set; } = new();
 
-        private readonly List<ActorTag2D> _verifiers = new();
-        private readonly List<ActorTag2D> _falsifiers = new();
+        private readonly HashSet<ActorTag2D> _verifiers = new();
+        private readonly HashSet<ActorTag2D> _falsifiers = new();
 
         public Crime(CrimeCategory category, ActorTag2D criminal)
         {
@@ -37,10 +56,23 @@ namespace NPCProcGen.Core.Components
             return Investigator == null && Status == CrimeStatus.Pending;
         }
 
+        public bool IsWitnessed()
+        {
+            return Participants.Contains(Investigator);
+        }
+
         public ActorTag2D GetRandomParticipant()
         {
-            return CommonUtils.Shuffle(Participants.Where(actor => actor.IsValidTarget(Investigator))
-                .ToList())
+            List<ActorTag2D> filteredParticipants = Participants
+                .Where(actor =>
+                {
+                    return actor.IsValidTarget(Investigator) && !_verifiers.Contains(actor)
+                        && !_falsifiers.Contains(actor);
+                })
+                .ToList();
+
+            return CommonUtils.Shuffle(filteredParticipants)
+                .ToList()
                 .FirstOrDefault();
         }
 
@@ -59,19 +91,19 @@ namespace NPCProcGen.Core.Components
         public bool IsDeposed()
         {
             DebugTool.Assert(
-                _verifiers.Count + _falsifiers.Count <= Participants.Count,
+                _verifiers.Count + _falsifiers.Count > Participants.Count,
                 "Interrogations exceed participants count."
             );
             return _verifiers.Count + _falsifiers.Count == Participants.Count;
         }
 
-        public bool IsUnsolvable()
+        public bool IsSolvable()
         {
             float probability = Participants.Count > 6
                 ? _verifiers.Count / (float)Participants.Count
                 : 0.1f + 0.15f * _verifiers.Count;
 
-            return GD.Randf() > probability;
+            return GD.Randf() <= probability;
         }
     }
 }

@@ -2,6 +2,7 @@ using NPCProcGen.Core.States;
 using Godot;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Internal;
+using Godot.Collections;
 
 namespace NPCProcGen.Core.Actions
 {
@@ -61,11 +62,7 @@ namespace NPCProcGen.Core.Actions
 
         public void Finish()
         {
-            _actorContext.EmitSignal(
-                NPCAgent2D.SignalName.ActionEnded,
-                Variant.From(ActionType)
-            );
-
+            _actorContext.EmitSignal(NPCAgent2D.SignalName.ActionEnded);
             TransitionTo(null);
             Terminate();
         }

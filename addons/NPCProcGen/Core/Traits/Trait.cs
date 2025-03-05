@@ -11,6 +11,14 @@ using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.Traits
 {
+    public class ActionParams
+    {
+        public ActorTag2D TargetActor { get; set; }
+        public ActorTag2D Criminal { get; set; }
+        public Crime Crime { get; set; }
+        public bool CaseClosed { get; set; } = false;
+    }
+
     public abstract class Trait
     {
         protected readonly ActorContext _actorCtx;
@@ -28,9 +36,11 @@ namespace NPCProcGen.Core.Traits
         {
             _actionCandidates.Clear();
 
-            if (practice == SocialPractice.Proactive)
+            switch (practice)
             {
-                EvaluateProactiveAction();
+                case SocialPractice.Proactive:
+                    EvaluateProactiveAction();
+                    break;
             }
 
             return _actionCandidates
@@ -40,15 +50,16 @@ namespace NPCProcGen.Core.Traits
 
         protected abstract void EvaluateProactiveAction();
 
-        protected void EvaluateInteraction(ResourceType type, Func<List<ActorTag2D>,
-            ActorTag2D> alternator, ActionType actionType)
+        protected void EvaluateInteraction(ActionType actionType, ResourceType resType,
+            Func<List<ActorTag2D>, ActorTag2D> alternator)
         {
-            ActorTag2D chosenActor = ChooseActor(type, actionType, alternator);
+            ActorTag2D chosenActor = ChooseActor();
             if (chosenActor == null) return;
-            AddAction(actionType, type, chosenActor);
 
-            ActorTag2D ChooseActor(ResourceType type, ActionType actionType,
-                Func<List<ActorTag2D>, ActorTag2D> actorPicker)
+            ActionParams actionParams = new() { TargetActor = chosenActor };
+            AddAction(actionType, resType, actionParams);
+
+            ActorTag2D ChooseActor()
             {
                 List<ActorTag2D> peerActors = CommonUtils.Shuffle(
                     _actorCtx.Memorizer.GetPeerActors()
@@ -62,29 +73,29 @@ namespace NPCProcGen.Core.Traits
 
                     if (actionType == ActionType.Petition)
                     {
-                        if (actor.Sensor.GetPetitionResourceType() == type) continue;
-                        if (!_actorCtx.Memorizer.IsValidPetitionTarget(actor, type)) continue;
+                        if (actor.Sensor.GetPetitionResourceType() == resType) continue;
+                        if (!_actorCtx.Memorizer.IsValidPetitionTarget(actor, resType)) continue;
                     }
 
-                    if (!ResourceManager.Instance.HasResource(type, actor)) continue;
+                    if (!ResourceManager.Instance.HasResource(resType, actor)) continue;
                     potentialActors.Add(actor);
                 }
 
-                return actorPicker(potentialActors);
+                return alternator(potentialActors);
             }
         }
 
-        protected void AddAction(ActionType actionType, ResourceType type,
-            ActorTag2D chosenActor = null, Crime crime = null)
+        protected void AddAction(ActionType actionType, ResourceType resType,
+            ActionParams @params = null)
         {
-            float weightedScore = CalculateWeight(type);
-            BaseAction action = CreateAction(actionType, chosenActor, type, crime);
+            float weightedScore = CalculateWeight();
+            BaseAction action = CreateAction();
             _actionCandidates.Add(new(action, weightedScore));
 
-            float CalculateWeight(ResourceType type)
+            float CalculateWeight()
             {
                 ResourceManager resMgr = ResourceManager.Instance;
-                ResourceStat chosenResource = resMgr.GetResource(type, _actorCtx.Actor);
+                ResourceStat chosenResource = resMgr.GetResource(resType, _actorCtx.Actor);
 
                 float lowerBound = Mathf.Lerp(
                     chosenResource.LowerThreshold,
@@ -104,18 +115,28 @@ namespace NPCProcGen.Core.Traits
                 return weightedScore;
             }
 
-            BaseAction CreateAction(ActionType actionType, ActorTag2D chosenActor,
-                ResourceType resType, Crime crime)
+            BaseAction CreateAction()
             {
+                ActorTag2D targetActor = @params?.TargetActor;
+                Crime crime = @params?.Crime;
+
                 return actionType switch
                 {
-                    ActionType.Theft => new TheftAction(_actorCtx, chosenActor, resType),
-                    ActionType.Petition => new PetitionAction(_actorCtx, chosenActor, resType),
+                    ActionType.Theft => new TheftAction(_actorCtx, targetActor, resType),
+                    ActionType.Petition => new PetitionAction(_actorCtx, targetActor, resType),
                     ActionType.Eat => new EatAction(_actorCtx),
                     ActionType.Socialize => new SocializeAction(_actorCtx),
-                    ActionType.Assess => new AssessAction(_actorCtx),
-                    ActionType.Interrogate => new InterrogateAction(_actorCtx, chosenActor, crime),
-                    ActionType.Pursuit => new PursuitAction(_actorCtx),
+                    ActionType.Assess => new AssessAction(
+                        _actorCtx,
+                        @params.Crime,
+                        @params.CaseClosed
+                    ),
+                    ActionType.Interrogate => new InterrogateAction(
+                        _actorCtx,
+                        targetActor,
+                        crime
+                    ),
+                    ActionType.Pursuit => new PursuitAction(_actorCtx, @params.Criminal, crime),
                     ActionType.Plant => new PlantAction(_actorCtx),
                     ActionType.Harvest => new HarvestAction(_actorCtx),
                     _ => throw new ArgumentException("Invalid action type"),

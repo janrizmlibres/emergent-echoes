@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using NPCProcGen.Autoloads;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
@@ -10,12 +11,16 @@ namespace NPCProcGen.Core.States
     public class CaptureState : BaseState, INavigationState
     {
         private readonly ActorTag2D _criminal;
+        private readonly Crime _crime;
+
         private Vector2 _prisonLocation;
 
         public CaptureState(ActorContext actorContext, StateContext stateContext,
-            ActorTag2D criminal) : base(actorContext, stateContext, ActionState.Capture)
+            ActorTag2D criminal, Crime crime)
+            : base(actorContext, stateContext, ActionState.Capture)
         {
             _criminal = criminal;
+            _crime = crime;
         }
 
         protected override EnterParameters GetEnterData()
@@ -31,7 +36,7 @@ namespace NPCProcGen.Core.States
         {
             return new ExitParameters
             {
-                Data = new Array<Variant>()
+                Data = new Array<Variant> { CommonUtils.DutyIncrease }
             };
         }
 
@@ -39,12 +44,18 @@ namespace NPCProcGen.Core.States
         {
             PrisonMarker2D prisonMarker = Sensor.GetRandomPrison();
             _prisonLocation = prisonMarker.GlobalPosition;
-            _criminal.TriggerDetainment();
+            _criminal.TriggerDetainment(_actorContext.Actor);
         }
 
         protected override void ExecuteExit()
         {
-            _actorContext.LawfulModule.ClearCase(CrimeStatus.Solved);
+            ResourceManager.Instance.ModifyResource(
+                ResourceType.Companionship,
+                CommonUtils.DutyIncrease,
+                _actorContext.Actor
+            );
+
+            _crime.Status = CrimeStatus.Solved;
             _criminal.TriggerCaptivity(_prisonLocation);
         }
 

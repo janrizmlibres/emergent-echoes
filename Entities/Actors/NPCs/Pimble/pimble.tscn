@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://blypn5fdqy1iv"]
+
+[ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_npgde"]
+[ext_resource type="Texture2D" uid="uid://bni44g000tsk4" path="res://Entities/Actors/NPCs/Pimble/Art/pimble.png" id="2_xaarx"]
+
+[node name="Pimble" instance=ExtResource("1_npgde")]
+
+[node name="NPCAgent2D" parent="." index="0"]
+Farmer = 1.0
+
+[node name="Sprite2D" parent="." index="2"]
+texture = ExtResource("2_xaarx")
+
+[editable path="CarryProp"]

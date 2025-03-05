@@ -1,8 +1,6 @@
-using System;
 using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
-using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 
 namespace NPCProcGen.Core.Traits
@@ -11,7 +9,22 @@ namespace NPCProcGen.Core.Traits
     {
         private const float InvestigationDuration = 600;
 
-        public Crime AssignedCase { get; private set; }
+        private Crime _assignedCase;
+        public Crime AssignedCase
+        {
+            get => _assignedCase;
+            private set
+            {
+                _assignedCase = value;
+                _investigationTimer = InvestigationDuration;
+
+                if (_assignedCase != null)
+                {
+                    _assignedCase.Investigator = _actorCtx.GetNPCAgent2D();
+                    _assignedCase.OnCrimeClosed += () => _assignedCase = null;
+                }
+            }
+        }
 
         private float _investigationTimer = InvestigationDuration;
 
@@ -31,23 +44,28 @@ namespace NPCProcGen.Core.Traits
                 return;
             }
 
-            if (AssignedCase == null)
+            AssignedCase ??= Sensor.GetOpenCase();
+            if (AssignedCase == null) return;
+
+            if (!AssignedCase.AssessmentDone)
             {
-                StartNewInvestigation();
+                AddAction(ActionType.Assess, ResourceType.Duty);
+                return;
+            }
+
+            if (AssignedCase.IsWitnessed())
+            {
+                AddAction(ActionType.Pursuit, ResourceType.Duty);
                 return;
             }
 
             ResumeInvestigation();
         }
 
-        private void StartNewInvestigation()
+        public void PursueCriminal(ActorTag2D criminal, Crime crime)
         {
-            AssignedCase = _actorCtx.Sensor.AssignCase();
-            if (AssignedCase == null) return;
-
-            _investigationTimer = InvestigationDuration;
-
-            AddAction(ActionType.Assess, ResourceType.Duty);
+            PursuitAction action = new(_actorCtx, criminal, crime);
+            _actorCtx.Executor.AddAction(action);
         }
 
         private void ResumeInvestigation()
@@ -56,34 +74,32 @@ namespace NPCProcGen.Core.Traits
 
             if (target != null)
             {
-                AddAction(ActionType.Interrogate, ResourceType.Duty, target, AssignedCase);
+                ActionParams actionParams = new()
+                {
+                    TargetActor = target,
+                    Crime = AssignedCase,
+                };
+
+                AddAction(ActionType.Interrogate, ResourceType.Duty, actionParams);
                 return;
             }
 
             if (AssignedCase.IsDeposed())
             {
-                AddAction(ActionType.Pursuit, ResourceType.Duty);
+                AttemptResolveCase();
             }
         }
 
         private void AttemptResolveCase()
         {
-            if (AssignedCase.IsUnsolvable())
+            if (!AssignedCase.IsSolvable())
             {
-                ClearCase(CrimeStatus.Unsolved);
+                ActionParams actionParams = new() { CaseClosed = true };
+                AddAction(ActionType.Assess, ResourceType.Duty, actionParams);
                 return;
             }
 
             AddAction(ActionType.Pursuit, ResourceType.Duty);
-        }
-
-        public void ClearCase(CrimeStatus status)
-        {
-            if (status == CrimeStatus.Pending) throw new ArgumentException("Invalid status");
-
-            AssignedCase.Status = status;
-            AssignedCase = null;
-            _investigationTimer = InvestigationDuration;
         }
     }
 }

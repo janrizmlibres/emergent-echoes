@@ -23,10 +23,10 @@ namespace NPCProcGen
         public delegate void EventTriggeredEventHandler(Variant eventType, Array<Variant> data);
 
         [Export(PropertyHint.Range, "0,1000000,")]
-        public int MoneyAmount { get; set; } = 100;
+        public int MoneyAmount { get; set; } = 500;
 
         [Export(PropertyHint.Range, "0,1000,")]
-        public int FoodAmount { get; set; } = 5;
+        public int FoodAmount { get; set; } = 10;
 
         [Export]
         public Area2D ActorDetector { get; set; }
@@ -171,9 +171,9 @@ namespace NPCProcGen
             Sensor.ClearTaskRecord();
         }
 
-        public virtual void TriggerDetainment()
+        public virtual void TriggerDetainment(ActorTag2D captor)
         {
-            NotifManager.Instance.NotifyActorDetained(this);
+            NotifManager.Instance.NotifyActorDetained(this, captor);
             Sensor.SetAvailability(false);
 
             DetainNPC();
@@ -181,7 +181,8 @@ namespace NPCProcGen
             CommonUtils.EmitSignal(
                 this,
                 SignalName.EventTriggered,
-                Variant.From(EventType.Detained)
+                Variant.From(EventType.Detained),
+                new Array<Variant>()
             );
         }
 
@@ -201,6 +202,8 @@ namespace NPCProcGen
         {
             if (criminal == this) return;
 
+            ExecuteOnCrimeCommitted(criminal, crime);
+
             if (_nearbyActors.Contains(criminal))
             {
                 crime.Participants.Add(this);
@@ -212,6 +215,8 @@ namespace NPCProcGen
                 );
             }
         }
+
+        protected virtual void ExecuteOnCrimeCommitted(ActorTag2D criminal, Crime crime) { }
 
         protected void OnBodyEntered(Node2D body)
         {
@@ -228,6 +233,8 @@ namespace NPCProcGen
 
         protected void OnBodyExited(Node2D body)
         {
+            if (GetParent<Node2D>() == body) return;
+
             ActorTag2D actor = body.GetChildren().OfType<ActorTag2D>().FirstOrDefault();
 
             if (actor != null)

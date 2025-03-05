@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0o0ox45oqj1h"]
+
+[ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_bfh3u"]
+[ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_m84m3"]
+
+[node name="Garreth" instance=ExtResource("1_bfh3u")]
+
+[node name="NPCAgent2D" parent="." index="0"]
+Survival = 0.4
+Lawful = 1.0
+
+[node name="NavigationAgent2D" parent="." index="1"]
+navigation_layers = 3
+
+[node name="Sprite2D" parent="." index="2"]
+texture = ExtResource("2_m84m3")
+
+[editable path="CarryProp"]

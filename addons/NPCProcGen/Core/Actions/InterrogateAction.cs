@@ -1,5 +1,8 @@
+using Godot;
+using Godot.Collections;
 using NPCProcGen.Core.Components;
 using NPCProcGen.Core.Components.Enums;
+using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.Internal;
 using NPCProcGen.Core.States;
 

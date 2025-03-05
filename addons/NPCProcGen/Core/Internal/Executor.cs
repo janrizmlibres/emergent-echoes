@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 using NPCProcGen.Core.Actions;
+using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Helpers;
 using NPCProcGen.Core.States;
 
@@ -33,6 +34,11 @@ namespace NPCProcGen.Core.Internal
 
             if (_actions.TryPeek(out BaseAction currentAction))
             {
+                if (currentAction.ActionType == ActionType.Interact)
+                {
+                    _actions.Pop();
+                }
+
                 currentAction.Interrupt();
             }
             else
@@ -151,9 +157,10 @@ namespace NPCProcGen.Core.Internal
             }
         }
 
-        private void OnActorDetained(ActorTag2D actor)
+        private void OnActorDetained(ActorTag2D actor, ActorTag2D captor)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
+            if (captor == _actorContext.Actor) return;
 
             if (_actions.TryPeek(out BaseAction action))
             {

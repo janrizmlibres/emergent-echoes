@@ -5,21 +5,27 @@
 [ext_resource type="Script" path="res://addons/NPCProcGen/Nodes/ActorTag2D/ActorTag2D.cs" id="3_tiunm"]
 
 [node name="Player" instance=ExtResource("1_15eeh")]
+collision_mask = 3
 script = ExtResource("1_idj2s")
 MaxSpeed = 80
 Acceleration = 10
 Friction = 10
+
+[node name="RearMarker" parent="." index="8"]
+visible = false
 
 [node name="AnimationTree" parent="." index="10"]
 parameters/Harvest/blend_position = 0
 
 [node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="." index="13"]
 position = Vector2(0, -1)
-radius = 6.0
+radius = 5.0
 metadata/_edit_lock_ = true
 
 [node name="ActorTag2D" type="Node" parent="." index="14" node_paths=PackedStringArray("ActorDetector", "RearMarker")]
 script = ExtResource("3_tiunm")
+MoneyAmount = 100
+FoodAmount = 5
 ActorDetector = NodePath("../ActorDetector")
 RearMarker = NodePath("../RearMarker/Marker2D")
 

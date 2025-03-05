@@ -10,7 +10,7 @@ namespace NPCProcGen.Core.States
     {
         private readonly CropMarker2D _cropMarker;
 
-        public Action OnComplete { get; set; }
+        public Func<bool> OnComplete { get; set; }
 
         public PlantState(ActorContext actorContext, StateContext stateContext,
             CropMarker2D cropMarker)
@@ -36,13 +36,14 @@ namespace NPCProcGen.Core.States
             };
         }
 
-        public bool OnPlantingComplete()
+        public void OnPlantingComplete()
         {
             _cropMarker.Status = CropStatus.Growing;
 
-            OnComplete?.Invoke();
-            _stateContext.Action.TransitionTo(_stateContext.StartingState);
-            return true;
+            if (OnComplete?.Invoke() ?? false)
+            {
+                _stateContext.Action.TransitionTo(_stateContext.StartingState);
+            }
         }
     }
 }

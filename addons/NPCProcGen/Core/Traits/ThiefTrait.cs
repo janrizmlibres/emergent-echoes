@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using NPCProcGen.Autoloads;
-using NPCProcGen.Core.Actions;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Internal;
 
@@ -19,26 +17,26 @@ namespace NPCProcGen.Core.Traits
             foreach (ResourceType type in resourceMgr.TangibleTypes)
             {
                 EvaluateInteraction(
+                    ActionType.Theft,
                     type,
-                    peerActors => PickActor(peerActors, type),
-                    ActionType.Theft
+                    peerActors => PickActor(peerActors, type)
                 );
             }
         }
 
-        // ! Remove in production
-        public override BaseAction EvaluateActionStub(Type actionType, ResourceType resType)
-        {
-            List<Tuple<BaseAction, float>> actionCandidates = new();
+        // // ! Remove in production
+        // public override BaseAction EvaluateActionStub(Type actionType, ResourceType resType)
+        // {
+        //     List<Tuple<BaseAction, float>> actionCandidates = new();
 
-            EvaluateInteraction(
-                resType,
-                peerActors => PickActor(peerActors, resType),
-                ActionType.Theft
-            );
+        //     EvaluateInteraction(
+        //         resType,
+        //         peerActors => PickActor(peerActors, resType),
+        //         ActionType.Theft
+        //     );
 
-            return actionCandidates.FirstOrDefault()?.Item1;
-        }
+        //     return actionCandidates.FirstOrDefault()?.Item1;
+        // }
 
         private ActorTag2D PickActor(List<ActorTag2D> peerActors, ResourceType type)
         {
