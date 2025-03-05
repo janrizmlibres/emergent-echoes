@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://blypn5fdqy1iv"]
+[gd_scene load_steps=5 format=3 uid="uid://blypn5fdqy1iv"]
 
 [ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_npgde"]
 [ext_resource type="Texture2D" uid="uid://bni44g000tsk4" path="res://Entities/Actors/NPCs/Pimble/Art/pimble.png" id="2_xaarx"]
+[ext_resource type="PackedScene" uid="uid://c3s3r5aucrjod" path="res://Entities/UI/HUD/Prompt/prompt.tscn" id="3_nokag"]
+[ext_resource type="Script" uid="uid://dtyfd1ptvbth2" path="res://Entities/UI/HUD/Prompt/Scripts/PimblePrompt.cs" id="4_nokag"]
 
 [node name="Pimble" instance=ExtResource("1_npgde")]
 
@@ -13,5 +15,9 @@ texture = ExtResource("2_xaarx")
 
 [node name="Interactable" parent="." index="17"]
 PrimaryActionDescription = "View Pimble"
+
+[node name="DescriptionPrompt" parent="." index="18" instance=ExtResource("3_nokag")]
+visible = false
+script = ExtResource("4_nokag")
 
 [editable path="CarryProp"]

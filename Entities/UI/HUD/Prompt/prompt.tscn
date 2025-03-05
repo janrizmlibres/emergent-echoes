@@ -1,21 +1,17 @@
-[gd_scene load_steps=11 format=3 uid="uid://c3s3r5aucrjod"]
+[gd_scene load_steps=8 format=3 uid="uid://c3s3r5aucrjod"]
 
-[ext_resource type="Script" path="res://Entities/UI/HUD/Prompt/Scripts/NpcPrompt.cs" id="1_i5nt7"]
-[ext_resource type="Texture2D" uid="uid://chebn1ujnluva" path="res://Entities/UI/HUD/Prompt/Prompt BG (1).png" id="1_t75cs"]
+[ext_resource type="Texture2D" uid="uid://chebn1ujnluva" path="res://Entities/UI/HUD/Prompt/Prompt BG.png" id="1_t75cs"]
 [ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/PressStart2P-Regular.ttf" id="2_jkvan"]
 [ext_resource type="Script" uid="uid://dqf2vaa58h0bf" path="res://Entities/UI/HUD/Prompt/Scripts/NpcName.cs" id="3_ibojn"]
 [ext_resource type="FontFile" uid="uid://brdooo1e25vgt" path="res://Assets/Fonts/PixelifySans-VariableFont_wght.ttf" id="3_tt8x5"]
 [ext_resource type="Script" uid="uid://dwe0ss5rjt8wf" path="res://Entities/UI/HUD/Prompt/Scripts/NpcDescription.cs" id="5_ax7q8"]
 [ext_resource type="Script" uid="uid://6k6c3gtma8kb" path="res://Entities/UI/HUD/Prompt/Scripts/Traits.cs" id="6_dplg3"]
-[ext_resource type="PackedScene" uid="uid://c0ee67a3a37o5" path="res://Entities/UI/HUD/Status Bar/heart_bar/heart_bar.tscn" id="7_qdw11"]
-[ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="8_3b0bo"]
-[ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="9_tb52g"]
+[ext_resource type="PackedScene" uid="uid://bcw71ah0pwnpd" path="res://Entities/UI/HUD/Prompt/npcRelationship.tscn" id="7_y04ul"]
 
 [node name="DescriptionPrompt" type="CanvasLayer"]
 layer = 10
 scale = Vector2(0.67, 0.55)
 transform = Transform2D(0.67, 0, 0, 0.55, 0, 0)
-script = ExtResource("1_i5nt7")
 
 [node name="Prompt" type="Control" parent="."]
 layout_mode = 3
@@ -93,37 +89,23 @@ script = ExtResource("6_dplg3")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Prompt"]
 layout_mode = 0
-offset_left = 76.5075
-offset_top = 193.0
-offset_right = 400.507
-offset_bottom = 233.0
+offset_left = 74.6269
+offset_top = 185.455
+offset_right = 398.626
+offset_bottom = 225.455
 theme_override_constants/separation = 70
 
-[node name="HeartBar1" parent="Prompt/HBoxContainer" instance=ExtResource("7_qdw11")]
+[node name="NPCIcon" parent="Prompt/HBoxContainer" instance=ExtResource("7_y04ul")]
 layout_mode = 2
 
-[node name="HeartBar2" parent="Prompt/HBoxContainer" instance=ExtResource("7_qdw11")]
+[node name="NPCIcon2" parent="Prompt/HBoxContainer" instance=ExtResource("7_y04ul")]
 layout_mode = 2
 
-[node name="HeartBar3" parent="Prompt/HBoxContainer" instance=ExtResource("7_qdw11")]
+[node name="NPCIcon3" parent="Prompt/HBoxContainer" instance=ExtResource("7_y04ul")]
 layout_mode = 2
 
-[node name="HeartBar4" parent="Prompt/HBoxContainer" instance=ExtResource("7_qdw11")]
+[node name="NPCIcon4" parent="Prompt/HBoxContainer" instance=ExtResource("7_y04ul")]
 layout_mode = 2
 
-[node name="HeartBar5" parent="Prompt/HBoxContainer" instance=ExtResource("7_qdw11")]
+[node name="NPCIcon5" parent="Prompt/HBoxContainer" instance=ExtResource("7_y04ul")]
 layout_mode = 2
-
-[node name="Silas" type="Sprite2D" parent="."]
-position = Vector2(100, 232.727)
-texture = ExtResource("9_tb52g")
-hframes = 8
-vframes = 6
-frame = 4
-
-[node name="Garreth" type="Sprite2D" parent="."]
-position = Vector2(168.657, 232.727)
-texture = ExtResource("8_3b0bo")
-hframes = 8
-vframes = 6
-frame = 5

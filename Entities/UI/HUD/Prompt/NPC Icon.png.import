@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chebn1ujnluva"
-path="res://.godot/imported/Prompt BG (1).png-1b363f2f6996ec156cd82b8f4932ca96.ctex"
+uid="uid://bjydk2dmap8pf"
+path="res://.godot/imported/NPC Icon.png-f54987b81a421a11b35a97ebf67212cc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entities/UI/HUD/Prompt/Prompt BG (1).png"
-dest_files=["res://.godot/imported/Prompt BG (1).png-1b363f2f6996ec156cd82b8f4932ca96.ctex"]
+source_file="res://Entities/UI/HUD/Prompt/NPC Icon.png"
+dest_files=["res://.godot/imported/NPC Icon.png-f54987b81a421a11b35a97ebf67212cc.ctex"]
 
 [params]
 
