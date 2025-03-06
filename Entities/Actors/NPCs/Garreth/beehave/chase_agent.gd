@@ -35,7 +35,7 @@ func _on_petition_area_body_entered(body: Node2D) -> void:
 	if body.get_name() == "GarrethAlt":
 		return
 		
-	if body.get_node_or_null("FoodAnchor") == null:
+	if body.get_node_or_null("SeedProp") == null:
 		return
 	
 	if body.get_name() == blackboard_object.get_value("actor").get_name():

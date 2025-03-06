@@ -17,11 +17,13 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		
 		blackboard.set_value("current_state", "idle")
 		return SUCCESS
+		
+	if blackboard.get_value("current_state") == "eating":
+		return RUNNING
 	
 	return FAILURE
 
-
 func _on_animation_tree_animation_finished(anim_name: StringName) -> void:
-	if anim_name == "eat_left" || anim_name == "right":
+	if anim_name == "eat_left" || anim_name == "eat_right":
 		blackboard.set_value("current_state", "done eating")
 	pass # Replace with function body.

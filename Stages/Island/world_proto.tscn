@@ -307,3 +307,4 @@ position = Vector2(229, 260)
 
 [editable path="Camera2D"]
 [editable path="Player"]
+[editable path="Player/CarryProp"]

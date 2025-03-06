@@ -8,7 +8,7 @@ func _ready() -> void:
 	hunger_timer.start()
 	pass # Replace with function body.
 	
-func _process(delta: float) -> void:	
+func _process(delta: float) -> void:
 	if blackboard.get_value("is_full") <= 60 && blackboard.get_value("food_inventory") >= 3:
 		blackboard.set_value("is_full", blackboard.get_value("is_full") + 30)
 		blackboard.set_value("food_inventory", blackboard.get_value("food_inventory") - 3)

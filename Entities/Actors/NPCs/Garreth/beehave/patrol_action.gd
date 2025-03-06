@@ -1,5 +1,8 @@
 extends ActionLeaf
 
+@onready var animation_tree = $"../../../../AnimationTree"
+@onready var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/playback")
+
 signal move_actor(patrol_location: Vector2)
 
 var current_patrol_index: int = 0
@@ -20,7 +23,8 @@ func tick(_actor: Node, blackboard: Blackboard) -> int:
 			current_patrol_index += 1
 		else:
 			current_patrol_index = 0
-		
+			
+		animation_state.travel("Idle")
 		blackboard.set_value("agent_arrived", false)
 		blackboard.set_value("current_state", "idle")	
 		return SUCCESS

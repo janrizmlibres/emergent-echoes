@@ -11,9 +11,7 @@ func before_run(actor: Node, blackboard: Blackboard) -> void:
 		return
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
-	
 	if blackboard.get_value("current_state") != "shouting" && blackboard.get_value("current_state") != "surveying":
-		print(blackboard.get_value("current_state"))
 		return FAILURE
 			
 	if chances >= 5:

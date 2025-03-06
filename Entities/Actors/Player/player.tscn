@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bnmuhsutwyeye"]
+[gd_scene load_steps=5 format=3 uid="uid://bnmuhsutwyeye"]
 
 [ext_resource type="PackedScene" uid="uid://dca6ru8aaidgk" path="res://Entities/Actors/actor.tscn" id="1_15eeh"]
 [ext_resource type="Script" uid="uid://mquu5kr20ocd" path="res://Entities/Actors/Player/Player.cs" id="1_idj2s"]
 [ext_resource type="Script" uid="uid://c3opdn48bdfcg" path="res://addons/NPCProcGen/Nodes/ActorTag2D/ActorTag2D.cs" id="3_tiunm"]
+[ext_resource type="Script" uid="uid://bgxm0q2ycclid" path="res://addons/beehave/blackboard.gd" id="4_5vy5m"]
 
 [node name="Player" instance=ExtResource("1_15eeh")]
 collision_mask = 3
@@ -31,5 +32,12 @@ RearMarker = NodePath("../RearMarker/Marker2D")
 
 [node name="DebugLabel" parent="." index="15" node_paths=PackedStringArray("Actor")]
 Actor = NodePath("../ActorTag2D")
+
+[node name="Blackboard" type="Node" parent="." index="16"]
+script = ExtResource("4_5vy5m")
+blackboard = {
+"money": 100
+}
+metadata/_custom_type_script = "uid://bgxm0q2ycclid"
 
 [editable path="CarryProp"]

@@ -9,7 +9,6 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	move_actor.emit(Vector2(480, 496))
 	
 	if blackboard.get_value("agent_arrived") == true:
-		print("arrived at market")
 		blackboard.set_value("current_state", "buying food")
 		blackboard.set_value("agent_arrived", false)
 		return SUCCESS

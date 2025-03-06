@@ -17,7 +17,7 @@ func _on_npc_alt_detector_body_entered(body: Node2D) -> void:
 	if body.get_name() == "GarrethAlt":
 		return
 
-	if body.get_node_or_null("FoodAnchor"):
+	if body.get_node_or_null("SeedProp"):
 		blackboard.set_value("actor", body)
 		
 		timer.stop()
