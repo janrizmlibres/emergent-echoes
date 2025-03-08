@@ -4,9 +4,6 @@ signal move_actor(patrol_location: Vector2)
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
 	if blackboard.get_value("current_state") == "resuming patrol" || blackboard.get_value("current_state") == "done petitioning":
-		if blackboard.get_value("current_state") == "done petitioning":
-			blackboard.get_value("actor").OnInteractionEnded()
-			
 		move_actor.emit(blackboard.get_value("last_patrol_location"))
 	
 		if blackboard.get_value("agent_arrived") == true:

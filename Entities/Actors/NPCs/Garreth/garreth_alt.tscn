@@ -168,15 +168,18 @@ one_shot = true
 [node name="HungerTimer" type="Timer" parent="."]
 wait_time = 30.0
 
+[node name="ConversationTimer" type="Timer" parent="."]
+wait_time = 3.0
+
 [node name="Physiological" type="Node" parent="."]
 script = ExtResource("7_ushby")
 
 [node name="Personality" type="Node" parent="."]
 script = ExtResource("7_rs2tg")
 
-[node name="EmoteController" parent="." instance=ExtResource("8_btyao")]
-
 [node name="FloatTextController" parent="." instance=ExtResource("9_7sty6")]
+
+[node name="EmoteController" parent="." instance=ExtResource("8_btyao")]
 
 [node name="GarrethBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("4_s0dao")
@@ -231,6 +234,7 @@ script = ExtResource("18_e4j5f")
 [connection signal="body_entered" from="NpcAltDetector" to="Personality" method="_on_npc_alt_detector_body_entered"]
 [connection signal="timeout" from="Timer" to="GarrethBehaviour/SelectorComposite/Patrol/Shout For Petition" method="_on_timer_timeout"]
 [connection signal="timeout" from="HungerTimer" to="Physiological" method="hunger_decay_timeout"]
+[connection signal="timeout" from="ConversationTimer" to="GarrethBehaviour/SelectorComposite/Petitioning/Ask For Petition" method="_on_conversation_timer_timeout"]
 [connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Resume Patrol" to="." method="move_actor"]
 [connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Buy Food/Go To Market" to="." method="move_actor"]
 [connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Patrol/Patrol Action" to="." method="move_actor"]

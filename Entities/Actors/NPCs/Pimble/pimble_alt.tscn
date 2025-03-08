@@ -1,0 +1,202 @@
+[gd_scene load_steps=21 format=3 uid="uid://cejru5227hvql"]
+
+[ext_resource type="Script" uid="uid://cukg3g5jvu3c7" path="res://Entities/Actors/NPCs/Pimble/beehave/pimble_alt.gd" id="1_ycgvp"]
+[ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Objects/Crop/Art/crops.png" id="2_0wisk"]
+[ext_resource type="Texture2D" uid="uid://bni44g000tsk4" path="res://Entities/Actors/NPCs/Pimble/Art/pimble.png" id="2_fr5lo"]
+[ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Objects/Sword/Art/sword.png" id="3_s0tkn"]
+[ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="4_nlchm"]
+[ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="5_4ptls"]
+[ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="6_sjbmi"]
+[ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="7_ycgvp"]
+[ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="8_852xc"]
+[ext_resource type="Script" uid="uid://bmqjw1xe63sui" path="res://addons/beehave/nodes/beehave_tree.gd" id="10_852xc"]
+[ext_resource type="Script" uid="uid://bgxm0q2ycclid" path="res://addons/beehave/blackboard.gd" id="10_a74vy"]
+[ext_resource type="Script" uid="uid://cr55e3ervhmig" path="res://addons/beehave/nodes/composites/selector.gd" id="11_0trbs"]
+[ext_resource type="Script" uid="uid://mtuuxj1jd0m2" path="res://addons/beehave/nodes/composites/sequence.gd" id="12_a74vy"]
+[ext_resource type="Script" uid="uid://ch4e5gtacl78u" path="res://Entities/Actors/NPCs/Pimble/beehave/is_the_agent_idle.gd" id="13_wi14k"]
+[ext_resource type="Script" uid="uid://ddwxanmadak5m" path="res://Entities/Actors/NPCs/Pimble/beehave/wait_for_5_sec.gd" id="14_852xc"]
+[ext_resource type="Script" uid="uid://djo7m1wpaf31j" path="res://Entities/Actors/NPCs/Pimble/beehave/is_the_actor_being_interacted.gd" id="14_iwkt0"]
+[ext_resource type="Script" uid="uid://c2epnvv8x4xpl" path="res://Entities/Actors/NPCs/Pimble/beehave/interacting.gd" id="15_f0nv0"]
+[ext_resource type="Script" uid="uid://n5rohh5152su" path="res://Entities/Actors/NPCs/Pimble/beehave/patrolling.gd" id="16_wi14k"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0trbs"]
+radius = 3.0
+height = 10.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a74vy"]
+size = Vector2(26, 20)
+
+[node name="pimbleAlt" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_ycgvp")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 4.0
+target_desired_distance = 2.0
+path_postprocessing = 1
+simplify_path = true
+avoidance_enabled = true
+radius = 5.0
+debug_enabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -10)
+texture = ExtResource("2_fr5lo")
+hframes = 8
+vframes = 6
+frame = 8
+metadata/_edit_lock_ = true
+
+[node name="SeedProp" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -21)
+texture = ExtResource("2_0wisk")
+hframes = 6
+vframes = 2
+frame = 6
+metadata/_edit_lock_ = true
+
+[node name="HarvestProp" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(0, -3)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("2_0wisk")
+hframes = 6
+vframes = 2
+frame = 11
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(0, -1)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_0trbs")
+metadata/_edit_lock_ = true
+
+[node name="Weapon" type="Area2D" parent="."]
+visible = false
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Weapon"]
+position = Vector2(16, 0)
+rotation = 1.5708
+texture = ExtResource("3_s0tkn")
+hframes = 4
+vframes = 3
+frame = 4
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Weapon"]
+position = Vector2(13, -6)
+shape = SubResource("RectangleShape2D_a74vy")
+disabled = true
+metadata/_edit_lock_ = true
+
+[node name="EatProp" type="Node2D" parent="."]
+visible = false
+texture_filter = 1
+position = Vector2(0, -5)
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="EatProp"]
+position = Vector2(9, 0)
+texture = ExtResource("2_0wisk")
+hframes = 6
+vframes = 2
+frame = 11
+metadata/_edit_lock_ = true
+
+[node name="CarryProp" parent="." instance=ExtResource("4_nlchm")]
+visible = false
+
+[node name="RearMarker" type="Node2D" parent="."]
+visible = false
+rotation = 3.14159
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
+
+[node name="Marker2D" type="Marker2D" parent="RearMarker"]
+position = Vector2(-10, 0)
+metadata/_edit_lock_ = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": ExtResource("5_4ptls")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = ExtResource("6_sjbmi")
+anim_player = NodePath("../AnimationPlayer")
+parameters/Attack/blend_position = 1.0
+parameters/Eat/blend_position = 1.0
+parameters/Harvest/blend_position = 0
+parameters/Idle/blend_position = 1.0
+parameters/Move/blend_position = 1.0
+
+[node name="EmoteController" parent="." instance=ExtResource("7_ycgvp")]
+
+[node name="FloatTextController" parent="." instance=ExtResource("8_852xc")]
+
+[node name="Timer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 5.0
+one_shot = true
+
+[node name="ConversationTimer" type="Timer" parent="."]
+wait_time = 3.0
+
+[node name="Blackboard" type="Node" parent="."]
+script = ExtResource("10_a74vy")
+blackboard = {
+"agent_arrived": false,
+"current_state": "idle",
+"food_inventory": 5,
+"money": 100
+}
+
+[node name="PimbleBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("10_852xc")
+blackboard = NodePath("../Blackboard")
+actor = NodePath("..")
+metadata/_custom_type_script = "uid://bmqjw1xe63sui"
+
+[node name="SelectorComposite" type="Node" parent="PimbleBehaviour"]
+script = ExtResource("11_0trbs")
+metadata/_custom_type_script = "uid://cr55e3ervhmig"
+
+[node name="Interacted" type="Node" parent="PimbleBehaviour/SelectorComposite"]
+script = ExtResource("12_a74vy")
+metadata/_custom_type_script = "uid://mtuuxj1jd0m2"
+
+[node name="Is The Actor Being Interacted" type="Node" parent="PimbleBehaviour/SelectorComposite/Interacted"]
+script = ExtResource("14_iwkt0")
+metadata/_custom_type_script = "uid://5taa4qhf13r1"
+
+[node name="Interacting" type="Node" parent="PimbleBehaviour/SelectorComposite/Interacted"]
+script = ExtResource("15_f0nv0")
+metadata/_custom_type_script = "uid://2xo58xxmeuvk"
+
+[node name="Patrolling" type="Node" parent="PimbleBehaviour/SelectorComposite"]
+script = ExtResource("12_a74vy")
+metadata/_custom_type_script = "uid://mtuuxj1jd0m2"
+
+[node name="Is The Agent Idle" type="Node" parent="PimbleBehaviour/SelectorComposite/Patrolling"]
+script = ExtResource("13_wi14k")
+metadata/_custom_type_script = "uid://5taa4qhf13r1"
+
+[node name="Wait For 5 Sec" type="Node" parent="PimbleBehaviour/SelectorComposite/Patrolling"]
+script = ExtResource("14_852xc")
+metadata/_custom_type_script = "uid://2xo58xxmeuvk"
+
+[node name="Patrolling" type="Node" parent="PimbleBehaviour/SelectorComposite/Patrolling"]
+script = ExtResource("16_wi14k")
+metadata/_custom_type_script = "uid://2xo58xxmeuvk"
+
+[connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
+[connection signal="timeout" from="Timer" to="PimbleBehaviour/SelectorComposite/Patrolling/Wait For 5 Sec" method="_on_timer_timeout"]
+[connection signal="timeout" from="ConversationTimer" to="PimbleBehaviour/SelectorComposite/Interacted/Interacting" method="_on_conversation_timer_timeout"]
+[connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Patrolling/Patrolling" to="." method="move_actor"]
+
+[editable path="CarryProp"]
