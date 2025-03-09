@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4yk4o5mx8jr6"
-path="res://.godot/imported/hero_elf.png-c2943583e8917a3ee6aa69116a841a63.ctex"
+uid="uid://bu4lgseyryu3n"
+path="res://.godot/imported/toblin.png-a9d329d35a90e31f93516d01bcdf1eda.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entities/Actors/Player/Art/hero_elf.png"
-dest_files=["res://.godot/imported/hero_elf.png-c2943583e8917a3ee6aa69116a841a63.ctex"]
+source_file="res://Entities/Actors/NPCs/Toblin/Art/toblin.png"
+dest_files=["res://.godot/imported/toblin.png-a9d329d35a90e31f93516d01bcdf1eda.ctex"]
 
 [params]
 

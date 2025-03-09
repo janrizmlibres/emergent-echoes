@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://u36eed1tu2hk"
-path="res://.godot/imported/tobin.png-f0e9db583e1fb5165702180cad75c53e.ctex"
+uid="uid://jvowy0xvcekr"
+path="res://.godot/imported/player.png-a1f02f3656fd211e30373084f279ac10.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entities/Actors/NPCs/Tobin/Art/tobin.png"
-dest_files=["res://.godot/imported/tobin.png-f0e9db583e1fb5165702180cad75c53e.ctex"]
+source_file="res://Entities/Actors/Player/Art/player.png"
+dest_files=["res://.godot/imported/player.png-a1f02f3656fd211e30373084f279ac10.ctex"]
 
 [params]
 
