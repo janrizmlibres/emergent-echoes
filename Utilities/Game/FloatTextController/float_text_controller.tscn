@@ -1,7 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dt0tf8aaxnjcl"]
 
-[ext_resource type="Script" path="res://Utilities/Game/FloatTextController/FloatTextController.cs" id="1_4612p"]
+[ext_resource type="Script" uid="uid://ma34e81r7lo0" path="res://Utilities/Game/FloatTextController/float_text_controller.gd" id="1_a7ngm"]
 
 [node name="FloatTextController" type="Node2D"]
-script = ExtResource("1_4612p")
-metadata/_edit_lock_ = true
+script = ExtResource("1_a7ngm")

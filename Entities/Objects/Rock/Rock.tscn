@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://cvgiqagi4pexc"]
 
-[ext_resource type="Script" path="res://Entities/Objects/Rock/Rock.cs" id="1_aa0db"]
+[ext_resource type="Script" uid="uid://dsmcagmmct5wj" path="res://Entities/Objects/Rock/Rock.cs" id="1_aa0db"]
 [ext_resource type="Texture2D" uid="uid://mqkuvhifdtkt" path="res://Entities/Objects/Rock/Art/forest_resources.png" id="1_rrllk"]
-[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Game Components/interactable.tscn" id="2_hfwux"]
+[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Interactions/interactable.tscn" id="2_hfwux"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_038nm"]
 atlas = ExtResource("1_rrllk")

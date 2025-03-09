@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://fabi3vghib2x"]
+
+[ext_resource type="Script" uid="uid://bh37rx3qwurof" path="res://Entities/AI/Nodes/is_action_pending.gd" id="1_gywco"]
+
+[node name="IsActionPending" type="Node"]
+script = ExtResource("1_gywco")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"

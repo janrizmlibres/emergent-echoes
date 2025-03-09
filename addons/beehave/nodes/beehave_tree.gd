@@ -104,8 +104,11 @@ var _can_send_message: bool = false
 
 
 func _ready() -> void:
-	get_tree().node_added.connect(_on_scene_tree_node_added_removed.bind(true))
-	get_tree().node_removed.connect(_on_scene_tree_node_added_removed.bind(false))
+	var connect_scene_tree_signal = func(signal_name: String, is_added: bool):
+		if not get_tree().is_connected(signal_name, _on_scene_tree_node_added_removed.bind(is_added)):
+			get_tree().connect(signal_name, _on_scene_tree_node_added_removed.bind(is_added))
+	connect_scene_tree_signal.call("node_added", true)
+	connect_scene_tree_signal.call("node_removed", false)
 
 	if not process_thread:
 		process_thread = ProcessThread.PHYSICS
@@ -156,7 +159,9 @@ func _on_scene_tree_node_added_removed(node: Node, is_added: bool) -> void:
 			)
 		else:
 			sgnal.connect(
-				func() -> void: BeehaveDebuggerMessages.unregister_tree(get_instance_id())
+				func() -> void:
+					BeehaveDebuggerMessages.unregister_tree(get_instance_id())
+					request_ready()
 			)
 
 
@@ -184,13 +189,13 @@ func _process_internally() -> void:
 	blackboard.set_value("can_send_message", _can_send_message)
 
 	if _can_send_message:
-		BeehaveDebuggerMessages.process_begin(get_instance_id())
+		BeehaveDebuggerMessages.process_begin(get_instance_id(), blackboard.get_debug_data())
 
 	if self.get_child_count() == 1:
 		tick()
 
 	if _can_send_message:
-		BeehaveDebuggerMessages.process_end(get_instance_id())
+		BeehaveDebuggerMessages.process_end(get_instance_id(), blackboard.get_debug_data())
 
 	# Check the cost for this frame and save it for metric report
 	_process_time_metric_value = Time.get_ticks_usec() - start_time
@@ -205,8 +210,8 @@ func tick() -> int:
 
 	status = child.tick(actor, blackboard)
 	if _can_send_message:
-		BeehaveDebuggerMessages.process_tick(child.get_instance_id(), status)
-		BeehaveDebuggerMessages.process_tick(get_instance_id(), status)
+		BeehaveDebuggerMessages.process_tick(child.get_instance_id(), status, blackboard.get_debug_data())
+		BeehaveDebuggerMessages.process_tick(get_instance_id(), status, blackboard.get_debug_data())
 
 	# Clear running action if nothing is running
 	if status != RUNNING:

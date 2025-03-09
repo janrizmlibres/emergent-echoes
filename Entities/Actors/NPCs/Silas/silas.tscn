@@ -1,15 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://ct27a7iqtaqs2"]
+[gd_scene load_steps=4 format=3 uid="uid://bt3gcxbonxwfd"]
 
-[ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_p7u50"]
-[ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_bkbxt"]
+[ext_resource type="PackedScene" uid="uid://8w0pyr8skfw7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_sprwr"]
+[ext_resource type="Texture2D" uid="uid://u6qjhno0n6dl" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_8j1os"]
+[ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/AI/procedural_tree.tscn" id="3_lha76"]
 
-[node name="Silas" instance=ExtResource("1_p7u50")]
+[node name="Silas" instance=ExtResource("1_sprwr")]
+metadata/_edit_vertical_guides_ = [138.0]
 
-[node name="NPCAgent2D" parent="." index="0"]
-Survival = 0.4
-Thief = 0.6
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_8j1os")
 
-[node name="Sprite2D" parent="." index="2"]
-texture = ExtResource("2_bkbxt")
+[node name="Executor" parent="." index="2" node_paths=PackedStringArray("procedural_tree")]
+procedural_tree = NodePath("SilasBT")
 
-[editable path="CarryProp"]
+[node name="SilasBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard") instance=ExtResource("3_lha76")]
+blackboard = NodePath("@Node@392436")
+
+[editable path="EmoteBubble"]

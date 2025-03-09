@@ -1,11 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://yaeul8xeirkq"]
+[gd_scene load_steps=8 format=3 uid="uid://yaeul8xeirkq"]
 
-[ext_resource type="Script" path="res://Entities/Objects/Chest/Chest.cs" id="1_k4i5w"]
-[ext_resource type="Texture2D" uid="uid://dek1ghcu58x00" path="res://Entities/Objects/Chest/Art/cave_ [resources].png" id="2_y0ji4"]
-[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Game Components/interactable.tscn" id="3_6mav2"]
+[ext_resource type="Script" uid="uid://bjahjgso5u8vb" path="res://Entities/Objects/Chest/Chest.cs" id="1_k4i5w"]
+[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Interactions/interactable.tscn" id="3_6mav2"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_00jr5"]
-atlas = ExtResource("2_y0ji4")
 region = Rect2(17, 94, 14, 15)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_quya2"]
