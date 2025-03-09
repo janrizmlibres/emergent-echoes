@@ -1,38 +1,62 @@
-[gd_scene load_steps=5 format=3 uid="uid://diiesf6ffioa7"]
+[gd_scene load_steps=6 format=3 uid="uid://8w0pyr8skfw7"]
 
-[ext_resource type="PackedScene" uid="uid://dca6ru8aaidgk" path="res://Entities/Actors/actor.tscn" id="1_r1c1o"]
-[ext_resource type="Script" uid="uid://gl3gs60775ud" path="res://Entities/Actors/NPCs/NPC.cs" id="1_scutl"]
-[ext_resource type="Script" uid="uid://u2djuuj5e76w" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_x7obk"]
-[ext_resource type="Texture2D" uid="uid://u36eed1tu2hk" path="res://Entities/Actors/NPCs/Tobin/Art/tobin.png" id="4_a6455"]
+[ext_resource type="PackedScene" uid="uid://cmcj7lmi8c5yw" path="res://Entities/Actors/actor.tscn" id="1_1dey1"]
+[ext_resource type="Script" uid="uid://cgutu5snnscr2" path="res://Entities/Actors/NPCs/npc.gd" id="2_36x7w"]
+[ext_resource type="Script" uid="uid://b2w31tcpkshsc" path="res://Utilities/NPCProcGen/Traits/survival_trait.gd" id="11_w50q2"]
+[ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="11_wuycy"]
+[ext_resource type="Script" uid="uid://x8h723av8g65" path="res://Utilities/NPCProcGen/Internal/executor.gd" id="13_c1v6p"]
 
-[node name="NPC" instance=ExtResource("1_r1c1o")]
-script = ExtResource("1_scutl")
+[node name="NPC" instance=ExtResource("1_1dey1")]
+script = ExtResource("2_36x7w")
+evaluation_interval = Vector2(10, 20)
 
-[node name="NPCAgent2D" type="Node" parent="." index="0" node_paths=PackedStringArray("ActorDetector", "RearMarker")]
-script = ExtResource("3_x7obk")
-ActorDetector = NodePath("../ActorDetector")
-RearMarker = NodePath("../RearMarker/Marker2D")
+[node name="Traits" type="Node" parent="." index="1"]
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." index="1"]
+[node name="SurvivalTrait" type="Node" parent="Traits" index="0"]
+script = ExtResource("11_w50q2")
+metadata/_custom_type_script = "uid://b2w31tcpkshsc"
+
+[node name="Executor" type="Node" parent="." index="2"]
+script = ExtResource("13_c1v6p")
+metadata/_custom_type_script = "uid://x8h723av8g65"
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." index="3"]
 path_desired_distance = 4.0
 target_desired_distance = 2.0
 simplify_path = true
 avoidance_enabled = true
 radius = 5.0
+debug_enabled = true
 
-[node name="Sprite2D" parent="." index="2"]
-texture = ExtResource("4_a6455")
-
-[node name="RearMarker" parent="." index="10"]
-visible = false
-
-[node name="AnimationTree" parent="." index="12"]
-parameters/Harvest/blend_position = 0
-
-[node name="StateTimer" type="Timer" parent="." index="15"]
+[node name="EvaluationTimer" type="Timer" parent="." index="4"]
 one_shot = true
 
-[node name="DebugLabel" parent="." index="16" node_paths=PackedStringArray("Actor")]
-Actor = NodePath("../NPCAgent2D")
+[node name="Money" type="Node" parent="Resources" index="0"]
+script = ExtResource("11_wuycy")
+type = 2
+amount = 500.0
+metadata/_custom_type_script = "uid://w1ekbi28ftm7"
+
+[node name="Food" type="Node" parent="Resources" index="1"]
+script = ExtResource("11_wuycy")
+type = 3
+amount = 10.0
+metadata/_custom_type_script = "uid://w1ekbi28ftm7"
+
+[node name="Satiation" type="Node" parent="Resources" index="2"]
+script = ExtResource("11_wuycy")
+type = 4
+amount = 70.0
+metadata/_custom_type_script = "uid://w1ekbi28ftm7"
+
+[node name="Companionship" type="Node" parent="Resources" index="3"]
+script = ExtResource("11_wuycy")
+type = 5
+amount = 70.0
+metadata/_custom_type_script = "uid://w1ekbi28ftm7"
+
+[connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
+[connection signal="timeout" from="EvaluationTimer" to="." method="_on_evaluation_timer_timeout"]
 
 [editable path="CarryProp"]
+[editable path="EmoteBubble"]
