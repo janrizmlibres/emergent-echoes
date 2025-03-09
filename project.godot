@@ -18,6 +18,7 @@ config/features=PackedStringArray("4.4", "C#", "GL Compatibility")
 
 BeehaveGlobalMetrics="*res://addons/beehave/metrics/beehave_global_metrics.gd"
 BeehaveGlobalDebugger="*res://addons/beehave/debug/global_debugger.gd"
+WorldState="*res://Utilities/NPCProcGen/world_state.gd"
 
 [display]
 
@@ -33,7 +34,7 @@ project/assembly_name="EmergentEchoes"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/NPCProcGen/plugin.cfg", "res://addons/beehave/plugin.cfg")
+enabled=PackedStringArray("res://addons/beehave/plugin.cfg")
 
 [input]
 
