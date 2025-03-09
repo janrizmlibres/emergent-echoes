@@ -39,8 +39,8 @@ func is_actor_valid_target(initiator: Actor, target: Actor) -> bool:
 	if not actor_state[target].is_available: return false
 	return true
 
-func is_actor_busy(actor: Actor) -> bool:
-	return actor_state[actor].is_busy
-
-func record_crime(crime) -> void:
-	crimes.append(crime)
+func get_open_case() -> Crime:
+	for crime in crimes:
+		if crime.is_open():
+			return crime
+	return null

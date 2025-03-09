@@ -1,7 +1,7 @@
 class_name SurvivalTrait
 extends BaseTrait
 
-func _evaluation_proactive_action():
+func evaluation_proactive_action():
 	for resource_type in ResourceStat.TANGIBLE_TYPES:
 		var actor_candidates = get_actor_candidates(resource_type)
 

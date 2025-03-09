@@ -1,8 +1,8 @@
 @tool
 extends ActionLeaf
 
-@export var companionship_increase: int = 3
-@export var companionship_decrease: int = -1
+@export var relationship_increase: int = 3
+@export var relationship_decrease: int = -1
 
 @onready var timer: Timer = $Timer
 
@@ -15,16 +15,17 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	(actor as NPC).face_target(target)
 	return RUNNING
 
-func clean_up(npc: NPC, target: Actor) -> void:
+func clean_up(npc: NPC, target: Actor, blackboard) -> void:
 	npc.emote_bubble.deactivate()
 	WorldState.actor_state[npc].is_busy = false
 	target.stop_interaction()
+	blackboard.set_value("target_secured", false)
 
 func interrupt(actor: Node, blackboard: Blackboard) -> void:
 	print(actor.name + " interrupting petition")
 	var npc = actor as NPC
 	var target = blackboard.get_value("target")
-	clean_up(npc, target)
+	clean_up(npc, target, blackboard)
 
 func before_run(actor: Node, blackboard: Blackboard) -> void:
 	print(actor.name + " starting petition")
@@ -39,18 +40,19 @@ func before_run(actor: Node, blackboard: Blackboard) -> void:
 func after_run(actor: Node, blackboard: Blackboard) -> void:
 	print(actor.name + " finishing petition")
 	var npc = actor as NPC
-	var target = blackboard.get_value("target")
+	var target: Actor = blackboard.get_value("target")
 	var resource_type = blackboard.get_value("resource_type")
-	clean_up(npc, target)
+	clean_up(npc, target, blackboard)
 
 	var relationship = target.memorizer.get_actor_relationship(npc)
 	var probability = get_petition_probability(relationship)
 	var accepted = randf() <= probability and target.has_resource(resource_type)
 
 	if not accepted:
+		npc.memorizer.actor_data[target].relationship += relationship_decrease
 		npc.float_text_controller.show_float_text(
 			Globals.ResourceType.COMPANIONSHIP,
-			String.num_int64(companionship_decrease),
+			int(relationship_decrease),
 			true
 		)
 		return
@@ -60,11 +62,12 @@ func after_run(actor: Node, blackboard: Blackboard) -> void:
 	var amount_to_give = max(1, (target_resource.amount - deficiency_point) * probability)
 	target.give_resource(npc, resource_type, amount_to_give)
 
-	target.memorizer.set_last_petition_resource(npc, resource_type)
-	npc.memorizer.update_relationship(target, companionship_increase)
+	target.memorizer.actor_data[npc].last_resource_petitioned = resource_type
+
+	npc.memorizer.actor_data[target].relationship += relationship_increase
 	npc.float_text_controller.show_float_text(
 		resource_type,
-		String.num_int64(amount_to_give),
+		int(amount_to_give),
 		true
 	)
 

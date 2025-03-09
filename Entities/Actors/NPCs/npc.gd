@@ -3,10 +3,8 @@ extends Actor
 
 @export var evaluation_interval: Vector2 = Vector2(10, 20)
 
-@onready var survival_trait: SurvivalTrait = $Traits/SurvivalTrait as SurvivalTrait
-var thief_trait: ThiefTrait
 var lawful_trait: LawfulTrait
-var farmer_trait: FarmerTrait
+var thief_trait: ThiefTrait
 var traits: Array[BaseTrait] = []
 
 @onready var executor: Executor = $Executor
@@ -20,15 +18,15 @@ func _ready():
 	start_timer()
 
 func setup_traits():
-	traits.append(survival_trait)
-
-	thief_trait = get_node_or_null("Traits/ThiefTrait")
-	if thief_trait != null: traits.append(thief_trait)
+	traits.append($Traits/SurvivalTrait)
 
 	lawful_trait = get_node_or_null("Traits/LawfulTrait")
 	if lawful_trait != null: traits.append(lawful_trait)
 
-	farmer_trait = get_node_or_null("Traits/FarmerTrait")
+	thief_trait = get_node_or_null("Traits/ThiefTrait")
+	if thief_trait != null: traits.append(thief_trait)
+
+	var farmer_trait = get_node_or_null("Traits/FarmerTrait")
 	if farmer_trait != null: traits.append(farmer_trait)
 
 func setup_resources():
@@ -104,3 +102,7 @@ func _on_evaluation_timer_timeout():
 func _on_navigation_agent_2d_velocity_computed(safe_velocity):
 	velocity = safe_velocity
 	move_and_slide()
+
+func _on_animation_tree_animation_finished(anim_name: StringName):
+	if anim_name.contains("eat"):
+		executor.procedural_tree.blackboard.set_value("eat_finished", true)

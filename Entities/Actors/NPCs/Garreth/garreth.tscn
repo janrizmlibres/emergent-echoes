@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/AI/procedural_tree.tscn" id="3_jlis0"]
 
 [node name="Garreth" instance=ExtResource("1_m3od5")]
+motion_mode = 0
 
 [node name="Sprite2D" parent="." index="0"]
 texture = ExtResource("2_7ptt5")
@@ -12,7 +13,22 @@ texture = ExtResource("2_7ptt5")
 [node name="Executor" parent="." index="2" node_paths=PackedStringArray("procedural_tree")]
 procedural_tree = NodePath("GarrethBT")
 
-[node name="GarrethBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard") instance=ExtResource("3_jlis0")]
-blackboard = NodePath("@Node@391609")
+[node name="GarrethBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_jlis0")]
+blackboard = NodePath("@Node@470968")
+actor = NodePath("../..")
 
+[node name="NavigationAgent2D" parent="." index="3"]
+navigation_layers = 3
+
+[node name="WeaponSprite" parent="Weapon" index="0"]
+frame = 0
+
+[node name="AnimationTree" parent="." index="15"]
+parameters/Attack/blend_position = 0
+parameters/Eat/blend_position = 0
+parameters/Harvest/blend_position = 0
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+
+[editable path="CarryProp"]
 [editable path="EmoteBubble"]

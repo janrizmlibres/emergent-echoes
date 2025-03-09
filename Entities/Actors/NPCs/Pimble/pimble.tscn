@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/AI/procedural_tree.tscn" id="3_vgnlq"]
 
 [node name="Pimble" instance=ExtResource("1_87dmx")]
+motion_mode = 0
 
 [node name="Sprite2D" parent="." index="0"]
 texture = ExtResource("2_nokag")
@@ -12,7 +13,18 @@ texture = ExtResource("2_nokag")
 [node name="Executor" parent="." index="2" node_paths=PackedStringArray("procedural_tree")]
 procedural_tree = NodePath("PimbleBT")
 
-[node name="PimbleBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard") instance=ExtResource("3_vgnlq")]
-blackboard = NodePath("@Node@391928")
+[node name="PimbleBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_vgnlq")]
+blackboard = NodePath("@Node@401602")
+actor = NodePath("../..")
 
+[node name="SeedProp" parent="." index="8"]
+position = Vector2(0, -17)
+
+[node name="WeaponSprite" parent="Weapon" index="0"]
+frame = 0
+
+[node name="AnimationTree" parent="." index="15"]
+parameters/Idle/blend_position = 0.00240386
+
+[editable path="CarryProp"]
 [editable path="EmoteBubble"]

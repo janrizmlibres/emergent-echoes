@@ -1,19 +1,35 @@
-[gd_scene load_steps=4 format=3 uid="uid://bt3gcxbonxwfd"]
+[gd_scene load_steps=5 format=3 uid="uid://bt3gcxbonxwfd"]
 
 [ext_resource type="PackedScene" uid="uid://8w0pyr8skfw7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_sprwr"]
 [ext_resource type="Texture2D" uid="uid://u6qjhno0n6dl" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_8j1os"]
+[ext_resource type="Script" uid="uid://b6dhi4y7p1aqr" path="res://Utilities/NPCProcGen/Traits/thief_trait.gd" id="3_8j1os"]
 [ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/AI/procedural_tree.tscn" id="3_lha76"]
 
 [node name="Silas" instance=ExtResource("1_sprwr")]
+motion_mode = 0
 metadata/_edit_vertical_guides_ = [138.0]
 
 [node name="Sprite2D" parent="." index="0"]
 texture = ExtResource("2_8j1os")
 
+[node name="ThiefTrait" type="Node" parent="Traits" index="1" node_paths=PackedStringArray("actor_node")]
+script = ExtResource("3_8j1os")
+weight = 0.7
+actor_node = NodePath("../..")
+metadata/_custom_type_script = "uid://b6dhi4y7p1aqr"
+
 [node name="Executor" parent="." index="2" node_paths=PackedStringArray("procedural_tree")]
 procedural_tree = NodePath("SilasBT")
 
-[node name="SilasBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard") instance=ExtResource("3_lha76")]
-blackboard = NodePath("@Node@392436")
+[node name="SilasBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_lha76")]
+blackboard = NodePath("@Node@481209")
+actor = NodePath("../..")
 
+[node name="SeedProp" parent="." index="8"]
+position = Vector2(0, -18)
+
+[node name="AnimationTree" parent="." index="15"]
+parameters/Idle/blend_position = 0.00240386
+
+[editable path="CarryProp"]
 [editable path="EmoteBubble"]

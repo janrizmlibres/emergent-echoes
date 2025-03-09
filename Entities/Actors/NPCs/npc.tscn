@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://8w0pyr8skfw7"]
 
 [ext_resource type="PackedScene" uid="uid://cmcj7lmi8c5yw" path="res://Entities/Actors/actor.tscn" id="1_1dey1"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/npc.gd" id="2_36x7w"]
+[ext_resource type="Script" uid="uid://cgutu5snnscr2" path="res://Entities/Actors/NPCs/npc.gd" id="2_36x7w"]
 [ext_resource type="Script" uid="uid://b2w31tcpkshsc" path="res://Utilities/NPCProcGen/Traits/survival_trait.gd" id="11_w50q2"]
 [ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="11_wuycy"]
 [ext_resource type="Script" uid="uid://x8h723av8g65" path="res://Utilities/NPCProcGen/Internal/executor.gd" id="13_c1v6p"]
@@ -12,8 +12,9 @@ evaluation_interval = Vector2(10, 20)
 
 [node name="Traits" type="Node" parent="." index="1"]
 
-[node name="SurvivalTrait" type="Node" parent="Traits" index="0"]
+[node name="SurvivalTrait" type="Node" parent="Traits" index="0" node_paths=PackedStringArray("actor_node")]
 script = ExtResource("11_w50q2")
+actor_node = NodePath("../..")
 metadata/_custom_type_script = "uid://b2w31tcpkshsc"
 
 [node name="Executor" type="Node" parent="." index="2"]
@@ -46,7 +47,7 @@ metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 [node name="Satiation" type="Node" parent="Resources" index="2"]
 script = ExtResource("11_wuycy")
 type = 4
-amount = 70.0
+amount = 20.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
 [node name="Companionship" type="Node" parent="Resources" index="3"]
@@ -54,6 +55,15 @@ script = ExtResource("11_wuycy")
 type = 5
 amount = 70.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
+
+[node name="SeedProp" parent="." index="8"]
+position = Vector2(0, -17)
+
+[node name="WeaponSprite" parent="Weapon" index="0"]
+frame = 0
+
+[node name="DebugLabel" parent="." index="18" node_paths=PackedStringArray("actor")]
+actor = NodePath("..")
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="timeout" from="EvaluationTimer" to="." method="_on_evaluation_timer_timeout"]

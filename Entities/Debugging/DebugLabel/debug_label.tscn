@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://d02tt78f7ol46"]
+
+[ext_resource type="Script" uid="uid://bynr5d4x5rdb1" path="res://Entities/Debugging/DebugLabel/debug_label.gd" id="1_ca0vq"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_7qwyo"]
+line_spacing = 0.0
+font_size = 6
+
+[node name="DebugLabel" type="Label"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -22.0
+offset_right = 20.0
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Testing 123"
+label_settings = SubResource("LabelSettings_7qwyo")
+horizontal_alignment = 1
+script = ExtResource("1_ca0vq")

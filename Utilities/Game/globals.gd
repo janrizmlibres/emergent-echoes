@@ -23,7 +23,11 @@ enum Action {
 	THEFT,
 	PETITION,
 	TALK,
-	EAT
+	EAT,
+	INTERROGATE,
+	PURSUIT,
+	PLANT,
+	HARVEST
 }
 
 enum Emote {

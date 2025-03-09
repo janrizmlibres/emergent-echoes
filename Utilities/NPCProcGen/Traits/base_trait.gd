@@ -13,11 +13,11 @@ func evaluation_action(social_practice: Globals.SocialPractice) -> Array:
 
 	match social_practice:
 		Globals.SocialPractice.PROACTIVE:
-			_evaluation_proactive_action()
+			evaluation_proactive_action()
 
 	return action_candidates.duplicate()
 
-func _evaluation_proactive_action():
+func evaluation_proactive_action():
 	pass
 
 func get_actor_candidates(resource_type: Globals.ResourceType) -> Array[Actor]:

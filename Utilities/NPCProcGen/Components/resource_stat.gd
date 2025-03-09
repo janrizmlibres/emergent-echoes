@@ -64,3 +64,6 @@ func is_unbounded() -> bool:
 
 func get_deficiency_point(multiplier: float = 1) -> float:
 	return lerp(lower_threshold, upper_threshold - 1, weight * multiplier)
+
+func get_max_value() -> float:
+	return MAX_VALUE[type]

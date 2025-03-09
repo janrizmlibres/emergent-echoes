@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://cualnqewkna60"]
+
+[ext_resource type="Script" uid="uid://cv332uqdwgww4" path="res://Entities/AI/Nodes/is_target_available.gd" id="1_dv77q"]
+
+[node name="IsTargetAvailable" type="Node"]
+script = ExtResource("1_dv77q")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"

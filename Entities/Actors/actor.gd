@@ -72,5 +72,8 @@ func _on_actor_detector_body_exited(body: Node2D):
 	if actor == null: return
 	
 	var remembered_position = actor.global_position
-	memorizer.set_last_known_position(actor, remembered_position)
+	memorizer.actor_data[actor].last_known_position = remembered_position
 	actors_in_range.erase(actor)
+
+func _on_animation_tree_animation_finished(_anim_name: StringName):
+	pass

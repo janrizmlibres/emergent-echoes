@@ -1,21 +1,35 @@
-[gd_scene load_steps=8 format=3 uid="uid://dxdxocng71jb2"]
+[gd_scene load_steps=11 format=3 uid="uid://dxdxocng71jb2"]
 
-[ext_resource type="Script" path="res://Stages/Testing/world.gd" id="1_smujd"]
+[ext_resource type="Script" uid="uid://b3y4asqmbsqma" path="res://Stages/Testing/world.gd" id="1_smujd"]
 [ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="2_iutls"]
+[ext_resource type="PackedScene" uid="uid://dderfoygjxyaf" path="res://Entities/Objects/Crops/CropTile/crop_tile.tscn" id="3_iutls"]
 [ext_resource type="PackedScene" uid="uid://d2icout5w8g1e" path="res://Entities/Actors/NPCs/Toblin/toblin.tscn" id="3_ksgwm"]
 [ext_resource type="PackedScene" uid="uid://bt3gcxbonxwfd" path="res://Entities/Actors/NPCs/Silas/silas.tscn" id="4_0lw8q"]
 [ext_resource type="PackedScene" uid="uid://gbb818jb3u6v" path="res://Entities/Actors/NPCs/Garreth/garreth.tscn" id="5_t0h3a"]
 [ext_resource type="PackedScene" uid="uid://wlg2sv2h5f5b" path="res://Entities/Actors/NPCs/Pimble/pimble.tscn" id="6_qxqqk"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_5ewud"]
-vertices = PackedVector2Array(314, 174, 6, 174, 6, 6, 314, 6)
+vertices = PackedVector2Array(314, 6, 314, 95, 229, 95, 6, 6, 6, 174, 229, 174)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(4, 3, 2, 5)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(0, 0, 320, 0, 320, 101, 235, 101, 235, 180, 0, 180)])
+agent_radius = 6.0
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_iutls"]
+vertices = PackedVector2Array(312, 172, 243, 172, 243, 109, 312, 109)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(0, 0, 320, 0, 320, 180, 0, 180)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(237, 103, 318, 103, 318, 178, 237, 178)])
+agent_radius = 6.0
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_ksgwm"]
+vertices = PackedVector2Array(250, 116, 229, 116, 229, 95, 250, 95)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(223, 89, 256, 89, 256, 109, 256, 122, 223, 122)])
 agent_radius = 6.0
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_smujd")
 metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
 
 [node name="TotalFood" type="Node" parent="."]
 script = ExtResource("2_iutls")
@@ -23,22 +37,68 @@ type = 1
 weight = 1.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
-[node name="Boundary" type="StaticBody2D" parent="."]
+[node name="Wallls" type="StaticBody2D" parent="."]
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Boundary"]
+[node name="Boundary" type="CollisionPolygon2D" parent="Wallls"]
 polygon = PackedVector2Array(0, 0, 320, 0, 320, 180, 0, 180, 0, 1, -2, 1, -2, 182, 322, 182, 322, -2, -2, -2, -2, 0)
 
-[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+[node name="Prison" type="CollisionPolygon2D" parent="Wallls"]
+position = Vector2(-27, 0)
+polygon = PackedVector2Array(262, 180, 262, 122, 264, 122, 264, 178, 345, 178, 345, 103, 283, 103, 283, 101, 347, 101, 347, 180)
+
+[node name="PrisonDoor" type="CollisionPolygon2D" parent="Wallls"]
+polygon = PackedVector2Array(256, 103, 237, 103, 237, 122, 235, 122, 235, 101, 256, 101)
+
+[node name="MainNavRegion" type="NavigationRegion2D" parent="."]
+visible = false
 navigation_polygon = SubResource("NavigationPolygon_5ewud")
 
+[node name="PrisonNavRegion" type="NavigationRegion2D" parent="."]
+visible = false
+navigation_polygon = SubResource("NavigationPolygon_iutls")
+
+[node name="PrisonDoorNavRegion" type="NavigationRegion2D" parent="."]
+visible = false
+navigation_polygon = SubResource("NavigationPolygon_ksgwm")
+navigation_layers = 2
+
+[node name="CropTiles" type="Node2D" parent="."]
+
+[node name="CropTile" parent="CropTiles" instance=ExtResource("3_iutls")]
+position = Vector2(13, 16)
+
+[node name="CropTile2" parent="CropTiles" instance=ExtResource("3_iutls")]
+position = Vector2(34, 16)
+
+[node name="CropTile3" parent="CropTiles" instance=ExtResource("3_iutls")]
+position = Vector2(56, 16)
+
+[node name="CropTile4" parent="CropTiles" instance=ExtResource("3_iutls")]
+position = Vector2(13, 39)
+
+[node name="CropTile5" parent="CropTiles" instance=ExtResource("3_iutls")]
+position = Vector2(34, 39)
+
+[node name="CropTile6" parent="CropTiles" instance=ExtResource("3_iutls")]
+position = Vector2(56, 39)
+
+[node name="CropTile7" parent="CropTiles" instance=ExtResource("3_iutls")]
+position = Vector2(13, 62)
+
+[node name="CropTile8" parent="CropTiles" instance=ExtResource("3_iutls")]
+position = Vector2(34, 62)
+
+[node name="CropTile9" parent="CropTiles" instance=ExtResource("3_iutls")]
+position = Vector2(56, 62)
+
 [node name="Toblin" parent="." instance=ExtResource("3_ksgwm")]
-position = Vector2(259, 125)
+position = Vector2(144, 86)
 
 [node name="Silas" parent="." instance=ExtResource("4_0lw8q")]
-position = Vector2(55, 71)
+position = Vector2(44, 105)
 
 [node name="Garreth" parent="." instance=ExtResource("5_t0h3a")]
 position = Vector2(208, 36)
 
 [node name="Pimble" parent="." instance=ExtResource("6_qxqqk")]
-position = Vector2(116, 127)
+position = Vector2(66, 138)
