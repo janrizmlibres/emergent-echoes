@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://uhfkpgur3ldd"]
+
+[ext_resource type="Script" uid="uid://7fxtnnarcx7v" path="res://Entities/AI/Nodes/get_random_position.gd" id="1_bynf7"]
+
+[node name="GetRandomPosition" type="Node"]
+script = ExtResource("1_bynf7")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"

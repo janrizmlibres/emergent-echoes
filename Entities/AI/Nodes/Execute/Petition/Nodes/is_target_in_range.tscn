@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://dj2bphprynbc0"]
+
+[ext_resource type="Script" uid="uid://x80ae8nixvw7" path="res://Entities/AI/Nodes/Execute/Petition/Nodes/is_target_in_range.gd" id="1_cbnat"]
+
+[node name="IsTargetInRange" type="Node"]
+script = ExtResource("1_cbnat")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
