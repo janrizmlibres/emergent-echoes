@@ -1,14 +1,8 @@
-[gd_scene load_steps=11 format=4 uid="uid://db1wmn8vycwnf"]
+[gd_scene load_steps=7 format=4 uid="uid://db1wmn8vycwnf"]
 
-[ext_resource type="Script" uid="uid://dle33ahc70c6b" path="res://Stages/Island/World.cs.txt" id="1_5y664"]
+[ext_resource type="Script" path="res://Stages/Island/World.cs.txt" id="1_5y664"]
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://forestcombined.tres" id="2_05cd2"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="3_i1x1k"]
-[ext_resource type="PackedScene" path="res://Entities/ActorsOld/Player/player.tscn" id="4_6onp1"]
-[ext_resource type="PackedScene" path="res://Entities/Actors/NPCs/Alts/NPCs/npc.tscn" id="5_pj3q8"]
-[ext_resource type="PackedScene" path="res://Entities/Actors/NPCs/Alts/Garreth/garreth.tscn" id="6_f5wjy"]
-
-[sub_resource type="Resource" id="Resource_85rwb"]
-metadata/__load_path__ = "res://addons/NPCProcGen/Nodes/PrisonArea2D/PrisonArea2D.cs"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6oap6"]
 size = Vector2(150, 34)
@@ -60,18 +54,47 @@ position = Vector2(-176, -160)
 [node name="BottomRight" parent="Camera2D" index="1"]
 position = Vector2(304, 224)
 
-[node name="Player" parent="." instance=ExtResource("4_6onp1")]
+[node name="Player" parent="."]
+_import_path = NodePath("")
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 0
+auto_translate_mode = 0
+editor_description = ""
 position = Vector2(649, 459)
+script = null
 
-[node name="Garreth" parent="." instance=ExtResource("6_f5wjy")]
+[node name="Garreth" parent="."]
+_import_path = NodePath("")
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 0
+auto_translate_mode = 0
+editor_description = ""
 position = Vector2(713, 456)
+script = null
 
-[node name="Silas" parent="." instance=ExtResource("5_pj3q8")]
+[node name="Silas" parent="."]
+_import_path = NodePath("")
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 0
+auto_translate_mode = 0
+editor_description = ""
 position = Vector2(696, 489)
+script = null
 
 [node name="PrisonArea2D" type="Area2D" parent="."]
 position = Vector2(93, 236)
-script = SubResource("Resource_85rwb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PrisonArea2D"]
 position = Vector2(75, 17)

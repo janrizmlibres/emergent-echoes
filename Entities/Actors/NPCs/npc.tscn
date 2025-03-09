@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://8w0pyr8skfw7"]
 
 [ext_resource type="PackedScene" uid="uid://cmcj7lmi8c5yw" path="res://Entities/Actors/actor.tscn" id="1_1dey1"]
-[ext_resource type="Script" uid="uid://cgutu5snnscr2" path="res://Entities/Actors/NPCs/npc.gd" id="2_36x7w"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/npc.gd" id="2_36x7w"]
 [ext_resource type="Script" uid="uid://b2w31tcpkshsc" path="res://Utilities/NPCProcGen/Traits/survival_trait.gd" id="11_w50q2"]
 [ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="11_wuycy"]
 [ext_resource type="Script" uid="uid://x8h723av8g65" path="res://Utilities/NPCProcGen/Internal/executor.gd" id="13_c1v6p"]

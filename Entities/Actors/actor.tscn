@@ -1,6 +1,6 @@
 [gd_scene load_steps=43 format=3 uid="uid://cmcj7lmi8c5yw"]
 
-[ext_resource type="Script" uid="uid://cb1rxtodur2tm" path="res://Entities/Actors/actor.gd" id="1_fjhqg"]
+[ext_resource type="Script" path="res://Entities/Actors/actor.gd" id="1_fjhqg"]
 [ext_resource type="Script" uid="uid://b8wl584h3jq0m" path="res://Utilities/NPCProcGen/Internal/memorizer.gd" id="2_3ijp3"]
 [ext_resource type="Texture2D" uid="uid://jvowy0xvcekr" path="res://Entities/Actors/Player/Art/player.png" id="2_f3284"]
 [ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Objects/Crops/Art/crops.png" id="4_f3284"]
