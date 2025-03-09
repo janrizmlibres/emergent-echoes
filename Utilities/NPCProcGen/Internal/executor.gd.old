@@ -1,0 +1,103 @@
+extends Node
+
+@export var actor: NPC
+
+enum State {
+	DORMANT,
+	PROCEDURAL,
+	STATE_MACHINE
+}
+
+var procedural_actions: Dictionary[Globals.Action, PackedScene] = {
+	Globals.Action.PETITION:
+		preload("res://Entities/Actors/NPCs/AI/Actions/petition_action.tscn"),
+	Globals.Action.TALK:
+		preload("res://Entities/Actors/NPCs/AI/Actions/talk_action.tscn")
+}
+
+var state: State = State.DORMANT
+var active_actions: Array = []
+
+@onready var dormant_bt: BeehaveTree = $DormantBT
+@onready var procedural_bt: BeehaveTree = $ProceduralBT
+@onready var state_machine_bt: BeehaveTree = $StateMachineBT
+
+func _physics_process(_delta):
+	match state:
+		State.DORMANT:
+			dormant_bt.enabled = true
+			procedural_bt.enabled = false
+			state_machine_bt.enabled = false
+		State.PROCEDURAL:
+			dormant_bt.enabled = false
+			procedural_bt.enabled = true
+			state_machine_bt.enabled = false
+		State.STATE_MACHINE:
+			dormant_bt.enabled = false
+			procedural_bt.enabled = false
+			state_machine_bt.enabled = true
+
+	var finish_statuses = [BeehaveTree.SUCCESS, BeehaveTree.FAILURE]
+	var is_procedural_finished = procedural_bt.status in finish_statuses
+	var is_state_machine_finished = state_machine_bt.status in finish_statuses
+
+	if is_procedural_finished or is_state_machine_finished:
+		end_current_action()
+
+func end_current_action():
+	var completed_action = active_actions.pop_back()
+
+	if completed_action != null:
+		clean_up(completed_action[0])
+	
+	if not active_actions.is_empty():
+		var last_action = active_actions[active_actions.size() - 1]
+		run_action(last_action[0], last_action[1])
+	else:
+		actor.start_timer()
+		state = State.DORMANT
+
+func run_action(action_name: Globals.Action, data: Array):
+	setup_data(action_name, data)
+
+	if action_name not in procedural_actions:
+		state = State.STATE_MACHINE
+		return
+	
+	var action_tree = procedural_actions[action_name].instance()
+	procedural_bt.add_child(action_tree)
+	state = State.PROCEDURAL
+
+func setup_data(action_name: Globals.Action, data: Array):
+	WorldState.actor_state[actor].current_action = action_name
+	state_machine_bt.blackboard.set_value("action", action_name)
+
+	match action_name:
+		Globals.Action.PETITION:
+			WorldState.actor_state[actor].current_petition_resource = data[1]
+			procedural_bt.blackboard.set_value("target", data[0])
+			procedural_bt.blackboard.set_value("resource_type", data[1])
+		Globals.Action.INTERACT:
+			state_machine_bt.blackboard.set_value("target", data[0])
+
+func clean_up(action_name: Globals.Action):
+	WorldState.actor_state[actor].current_action = Globals.Action.NONE
+	WorldState.actor_state[actor].current_petition_resource = Globals.ResourceType.NONE
+	WorldState.actor_state[actor].is_busy = false
+
+	if action_name in procedural_actions:
+		procedural_bt.get_child(0).queue_free()
+
+func add_action(new_action: Array) -> void:
+	var action_name = new_action[0]
+	var data = new_action[1]
+
+	if not active_actions.is_empty():
+		var current_action = active_actions[active_actions.size() - 1]
+		clean_up(current_action[0])
+
+		if current_action[0] == Globals.Action.INTERACT:
+			active_actions.pop_back()
+
+	run_action(action_name, data)
+	active_actions.append(new_action)
