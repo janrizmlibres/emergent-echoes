@@ -17,7 +17,7 @@ func _capture(message: String, data: Array, session_id: int) -> bool:
 	# in case the behavior tree has invalid setup this might be null
 	if debugger_tab == null:
 		return false
-	
+
 	if message == "beehave:register_tree":
 		debugger_tab.register_tree(data[0])
 		return true
@@ -25,13 +25,13 @@ func _capture(message: String, data: Array, session_id: int) -> bool:
 		debugger_tab.unregister_tree(data[0])
 		return true
 	if message == "beehave:process_tick":
-		debugger_tab.graph.process_tick(data[0], data[1])
+		debugger_tab.graph.process_tick(data[0], data[1], data[2])
 		return true
 	if message == "beehave:process_begin":
-		debugger_tab.graph.process_begin(data[0])
+		debugger_tab.graph.process_begin(data[0], data[1])
 		return true
 	if message == "beehave:process_end":
-		debugger_tab.graph.process_end(data[0])
+		debugger_tab.graph.process_end(data[0], data[1])
 		return true
 	return false
 
@@ -63,7 +63,10 @@ func _on_make_floating() -> void:
 	floating_window = Window.new()
 
 	var panel := Panel.new()
-	panel.add_theme_stylebox_override("panel", editor_interface.get_base_control().get_theme_stylebox("PanelForeground", "EditorStyles"))
+	panel.add_theme_stylebox_override(
+		"panel",
+		editor_interface.get_base_control().get_theme_stylebox("PanelForeground", "EditorStyles")
+	)
 	panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	floating_window.add_child(panel)
 
