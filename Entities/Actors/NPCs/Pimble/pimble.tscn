@@ -1,14 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://blypn5fdqy1iv"]
+[gd_scene load_steps=4 format=3 uid="uid://wlg2sv2h5f5b"]
 
-[ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_npgde"]
-[ext_resource type="Texture2D" uid="uid://bni44g000tsk4" path="res://Entities/Actors/NPCs/Pimble/Art/pimble.png" id="2_xaarx"]
+[ext_resource type="PackedScene" uid="uid://8w0pyr8skfw7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_87dmx"]
+[ext_resource type="Texture2D" uid="uid://cnxf1yrr65keq" path="res://Entities/Actors/NPCs/Pimble/Art/pimble.png" id="2_nokag"]
+[ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/AI/procedural_tree.tscn" id="3_vgnlq"]
 
-[node name="Pimble" instance=ExtResource("1_npgde")]
+[node name="Pimble" instance=ExtResource("1_87dmx")]
 
-[node name="NPCAgent2D" parent="." index="0"]
-Farmer = 1.0
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_nokag")
 
-[node name="Sprite2D" parent="." index="2"]
-texture = ExtResource("2_xaarx")
+[node name="Executor" parent="." index="2" node_paths=PackedStringArray("procedural_tree")]
+procedural_tree = NodePath("PimbleBT")
 
-[editable path="CarryProp"]
+[node name="PimbleBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard") instance=ExtResource("3_vgnlq")]
+blackboard = NodePath("@Node@391928")
+
+[editable path="EmoteBubble"]

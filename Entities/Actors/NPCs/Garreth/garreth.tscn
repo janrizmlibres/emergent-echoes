@@ -1,18 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://c0o0ox45oqj1h"]
+[gd_scene load_steps=4 format=3 uid="uid://gbb818jb3u6v"]
 
-[ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_bfh3u"]
-[ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_m84m3"]
+[ext_resource type="PackedScene" uid="uid://8w0pyr8skfw7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_m3od5"]
+[ext_resource type="Texture2D" uid="uid://bq8qo5fpoqcxt" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_7ptt5"]
+[ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/AI/procedural_tree.tscn" id="3_jlis0"]
 
-[node name="Garreth" instance=ExtResource("1_bfh3u")]
+[node name="Garreth" instance=ExtResource("1_m3od5")]
 
-[node name="NPCAgent2D" parent="." index="0"]
-Survival = 0.4
-Lawful = 1.0
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_7ptt5")
 
-[node name="NavigationAgent2D" parent="." index="1"]
-navigation_layers = 3
+[node name="Executor" parent="." index="2" node_paths=PackedStringArray("procedural_tree")]
+procedural_tree = NodePath("GarrethBT")
 
-[node name="Sprite2D" parent="." index="2"]
-texture = ExtResource("2_m84m3")
+[node name="GarrethBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard") instance=ExtResource("3_jlis0")]
+blackboard = NodePath("@Node@391609")
 
-[editable path="CarryProp"]
+[editable path="EmoteBubble"]
