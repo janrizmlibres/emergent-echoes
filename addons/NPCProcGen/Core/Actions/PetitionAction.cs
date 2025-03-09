@@ -1,4 +1,3 @@
-using Godot;
 using NPCProcGen.Core.Components.Enums;
 using NPCProcGen.Core.Internal;
 using NPCProcGen.Core.States;

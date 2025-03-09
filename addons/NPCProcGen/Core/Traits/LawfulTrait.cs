@@ -68,7 +68,7 @@ namespace NPCProcGen.Core.Traits
         {
             PursuitAction action = new(_actorCtx, criminal, crime);
             _actorCtx.Executor.AddAction(action);
-            NotifManager.Instance.NotifyInterruptedInteraction(_actorCtx.Actor);
+            // NotifManager.Instance.NotifyInteractionInterrupted(_actorCtx.Actor);
         }
 
         private void ResumeInvestigation()

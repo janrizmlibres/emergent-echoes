@@ -473,18 +473,18 @@ frame = 150
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_emkk2"),
-"circle": SubResource("AnimationLibrary_hmljg"),
-"cross": SubResource("AnimationLibrary_4vwpw"),
-"dizzy": SubResource("AnimationLibrary_06oac"),
-"ellipsis": SubResource("AnimationLibrary_38lik"),
-"exclamation": SubResource("AnimationLibrary_iaybi"),
-"hum": SubResource("AnimationLibrary_mgtrl"),
-"idea": SubResource("AnimationLibrary_lsfg4"),
-"interrobang": SubResource("AnimationLibrary_wranp"),
-"mark": SubResource("AnimationLibrary_ckeyp"),
-"query": SubResource("AnimationLibrary_5t30i"),
-"sweat": SubResource("AnimationLibrary_l2fu6")
+&"": SubResource("AnimationLibrary_emkk2"),
+&"circle": SubResource("AnimationLibrary_hmljg"),
+&"cross": SubResource("AnimationLibrary_4vwpw"),
+&"dizzy": SubResource("AnimationLibrary_06oac"),
+&"ellipsis": SubResource("AnimationLibrary_38lik"),
+&"exclamation": SubResource("AnimationLibrary_iaybi"),
+&"hum": SubResource("AnimationLibrary_mgtrl"),
+&"idea": SubResource("AnimationLibrary_lsfg4"),
+&"interrobang": SubResource("AnimationLibrary_wranp"),
+&"mark": SubResource("AnimationLibrary_ckeyp"),
+&"query": SubResource("AnimationLibrary_5t30i"),
+&"sweat": SubResource("AnimationLibrary_l2fu6")
 }
 
 [node name="DurationTimer" type="Timer" parent="."]

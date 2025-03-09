@@ -31,15 +31,15 @@ namespace NPCProcGen.Core.Helpers
         {
             CrimeCommitted?.Invoke(source, victim, crime);
         }
-        
-        public void NotifyInterruptedInteraction(ActorTag2D source)
-        {
-            InteractionInterrupted?.Invoke(source);
-        }
 
         public void NotifyInteractionStarted(ActorTag2D source)
         {
             InteractionStarted?.Invoke(source);
+        }
+        
+        public void NotifyInteractionInterrupted(ActorTag2D source)
+        {
+            InteractionInterrupted?.Invoke(source);
         }
 
         public void NotifyInteractionEnded(ActorTag2D source)

@@ -203,9 +203,10 @@ namespace NPCProcGen
         private void OnCrimeCommitted(ActorTag2D criminal, ActorTag2D victim, Crime crime)
         {
             if (criminal == this) return;
-            
+
             ExecuteOnCrimeCommitted(criminal, crime);
 
+            // If this actor is a victim and a Lawful, ignore the crime
             if (victim is NPCAgent2D npc && npc == this
                 && npc.Traits.Any(t => t is LawfulTrait))
             {
@@ -213,7 +214,7 @@ namespace NPCProcGen
             }
 
             if (!NearbyActors.Contains(criminal)) return;
-            
+
             crime.Participants.Add(this);
             CommonUtils.EmitSignal(
                 this,

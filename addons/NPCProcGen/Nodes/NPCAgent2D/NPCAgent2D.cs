@@ -152,7 +152,8 @@ namespace NPCProcGen
 
         protected override void ExecuteOnCrimeCommitted(ActorTag2D criminal, Crime crime)
         {
-            _context.LawfulModule?.PursueCriminal(criminal, crime);
+            if (_context.LawfulModule == null) return;
+            _context.LawfulModule.PursueCriminal(criminal, crime);
             _evaluationTimer.Stop();
         }
 
