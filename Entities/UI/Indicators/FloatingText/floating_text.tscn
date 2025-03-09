@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://d077ssc0c3wto"]
 
-[ext_resource type="Script" uid="uid://coa1tspuayalc" path="res://Entities/UI/Indicators/FloatingText/FloatingText.cs" id="1_rdrfv"]
+[ext_resource type="Script" uid="uid://bkyey7l81w4ln" path="res://Entities/UI/Indicators/FloatingText/floating_text.gd" id="1_gxwkt"]
 [ext_resource type="Texture2D" uid="uid://jn6pbqmsasut" path="res://Entities/UI/Indicators/FloatingText/Art/companionship.png" id="2_h1438"]
 [ext_resource type="LabelSettings" uid="uid://c84y7knhdw36u" path="res://Entities/UI/Indicators/FloatingText/Data/normal_label.tres" id="3_qex6n"]
 
@@ -9,7 +9,7 @@ texture_filter = 1
 offset_right = 47.0
 offset_bottom = 16.0
 scale = Vector2(0.5, 0.5)
-script = ExtResource("1_rdrfv")
+script = ExtResource("1_gxwkt")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 2

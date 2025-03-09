@@ -1,11 +1,11 @@
 [gd_scene load_steps=11 format=4 uid="uid://db1wmn8vycwnf"]
 
-[ext_resource type="Script" uid="uid://dle33ahc70c6b" path="res://Stages/Island/World.cs" id="1_5y664"]
+[ext_resource type="Script" uid="uid://dle33ahc70c6b" path="res://Stages/Island/World.cs.txt" id="1_5y664"]
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://forestcombined.tres" id="2_05cd2"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="3_i1x1k"]
-[ext_resource type="PackedScene" uid="uid://bnmuhsutwyeye" path="res://Entities/Actors/Player/player.tscn" id="4_6onp1"]
-[ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/npc.tscn" id="5_pj3q8"]
-[ext_resource type="PackedScene" uid="uid://c0o0ox45oqj1h" path="res://Entities/Actors/NPCs/Garreth/garreth.tscn" id="6_f5wjy"]
+[ext_resource type="PackedScene" path="res://Entities/ActorsOld/Player/player.tscn" id="4_6onp1"]
+[ext_resource type="PackedScene" path="res://Entities/Actors/NPCs/Alts/NPCs/npc.tscn" id="5_pj3q8"]
+[ext_resource type="PackedScene" path="res://Entities/Actors/NPCs/Alts/Garreth/garreth.tscn" id="6_f5wjy"]
 
 [sub_resource type="Resource" id="Resource_85rwb"]
 metadata/__load_path__ = "res://addons/NPCProcGen/Nodes/PrisonArea2D/PrisonArea2D.cs"

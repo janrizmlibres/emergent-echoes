@@ -1,0 +1,44 @@
+[gd_scene load_steps=8 format=3 uid="uid://s0wy4qjhj0p4"]
+
+[ext_resource type="Script" uid="uid://b3y4asqmbsqma" path="res://Stages/Testing/world.gd" id="1_smujd"]
+[ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="2_iutls"]
+[ext_resource type="PackedScene" uid="uid://d2icout5w8g1e" path="res://Entities/Actors/NPCs/Toblin/toblin.tscn" id="3_ksgwm"]
+[ext_resource type="PackedScene" uid="uid://bt3gcxbonxwfd" path="res://Entities/Actors/NPCs/Silas/silas.tscn" id="4_0lw8q"]
+[ext_resource type="PackedScene" uid="uid://gbb818jb3u6v" path="res://Entities/Actors/NPCs/Garreth/garreth.tscn" id="5_t0h3a"]
+[ext_resource type="PackedScene" uid="uid://wlg2sv2h5f5b" path="res://Entities/Actors/NPCs/Pimble/pimble.tscn" id="6_qxqqk"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_5ewud"]
+vertices = PackedVector2Array(314, 174, 6, 174, 6, 6, 314, 6)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(0, 0, 320, 0, 320, 180, 0, 180)])
+agent_radius = 6.0
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_smujd")
+metadata/_edit_group_ = true
+
+[node name="TotalFood" type="Node" parent="."]
+script = ExtResource("2_iutls")
+type = 1
+weight = 1.0
+metadata/_custom_type_script = "uid://w1ekbi28ftm7"
+
+[node name="Boundary" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Boundary"]
+polygon = PackedVector2Array(0, 0, 320, 0, 320, 180, 0, 180, 0, 1, -2, 1, -2, 182, 322, 182, 322, -2, -2, -2, -2, 0)
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_5ewud")
+
+[node name="Toblin" parent="." instance=ExtResource("3_ksgwm")]
+position = Vector2(259, 125)
+
+[node name="Silas" parent="." instance=ExtResource("4_0lw8q")]
+position = Vector2(55, 71)
+
+[node name="Garreth" parent="." instance=ExtResource("5_t0h3a")]
+position = Vector2(208, 36)
+
+[node name="Pimble" parent="." instance=ExtResource("6_qxqqk")]
+position = Vector2(116, 127)

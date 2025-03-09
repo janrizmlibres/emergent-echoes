@@ -7,8 +7,8 @@
 [ext_resource type="Script" uid="uid://bk6iqslf72f2x" path="res://Entities/UI/HUD/Prompt/Scripts/NpcDescription.cs" id="5_ax7q8"]
 [ext_resource type="Script" uid="uid://ci71drq0feg8b" path="res://Entities/UI/HUD/Prompt/Scripts/Traits.cs" id="6_dplg3"]
 [ext_resource type="PackedScene" uid="uid://c0ee67a3a37o5" path="res://Entities/UI/HUD/Status Bar/heart_bar/heart_bar.tscn" id="7_qdw11"]
-[ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="8_3b0bo"]
-[ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="9_tb52g"]
+[ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Alts/Garreth/Art/garreth.png" id="8_3b0bo"]
+[ext_resource type="Texture2D" uid="uid://cy1rkbqupy3bh" path="res://Entities/Actors/NPCs/Alts/Silas/Art/silas.png" id="9_tb52g"]
 
 [node name="DescriptionPrompt" type="CanvasLayer"]
 layer = 10
