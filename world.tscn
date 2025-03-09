@@ -1,11 +1,17 @@
 [gd_scene load_steps=7 format=4 uid="uid://7ju7mpc0by18"]
 
-[ext_resource type="Script" uid="uid://dle33ahc70c6b" path="res://Stages/Island/World.cs.txt" id="1_1yijo"]
+[ext_resource type="Script" path="res://Stages/Island/World.cs.txt" id="1_1yijo"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="1_pp8dq"]
-[ext_resource type="PackedScene" path="res://Entities/ActorsOld/Player/player.tscn" id="2_ne4id"]
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://forestcombined.tres" id="3_nfo08"]
-[ext_resource type="PackedScene" path="res://Entities/Actors/NPCs/Alts/NPCs/npc.tscn" id="4_gun4a"]
-[ext_resource type="PackedScene" path="res://Entities/Actors/NPCs/Alts/Garreth/garreth.tscn" id="5_5sidg"]
+
+[sub_resource type="Resource" id="Resource_74hl8"]
+metadata/__load_path__ = "res://Entities/ActorsOld/Player/player.tscn"
+
+[sub_resource type="Resource" id="Resource_33gqn"]
+metadata/__load_path__ = "res://Entities/Actors/NPCs/Alts/NPCs/npc.tscn"
+
+[sub_resource type="Resource" id="Resource_bpndb"]
+metadata/__load_path__ = "res://Entities/Actors/NPCs/Alts/Garreth/garreth.tscn"
 
 [node name="World" type="Node2D"]
 y_sort_enabled = true
@@ -50,7 +56,7 @@ position = Vector2(-176, -160)
 [node name="BottomRight" parent="Camera2D" index="1"]
 position = Vector2(304, 224)
 
-[node name="Player" parent="." instance=ExtResource("2_ne4id")]
+[node name="Player" parent="."]
 z_index = 1
 position = Vector2(426, 220)
 
@@ -60,11 +66,11 @@ MoneyAmount = 100
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
 remote_path = NodePath("../../Camera2D")
 
-[node name="Silas" parent="." instance=ExtResource("4_gun4a")]
+[node name="Silas" parent="."]
 visible = false
 position = Vector2(272, 162)
 
-[node name="Garreth" parent="." instance=ExtResource("5_5sidg")]
+[node name="Garreth" parent="."]
 visible = false
 position = Vector2(229, 260)
 

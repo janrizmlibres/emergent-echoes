@@ -1,21 +1,16 @@
 [gd_scene load_steps=25 format=4 uid="uid://7ykbd3t05bcd"]
 
-[ext_resource type="Script" uid="uid://dle33ahc70c6b" path="res://Stages/Island/World.cs.txt" id="1_2a375"]
+[ext_resource type="Script" path="res://Stages/Island/World.cs.txt" id="1_2a375"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="2_1qb5f"]
 [ext_resource type="Texture2D" uid="uid://b3h6fxk0bi5lj" path="res://Stages/Island/Art/Forest/forest.png" id="3_1mwuw"]
 [ext_resource type="PackedScene" uid="uid://cvgiqagi4pexc" path="res://Entities/Objects/Rock/Rock.tscn" id="4_j1rfh"]
 [ext_resource type="PackedScene" uid="uid://boawcqhrg67eg" path="res://Entities/Objects/Tree/tree.tscn" id="5_tgwpt"]
 [ext_resource type="PackedScene" uid="uid://bf75pmpbofcom" path="res://Entities/Objects/House/house.tscn" id="6_eylmk"]
-[ext_resource type="PackedScene" path="res://Entities/ActorsOld/Player/player.tscn" id="7_mu6ya"]
 [ext_resource type="Texture2D" uid="uid://b88f5qchsvx1n" path="res://Stages/Island/Art/Forest/tilled_dirt.png" id="7_odmgd"]
 [ext_resource type="Script" uid="uid://bmvlo5dbvjqpe" path="res://Stages/Testing/WorldLayer.cs" id="7_omad2"]
-[ext_resource type="Script" uid="uid://cb0aq7gg1wwy7" path="res://Utilities/NPCProcGenOld/Nodes/CropMarker2D/CropMarker2D.cs" id="9_3lr7n"]
-[ext_resource type="PackedScene" path="res://Entities/Actors/NPCs/Alts/NPCs/Tobin/toblin.tscn" id="11_0k8ww"]
-[ext_resource type="PackedScene" path="res://Entities/Actors/NPCs/Alts/Silas/silas.tscn" id="12_vqho4"]
-[ext_resource type="PackedScene" path="res://Entities/Actors/NPCs/Alts/Garreth/garreth.tscn" id="13_hrw2u"]
-[ext_resource type="PackedScene" path="res://Entities/Actors/NPCs/Alts/NPCs/Pimble/pimble.tscn" id="14_irlir"]
-[ext_resource type="Script" uid="uid://bkx0tytkoss0a" path="res://Utilities/NPCProcGenOld/Nodes/PrisonMarker2D/PrisonMarker2D.cs" id="15_02inm"]
-[ext_resource type="Script" uid="uid://b13kfh5gqy63g" path="res://Utilities/NPCProcGenOld/Nodes/ShopMarker2D/ShopMarker2D.cs" id="16_7krdg"]
+[ext_resource type="Script" path="res://Utilities/NPCProcGenOld/Nodes/CropMarker2D/CropMarker2D.cs" id="9_3lr7n"]
+[ext_resource type="Script" path="res://Utilities/NPCProcGenOld/Nodes/PrisonMarker2D/PrisonMarker2D.cs" id="15_02inm"]
+[ext_resource type="Script" path="res://Utilities/NPCProcGenOld/Nodes/ShopMarker2D/ShopMarker2D.cs" id="16_7krdg"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_k42pd"]
 resource_name = "Forest"
@@ -571,6 +566,21 @@ terrain_set_0/terrain_0/name = "Tiled Dirt"
 terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
 sources/0 = SubResource("TileSetAtlasSource_7w10g")
 
+[sub_resource type="Resource" id="Resource_ukxl8"]
+metadata/__load_path__ = "res://Entities/ActorsOld/Player/player.tscn"
+
+[sub_resource type="Resource" id="Resource_ucdwg"]
+metadata/__load_path__ = "res://Entities/Actors/NPCs/Alts/NPCs/Tobin/toblin.tscn"
+
+[sub_resource type="Resource" id="Resource_rqyss"]
+metadata/__load_path__ = "res://Entities/Actors/NPCs/Alts/Silas/silas.tscn"
+
+[sub_resource type="Resource" id="Resource_o6oxs"]
+metadata/__load_path__ = "res://Entities/Actors/NPCs/Alts/Garreth/garreth.tscn"
+
+[sub_resource type="Resource" id="Resource_xodbp"]
+metadata/__load_path__ = "res://Entities/Actors/NPCs/Alts/NPCs/Pimble/pimble.tscn"
+
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_0kads"]
 vertices = PackedVector2Array(179, 291, 227, 301, 115, 301, 141, 291, 115, 147, 141, 221, 179, 221, 147, 147, 205, 189, 333, 173, 333, 229.281, 323.883, 253, 301, 253, 259, 227, 259, 189, 243, 131, 243, 115, 381, 115, 381, 173, 205, 131, 301, 269, 253, 269, 205, 227, 253, 307, 301, 307, 301, 317, 227, 317, 147, 115, 205, 115)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(3, 2, 4, 5), PackedInt32Array(6, 5, 4, 7, 8), PackedInt32Array(9, 10, 11, 12, 13, 14), PackedInt32Array(15, 16, 17, 18, 9), PackedInt32Array(19, 15, 9, 14, 8, 7), PackedInt32Array(13, 12, 20, 21, 22), PackedInt32Array(23, 24, 25, 26), PackedInt32Array(23, 26, 1, 21), PackedInt32Array(7, 27, 28, 19), PackedInt32Array(6, 8, 22, 0), PackedInt32Array(0, 22, 21, 1)])
@@ -665,7 +675,7 @@ script = ExtResource("9_3lr7n")
 position = Vector2(344, 168)
 script = ExtResource("9_3lr7n")
 
-[node name="Player" parent="." groups=["Actors"] instance=ExtResource("7_mu6ya")]
+[node name="Player" parent="." groups=["Actors"]]
 position = Vector2(174, 165)
 
 [node name="AnimationTree" parent="Player" index="10"]
@@ -674,18 +684,18 @@ parameters/Attack/blend_position = 0
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
 remote_path = NodePath("../../Camera2D")
 
-[node name="Toblin" parent="." groups=["Actors"] instance=ExtResource("11_0k8ww")]
+[node name="Toblin" parent="." groups=["Actors"]]
 position = Vector2(128, 269)
 collision_mask = 3
 
-[node name="Silas" parent="." groups=["Actors"] instance=ExtResource("12_vqho4")]
+[node name="Silas" parent="." groups=["Actors"]]
 position = Vector2(219, 266)
 collision_mask = 3
 
-[node name="Garreth" parent="." groups=["Actors"] instance=ExtResource("13_hrw2u")]
+[node name="Garreth" parent="." groups=["Actors"]]
 position = Vector2(300, 233)
 
-[node name="Pimble" parent="." groups=["Actors"] instance=ExtResource("14_irlir")]
+[node name="Pimble" parent="." groups=["Actors"]]
 position = Vector2(290, 149)
 collision_mask = 3
 

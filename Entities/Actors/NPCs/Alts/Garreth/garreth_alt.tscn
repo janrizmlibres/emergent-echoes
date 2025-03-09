@@ -1,27 +1,30 @@
-[gd_scene load_steps=23 format=3 uid="uid://c46vvjqepxr5c"]
+[gd_scene load_steps=22 format=3 uid="uid://c46vvjqepxr5c"]
 
-[ext_resource type="Script" uid="uid://ei8oqa15b1br" path="res://Entities/Actors/NPCs/Alts/beehave/garreth_alt.gd" id="1_0w5gq"]
-[ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Alts/Garreth/Art/garreth.png" id="2_ykyr2"]
-[ext_resource type="AnimationLibrary" path="res://Entities/Actors/NPCs/Alts/actor_anim_library.res" id="3_hjw3h"]
-[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_s0dao"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/garreth_alt.gd" id="1_0w5gq"]
+[ext_resource type="Texture2D" uid="uid://bq8qo5fpoqcxt" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_ykyr2"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_s0dao"]
 [ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Interactions/npc_alt_detector.tscn" id="4_t4ib7"]
-[ext_resource type="AnimationNodeStateMachine" path="res://Entities/Actors/NPCs/Alts/actor_anim_sm.tres" id="4_vx0j5"]
-[ext_resource type="Script" uid="uid://cmlopw75b05c1" path="res://addons/beehave/nodes/composites/selector.gd" id="5_x35se"]
-[ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_6gfsl"]
-[ext_resource type="Script" uid="uid://w1xnfvpv70ab" path="res://Entities/Actors/NPCs/Alts/beehave/personality.gd" id="7_rs2tg"]
-[ext_resource type="PackedScene" path="res://Utilities/GameOld/EmoteController/emote_controller.tscn" id="8_btyao"]
-[ext_resource type="Script" uid="uid://cxory4mwolckl" path="res://Entities/Actors/NPCs/Alts/beehave/has_the_agent_arrived.gd" id="9_7j1tl"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="5_x35se"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_6gfsl"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/personality.gd" id="7_rs2tg"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/has_the_agent_arrived.gd" id="9_7j1tl"]
 [ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="9_7sty6"]
-[ext_resource type="Script" uid="uid://cf8d8cve2augn" path="res://Entities/Actors/NPCs/Alts/beehave/patrol_action.gd" id="11_8k8tp"]
-[ext_resource type="Script" uid="uid://3i4p0dgh2c1n" path="res://Entities/Actors/NPCs/Alts/beehave/shout_for_petition.gd" id="11_hcrvy"]
-[ext_resource type="Script" uid="uid://f6fqw7i1ke8e" path="res://addons/beehave/blackboard.gd" id="12_77cs2"]
-[ext_resource type="Script" uid="uid://dgo4xtxlpdg3r" path="res://Entities/Actors/NPCs/Alts/beehave/chase_agent.gd" id="17_8186l"]
-[ext_resource type="Script" uid="uid://0tklri4cvwpc" path="res://Entities/Actors/NPCs/Alts/beehave/ask_for_petition.gd" id="18_e4j5f"]
-[ext_resource type="Script" uid="uid://b8qgp5e3qcbul" path="res://Entities/Actors/NPCs/Alts/beehave/resume_patrol.gd" id="19_76401"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/patrol_action.gd" id="11_8k8tp"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/shout_for_petition.gd" id="11_hcrvy"]
+[ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="12_77cs2"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/chase_agent.gd" id="17_8186l"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/ask_for_petition.gd" id="18_e4j5f"]
+[ext_resource type="Script" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/resume_patrol.gd" id="19_76401"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0
 height = 10.0
+
+[sub_resource type="Resource" id="Resource_omcai"]
+metadata/__load_path__ = "res://Entities/Actors/NPCs/Alts/actor_anim_library.res"
+
+[sub_resource type="Resource" id="Resource_ugj32"]
+metadata/__load_path__ = "res://Entities/Actors/NPCs/Alts/actor_anim_sm.tres"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rsp3p"]
 size = Vector2(24, 30)
@@ -29,8 +32,8 @@ size = Vector2(24, 30)
 [sub_resource type="CircleShape2D" id="CircleShape2D_ajai6"]
 radius = 44.0
 
-[sub_resource type="Resource" id="Resource_r3f8e"]
-metadata/__load_path__ = "res://Entities/Hooks/FoodAnchor/food_anchor.tscn"
+[sub_resource type="Resource" id="Resource_avhep"]
+metadata/__load_path__ = "res://Utilities/GameOld/EmoteController/emote_controller.tscn"
 
 [node name="GarrethAlt" type="CharacterBody2D"]
 texture_filter = 1
@@ -50,11 +53,11 @@ shape = SubResource("CapsuleShape2D_tfsnf")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": ExtResource("3_hjw3h")
+"": SubResource("Resource_omcai")
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = ExtResource("4_vx0j5")
+tree_root = SubResource("Resource_ugj32")
 anim_player = NodePath("../AnimationPlayer")
 parameters/Eat/blend_position = 0
 parameters/Idle/blend_position = 0
@@ -97,7 +100,7 @@ one_shot = true
 [node name="Personality" type="Node" parent="."]
 script = ExtResource("7_rs2tg")
 
-[node name="EmoteController" parent="." instance=ExtResource("8_btyao")]
+[node name="EmoteController" parent="."]
 
 [node name="FloatTextController" parent="." instance=ExtResource("9_7sty6")]
 

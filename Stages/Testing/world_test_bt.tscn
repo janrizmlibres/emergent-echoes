@@ -1,6 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://s0wy4qjhj0p4"]
+[gd_scene load_steps=8 format=3 uid="uid://dxdxocng71jb2"]
 
-[ext_resource type="Script" uid="uid://b3y4asqmbsqma" path="res://Stages/Testing/world.gd" id="1_smujd"]
+[ext_resource type="Script" path="res://Stages/Testing/world.gd" id="1_smujd"]
 [ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="2_iutls"]
 [ext_resource type="PackedScene" uid="uid://d2icout5w8g1e" path="res://Entities/Actors/NPCs/Toblin/toblin.tscn" id="3_ksgwm"]
 [ext_resource type="PackedScene" uid="uid://bt3gcxbonxwfd" path="res://Entities/Actors/NPCs/Silas/silas.tscn" id="4_0lw8q"]

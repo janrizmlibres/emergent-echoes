@@ -2,9 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="1_pp8dq"]
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://forestcombined.tres" id="2_jcyte"]
-[ext_resource type="PackedScene" path="res://Entities/ActorsOld/Player/player.tscn" id="2_ne4id"]
-[ext_resource type="PackedScene" path="res://Entities/Actors/NPCs/Alts/NPCs/npc.tscn" id="4_gun4a"]
-[ext_resource type="PackedScene" uid="uid://c0o0ox45oqj1h" path="res://Entities/Actors/NPCs/Alts/Garreth/garreth.tscn" id="5_5sidg"]
 
 [sub_resource type="CSharpScript" id="CSharpScript_mabam"]
 script/source = "using Godot;
@@ -40,6 +37,15 @@ namespace EmergentEchoes
 	}
 }
 "
+
+[sub_resource type="Resource" id="Resource_mbpi4"]
+metadata/__load_path__ = "res://Entities/Actors/NPCs/Alts/NPCs/npc.tscn"
+
+[sub_resource type="Resource" id="Resource_x2f32"]
+metadata/__load_path__ = "res://Entities/ActorsOld/Player/player.tscn"
+
+[sub_resource type="Resource" id="Resource_am56c"]
+metadata/__load_path__ = "res://Entities/Actors/NPCs/Alts/Garreth/garreth.tscn"
 
 [node name="World" type="Node2D"]
 texture_filter = 1
@@ -81,16 +87,16 @@ tile_map_data = PackedByteArray("AAAFABMAAQAEAAQAAAAEABgAAQAEAAMAAAAIABoAAQAEAAM
 tile_set = ExtResource("2_jcyte")
 metadata/_edit_lock_ = true
 
-[node name="Silas" parent="Ysort" instance=ExtResource("4_gun4a")]
+[node name="Silas" parent="Ysort"]
 position = Vector2(616, 331)
 
-[node name="Player" parent="Ysort" instance=ExtResource("2_ne4id")]
+[node name="Player" parent="Ysort"]
 position = Vector2(551, 333)
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Ysort/Player"]
 remote_path = NodePath("../../../Camera2D")
 
-[node name="Garreth" parent="." instance=ExtResource("5_5sidg")]
+[node name="Garreth" parent="."]
 position = Vector2(229, 260)
 
 [editable path="Camera2D"]

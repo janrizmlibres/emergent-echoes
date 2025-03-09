@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bk10dt7i8uqo6"]
 
-[ext_resource type="Script" uid="uid://dci6bbctn7c3n" path="res://Entities/Props/CarryProp/carry_prop.gd" id="1_ruk1u"]
+[ext_resource type="Script" path="res://Entities/Props/CarryProp/carry_prop.gd" id="1_ruk1u"]
 [ext_resource type="Texture2D" uid="uid://bu4lgseyryu3n" path="res://Entities/Actors/NPCs/Toblin/Art/toblin.png" id="1_vd5d3"]
 
 [node name="CarryProp" type="Node2D"]
