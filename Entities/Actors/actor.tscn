@@ -1035,7 +1035,6 @@ rotation = 1.5708
 texture = ExtResource("5_uxave")
 hframes = 4
 vframes = 3
-frame = 4
 
 [node name="WeaponShape" type="CollisionShape2D" parent="Weapon"]
 position = Vector2(13, -6)

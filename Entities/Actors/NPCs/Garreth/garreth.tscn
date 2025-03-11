@@ -14,14 +14,14 @@ texture = ExtResource("2_7ptt5")
 procedural_tree = NodePath("GarrethBT")
 
 [node name="GarrethBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_jlis0")]
-blackboard = NodePath("@Node@470968")
+blackboard = NodePath("@Node@21905")
 actor = NodePath("../..")
 
 [node name="NavigationAgent2D" parent="." index="3"]
 navigation_layers = 3
 
-[node name="WeaponSprite" parent="Weapon" index="0"]
-frame = 0
+[node name="SeedProp" parent="." index="8"]
+position = Vector2(0, -18)
 
 [node name="AnimationTree" parent="." index="15"]
 parameters/Attack/blend_position = 0

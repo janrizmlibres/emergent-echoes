@@ -1,11 +1,15 @@
 class_name NPC
 extends Actor
 
+enum State {IDLE, MOVING}
+
 @export var evaluation_interval: Vector2 = Vector2(10, 20)
 
 var lawful_trait: LawfulTrait
 var thief_trait: ThiefTrait
 var traits: Array[BaseTrait] = []
+
+var state: State = State.IDLE
 
 @onready var executor: Executor = $Executor
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
@@ -82,27 +86,29 @@ func handle_animations():
 		animation_state.travel("Idle")
 
 func start_interaction(target):
-	executor.procedural_tree.blackboard.set_value("interaction_target", target)
-	executor.procedural_tree.blackboard.set_value("interaction_required", true)
-	evaluation_timer.stop()
+	var action_data = {
+		"action": Globals.Action.INTERACT,
+		"data": {"target": target}
+	}
+	executor.start_action(action_data)
 
 func stop_interaction():
-	executor.procedural_tree.blackboard.set_value("interaction_required", false)
-	start_timer()
+	print("Stopping interaction for " + name)
+	executor.end_action()
 
 func _on_evaluation_timer_timeout():
-	var action: Array = Strategiser.evaluation_action(self, Globals.SocialPractice.PROACTIVE)
+	var action_data: Dictionary = Strategiser.evaluation_action(self, Globals.SocialPractice.PROACTIVE)
 
-	if not action.is_empty():
-		print("Action evaluated by ", self.name, ": ", Globals.get_action_enum_string(action[0]))
-		executor.start_evaluated_action(action)
+	if not action_data.is_empty():
+		print("Action evaluated by ", self.name, ": ", Globals.get_action_string(action_data.action))
+		executor.start_action(action_data)
 	else:
+		print("No action evaluated by ", self.name)
 		start_timer()
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity):
 	velocity = safe_velocity
 	move_and_slide()
 
-func _on_animation_tree_animation_finished(anim_name: StringName):
-	if anim_name.contains("eat"):
-		executor.procedural_tree.blackboard.set_value("eat_finished", true)
+func _on_animation_tree_animation_finished(_anim_name: StringName):
+	executor.procedural_tree.blackboard.set_value("anim_finished", true)

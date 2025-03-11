@@ -19,14 +19,14 @@ const PERCENT_TYPES = [
 ]
 const MAX_VALUE = {
 	Globals.ResourceType.TOTAL_FOOD: Globals.INT_MAX,
-	Globals.ResourceType.MONEY: 10000,
-	Globals.ResourceType.FOOD: 100,
+	Globals.ResourceType.MONEY: 500,
+	Globals.ResourceType.FOOD: 30,
 	Globals.ResourceType.SATIATION: 100,
 	Globals.ResourceType.COMPANIONSHIP: 100,
 	Globals.ResourceType.DUTY: 100
 }
 const LOCAL_THRESHOLDS = {
-	Globals.ResourceType.MONEY: [20, 1000],
+	Globals.ResourceType.MONEY: [20, 450],
 	Globals.ResourceType.FOOD: [5, 20],
 	Globals.ResourceType.SATIATION: [5, 90],
 	Globals.ResourceType.COMPANIONSHIP: [10, 90],
@@ -53,7 +53,9 @@ func _ready():
 	if LOCAL_THRESHOLDS.has(type):
 		lower_threshold = LOCAL_THRESHOLDS[type][0]
 		upper_threshold = LOCAL_THRESHOLDS[type][1]
-		return
+
+		var res_type = Globals.get_resource_string(type)
+		print("DP of ", owner.name, " for ", res_type, ": ", get_deficiency_point())
 
 func _process(delta):
 	if DECAY_TYPES.has(type):
@@ -62,8 +64,8 @@ func _process(delta):
 func is_unbounded() -> bool:
 	return MAX_VALUE[type] == Globals.INT_MAX
 
-func get_deficiency_point(multiplier: float = 1) -> float:
-	return lerp(lower_threshold, upper_threshold - 1, weight * multiplier)
+func get_deficiency_point() -> float:
+	return lerp(lower_threshold, upper_threshold - 1, weight)
 
 func get_max_value() -> float:
 	return MAX_VALUE[type]

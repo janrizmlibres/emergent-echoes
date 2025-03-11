@@ -1,9 +1,14 @@
 [gd_scene load_steps=3 format=3 uid="uid://jh8w0jv3rc0f"]
 
 [ext_resource type="PackedScene" uid="uid://cmcj7lmi8c5yw" path="res://Entities/Actors/actor.tscn" id="1_h34l7"]
-[ext_resource type="Script" path="res://Entities/Actors/Player/player.gd" id="2_ngslm"]
+[ext_resource type="Script" uid="uid://bmjvv7wfg7dpl" path="res://Entities/Actors/Player/player.gd" id="2_ngslm"]
 
 [node name="Player" instance=ExtResource("1_h34l7")]
+collision_mask = 3
 script = ExtResource("2_ngslm")
 
+[node name="SeedProp" parent="." index="4"]
+position = Vector2(0, -18)
+
+[editable path="CarryProp"]
 [editable path="EmoteBubble"]

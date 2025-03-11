@@ -16,13 +16,6 @@ var last_known_position: Vector2 = Vector2.INF:
 		last_known_position = value
 		decay_timer.start()
 
-var last_resource_petitioned: Globals.ResourceType = Globals.ResourceType.NONE:
-	get:
-		return last_resource_petitioned
-	set(value):
-		last_resource_petitioned = value
-		petition_timer.start()
-
 var decay_timer: Timer
 var petition_timer: Timer
 
@@ -32,18 +25,9 @@ func _init(memorizer: Memorizer):
 	decay_timer.one_shot = true
 	decay_timer.timeout.connect(_on_decay_timer_timeout)
 	memorizer.add_child(decay_timer)
-	
-	petition_timer = Timer.new()
-	petition_timer.wait_time = PETITION_INTERVAL
-	petition_timer.one_shot = true
-	petition_timer.timeout.connect(_on_petition_timer_timeout)
-	memorizer.add_child(petition_timer)
 
 func _on_decay_timer_timeout() -> void:
 	last_known_position = Vector2.INF
-
-func _on_petition_timer_timeout() -> void:
-	last_resource_petitioned = Globals.ResourceType.NONE
 
 static func get_interrogation_probability(relationship_level: float) -> float:
 	if relationship_level <= -26:

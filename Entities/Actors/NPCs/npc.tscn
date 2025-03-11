@@ -35,7 +35,7 @@ one_shot = true
 [node name="Money" type="Node" parent="Resources" index="0"]
 script = ExtResource("11_wuycy")
 type = 2
-amount = 500.0
+amount = 250.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
 [node name="Food" type="Node" parent="Resources" index="1"]
@@ -47,7 +47,7 @@ metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 [node name="Satiation" type="Node" parent="Resources" index="2"]
 script = ExtResource("11_wuycy")
 type = 4
-amount = 20.0
+amount = 70.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
 [node name="Companionship" type="Node" parent="Resources" index="3"]
@@ -55,12 +55,6 @@ script = ExtResource("11_wuycy")
 type = 5
 amount = 70.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
-
-[node name="SeedProp" parent="." index="8"]
-position = Vector2(0, -17)
-
-[node name="WeaponSprite" parent="Weapon" index="0"]
-frame = 0
 
 [node name="DebugLabel" parent="." index="18" node_paths=PackedStringArray("actor")]
 actor = NodePath("..")

@@ -9,8 +9,10 @@ var resources: Array[ResourceStat] = []
 var actors_in_range: Array[Actor] = []
 
 @onready var memorizer: Memorizer = $Memorizer
+@onready var seed_prop: Sprite2D = $SeedProp
 @onready var actor_detector: Area2D = $ActorDetector
 @onready var rear_marker: Marker2D = $RearMarker/RearMarker
+@onready var carry_prop: CarryProp = $CarryProp
 
 @onready var animation_tree: AnimationTree = $AnimationTree
 @onready
@@ -25,8 +27,11 @@ func _ready():
 func set_blend_positions(x: float):
 	animation_tree.set("parameters/Idle/blend_position", x)
 	animation_tree.set("parameters/Move/blend_position", x)
+	animation_tree.set("parameters/Eat/blend_position", x)
+	animation_tree.set("parameters/Harvest/blend_position", x)
+	animation_tree.set("parameters/Attack/blend_position", x)
 
-func has_resource(type: Globals.ResourceType) -> bool:
+func holds_resource(type: Globals.ResourceType) -> bool:
 	var resource = get_resource(type)
 	return resource.amount > 0 if resource != null else false
 
@@ -61,18 +66,14 @@ func stop_interaction():
 	pass
 
 func _on_actor_detector_body_entered(body: Node2D):
-	if body == self: return
-	var actor = body as Actor
-	if actor == null: return
-	actors_in_range.append(actor)
+	if body == self or body is not Actor: return
+	actors_in_range.append(body as Actor)
 
 func _on_actor_detector_body_exited(body: Node2D):
-	if body == self: return
-	var actor = body as Actor
-	if actor == null: return
+	if body == self or body is not Actor: return
 	
-	var remembered_position = actor.global_position
-	memorizer.actor_data[actor].last_known_position = remembered_position
+	var actor = body as Actor
+	memorizer.set_last_known_position(actor, actor.global_position)
 	actors_in_range.erase(actor)
 
 func _on_animation_tree_animation_finished(_anim_name: StringName):

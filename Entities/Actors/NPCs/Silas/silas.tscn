@@ -14,7 +14,7 @@ texture = ExtResource("2_8j1os")
 
 [node name="ThiefTrait" type="Node" parent="Traits" index="1" node_paths=PackedStringArray("actor_node")]
 script = ExtResource("3_8j1os")
-weight = 0.7
+weight = 0.8
 actor_node = NodePath("../..")
 metadata/_custom_type_script = "uid://b6dhi4y7p1aqr"
 
@@ -22,11 +22,17 @@ metadata/_custom_type_script = "uid://b6dhi4y7p1aqr"
 procedural_tree = NodePath("SilasBT")
 
 [node name="SilasBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_lha76")]
-blackboard = NodePath("@Node@481209")
+blackboard = NodePath("@Node@161586")
 actor = NodePath("../..")
 
+[node name="Money" parent="Resources" index="0"]
+amount = 100.0
+
+[node name="Food" parent="Resources" index="1"]
+amount = 2.0
+
 [node name="SeedProp" parent="." index="8"]
-position = Vector2(0, -18)
+position = Vector2(0, -17)
 
 [node name="AnimationTree" parent="." index="15"]
 parameters/Idle/blend_position = 0.00240386

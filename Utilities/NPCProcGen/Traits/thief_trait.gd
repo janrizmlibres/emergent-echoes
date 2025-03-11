@@ -5,14 +5,21 @@ func evaluation_proactive_action():
 	for resource_type in ResourceStat.TANGIBLE_TYPES:
 		var actor_candidates = get_actor_candidates(resource_type)
 
+		print("Actor candidates for theft: " + str(actor_candidates.size()))
 		actor_candidates = actor_candidates.filter(func(actor):
-			if actor is not NPC: return true
+			if actor is Player: return true
 			return (actor as NPC).lawful_trait == null
 		)
 
 		var target_actor = choose_actor(actor_candidates)
-		if (target_actor == null): continue
-		add_action(Globals.Action.THEFT, resource_type, [target_actor, resource_type])
+		if (target_actor == null):
+			print("No target actor found for theft")
+			continue
+
+		add_action(Globals.Action.THEFT, resource_type, {
+			"target": target_actor,
+			"resource_type": resource_type
+		})
 
 func choose_actor(candidates: Array[Actor]) -> Actor:
 	for actor in candidates:

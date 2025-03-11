@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" uid="uid://b3y4asqmbsqma" path="res://Stages/Testing/world.gd" id="1_smujd"]
 [ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="2_iutls"]
+[ext_resource type="PackedScene" uid="uid://cggrn3eu6010x" path="res://Entities/Objects/PrisonMarker/prison_marker.tscn" id="3_0lw8q"]
 [ext_resource type="PackedScene" uid="uid://dderfoygjxyaf" path="res://Entities/Objects/Crops/CropTile/crop_tile.tscn" id="3_iutls"]
 [ext_resource type="PackedScene" uid="uid://d2icout5w8g1e" path="res://Entities/Actors/NPCs/Toblin/toblin.tscn" id="3_ksgwm"]
 [ext_resource type="PackedScene" uid="uid://bt3gcxbonxwfd" path="res://Entities/Actors/NPCs/Silas/silas.tscn" id="4_0lw8q"]
-[ext_resource type="PackedScene" uid="uid://gbb818jb3u6v" path="res://Entities/Actors/NPCs/Garreth/garreth.tscn" id="5_t0h3a"]
-[ext_resource type="PackedScene" uid="uid://wlg2sv2h5f5b" path="res://Entities/Actors/NPCs/Pimble/pimble.tscn" id="6_qxqqk"]
+[ext_resource type="PackedScene" uid="uid://wlg2sv2h5f5b" path="res://Entities/Actors/NPCs/Pimble/pimble.tscn" id="7_iutls"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_5ewud"]
 vertices = PackedVector2Array(314, 6, 314, 95, 229, 95, 6, 6, 6, 174, 229, 174)
@@ -46,21 +46,28 @@ polygon = PackedVector2Array(0, 0, 320, 0, 320, 180, 0, 180, 0, 1, -2, 1, -2, 18
 position = Vector2(-27, 0)
 polygon = PackedVector2Array(262, 180, 262, 122, 264, 122, 264, 178, 345, 178, 345, 103, 283, 103, 283, 101, 347, 101, 347, 180)
 
-[node name="PrisonDoor" type="CollisionPolygon2D" parent="Wallls"]
+[node name="PrisonDoor" type="StaticBody2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PrisonDoor"]
 polygon = PackedVector2Array(256, 103, 237, 103, 237, 122, 235, 122, 235, 101, 256, 101)
 
-[node name="MainNavRegion" type="NavigationRegion2D" parent="."]
-visible = false
+[node name="NavigationRegions" type="Node2D" parent="."]
+
+[node name="Main" type="NavigationRegion2D" parent="NavigationRegions"]
 navigation_polygon = SubResource("NavigationPolygon_5ewud")
 
-[node name="PrisonNavRegion" type="NavigationRegion2D" parent="."]
-visible = false
+[node name="Prison" type="NavigationRegion2D" parent="NavigationRegions"]
 navigation_polygon = SubResource("NavigationPolygon_iutls")
 
-[node name="PrisonDoorNavRegion" type="NavigationRegion2D" parent="."]
-visible = false
+[node name="PrisonDoor" type="NavigationRegion2D" parent="NavigationRegions"]
 navigation_polygon = SubResource("NavigationPolygon_ksgwm")
 navigation_layers = 2
+
+[node name="Prisons" type="Node2D" parent="."]
+
+[node name="PrisonMarker" parent="Prisons" instance=ExtResource("3_0lw8q")]
+position = Vector2(278, 141)
 
 [node name="CropTiles" type="Node2D" parent="."]
 
@@ -97,8 +104,5 @@ position = Vector2(144, 86)
 [node name="Silas" parent="." instance=ExtResource("4_0lw8q")]
 position = Vector2(44, 105)
 
-[node name="Garreth" parent="." instance=ExtResource("5_t0h3a")]
-position = Vector2(208, 36)
-
-[node name="Pimble" parent="." instance=ExtResource("6_qxqqk")]
-position = Vector2(66, 138)
+[node name="Pimble" parent="." instance=ExtResource("7_iutls")]
+position = Vector2(124, 48)

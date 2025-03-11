@@ -29,16 +29,26 @@ func evaluation_proactive_action():
 
 	var target = assigned_case.get_random_participant()
 	if target != null:
-		add_action(Globals.Action.INTERROGATE, Globals.ResourceType.DUTY, [assigned_case, target])
+		add_action(Globals.Action.INTERROGATE, Globals.ResourceType.DUTY, {
+			"case": assigned_case,
+			"target": target
+		})
 		return
 	
 	if assigned_case.all_participants_cleared():
-		add_action(Globals.Action.PURSUIT, Globals.ResourceType.DUTY, [assigned_case])
+		add_action(Globals.Action.PURSUIT, Globals.ResourceType.DUTY, {
+			"case": assigned_case,
+			"target": assigned_case.criminal
+		})
 
 func resolve_case():
 	var probability = assigned_case.get_solve_probability()
+
 	if (randf() < probability):
-		add_action(Globals.Action.PURSUIT, Globals.ResourceType.DUTY, [assigned_case])
+		add_action(Globals.Action.PURSUIT, Globals.ResourceType.DUTY, {
+			"case": assigned_case,
+			"target": assigned_case.criminal
+		})
 	else:
 		assigned_case.status = Crime.Status.UNSOLVED
 		assigned_case = null

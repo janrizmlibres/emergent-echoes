@@ -13,5 +13,6 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	blackboard.set_value("target_found", false)
 	blackboard.set_value("target_secured", false)
 	blackboard.set_value("eat_finished", false)
+	blackboard.set_value("target_detained", false)
 	(actor_node as NPC).start_timer()
 	return SUCCESS

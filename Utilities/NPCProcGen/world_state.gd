@@ -2,7 +2,6 @@ extends Node
 
 class ActorState:
 	var current_action: Globals.Action = Globals.Action.NONE
-	var current_petition_resource: Globals.ResourceType = Globals.ResourceType.NONE
 	var is_busy: bool = false
 	var is_available: bool = true
 
@@ -31,13 +30,30 @@ func get_peer_actors(actor: Actor) -> Array[Actor]:
 func get_actor_count() -> int:
 	return actor_state.size()
 
+func get_current_action(actor):
+	return actor_state[actor].current_action
+
+func set_current_action(actor, action):
+	actor_state[actor].current_action = action
+
+func is_busy(actor):
+	return actor_state[actor].is_busy
+
+func set_is_busy(actor, value):
+	actor_state[actor].is_busy = value
+
+func is_available(actor):
+	return actor_state[actor].is_available
+
+func set_availability(actor, value):
+	actor_state[actor].is_available = value
+
 func is_actor_valid_target(initiator: Actor, target: Actor) -> bool:
 	var target_last_position = initiator.memorizer.get_last_known_position(target)
 	if target_last_position == Vector2.INF and not initiator.actors_in_range.has(target):
 		return false
 
-	if not actor_state[target].is_available: return false
-	return true
+	return actor_state[target].is_available
 
 func get_open_case() -> Crime:
 	for crime in crimes:

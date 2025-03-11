@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ck8qpegql0ece"]
 
-[ext_resource type="Script" uid="uid://dq4x360dwwdxi" path="res://Entities/AI/Nodes/Execute/Petition/Nodes/is_target_valid.gd" id="1_si63o"]
+[ext_resource type="Script" uid="uid://dq4x360dwwdxi" path="res://Entities/AI/Nodes/Execute/is_target_valid.gd" id="1_si63o"]
 
 [node name="IsTargetValid" type="Node"]
 script = ExtResource("1_si63o")

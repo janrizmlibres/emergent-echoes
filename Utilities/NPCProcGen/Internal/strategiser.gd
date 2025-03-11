@@ -1,27 +1,31 @@
 class_name Strategiser
 
-static func evaluation_action(agent: NPC, practice: Globals.SocialPractice) -> Array:
-	var evaluations = []
+static func evaluation_action(agent: NPC, practice: Globals.SocialPractice) -> Dictionary:
+	var candidates: Array[Dictionary] = []
 
 	for trait_mod in agent.traits:
-		var actions = trait_mod.evaluation_action(practice)
+		var action_candidates: Array[Dictionary] = trait_mod.evaluation_action(practice)
+		print("Action candidates for ", agent.name, " under ", trait_mod.name, ": ", action_candidates)
 
-		for action in actions:
-			if randf() <= action[1]:
-				evaluations.append([action[0], float("%.2f" % action[1])])
+		print("Final candidates:")
+		for candidate in action_candidates:
+			var rand_num = randf()
+			print("Random number: ", rand_num, " Candidate weight: ", candidate.weight)
+			if rand_num <= candidate.weight:
+				print(candidate)
+				candidates.append(candidate)
 
-	if evaluations.is_empty(): return []
+	if candidates.is_empty(): return {}
 
 	var max_weight: float = 0.0
-	for action in evaluations:
-		max_weight = max(max_weight, action[1])
+	for candidate in candidates:
+		max_weight = max(max_weight, candidate.weight)
 
+	print("Max weight candidates:")
 	var max_weighted_actions = []
-	for action in evaluations:
-		if abs(action[1] - max_weight) < 0.5:
-			max_weighted_actions.append(action)
+	for candidate in candidates:
+		if absf(candidate.weight - max_weight) < 0.01:
+			print(candidate)
+			max_weighted_actions.append(candidate)
   
-	if not max_weighted_actions.is_empty():
-		return max_weighted_actions[randi() % max_weighted_actions.size()][0]
-  
-	return []
+	return max_weighted_actions[randi() % max_weighted_actions.size()].action_data

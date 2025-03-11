@@ -13,6 +13,7 @@ var status: Status = Status.DORMANT:
 		if status == Status.DORMANT:
 			growth_timer = 0
 	
+var is_attended: bool = false
 var growth_timer: float = 0
 
 @onready var sprite: Sprite2D = $Sprite2D
@@ -30,11 +31,12 @@ func _process(delta):
 		status = Status.MATURE
 		growth_timer = growth_duration
 	
-	if get_growth_progress() < 0.33:
+	var progress = get_growth_progress()
+	if progress < 0.33:
 		sprite.frame = 7
-	elif get_growth_progress() < 0.66:
+	elif progress < 0.66:
 		sprite.frame = 8
-	elif get_growth_progress() < 0.99:
+	elif progress < 0.99:
 		sprite.frame = 9
 	else:
 		sprite.frame = 10
