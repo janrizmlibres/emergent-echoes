@@ -1,11 +1,11 @@
 [gd_scene load_steps=2 format=3 uid="uid://0esw0i5rv0cx"]
 
-[ext_resource type="Script" uid="uid://bpcqixxsyyism" path="res://Entities/Camera/Camera2d.cs" id="1_32a56"]
+[ext_resource type="Script" uid="uid://cr03djtcwpj0r" path="res://Entities/Camera/camera_2d.gd" id="1_81151"]
 
 [node name="Camera2D" type="Camera2D"]
 limit_smoothed = true
 position_smoothing_enabled = true
-script = ExtResource("1_32a56")
+script = ExtResource("1_81151")
 metadata/_edit_group_ = true
 
 [node name="TopLeft" type="Marker2D" parent="."]

@@ -21,7 +21,7 @@ metadata/_custom_type_script = "uid://cmda8gt6vuorb"
 procedural_tree = NodePath("PimbleBT")
 
 [node name="PimbleBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_vgnlq")]
-blackboard = NodePath("@Node@185534")
+blackboard = NodePath("@Node@21914")
 actor = NodePath("../..")
 
 [node name="SeedProp" parent="." index="8"]

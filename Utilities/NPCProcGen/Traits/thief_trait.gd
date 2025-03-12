@@ -4,17 +4,10 @@ extends BaseTrait
 func evaluation_proactive_action():
 	for resource_type in ResourceStat.TANGIBLE_TYPES:
 		var actor_candidates = get_actor_candidates(resource_type)
-
-		print("Actor candidates for theft: " + str(actor_candidates.size()))
-		actor_candidates = actor_candidates.filter(func(actor):
-			if actor is Player: return true
-			return (actor as NPC).lawful_trait == null
-		)
+		actor_candidates = actor_candidates.filter(func(actor): return not actor.is_lawful())
 
 		var target_actor = choose_actor(actor_candidates)
-		if (target_actor == null):
-			print("No target actor found for theft")
-			continue
+		if (target_actor == null): continue
 
 		add_action(Globals.Action.THEFT, resource_type, {
 			"target": target_actor,

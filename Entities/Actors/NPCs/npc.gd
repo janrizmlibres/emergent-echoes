@@ -1,15 +1,13 @@
 class_name NPC
 extends Actor
 
-enum State {IDLE, MOVING}
-
 @export var evaluation_interval: Vector2 = Vector2(10, 20)
 
 var lawful_trait: LawfulTrait
 var thief_trait: ThiefTrait
 var traits: Array[BaseTrait] = []
 
-var state: State = State.IDLE
+var is_in_knockback: bool = false
 
 @onready var executor: Executor = $Executor
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
@@ -40,17 +38,29 @@ func setup_resources():
 	var food_resource = get_node("Resources/Food")
 	resources.append(food_resource)
 
-	var satiation_resource = get_node("Resources/Satiation")
+	var satiation_resource: ResourceStat = get_node("Resources/Satiation")
 	resources.append(satiation_resource)
 
 	var companionship_resource = get_node("Resources/Companionship")
 	resources.append(companionship_resource)
+
+	var duty_resource = get_node_or_null("Resources/Duty")
+	if duty_resource != null: resources.append(duty_resource)
 
 func start_timer():
 	if evaluation_timer.is_stopped():
 		evaluation_timer.start(randf_range(evaluation_interval.x, evaluation_interval.y))
 
 func _physics_process(_delta):
+	if is_in_knockback:
+		velocity = velocity.move_toward(Vector2.ZERO, friction)
+
+		if velocity.length() == 0:
+			is_in_knockback = false
+
+		move_and_slide()
+		return
+
 	stop_agent()
 
 func face_target(target):
@@ -93,22 +103,31 @@ func start_interaction(target):
 	executor.start_action(action_data)
 
 func stop_interaction():
-	print("Stopping interaction for " + name)
 	executor.end_action()
+
+func apply_knockback(direction: Vector2, force: float):
+	velocity = direction * force
+	animation_state.travel("Idle")
+	is_in_knockback = true
 
 func _on_evaluation_timer_timeout():
 	var action_data: Dictionary = Strategiser.evaluation_action(self, Globals.SocialPractice.PROACTIVE)
 
 	if not action_data.is_empty():
-		print("Action evaluated by ", self.name, ": ", Globals.get_action_string(action_data.action))
+		# print("Action evaluated by ", self.name, ": ", Globals.get_action_string(action_data.action))
 		executor.start_action(action_data)
 	else:
 		print("No action evaluated by ", self.name)
 		start_timer()
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity):
-	velocity = safe_velocity
-	move_and_slide()
+	if not is_in_knockback:
+			velocity = safe_velocity
+			move_and_slide()
 
 func _on_animation_tree_animation_finished(_anim_name: StringName):
 	executor.procedural_tree.blackboard.set_value("anim_finished", true)
+
+func _on_satiation_satiation_depleted():
+	print(self.name, " took damage due to satiation depletion")
+	apply_damage()

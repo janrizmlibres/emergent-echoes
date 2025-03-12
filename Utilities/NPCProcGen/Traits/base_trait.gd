@@ -29,7 +29,7 @@ func get_actor_candidates(resource_type: Globals.ResourceType) -> Array[Actor]:
 		if actor is Player and randf() > 0.2: continue
 		if not actor.holds_resource(resource_type): continue
 
-		if WorldState.is_actor_valid_target(actor_node, actor):
+		if actor.is_trackable(actor_node) and actor.is_valid_target():
 			candidates.append(actor)
 	
 	return candidates
@@ -44,10 +44,7 @@ func add_action(action: Globals.Action, resource_type: Globals.ResourceType, dat
 
 func calculate_weight(resource_type: Globals.ResourceType) -> float:
 	var chosen_resource: ResourceStat = actor_node.get_resource(resource_type)
-	
 	var deficiency_point = chosen_resource.get_deficiency_point()
-	print("Skewed DP for ", actor_node.name, " for ", Globals.get_resource_string(resource_type),
-		" under trait ", name, ": ", deficiency_point)
 	var variance = chosen_resource.amount - deficiency_point
 	
 	var upper_bound = (

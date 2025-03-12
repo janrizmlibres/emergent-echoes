@@ -11,7 +11,9 @@ func set_texture(actor_name: String) -> void:
 	carry_sprite.texture = texture
 
 func show_sprite():
+	print("Showing carry sprite")
 	carry_sprite.visible = true
 
 func hide_sprite():
+	print("Hiding carry sprite")
 	carry_sprite.visible = false

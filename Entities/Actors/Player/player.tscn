@@ -1,14 +1,41 @@
-[gd_scene load_steps=3 format=3 uid="uid://jh8w0jv3rc0f"]
+[gd_scene load_steps=4 format=3 uid="uid://jh8w0jv3rc0f"]
 
 [ext_resource type="PackedScene" uid="uid://cmcj7lmi8c5yw" path="res://Entities/Actors/actor.tscn" id="1_h34l7"]
 [ext_resource type="Script" uid="uid://bmjvv7wfg7dpl" path="res://Entities/Actors/Player/player.gd" id="2_ngslm"]
+[ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="3_ngslm"]
 
 [node name="Player" instance=ExtResource("1_h34l7")]
 collision_mask = 3
 script = ExtResource("2_ngslm")
+max_speed = 60
+acceleration = 8
+friction = 8
+
+[node name="Sprite2D" parent="." index="0"]
+frame = 0
+
+[node name="Money" type="Node" parent="Resources" index="0"]
+script = ExtResource("3_ngslm")
+type = 2
+amount = 500.0
+weight = 1.0
+metadata/_custom_type_script = "uid://w1ekbi28ftm7"
+
+[node name="Food" type="Node" parent="Resources" index="1"]
+script = ExtResource("3_ngslm")
+type = 3
+amount = 20.0
+weight = 1.0
+metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
 [node name="SeedProp" parent="." index="4"]
-position = Vector2(0, -18)
+position = Vector2(0, -17)
+
+[node name="WeaponSprite" parent="Weapon" index="0"]
+frame = 4
+
+[node name="DebugLabel" parent="." index="15" node_paths=PackedStringArray("actor")]
+actor = NodePath("..")
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

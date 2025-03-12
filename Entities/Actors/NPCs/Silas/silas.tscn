@@ -22,7 +22,7 @@ metadata/_custom_type_script = "uid://b6dhi4y7p1aqr"
 procedural_tree = NodePath("SilasBT")
 
 [node name="SilasBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_lha76")]
-blackboard = NodePath("@Node@161586")
+blackboard = NodePath("@Node@182534")
 actor = NodePath("../..")
 
 [node name="Money" parent="Resources" index="0"]
@@ -30,9 +30,6 @@ amount = 100.0
 
 [node name="Food" parent="Resources" index="1"]
 amount = 2.0
-
-[node name="SeedProp" parent="." index="8"]
-position = Vector2(0, -17)
 
 [node name="AnimationTree" parent="." index="15"]
 parameters/Idle/blend_position = 0.00240386

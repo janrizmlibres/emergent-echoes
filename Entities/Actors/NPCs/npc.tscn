@@ -10,6 +10,9 @@
 script = ExtResource("2_36x7w")
 evaluation_interval = Vector2(10, 20)
 
+[node name="Sprite2D" parent="." index="0"]
+frame = 0
+
 [node name="Traits" type="Node" parent="." index="1"]
 
 [node name="SurvivalTrait" type="Node" parent="Traits" index="0" node_paths=PackedStringArray("actor_node")]
@@ -56,11 +59,12 @@ type = 5
 amount = 70.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
-[node name="DebugLabel" parent="." index="18" node_paths=PackedStringArray("actor")]
+[node name="DebugLabel" parent="." index="19" node_paths=PackedStringArray("actor")]
 actor = NodePath("..")
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="timeout" from="EvaluationTimer" to="." method="_on_evaluation_timer_timeout"]
+[connection signal="satiation_depleted" from="Resources/Satiation" to="." method="_on_satiation_satiation_depleted"]
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

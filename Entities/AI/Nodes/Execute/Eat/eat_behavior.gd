@@ -15,7 +15,6 @@ func interrupt(actor: Node, _blackboard: Blackboard) -> void:
   WorldState.actor_state[actor as NPC].is_busy = false
 
 func before_run(actor: Node, _blackboard: Blackboard) -> void:
-  print(actor.name + " started eating")
   WorldState.actor_state[actor as NPC].is_busy = true
 
 func after_run(actor: Node, _blackboard: Blackboard) -> void:

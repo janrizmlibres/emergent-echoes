@@ -24,6 +24,7 @@ enum Action {
 	PETITION,
 	TALK,
 	EAT,
+	SHOP,
 	INTERROGATE,
 	PURSUIT,
 	PLANT,

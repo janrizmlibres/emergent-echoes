@@ -16,11 +16,9 @@ func interrupt(actor: Node, _blackboard: Blackboard) -> void:
   WorldState.actor_state[actor as NPC].is_busy = false
 
 func before_run(actor: Node, _blackboard: Blackboard) -> void:
-  print(actor.name + " started harvesting")
   WorldState.actor_state[actor as NPC].is_busy = true
 
 func after_run(actor: Node, _blackboard: Blackboard) -> void:
-  print(actor.name + "stopped harvesting")
   WorldState.actor_state[actor as NPC].is_busy = false
-  
   WorldState.total_food.amount += 1
+  WorldState.shop.food_amount += 1

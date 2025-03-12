@@ -1,6 +1,7 @@
 class_name Actor
 extends CharacterBody2D
 
+@export var hit_points: float = 3
 @export var max_speed: int = 40
 @export var acceleration: int = 8
 @export var friction: int = 4
@@ -59,6 +60,20 @@ func give_resource(receiver: Actor, resource_type: Globals.ResourceType, amount:
 	sender_resource.amount -= amount
 	receiver_resource.amount += amount
 
+func is_trackable(initiator: Actor) -> bool:
+	var target_last_position = initiator.memorizer.get_last_known_position(self)
+	if target_last_position != Vector2.INF: return true
+	if initiator.actors_in_range.has(self): return true
+	return false
+
+func is_valid_target() -> bool:
+	if WorldState.is_available(self): return true
+	return not WorldState.is_captured(self)
+
+func is_lawful() -> bool:
+	if self is Player: return false
+	return (self as NPC).lawful_trait != null
+
 func start_interaction(_target):
 	pass
 
@@ -71,10 +86,28 @@ func _on_actor_detector_body_entered(body: Node2D):
 
 func _on_actor_detector_body_exited(body: Node2D):
 	if body == self or body is not Actor: return
+	if body.is_queued_for_deletion(): return
 	
 	var actor = body as Actor
 	memorizer.set_last_known_position(actor, actor.global_position)
 	actors_in_range.erase(actor)
 
 func _on_animation_tree_animation_finished(_anim_name: StringName):
+	pass
+
+func _on_hurt_box_area_entered(area):
+	var weapon = area as Weapon
+	if weapon.actor == self: return
+
+	var direction = weapon.global_position.direction_to(global_position)
+	apply_knockback(direction, weapon.knockback)
+	apply_damage()
+
+func apply_damage():
+	hit_points -= 1
+	if hit_points <= 0:
+		WorldState.queue_free_actor(self)
+		queue_free()
+
+func apply_knockback(_direction: Vector2, _force: float):
 	pass

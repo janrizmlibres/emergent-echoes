@@ -33,7 +33,7 @@ func get_random_participant():
 	var filtered_participants = participants.filter(func(p):
 		if verifiers.has(p): return false
 		if falsifiers.has(p): return false
-		return WorldState.actor_state[p].is_available
+		return true
 	)
 
 	if not filtered_participants.is_empty():
@@ -42,7 +42,36 @@ func get_random_participant():
 	return null
 
 func all_participants_cleared():
+	var cleared = verifiers.size() + falsifiers.size()
+	assert(cleared <= participants.size(), "Cleared more participants then actual count")
 	return verifiers.size() + falsifiers.size() == participants.size()
+
+func close(duty_increase: float) -> bool:
+	assert(investigator != null, "Cannot close case without investigator")
+
+	if randf() >= get_solve_probability():
+		print("Failed to solve case")
+		status = Status.UNSOLVED
+		complete_investigation(duty_increase)
+		return true
+
+	if WorldState.is_captured(criminal):
+		print("Successfully solved case")
+		status = Status.SOLVED
+		complete_investigation(duty_increase)
+		return true
+	
+	return false
+
+func complete_investigation(duty_increase: float):
+	investigator.lawful_trait.assigned_case = null
+	investigator.modify_resource(Globals.ResourceType.DUTY, duty_increase)
+	investigator.float_text_controller.show_float_text(
+		Globals.ResourceType.DUTY,
+		str(duty_increase),
+		true
+	)
+	print("Open cases: " + str(WorldState.crimes.filter(func(x): return x.is_open()).size()))
 
 func get_solve_probability():
 	if participants.size() > 3:

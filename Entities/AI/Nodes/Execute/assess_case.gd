@@ -5,10 +5,13 @@ extends ActionLeaf
 
 var timer: float = duration
 
-func tick(_actor: Node, _blackboard: Blackboard) -> int:
+func tick(_actor: Node, blackboard: Blackboard) -> int:
 	timer -= get_process_delta_time()
 
 	if timer <= 0:
+		var data = blackboard.get_value("data")
+		data.assess_completed = true
+		blackboard.set_value("data", data)
 		return SUCCESS
 
 	return RUNNING

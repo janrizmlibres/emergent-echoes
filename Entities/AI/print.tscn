@@ -4,5 +4,4 @@
 
 [node name="Print" type="Node"]
 script = ExtResource("1_n5k4v")
-text = null
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"

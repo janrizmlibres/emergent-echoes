@@ -15,17 +15,15 @@ func tick(_actor: Node, _blackboard: Blackboard) -> int:
 
 func interrupt(_actor: Node, blackboard: Blackboard) -> void:
 	var target = blackboard.get_value("target")
+	if target.is_queued_for_deletion() or not is_instance_valid(target): return
 	target.stop_interaction()
 
 func before_run(actor: Node, blackboard: Blackboard) -> void:
-	print(actor.name + " started interacting")
 	timer = duration
-
 	var npc = actor as NPC
 	var target = blackboard.get_value("target")
 	target.start_interaction(npc)
 
-func after_run(actor: Node, blackboard: Blackboard) -> void:
-	print(actor.name + " finished interacting")
+func after_run(_actor: Node, blackboard: Blackboard) -> void:
 	var target = blackboard.get_value("target")
 	target.stop_interaction()

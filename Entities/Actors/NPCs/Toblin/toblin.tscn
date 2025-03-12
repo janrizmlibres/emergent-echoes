@@ -14,7 +14,7 @@ texture = ExtResource("2_4hnsp")
 procedural_tree = NodePath("ToblinBT")
 
 [node name="ToblinBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_u7be1")]
-blackboard = NodePath("@Node@116622")
+blackboard = NodePath("@Node@21911")
 actor = NodePath("../..")
 
 [node name="SeedProp" parent="." index="8"]

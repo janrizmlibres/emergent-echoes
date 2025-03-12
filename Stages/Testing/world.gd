@@ -5,8 +5,9 @@ func _ready():
 	total_food.amount = 0
 	total_food.weight = 1
 	
+	var shop: Shop = $Shop
 	var actors = get_tree().get_nodes_in_group("Actors")
-	WorldState.initialize(total_food, actors)
+	WorldState.initialize(total_food, shop, actors)
 
 	var thresholds = ResourceStat.LOCAL_THRESHOLDS
 	var food = Globals.ResourceType.FOOD
