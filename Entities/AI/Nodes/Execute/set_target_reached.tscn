@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://brb88fpudatxy"]
-
-[ext_resource type="Script" uid="uid://c5tivf5wblbie" path="res://Entities/AI/Nodes/Execute/set_target_reached.gd" id="1_26qvn"]
-
-[node name="SetTargetReached" type="Node"]
-script = ExtResource("1_26qvn")
-metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"

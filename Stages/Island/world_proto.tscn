@@ -1,12 +1,11 @@
-[gd_scene load_steps=17 format=4 uid="uid://7ju7mpc0by18"]
+[gd_scene load_steps=13 format=4 uid="uid://cx38tciktambc"]
 
-[ext_resource type="Script" path="res://Stages/Island/World.cs.txt" id="1_1yijo"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="1_pp8dq"]
 [ext_resource type="Texture2D" uid="uid://b3h6fxk0bi5lj" path="res://Stages/Island/Art/Forest/forest.png" id="1_tpvnw"]
-[ext_resource type="PackedScene" uid="uid://c6n8kbdjlq0ka" path="res://Entities/UI/HUD/Status Bar/interface.tscn" id="3_gex63"]
-[ext_resource type="PackedScene" uid="uid://bf75pmpbofcom" path="res://Entities/Objects/House/house.tscn" id="6_12eed"]
+[ext_resource type="PackedScene" uid="uid://c6n8kbdjlq0ka" path="res://Entities/UI/HUD/interface.tscn" id="3_gex63"]
+[ext_resource type="PackedScene" uid="uid://bf75pmpbofcom" path="res://Entities/Structures/House/house.tscn" id="6_12eed"]
 [ext_resource type="PackedScene" uid="uid://boawcqhrg67eg" path="res://Entities/Objects/Tree/tree.tscn" id="7_p7wec"]
-[ext_resource type="PackedScene" uid="uid://bbvfg1jotmlna" path="res://Entities/Objects/Crops/Wheat/Wheat.tscn" id="7_qhmo1"]
+[ext_resource type="PackedScene" uid="uid://bbvfg1jotmlna" path="res://Entities/Objects/Wheat/Wheat.tscn" id="7_qhmo1"]
 [ext_resource type="PackedScene" uid="uid://cvgiqagi4pexc" path="res://Entities/Objects/Rock/Rock.tscn" id="8_pvw5h"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_d7vs6"]
@@ -257,19 +256,9 @@ sources/0 = SubResource("TileSetAtlasSource_k42pd")
 
 [sub_resource type="TileSet" id="TileSet_1jo8w"]
 
-[sub_resource type="Resource" id="Resource_qkl33"]
-metadata/__load_path__ = "res://Entities/ActorsOld/Player/player.tscn"
-
-[sub_resource type="Resource" id="Resource_gergv"]
-metadata/__load_path__ = "res://Entities/Actors/NPCs/Alts/NPCs/npc.tscn"
-
-[sub_resource type="Resource" id="Resource_a33p5"]
-metadata/__load_path__ = "res://Entities/Actors/NPCs/Alts/Garreth/garreth.tscn"
-
 [node name="World" type="Node2D"]
 y_sort_enabled = true
 texture_filter = 1
-script = ExtResource("1_1yijo")
 
 [node name="Camera2D" parent="." instance=ExtResource("1_pp8dq")]
 position = Vector2(176, 160)
@@ -299,17 +288,7 @@ tile_set = SubResource("TileSet_07foc")
 position = Vector2(176, 160)
 tile_set = SubResource("TileSet_1jo8w")
 
-[node name="Player" parent="."]
-position = Vector2(176, 160)
-
-[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
+[node name="Player#RemoteTransform2D" type="RemoteTransform2D" parent="."]
 remote_path = NodePath("../../Camera2D")
 
-[node name="Silas" parent="."]
-position = Vector2(272, 162)
-
-[node name="Garreth" parent="."]
-position = Vector2(229, 260)
-
 [editable path="Camera2D"]
-[editable path="Player"]

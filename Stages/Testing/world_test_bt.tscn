@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" uid="uid://b3y4asqmbsqma" path="res://Stages/Testing/world.gd" id="1_smujd"]
 [ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="2_iutls"]
-[ext_resource type="PackedScene" uid="uid://cggrn3eu6010x" path="res://Entities/Objects/PrisonMarker/prison_marker.tscn" id="3_0lw8q"]
-[ext_resource type="PackedScene" uid="uid://dderfoygjxyaf" path="res://Entities/Objects/Crops/CropTile/crop_tile.tscn" id="3_iutls"]
+[ext_resource type="PackedScene" uid="uid://cggrn3eu6010x" path="res://Entities/Structures/Prison/prison.tscn" id="3_0lw8q"]
+[ext_resource type="PackedScene" uid="uid://dderfoygjxyaf" path="res://Entities/Structures/CropTile/crop_tile.tscn" id="3_iutls"]
 [ext_resource type="PackedScene" uid="uid://bt3gcxbonxwfd" path="res://Entities/Actors/NPCs/Silas/silas.tscn" id="4_0lw8q"]
 [ext_resource type="PackedScene" uid="uid://d2icout5w8g1e" path="res://Entities/Actors/NPCs/Toblin/toblin.tscn" id="6_0lw8q"]
-[ext_resource type="Script" uid="uid://c42dwducayvvu" path="res://Entities/Objects/shop.gd" id="6_t0h3a"]
+[ext_resource type="PackedScene" uid="uid://drbup72u7bkho" path="res://Entities/Structures/Shop/shop.tscn" id="6_qxqqk"]
 [ext_resource type="PackedScene" uid="uid://jh8w0jv3rc0f" path="res://Entities/Actors/Player/player.tscn" id="7_ksgwm"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="8_0lw8q"]
 [ext_resource type="PackedScene" uid="uid://wlg2sv2h5f5b" path="res://Entities/Actors/NPCs/Pimble/pimble.tscn" id="8_t0h3a"]
@@ -79,7 +79,7 @@ navigation_layers = 2
 
 [node name="Prisons" type="Node2D" parent="."]
 
-[node name="PrisonMarker" parent="Prisons" instance=ExtResource("3_0lw8q")]
+[node name="Prison" parent="Prisons" instance=ExtResource("3_0lw8q")]
 position = Vector2(278, 141)
 
 [node name="CropTiles" type="Node2D" parent="."]
@@ -111,9 +111,8 @@ position = Vector2(34, 62)
 [node name="CropTile9" parent="CropTiles" instance=ExtResource("3_iutls")]
 position = Vector2(56, 62)
 
-[node name="Shop" type="Marker2D" parent="."]
+[node name="Shop" parent="." instance=ExtResource("6_qxqqk")]
 position = Vector2(21, 159)
-script = ExtResource("6_t0h3a")
 
 [node name="Toblin" parent="." instance=ExtResource("6_0lw8q")]
 position = Vector2(120, 79)

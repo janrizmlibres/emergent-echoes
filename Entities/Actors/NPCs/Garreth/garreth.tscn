@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://8w0pyr8skfw7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_m3od5"]
 [ext_resource type="Texture2D" uid="uid://bq8qo5fpoqcxt" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_7ptt5"]
 [ext_resource type="Script" uid="uid://mlbnetcoq4lk" path="res://Utilities/NPCProcGen/Traits/lawful_trait.gd" id="3_7ptt5"]
-[ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/AI/procedural_tree.tscn" id="3_jlis0"]
+[ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/Actors/NPCs/AI/procedural_tree.tscn" id="3_jlis0"]
 [ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="5_jlis0"]
 
 [node name="Garreth" instance=ExtResource("1_m3od5")]

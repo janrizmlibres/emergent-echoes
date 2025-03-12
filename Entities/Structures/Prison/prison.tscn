@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cggrn3eu6010x"]
+
+[ext_resource type="Script" uid="uid://dy2on4jyiv8fo" path="res://Entities/Structures/Prison/prison.gd" id="1_pwn34"]
+
+[node name="Prison" type="Marker2D" groups=["Prisons"]]
+script = ExtResource("1_pwn34")

@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://cb4fd3upbur04"]
-
-[ext_resource type="Script" uid="uid://cytm8mmilno58" path="res://Entities/AI/Nodes/Interact/interact_behavior.gd" id="1_btj2y"]
-
-[node name="InteractBehavior" type="Node"]
-script = ExtResource("1_btj2y")
-metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"

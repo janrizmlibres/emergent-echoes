@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://0sjgm3h7274m"]
-
-[ext_resource type="Script" uid="uid://br1le7in5fd3r" path="res://Entities/AI/Nodes/Execute/get_wait_position.gd" id="1_3hypm"]
-
-[node name="GetWaitPosition" type="Node"]
-script = ExtResource("1_3hypm")
-metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"

@@ -11,7 +11,6 @@ config_version=5
 [application]
 
 config/name="Emergent Echoes"
-run/main_scene="res://Stages/Testing/world_test1.tscn"
 config/features=PackedStringArray("4.4", "C#", "GL Compatibility")
 
 [autoload]

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c124x0mip4ii3"]
+
+[ext_resource type="Script" uid="uid://dh3gs2qg424i8" path="res://Entities/Actors/NPCs/AI/Nodes/assess_completed.gd" id="1_0xruh"]
+
+[node name="AssessCompleted" type="Node"]
+script = ExtResource("1_0xruh")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"

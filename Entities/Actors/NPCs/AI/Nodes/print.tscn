@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://cg5sjuvgx4utm"]
+
+[ext_resource type="Script" uid="uid://guvvlkuur4l5" path="res://Entities/AI/Nodes/print.gd" id="1_n5k4v"]
+
+[node name="Print" type="Node"]
+script = ExtResource("1_n5k4v")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"

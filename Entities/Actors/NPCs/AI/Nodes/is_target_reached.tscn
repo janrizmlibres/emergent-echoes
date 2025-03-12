@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bo5mx8ex74q0o"]
+
+[ext_resource type="Script" uid="uid://23txym3njuoa" path="res://Entities/Actors/NPCs/AI/Nodes/is_target_reached.gd" id="1_t4e0m"]
+
+[node name="IsTargetReached" type="Node"]
+script = ExtResource("1_t4e0m")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"

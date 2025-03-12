@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://8w0pyr8skfw7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_87dmx"]
 [ext_resource type="Texture2D" uid="uid://cnxf1yrr65keq" path="res://Entities/Actors/NPCs/Pimble/Art/pimble.png" id="2_nokag"]
 [ext_resource type="Script" uid="uid://cmda8gt6vuorb" path="res://Utilities/NPCProcGen/Traits/farmer_trait.gd" id="3_nokag"]
-[ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/AI/procedural_tree.tscn" id="3_vgnlq"]
+[ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/Actors/NPCs/AI/procedural_tree.tscn" id="3_vgnlq"]
 
 [node name="Pimble" instance=ExtResource("1_87dmx")]
 motion_mode = 0

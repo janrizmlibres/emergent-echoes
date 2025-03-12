@@ -1,0 +1,769 @@
+[gd_scene load_steps=58 format=3 uid="uid://pihkxvmclolw"]
+
+[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_mx8te"]
+[ext_resource type="Script" uid="uid://lc1dnoc2x4b" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="2_gwfqn"]
+[ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="3_u33fa"]
+[ext_resource type="Script" uid="uid://bk06l42h8b5px" path="res://Entities/Actors/NPCs/AI/Scripts/is_interact_action.gd" id="4_fhn60"]
+[ext_resource type="PackedScene" uid="uid://fabi3vghib2x" path="res://Entities/Actors/NPCs/AI/Nodes/has_action.tscn" id="6_jvdny"]
+[ext_resource type="Script" uid="uid://cmlopw75b05c1" path="res://addons/beehave/nodes/composites/selector.gd" id="7_nsp4m"]
+[ext_resource type="Script" uid="uid://d2d5sh0f7g61s" path="res://Entities/Actors/NPCs/AI/Scripts/is_talk_action.gd" id="8_ut1o1"]
+[ext_resource type="Script" uid="uid://ddsynpu03eev2" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="9_367ub"]
+[ext_resource type="Script" uid="uid://cx07pxr1bsjba" path="res://addons/beehave/nodes/decorators/inverter.gd" id="10_g81id"]
+[ext_resource type="PackedScene" uid="uid://7r87ri3qdftt" path="res://Entities/Actors/NPCs/AI/Nodes/target_found.tscn" id="11_0buck"]
+[ext_resource type="Script" uid="uid://wjiuop1tt6kj" path="res://Entities/Actors/NPCs/AI/Scripts/get_valid_target_in_range.gd" id="12_bhok5"]
+[ext_resource type="Script" uid="uid://brukbaqvfbt0y" path="res://addons/beehave/nodes/decorators/cooldown.gd" id="13_tcbdt"]
+[ext_resource type="PackedScene" uid="uid://uhfkpgur3ldd" path="res://Entities/Actors/NPCs/AI/Nodes/get_random_position.tscn" id="14_qsook"]
+[ext_resource type="PackedScene" uid="uid://5fj0qtxhah7q" path="res://Entities/Actors/NPCs/AI/Nodes/end_action.tscn" id="14_sa7yn"]
+[ext_resource type="PackedScene" uid="uid://qwnvuvh4d71a" path="res://Entities/Actors/NPCs/AI/Nodes/move_to_position.tscn" id="15_oxd8l"]
+[ext_resource type="PackedScene" uid="uid://cb4fd3upbur04" path="res://Entities/Actors/NPCs/AI/Nodes/interact_behavior.tscn" id="16_sa7yn"]
+[ext_resource type="PackedScene" uid="uid://iv5s8ex501af" path="res://Entities/Actors/NPCs/AI/Nodes/is_target_busy.tscn" id="17_mx8te"]
+[ext_resource type="PackedScene" uid="uid://bo5mx8ex74q0o" path="res://Entities/Actors/NPCs/AI/Nodes/is_target_reached.tscn" id="17_u33fa"]
+[ext_resource type="PackedScene" uid="uid://0sjgm3h7274m" path="res://Entities/Actors/NPCs/AI/Nodes/get_wait_position.tscn" id="18_gwfqn"]
+[ext_resource type="PackedScene" uid="uid://7fudhwikrsk" path="res://Entities/Actors/NPCs/AI/Nodes/interact_with_target.tscn" id="18_vephg"]
+[ext_resource type="PackedScene" uid="uid://cualnqewkna60" path="res://Entities/Actors/NPCs/AI/Nodes/is_target_valid.tscn" id="19_3e0ew"]
+[ext_resource type="PackedScene" uid="uid://dk8go1ye7kdwd" path="res://Entities/Actors/NPCs/AI/Nodes/get_target_position.tscn" id="19_u33fa"]
+[ext_resource type="Script" uid="uid://c3xoagablvyfk" path="res://Entities/Actors/NPCs/AI/Scripts/finish_talking.gd" id="20_4bqkc"]
+[ext_resource type="Script" uid="uid://bfb1iie7tep5i" path="res://addons/beehave/nodes/decorators/succeeder.gd" id="20_inuhf"]
+[ext_resource type="Script" uid="uid://c675j3b420sch" path="res://Entities/Actors/NPCs/AI/Scripts/is_petition_action.gd" id="21_ucmxx"]
+[ext_resource type="PackedScene" uid="uid://ck8qpegql0ece" path="res://Entities/Actors/NPCs/AI/Nodes/is_target_trackable.tscn" id="22_esc8u"]
+[ext_resource type="PackedScene" uid="uid://brb88fpudatxy" path="res://Entities/Actors/NPCs/AI/Nodes/set_target_reached.tscn" id="22_fhn60"]
+[ext_resource type="PackedScene" uid="uid://dj2bphprynbc0" path="res://Entities/Actors/NPCs/AI/Nodes/is_target_in_range.tscn" id="23_uriqu"]
+[ext_resource type="Script" uid="uid://cbrnxuypxqu8e" path="res://Entities/Actors/NPCs/AI/Scripts/get_target_last_pos.gd" id="24_bbaml"]
+[ext_resource type="Script" uid="uid://u7kder1k34v5" path="res://addons/beehave/nodes/composites/simple_parallel.gd" id="24_sa7yn"]
+[ext_resource type="Script" uid="uid://c72p2icilb0bh" path="res://Entities/Actors/NPCs/AI/Scripts/finish_petition.gd" id="25_mx8te"]
+[ext_resource type="Script" uid="uid://b7rw8f72qvwqy" path="res://Entities/Actors/NPCs/AI/Scripts/is_eat_action.gd" id="26_k78s6"]
+[ext_resource type="Script" uid="uid://bjcmrmjkhkaed" path="res://Entities/Actors/NPCs/AI/Scripts/eat_behavior.gd" id="27_joxsq"]
+[ext_resource type="Script" uid="uid://bwccpiabo3csd" path="res://Entities/Actors/NPCs/AI/Scripts/randomizer.gd" id="29_5mej3"]
+[ext_resource type="Script" uid="uid://ddie3s384q7pg" path="res://Entities/Actors/NPCs/AI/Scripts/is_theft_action.gd" id="31_6ll13"]
+[ext_resource type="Script" uid="uid://bug48aq46j1uq" path="res://Entities/Actors/NPCs/AI/Scripts/lose_target.gd" id="31_r7sp2"]
+[ext_resource type="Script" uid="uid://b8bnkwp8kot0k" path="res://Entities/Actors/NPCs/AI/Scripts/is_interrogate_action.gd" id="32_ux1mj"]
+[ext_resource type="Script" uid="uid://xir4dkvi8wq3" path="res://addons/beehave/nodes/decorators/until_fail.gd" id="33_l0kml"]
+[ext_resource type="Script" uid="uid://8gtys5sr8p5s" path="res://Entities/Actors/NPCs/AI/Scripts/steal_from_target.gd" id="33_ux1mj"]
+[ext_resource type="Script" uid="uid://pjnt4it6euru" path="res://addons/beehave/nodes/decorators/time_limiter.gd" id="34_ux1mj"]
+[ext_resource type="PackedScene" uid="uid://5p51sjohtuli" path="res://Entities/Actors/NPCs/AI/Nodes/assess_case.tscn" id="34_wed3x"]
+[ext_resource type="Script" uid="uid://dfegq6we13byi" path="res://Entities/Actors/NPCs/AI/Scripts/finish_interrogation.gd" id="35_4tqbr"]
+[ext_resource type="Script" uid="uid://bpvuwsf2sl58x" path="res://Entities/Actors/NPCs/AI/Scripts/is_pursuit_action.gd" id="36_6ll13"]
+[ext_resource type="Script" uid="uid://bybu8q3l0svgx" path="res://Entities/Actors/NPCs/AI/Scripts/get_prison_location.gd" id="38_wjh3t"]
+[ext_resource type="Script" uid="uid://bekltbw08stn8" path="res://Entities/Actors/NPCs/AI/Scripts/detain_target.gd" id="39_efgux"]
+[ext_resource type="Script" uid="uid://dbjk2had23xqa" path="res://Entities/Actors/NPCs/AI/Scripts/release_captured_target.gd" id="39_f81io"]
+[ext_resource type="Script" uid="uid://bjvajq6npb6jd" path="res://Entities/Actors/NPCs/AI/Scripts/is_shop_action.gd" id="39_heafd"]
+[ext_resource type="Script" uid="uid://ba340d78xjkhe" path="res://Entities/Actors/NPCs/AI/Scripts/has_money.gd" id="40_2e6wi"]
+[ext_resource type="Script" uid="uid://dgyn1t44ip754" path="res://Entities/Actors/NPCs/AI/Scripts/get_shop_location.gd" id="40_kc3wj"]
+[ext_resource type="Script" uid="uid://ds8frtv04fuqy" path="res://Entities/Actors/NPCs/AI/Scripts/buy_food.gd" id="41_68kkn"]
+[ext_resource type="Script" uid="uid://dcbojwv0532j5" path="res://Entities/Actors/NPCs/AI/Scripts/is_plant_action.gd" id="41_ea5w0"]
+[ext_resource type="PackedScene" uid="uid://c124x0mip4ii3" path="res://Entities/Actors/NPCs/AI/Nodes/assess_completed.tscn" id="41_inuhf"]
+[ext_resource type="Script" uid="uid://d3ywtp4jekoxw" path="res://Entities/Actors/NPCs/AI/Scripts/shop_has_food.gd" id="41_tm2bm"]
+[ext_resource type="PackedScene" uid="uid://c8mncoh4iemp3" path="res://Entities/Actors/NPCs/AI/Nodes/get_crop_tile.tscn" id="44_cd634"]
+[ext_resource type="PackedScene" uid="uid://u3lyh1wujfr0" path="res://Entities/Actors/NPCs/AI/Nodes/modify_crop.tscn" id="45_u3nau"]
+[ext_resource type="Script" uid="uid://d0lkdn2nj7bcb" path="res://Entities/Actors/NPCs/AI/Scripts/is_harvest_action.gd" id="46_cd634"]
+[ext_resource type="Script" uid="uid://cgexvh6s1rans" path="res://Entities/Actors/NPCs/AI/Scripts/harvest_crop.gd" id="47_cd634"]
+
+[node name="ProceduralTree" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("1_mx8te")
+blackboard = NodePath("@Node@39581")
+actor = NodePath("..")
+metadata/_custom_type_script = "uid://da7jagy6am60c"
+metadata/_edit_vertical_guides_ = [-159.0]
+
+[node name="SelectorReact" type="Node" parent="."]
+script = ExtResource("2_gwfqn")
+metadata/_custom_type_script = "uid://lc1dnoc2x4b"
+
+[node name="Pursuit" type="Node" parent="SelectorReact"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="IsPursuitAction" type="Node" parent="SelectorReact/Pursuit"]
+script = ExtResource("36_6ll13")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="Selector" type="Node" parent="SelectorReact/Pursuit"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="Sequence" type="Node" parent="SelectorReact/Pursuit/Selector"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="AssessCase" parent="SelectorReact/Pursuit/Selector/Sequence" instance=ExtResource("34_wed3x")]
+
+[node name="SequenceReact" type="Node" parent="SelectorReact/Pursuit/Selector/Sequence"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="IsTargetValid" parent="SelectorReact/Pursuit/Selector/Sequence/SequenceReact" instance=ExtResource("19_3e0ew")]
+
+[node name="GetTargetPosition" parent="SelectorReact/Pursuit/Selector/Sequence/SequenceReact" instance=ExtResource("19_u33fa")]
+waypoint = 3
+
+[node name="MoveToPosition" parent="SelectorReact/Pursuit/Selector/Sequence/SequenceReact" instance=ExtResource("15_oxd8l")]
+
+[node name="DetainTarget" type="Node" parent="SelectorReact/Pursuit/Selector/Sequence"]
+script = ExtResource("39_efgux")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="GetPrisonLocation" type="Node" parent="SelectorReact/Pursuit/Selector/Sequence"]
+script = ExtResource("38_wjh3t")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="MoveToPosition" parent="SelectorReact/Pursuit/Selector/Sequence" instance=ExtResource("15_oxd8l")]
+
+[node name="ReleaseCapturedTarget" type="Node" parent="SelectorReact/Pursuit/Selector/Sequence"]
+script = ExtResource("39_f81io")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="EndAction" parent="SelectorReact/Pursuit/Selector" instance=ExtResource("14_sa7yn")]
+
+[node name="Interact" type="Node" parent="SelectorReact"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="IsInteractAction" type="Node" parent="SelectorReact/Interact"]
+script = ExtResource("4_fhn60")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="SelectorComposite" type="Node" parent="SelectorReact/Interact"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="IsTargetValid" parent="SelectorReact/Interact/SelectorComposite" instance=ExtResource("19_3e0ew")]
+
+[node name="EndAction" parent="SelectorReact/Interact/SelectorComposite" instance=ExtResource("14_sa7yn")]
+
+[node name="InteractBehavior" parent="SelectorReact/Interact" instance=ExtResource("16_sa7yn")]
+
+[node name="Talk" type="Node" parent="SelectorReact"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsTalkAction" type="Node" parent="SelectorReact/Talk"]
+script = ExtResource("8_ut1o1")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="Selector" type="Node" parent="SelectorReact/Talk"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="SequenceReact" type="Node" parent="SelectorReact/Talk/Selector"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="TargetNotFound" type="Node" parent="SelectorReact/Talk/Selector/SequenceReact"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="TargetFound" parent="SelectorReact/Talk/Selector/SequenceReact/TargetNotFound" instance=ExtResource("11_0buck")]
+
+[node name="Succeeder" type="Node" parent="SelectorReact/Talk/Selector/SequenceReact"]
+script = ExtResource("20_inuhf")
+metadata/_custom_type_script = "uid://bfb1iie7tep5i"
+
+[node name="GetValidTargetInRange" type="Node" parent="SelectorReact/Talk/Selector/SequenceReact/Succeeder"]
+script = ExtResource("12_bhok5")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Cooldown" type="Node" parent="SelectorReact/Talk/Selector/SequenceReact"]
+script = ExtResource("13_tcbdt")
+wait_time = 3.0
+metadata/_custom_type_script = "uid://brukbaqvfbt0y"
+
+[node name="Sequence" type="Node" parent="SelectorReact/Talk/Selector/SequenceReact/Cooldown"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="GetRandomPosition" parent="SelectorReact/Talk/Selector/SequenceReact/Cooldown/Sequence" instance=ExtResource("14_qsook")]
+
+[node name="MoveToPosition" parent="SelectorReact/Talk/Selector/SequenceReact/Cooldown/Sequence" instance=ExtResource("15_oxd8l")]
+
+[node name="Sequence" type="Node" parent="SelectorReact/Talk/Selector"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="TargetFound" parent="SelectorReact/Talk/Selector/Sequence" instance=ExtResource("11_0buck")]
+
+[node name="Selector" type="Node" parent="SelectorReact/Talk/Selector/Sequence"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="SequenceReact2" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="IsTargetValid" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2" instance=ExtResource("19_3e0ew")]
+
+[node name="Selector2" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="Sequence" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsTargetNotReached" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetReached" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/IsTargetNotReached" instance=ExtResource("17_u33fa")]
+
+[node name="SelectorReact" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence"]
+script = ExtResource("2_gwfqn")
+metadata/_custom_type_script = "uid://lc1dnoc2x4b"
+
+[node name="Wait" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="IsTargetBusy" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact/Wait" instance=ExtResource("17_mx8te")]
+
+[node name="GetWaitPosition" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact/Wait" instance=ExtResource("18_gwfqn")]
+
+[node name="MoveToPosition" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact/Wait" instance=ExtResource("15_oxd8l")]
+
+[node name="ReachTarget" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="GetTargetPosition" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact/ReachTarget" instance=ExtResource("19_u33fa")]
+
+[node name="MoveToPosition" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact/ReachTarget" instance=ExtResource("15_oxd8l")]
+
+[node name="SetTargetReached" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact/ReachTarget" instance=ExtResource("22_fhn60")]
+
+[node name="Sequence2" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsTargetReached" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2" instance=ExtResource("17_u33fa")]
+
+[node name="Parallel" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2"]
+script = ExtResource("24_sa7yn")
+metadata/_custom_type_script = "uid://u7kder1k34v5"
+
+[node name="InteractWithTarget" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2/Parallel" instance=ExtResource("18_vephg")]
+
+[node name="InteractBehavior" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2/Parallel" instance=ExtResource("16_sa7yn")]
+
+[node name="FinishTalking" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2"]
+script = ExtResource("20_4bqkc")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Timer" type="Timer" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2/FinishTalking"]
+wait_time = 15.0
+one_shot = true
+
+[node name="Sequence" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsTargetNotValid" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/Sequence"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetValid" parent="SelectorReact/Talk/Selector/Sequence/Selector/Sequence/IsTargetNotValid" instance=ExtResource("19_3e0ew")]
+
+[node name="LoseTarget" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/Sequence"]
+script = ExtResource("31_r7sp2")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Petition" type="Node" parent="SelectorReact"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="IsPetitionAction" type="Node" parent="SelectorReact/Petition"]
+script = ExtResource("21_ucmxx")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="Selector2" type="Node" parent="SelectorReact/Petition"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="SequenceComposite" type="Node" parent="SelectorReact/Petition/Selector2"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="IsTargetValid" parent="SelectorReact/Petition/Selector2/SequenceComposite" instance=ExtResource("19_3e0ew")]
+
+[node name="IsTargetTrackable" parent="SelectorReact/Petition/Selector2/SequenceComposite" instance=ExtResource("22_esc8u")]
+
+[node name="Selector" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="Sequence" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsTargetNotReached" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetReached" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/IsTargetNotReached" instance=ExtResource("17_u33fa")]
+
+[node name="Selector" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="SequenceReact" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="IsTargetNotInRange" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetInRange" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact/IsTargetNotInRange" instance=ExtResource("23_uriqu")]
+
+[node name="Sequence" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="GetTargetLastPos" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact/Sequence"]
+script = ExtResource("24_bbaml")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="MoveToPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact/Sequence" instance=ExtResource("15_oxd8l")]
+
+[node name="Cooldown" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact/Sequence"]
+script = ExtResource("13_tcbdt")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://brukbaqvfbt0y"
+
+[node name="Sequence" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact/Sequence/Cooldown"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="GetRandomPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact/Sequence/Cooldown/Sequence" instance=ExtResource("14_qsook")]
+max_radius = 70.0
+centered = true
+
+[node name="MoveToPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact/Sequence/Cooldown/Sequence" instance=ExtResource("15_oxd8l")]
+
+[node name="Sequence" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsTargetInRange" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence" instance=ExtResource("23_uriqu")]
+
+[node name="SelectorReact" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence"]
+script = ExtResource("2_gwfqn")
+metadata/_custom_type_script = "uid://lc1dnoc2x4b"
+
+[node name="Wait" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="IsTargetBusy" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("17_mx8te")]
+
+[node name="GetWaitPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("18_gwfqn")]
+
+[node name="MoveToPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("15_oxd8l")]
+
+[node name="ReachTarget" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="GetTargetPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("19_u33fa")]
+
+[node name="MoveToPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("15_oxd8l")]
+
+[node name="SetTargetReached" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("22_fhn60")]
+
+[node name="Sequence2" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsTargetReached" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence2" instance=ExtResource("17_u33fa")]
+
+[node name="Parallel" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence2"]
+script = ExtResource("24_sa7yn")
+metadata/_custom_type_script = "uid://u7kder1k34v5"
+
+[node name="InteractWithTarget" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence2/Parallel" instance=ExtResource("18_vephg")]
+
+[node name="InteractBehavior" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence2/Parallel" instance=ExtResource("16_sa7yn")]
+
+[node name="FinishPetition" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence2"]
+script = ExtResource("25_mx8te")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Timer" type="Timer" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence2/FinishPetition"]
+wait_time = 15.0
+one_shot = true
+
+[node name="Sequence" type="Node" parent="SelectorReact/Petition/Selector2"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="Inverter" type="Node" parent="SelectorReact/Petition/Selector2/Sequence"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetValid" parent="SelectorReact/Petition/Selector2/Sequence/Inverter" instance=ExtResource("19_3e0ew")]
+
+[node name="Inverter2" type="Node" parent="SelectorReact/Petition/Selector2/Sequence"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetTrackable" parent="SelectorReact/Petition/Selector2/Sequence/Inverter2" instance=ExtResource("22_esc8u")]
+
+[node name="EndAction" parent="SelectorReact/Petition/Selector2/Sequence" instance=ExtResource("14_sa7yn")]
+
+[node name="Eat" type="Node" parent="SelectorReact"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsEatAction" type="Node" parent="SelectorReact/Eat"]
+script = ExtResource("26_k78s6")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="EatBehavior" type="Node" parent="SelectorReact/Eat"]
+script = ExtResource("27_joxsq")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Shop" type="Node" parent="SelectorReact"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="IsShopAction" type="Node" parent="SelectorReact/Shop"]
+script = ExtResource("39_heafd")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="SelectorComposite" type="Node" parent="SelectorReact/Shop"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="SequenceReactiveComposite" type="Node" parent="SelectorReact/Shop/SelectorComposite"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="HasMoney" type="Node" parent="SelectorReact/Shop/SelectorComposite/SequenceReactiveComposite"]
+script = ExtResource("40_2e6wi")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="ShopHasFood" type="Node" parent="SelectorReact/Shop/SelectorComposite/SequenceReactiveComposite"]
+script = ExtResource("41_tm2bm")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="Sequence" type="Node" parent="SelectorReact/Shop/SelectorComposite/SequenceReactiveComposite"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="GetShopLocation" type="Node" parent="SelectorReact/Shop/SelectorComposite/SequenceReactiveComposite/Sequence"]
+script = ExtResource("40_kc3wj")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="MoveToPosition" parent="SelectorReact/Shop/SelectorComposite/SequenceReactiveComposite/Sequence" instance=ExtResource("15_oxd8l")]
+
+[node name="BuyFood" type="Node" parent="SelectorReact/Shop/SelectorComposite/SequenceReactiveComposite/Sequence"]
+script = ExtResource("41_68kkn")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="EndAction" parent="SelectorReact/Shop/SelectorComposite" instance=ExtResource("14_sa7yn")]
+
+[node name="Theft" type="Node" parent="SelectorReact"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsTheftAction" type="Node" parent="SelectorReact/Theft"]
+script = ExtResource("31_6ll13")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="SelectorComposite" type="Node" parent="SelectorReact/Theft"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="SequenceComposite" type="Node" parent="SelectorReact/Theft/SelectorComposite"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="IsTargetValid" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite" instance=ExtResource("19_3e0ew")]
+
+[node name="IsTargetTrackable" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite" instance=ExtResource("22_esc8u")]
+
+[node name="Selector" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="SequenceReact" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsTargetNotReached" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetReached" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/IsTargetNotReached" instance=ExtResource("17_u33fa")]
+
+[node name="Selector" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="SequenceReact" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="IsTargetNotInRange" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetInRange" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact/IsTargetNotInRange" instance=ExtResource("23_uriqu")]
+
+[node name="Sequence" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="GetTargetLastPos" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact/Sequence"]
+script = ExtResource("24_bbaml")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="MoveToPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact/Sequence" instance=ExtResource("15_oxd8l")]
+
+[node name="Cooldown" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact/Sequence"]
+script = ExtResource("13_tcbdt")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://brukbaqvfbt0y"
+
+[node name="Sequence" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact/Sequence/Cooldown"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="GetRandomPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact/Sequence/Cooldown/Sequence" instance=ExtResource("14_qsook")]
+max_radius = 70.0
+centered = true
+
+[node name="MoveToPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact/Sequence/Cooldown/Sequence" instance=ExtResource("15_oxd8l")]
+
+[node name="Sequence" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsTargetInRange" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/Sequence" instance=ExtResource("23_uriqu")]
+
+[node name="SequenceReact" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/Sequence"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="GetTargetPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/Sequence/SequenceReact" instance=ExtResource("19_u33fa")]
+waypoint = 1
+
+[node name="MoveToPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/Sequence/SequenceReact" instance=ExtResource("15_oxd8l")]
+
+[node name="SetTargetReached" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/Sequence" instance=ExtResource("22_fhn60")]
+
+[node name="Sequence" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsTargetReached" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/Sequence" instance=ExtResource("17_u33fa")]
+
+[node name="StealFromTarget" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/Sequence"]
+script = ExtResource("33_ux1mj")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="GetRandomPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/Sequence" instance=ExtResource("14_qsook")]
+max_radius = 300.0
+min_radius = 150.0
+
+[node name="MoveToPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/Sequence" instance=ExtResource("15_oxd8l")]
+
+[node name="EndAction" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/Sequence" instance=ExtResource("14_sa7yn")]
+
+[node name="SequenceComposite2" type="Node" parent="SelectorReact/Theft/SelectorComposite"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="InverterDecorator" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite2"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetValid" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite2/InverterDecorator" instance=ExtResource("19_3e0ew")]
+
+[node name="EndAction" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite2" instance=ExtResource("14_sa7yn")]
+
+[node name="Interrogate" type="Node" parent="SelectorReact"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsInterrogateAction" type="Node" parent="SelectorReact/Interrogate"]
+script = ExtResource("32_ux1mj")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="Selector" type="Node" parent="SelectorReact/Interrogate"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="Sequence" type="Node" parent="SelectorReact/Interrogate/Selector"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="AssessNotCompleted" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="AssessCompleted" parent="SelectorReact/Interrogate/Selector/Sequence/AssessNotCompleted" instance=ExtResource("41_inuhf")]
+
+[node name="AssessCase" parent="SelectorReact/Interrogate/Selector/Sequence" instance=ExtResource("34_wed3x")]
+
+[node name="Sequence2" type="Node" parent="SelectorReact/Interrogate/Selector"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="AssessCompleted" parent="SelectorReact/Interrogate/Selector/Sequence2" instance=ExtResource("41_inuhf")]
+
+[node name="SequenceReact" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="Selector2" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="IsTargetValid" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector2" instance=ExtResource("19_3e0ew")]
+
+[node name="EndAction" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector2" instance=ExtResource("14_sa7yn")]
+
+[node name="Selector" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="Sequence" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsTargetNotReached" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetReached" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/IsTargetNotReached" instance=ExtResource("17_u33fa")]
+
+[node name="SelectorReact" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence"]
+script = ExtResource("2_gwfqn")
+metadata/_custom_type_script = "uid://lc1dnoc2x4b"
+
+[node name="Wait" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="IsTargetBusy" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("17_mx8te")]
+
+[node name="GetWaitPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("18_gwfqn")]
+
+[node name="MoveToPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("15_oxd8l")]
+
+[node name="ReachTarget" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact"]
+script = ExtResource("9_367ub")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="GetTargetPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("19_u33fa")]
+
+[node name="MoveToPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("15_oxd8l")]
+
+[node name="SetTargetReached" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("22_fhn60")]
+
+[node name="Sequence2" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsTargetReached" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence2" instance=ExtResource("17_u33fa")]
+
+[node name="Parallel" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence2"]
+script = ExtResource("24_sa7yn")
+metadata/_custom_type_script = "uid://u7kder1k34v5"
+
+[node name="InteractWithTarget" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence2/Parallel" instance=ExtResource("18_vephg")]
+
+[node name="InteractBehavior" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence2/Parallel" instance=ExtResource("16_sa7yn")]
+
+[node name="FinishInterrogation" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence2"]
+script = ExtResource("35_4tqbr")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Plant" type="Node" parent="SelectorReact"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsPlantAction" type="Node" parent="SelectorReact/Plant"]
+script = ExtResource("41_ea5w0")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="UntilFail" type="Node" parent="SelectorReact/Plant"]
+script = ExtResource("33_l0kml")
+metadata/_custom_type_script = "uid://xir4dkvi8wq3"
+
+[node name="TimeLimiterDecorator" type="Node" parent="SelectorReact/Plant/UntilFail"]
+script = ExtResource("34_ux1mj")
+wait_time = 60.0
+metadata/_custom_type_script = "uid://pjnt4it6euru"
+
+[node name="Sequence" type="Node" parent="SelectorReact/Plant/UntilFail/TimeLimiterDecorator"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="GetCropTile" parent="SelectorReact/Plant/UntilFail/TimeLimiterDecorator/Sequence" instance=ExtResource("44_cd634")]
+
+[node name="MoveToPosition" parent="SelectorReact/Plant/UntilFail/TimeLimiterDecorator/Sequence" instance=ExtResource("15_oxd8l")]
+
+[node name="ModifyCrop" parent="SelectorReact/Plant/UntilFail/TimeLimiterDecorator/Sequence" instance=ExtResource("45_u3nau")]
+
+[node name="EndAction" parent="SelectorReact/Plant" instance=ExtResource("14_sa7yn")]
+
+[node name="Harvest" type="Node" parent="SelectorReact"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsHarvestAction" type="Node" parent="SelectorReact/Harvest"]
+script = ExtResource("46_cd634")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="UntilFail" type="Node" parent="SelectorReact/Harvest"]
+script = ExtResource("33_l0kml")
+metadata/_custom_type_script = "uid://xir4dkvi8wq3"
+
+[node name="TimeLimiter" type="Node" parent="SelectorReact/Harvest/UntilFail"]
+script = ExtResource("34_ux1mj")
+wait_time = 60.0
+metadata/_custom_type_script = "uid://pjnt4it6euru"
+
+[node name="Sequence" type="Node" parent="SelectorReact/Harvest/UntilFail/TimeLimiter"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="GetCropTile" parent="SelectorReact/Harvest/UntilFail/TimeLimiter/Sequence" instance=ExtResource("44_cd634")]
+status = 2
+
+[node name="MoveToPosition" parent="SelectorReact/Harvest/UntilFail/TimeLimiter/Sequence" instance=ExtResource("15_oxd8l")]
+
+[node name="ModifyCrop" parent="SelectorReact/Harvest/UntilFail/TimeLimiter/Sequence" instance=ExtResource("45_u3nau")]
+status = 0
+
+[node name="HarvestCrop" type="Node" parent="SelectorReact/Harvest/UntilFail/TimeLimiter/Sequence"]
+script = ExtResource("47_cd634")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="EndAction" parent="SelectorReact/Harvest" instance=ExtResource("14_sa7yn")]
+
+[node name="Dormant" type="Node" parent="SelectorReact"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="HasNoAction" type="Node" parent="SelectorReact/Dormant"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="HasAction" parent="SelectorReact/Dormant/HasNoAction" instance=ExtResource("6_jvdny")]
+
+[node name="Cooldown" type="Node" parent="SelectorReact/Dormant"]
+script = ExtResource("13_tcbdt")
+wait_time = 4.0
+metadata/_custom_type_script = "uid://brukbaqvfbt0y"
+
+[node name="Randomizer" type="Node" parent="SelectorReact/Dormant/Cooldown"]
+script = ExtResource("29_5mej3")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="GetRandomPosition" parent="SelectorReact/Dormant" instance=ExtResource("14_qsook")]
+max_radius = 100.0
+
+[node name="MoveToPosition" parent="SelectorReact/Dormant" instance=ExtResource("15_oxd8l")]
+
+[connection signal="timeout" from="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2/FinishTalking/Timer" to="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2/FinishTalking" method="_on_timer_timeout"]

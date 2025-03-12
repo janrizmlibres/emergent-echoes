@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://8w0pyr8skfw7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_sprwr"]
 [ext_resource type="Texture2D" uid="uid://u6qjhno0n6dl" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_8j1os"]
 [ext_resource type="Script" uid="uid://b6dhi4y7p1aqr" path="res://Utilities/NPCProcGen/Traits/thief_trait.gd" id="3_8j1os"]
-[ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/AI/procedural_tree.tscn" id="3_lha76"]
+[ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/Actors/NPCs/AI/procedural_tree.tscn" id="3_lha76"]
 
 [node name="Silas" instance=ExtResource("1_sprwr")]
 motion_mode = 0

@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://6li2ci8s3tqh"]
+
+[ext_resource type="PackedScene" uid="uid://bdtksr1wy60pd" path="res://Entities/UI/HUD/bar.tscn" id="1_coqb4"]
+
+[node name="HealthBar" instance=ExtResource("1_coqb4")]
