@@ -68,7 +68,7 @@ position = Vector2(676, 381)
 
 [node name="pimbleAlt" parent="." instance=ExtResource("8_au1bg")]
 z_index = 1
-position = Vector2(736, 602)
+position = Vector2(737, 565)
 
 [node name="CropAlt" parent="." instance=ExtResource("8_ctmk4")]
 z_index = 1
