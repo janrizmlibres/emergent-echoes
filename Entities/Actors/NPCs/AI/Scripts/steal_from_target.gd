@@ -15,7 +15,7 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	var desired_amount = deficiency_point + randf() * max_excess;
 	var steal_amount = max(1, desired_amount - actor_resource.amount);
 	steal_amount = min(steal_amount, target_resource.amount)
-	steal_amount = floor(steal_amount)
+	steal_amount = floor(min(steal_amount, 100))
 
 	target.give_resource(npc, resource_type, steal_amount)
 

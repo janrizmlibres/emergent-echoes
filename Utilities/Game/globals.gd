@@ -28,7 +28,8 @@ enum Action {
 	INTERROGATE,
 	PURSUIT,
 	PLANT,
-	HARVEST
+	HARVEST,
+	FLEE
 }
 
 enum Emote {
@@ -45,10 +46,12 @@ static func get_action_string(value: int) -> String:
 			Action.PETITION: return "Petition"
 			Action.TALK: return "Talk"
 			Action.EAT: return "Eat"
+			Action.SHOP: return "Shop"
 			Action.INTERROGATE: return "Interrogate"
 			Action.PURSUIT: return "Pursuit"
 			Action.PLANT: return "Plant"
 			Action.HARVEST: return "Harvest"
+			Action.FLEE: return "Flee"
 			_: return "Unknown"
 
 static func get_resource_string(value: int) -> String:

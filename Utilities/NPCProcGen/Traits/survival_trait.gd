@@ -20,7 +20,7 @@ func evaluation_proactive_action():
 	
 	if actor_node.get_resource_amount(Globals.ResourceType.MONEY) > 10 \
 		and WorldState.shop.food_amount > 0:
-		add_action(Globals.Action.SHOP, Globals.ResourceType.FOOD)
+		add_action(Globals.Action.SHOP, Globals.ResourceType.SATIATION)
 
 func choose_actor(candidates: Array[Actor]) -> Actor:
 	for actor in candidates:

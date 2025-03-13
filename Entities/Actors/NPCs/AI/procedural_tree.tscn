@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=3 uid="uid://pihkxvmclolw"]
+[gd_scene load_steps=56 format=3 uid="uid://pihkxvmclolw"]
 
 [ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_mx8te"]
 [ext_resource type="Script" uid="uid://lc1dnoc2x4b" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="2_gwfqn"]
@@ -10,10 +10,10 @@
 [ext_resource type="Script" uid="uid://ddsynpu03eev2" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="9_367ub"]
 [ext_resource type="Script" uid="uid://cx07pxr1bsjba" path="res://addons/beehave/nodes/decorators/inverter.gd" id="10_g81id"]
 [ext_resource type="PackedScene" uid="uid://7r87ri3qdftt" path="res://Entities/Actors/NPCs/AI/Nodes/target_found.tscn" id="11_0buck"]
-[ext_resource type="Script" uid="uid://wjiuop1tt6kj" path="res://Entities/Actors/NPCs/AI/Scripts/get_valid_target_in_range.gd" id="12_bhok5"]
 [ext_resource type="Script" uid="uid://brukbaqvfbt0y" path="res://addons/beehave/nodes/decorators/cooldown.gd" id="13_tcbdt"]
 [ext_resource type="PackedScene" uid="uid://uhfkpgur3ldd" path="res://Entities/Actors/NPCs/AI/Nodes/get_random_position.tscn" id="14_qsook"]
 [ext_resource type="PackedScene" uid="uid://5fj0qtxhah7q" path="res://Entities/Actors/NPCs/AI/Nodes/end_action.tscn" id="14_sa7yn"]
+[ext_resource type="Script" uid="uid://ci52epml5ek04" path="res://Entities/Actors/NPCs/AI/Scripts/is_flee_action.gd" id="15_1o703"]
 [ext_resource type="PackedScene" uid="uid://qwnvuvh4d71a" path="res://Entities/Actors/NPCs/AI/Nodes/move_to_position.tscn" id="15_oxd8l"]
 [ext_resource type="PackedScene" uid="uid://cb4fd3upbur04" path="res://Entities/Actors/NPCs/AI/Nodes/interact_behavior.tscn" id="16_sa7yn"]
 [ext_resource type="PackedScene" uid="uid://iv5s8ex501af" path="res://Entities/Actors/NPCs/AI/Nodes/is_target_busy.tscn" id="17_mx8te"]
@@ -25,10 +25,8 @@
 [ext_resource type="Script" uid="uid://c3xoagablvyfk" path="res://Entities/Actors/NPCs/AI/Scripts/finish_talking.gd" id="20_4bqkc"]
 [ext_resource type="Script" uid="uid://bfb1iie7tep5i" path="res://addons/beehave/nodes/decorators/succeeder.gd" id="20_inuhf"]
 [ext_resource type="Script" uid="uid://c675j3b420sch" path="res://Entities/Actors/NPCs/AI/Scripts/is_petition_action.gd" id="21_ucmxx"]
-[ext_resource type="PackedScene" uid="uid://ck8qpegql0ece" path="res://Entities/Actors/NPCs/AI/Nodes/is_target_trackable.tscn" id="22_esc8u"]
 [ext_resource type="PackedScene" uid="uid://brb88fpudatxy" path="res://Entities/Actors/NPCs/AI/Nodes/set_target_reached.tscn" id="22_fhn60"]
-[ext_resource type="PackedScene" uid="uid://dj2bphprynbc0" path="res://Entities/Actors/NPCs/AI/Nodes/is_target_in_range.tscn" id="23_uriqu"]
-[ext_resource type="Script" uid="uid://cbrnxuypxqu8e" path="res://Entities/Actors/NPCs/AI/Scripts/get_target_last_pos.gd" id="24_bbaml"]
+[ext_resource type="Script" uid="uid://cigo0bvj4vp0i" path="res://Entities/Actors/NPCs/AI/Scripts/get_random_target.gd" id="24_joxsq"]
 [ext_resource type="Script" uid="uid://u7kder1k34v5" path="res://addons/beehave/nodes/composites/simple_parallel.gd" id="24_sa7yn"]
 [ext_resource type="Script" uid="uid://c72p2icilb0bh" path="res://Entities/Actors/NPCs/AI/Scripts/finish_petition.gd" id="25_mx8te"]
 [ext_resource type="Script" uid="uid://b7rw8f72qvwqy" path="res://Entities/Actors/NPCs/AI/Scripts/is_eat_action.gd" id="26_k78s6"]
@@ -60,8 +58,8 @@
 
 [node name="ProceduralTree" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_mx8te")
-blackboard = NodePath("@Node@39581")
-actor = NodePath("..")
+blackboard = NodePath("@Node@21909")
+actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 metadata/_edit_vertical_guides_ = [-159.0]
 
@@ -85,7 +83,21 @@ metadata/_custom_type_script = "uid://cmlopw75b05c1"
 script = ExtResource("3_u33fa")
 metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="AssessCase" parent="SelectorReact/Pursuit/Selector/Sequence" instance=ExtResource("34_wed3x")]
+[node name="AlwaysSucceedDecorator" type="Node" parent="SelectorReact/Pursuit/Selector/Sequence"]
+script = ExtResource("20_inuhf")
+metadata/_custom_type_script = "uid://bfb1iie7tep5i"
+
+[node name="SequenceComposite" type="Node" parent="SelectorReact/Pursuit/Selector/Sequence/AlwaysSucceedDecorator"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="InverterDecorator" type="Node" parent="SelectorReact/Pursuit/Selector/Sequence/AlwaysSucceedDecorator/SequenceComposite"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="AssessCompleted" parent="SelectorReact/Pursuit/Selector/Sequence/AlwaysSucceedDecorator/SequenceComposite/InverterDecorator" instance=ExtResource("41_inuhf")]
+
+[node name="AssessCase" parent="SelectorReact/Pursuit/Selector/Sequence/AlwaysSucceedDecorator/SequenceComposite" instance=ExtResource("34_wed3x")]
 
 [node name="SequenceReact" type="Node" parent="SelectorReact/Pursuit/Selector/Sequence"]
 script = ExtResource("9_367ub")
@@ -114,6 +126,22 @@ metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [node name="EndAction" parent="SelectorReact/Pursuit/Selector" instance=ExtResource("14_sa7yn")]
 
+[node name="Flee" type="Node" parent="SelectorReact"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="IsFleeAction" type="Node" parent="SelectorReact/Flee"]
+script = ExtResource("15_1o703")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="GetRandomPosition" parent="SelectorReact/Flee" instance=ExtResource("14_qsook")]
+max_radius = 200.0
+min_radius = 150.0
+
+[node name="MoveToPosition" parent="SelectorReact/Flee" instance=ExtResource("15_oxd8l")]
+
+[node name="EndAction" parent="SelectorReact/Flee" instance=ExtResource("14_sa7yn")]
+
 [node name="Interact" type="Node" parent="SelectorReact"]
 script = ExtResource("9_367ub")
 metadata/_custom_type_script = "uid://ddsynpu03eev2"
@@ -121,14 +149,6 @@ metadata/_custom_type_script = "uid://ddsynpu03eev2"
 [node name="IsInteractAction" type="Node" parent="SelectorReact/Interact"]
 script = ExtResource("4_fhn60")
 metadata/_custom_type_script = "uid://dxlpexlc4dupq"
-
-[node name="SelectorComposite" type="Node" parent="SelectorReact/Interact"]
-script = ExtResource("7_nsp4m")
-metadata/_custom_type_script = "uid://cmlopw75b05c1"
-
-[node name="IsTargetValid" parent="SelectorReact/Interact/SelectorComposite" instance=ExtResource("19_3e0ew")]
-
-[node name="EndAction" parent="SelectorReact/Interact/SelectorComposite" instance=ExtResource("14_sa7yn")]
 
 [node name="InteractBehavior" parent="SelectorReact/Interact" instance=ExtResource("16_sa7yn")]
 
@@ -144,124 +164,113 @@ metadata/_custom_type_script = "uid://dxlpexlc4dupq"
 script = ExtResource("7_nsp4m")
 metadata/_custom_type_script = "uid://cmlopw75b05c1"
 
-[node name="SequenceReact" type="Node" parent="SelectorReact/Talk/Selector"]
-script = ExtResource("9_367ub")
-metadata/_custom_type_script = "uid://ddsynpu03eev2"
+[node name="SequenceComposite" type="Node" parent="SelectorReact/Talk/Selector"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="TargetNotFound" type="Node" parent="SelectorReact/Talk/Selector/SequenceReact"]
+[node name="InverterDecorator" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite"]
 script = ExtResource("10_g81id")
 metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
-[node name="TargetFound" parent="SelectorReact/Talk/Selector/SequenceReact/TargetNotFound" instance=ExtResource("11_0buck")]
+[node name="TargetFound" parent="SelectorReact/Talk/Selector/SequenceComposite/InverterDecorator" instance=ExtResource("11_0buck")]
 
-[node name="Succeeder" type="Node" parent="SelectorReact/Talk/Selector/SequenceReact"]
-script = ExtResource("20_inuhf")
-metadata/_custom_type_script = "uid://bfb1iie7tep5i"
+[node name="SelectorComposite" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
 
-[node name="GetValidTargetInRange" type="Node" parent="SelectorReact/Talk/Selector/SequenceReact/Succeeder"]
-script = ExtResource("12_bhok5")
+[node name="GetRandomTarget" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite/SelectorComposite"]
+script = ExtResource("24_joxsq")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
-[node name="Cooldown" type="Node" parent="SelectorReact/Talk/Selector/SequenceReact"]
-script = ExtResource("13_tcbdt")
-wait_time = 3.0
-metadata/_custom_type_script = "uid://brukbaqvfbt0y"
+[node name="EndAction" parent="SelectorReact/Talk/Selector/SequenceComposite/SelectorComposite" instance=ExtResource("14_sa7yn")]
 
-[node name="Sequence" type="Node" parent="SelectorReact/Talk/Selector/SequenceReact/Cooldown"]
+[node name="SequenceComposite2" type="Node" parent="SelectorReact/Talk/Selector"]
 script = ExtResource("3_u33fa")
 metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="GetRandomPosition" parent="SelectorReact/Talk/Selector/SequenceReact/Cooldown/Sequence" instance=ExtResource("14_qsook")]
+[node name="TargetFound" parent="SelectorReact/Talk/Selector/SequenceComposite2" instance=ExtResource("11_0buck")]
 
-[node name="MoveToPosition" parent="SelectorReact/Talk/Selector/SequenceReact/Cooldown/Sequence" instance=ExtResource("15_oxd8l")]
-
-[node name="Sequence" type="Node" parent="SelectorReact/Talk/Selector"]
-script = ExtResource("3_u33fa")
-metadata/_custom_type_script = "uid://jst6onxl5bwx"
-
-[node name="TargetFound" parent="SelectorReact/Talk/Selector/Sequence" instance=ExtResource("11_0buck")]
-
-[node name="Selector" type="Node" parent="SelectorReact/Talk/Selector/Sequence"]
+[node name="Selector2" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2"]
 script = ExtResource("7_nsp4m")
 metadata/_custom_type_script = "uid://cmlopw75b05c1"
 
-[node name="SequenceReact2" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector"]
+[node name="SequenceReact2" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2"]
 script = ExtResource("9_367ub")
 metadata/_custom_type_script = "uid://ddsynpu03eev2"
 
-[node name="IsTargetValid" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2" instance=ExtResource("19_3e0ew")]
+[node name="IsTargetValid" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2" instance=ExtResource("19_3e0ew")]
 
-[node name="Selector2" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2"]
+[node name="Selector2" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2"]
 script = ExtResource("7_nsp4m")
 metadata/_custom_type_script = "uid://cmlopw75b05c1"
 
-[node name="Sequence" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2"]
+[node name="Sequence" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2"]
 script = ExtResource("3_u33fa")
 metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="IsTargetNotReached" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence"]
+[node name="IsTargetNotReached" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence"]
 script = ExtResource("10_g81id")
 metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
-[node name="IsTargetReached" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/IsTargetNotReached" instance=ExtResource("17_u33fa")]
+[node name="IsTargetReached" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/IsTargetNotReached" instance=ExtResource("17_u33fa")]
 
-[node name="SelectorReact" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence"]
+[node name="SelectorReact" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence"]
 script = ExtResource("2_gwfqn")
 metadata/_custom_type_script = "uid://lc1dnoc2x4b"
 
-[node name="Wait" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact"]
+[node name="Wait" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/SelectorReact"]
 script = ExtResource("9_367ub")
 metadata/_custom_type_script = "uid://ddsynpu03eev2"
 
-[node name="IsTargetBusy" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact/Wait" instance=ExtResource("17_mx8te")]
+[node name="IsTargetBusy" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/SelectorReact/Wait" instance=ExtResource("17_mx8te")]
 
-[node name="GetWaitPosition" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact/Wait" instance=ExtResource("18_gwfqn")]
+[node name="GetWaitPosition" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/SelectorReact/Wait" instance=ExtResource("18_gwfqn")]
 
-[node name="MoveToPosition" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact/Wait" instance=ExtResource("15_oxd8l")]
+[node name="MoveToPosition" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/SelectorReact/Wait" instance=ExtResource("15_oxd8l")]
 
-[node name="ReachTarget" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact"]
+[node name="ReachTarget" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/SelectorReact"]
 script = ExtResource("9_367ub")
 metadata/_custom_type_script = "uid://ddsynpu03eev2"
 
-[node name="GetTargetPosition" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact/ReachTarget" instance=ExtResource("19_u33fa")]
+[node name="GetTargetPosition" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/SelectorReact/ReachTarget" instance=ExtResource("19_u33fa")]
 
-[node name="MoveToPosition" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact/ReachTarget" instance=ExtResource("15_oxd8l")]
+[node name="MoveToPosition" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/SelectorReact/ReachTarget" instance=ExtResource("15_oxd8l")]
 
-[node name="SetTargetReached" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence/SelectorReact/ReachTarget" instance=ExtResource("22_fhn60")]
+[node name="SetTargetReached" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/SelectorReact/ReachTarget" instance=ExtResource("22_fhn60")]
 
-[node name="Sequence2" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2"]
+[node name="Sequence2" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2"]
 script = ExtResource("3_u33fa")
 metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="IsTargetReached" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2" instance=ExtResource("17_u33fa")]
+[node name="IsTargetReached" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence2" instance=ExtResource("17_u33fa")]
 
-[node name="Parallel" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2"]
+[node name="Parallel" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence2"]
 script = ExtResource("24_sa7yn")
 metadata/_custom_type_script = "uid://u7kder1k34v5"
 
-[node name="InteractWithTarget" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2/Parallel" instance=ExtResource("18_vephg")]
+[node name="InteractWithTarget" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence2/Parallel" instance=ExtResource("18_vephg")]
 
-[node name="InteractBehavior" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2/Parallel" instance=ExtResource("16_sa7yn")]
+[node name="InteractBehavior" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence2/Parallel" instance=ExtResource("16_sa7yn")]
 
-[node name="FinishTalking" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2"]
+[node name="FinishTalking" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence2"]
 script = ExtResource("20_4bqkc")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
-[node name="Timer" type="Timer" parent="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2/FinishTalking"]
+[node name="Timer" type="Timer" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence2/FinishTalking"]
 wait_time = 15.0
 one_shot = true
 
-[node name="Sequence" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector"]
+[node name="Sequence" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2"]
 script = ExtResource("3_u33fa")
 metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="IsTargetNotValid" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/Sequence"]
+[node name="IsTargetNotValid" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/Sequence"]
 script = ExtResource("10_g81id")
 metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
-[node name="IsTargetValid" parent="SelectorReact/Talk/Selector/Sequence/Selector/Sequence/IsTargetNotValid" instance=ExtResource("19_3e0ew")]
+[node name="IsTargetValid" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/Sequence/IsTargetNotValid" instance=ExtResource("19_3e0ew")]
 
-[node name="LoseTarget" type="Node" parent="SelectorReact/Talk/Selector/Sequence/Selector/Sequence"]
+[node name="LoseTarget" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/Sequence"]
 script = ExtResource("31_r7sp2")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
@@ -283,8 +292,6 @@ metadata/_custom_type_script = "uid://ddsynpu03eev2"
 
 [node name="IsTargetValid" parent="SelectorReact/Petition/Selector2/SequenceComposite" instance=ExtResource("19_3e0ew")]
 
-[node name="IsTargetTrackable" parent="SelectorReact/Petition/Selector2/SequenceComposite" instance=ExtResource("22_esc8u")]
-
 [node name="Selector" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite"]
 script = ExtResource("7_nsp4m")
 metadata/_custom_type_script = "uid://cmlopw75b05c1"
@@ -299,74 +306,29 @@ metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
 [node name="IsTargetReached" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/IsTargetNotReached" instance=ExtResource("17_u33fa")]
 
-[node name="Selector" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence"]
-script = ExtResource("7_nsp4m")
-metadata/_custom_type_script = "uid://cmlopw75b05c1"
-
-[node name="SequenceReact" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector"]
-script = ExtResource("9_367ub")
-metadata/_custom_type_script = "uid://ddsynpu03eev2"
-
-[node name="IsTargetNotInRange" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact"]
-script = ExtResource("10_g81id")
-metadata/_custom_type_script = "uid://cx07pxr1bsjba"
-
-[node name="IsTargetInRange" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact/IsTargetNotInRange" instance=ExtResource("23_uriqu")]
-
-[node name="Sequence" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact"]
-script = ExtResource("3_u33fa")
-metadata/_custom_type_script = "uid://jst6onxl5bwx"
-
-[node name="GetTargetLastPos" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact/Sequence"]
-script = ExtResource("24_bbaml")
-metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
-
-[node name="MoveToPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact/Sequence" instance=ExtResource("15_oxd8l")]
-
-[node name="Cooldown" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact/Sequence"]
-script = ExtResource("13_tcbdt")
-wait_time = 10.0
-metadata/_custom_type_script = "uid://brukbaqvfbt0y"
-
-[node name="Sequence" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact/Sequence/Cooldown"]
-script = ExtResource("3_u33fa")
-metadata/_custom_type_script = "uid://jst6onxl5bwx"
-
-[node name="GetRandomPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact/Sequence/Cooldown/Sequence" instance=ExtResource("14_qsook")]
-max_radius = 70.0
-centered = true
-
-[node name="MoveToPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/SequenceReact/Sequence/Cooldown/Sequence" instance=ExtResource("15_oxd8l")]
-
-[node name="Sequence" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector"]
-script = ExtResource("3_u33fa")
-metadata/_custom_type_script = "uid://jst6onxl5bwx"
-
-[node name="IsTargetInRange" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence" instance=ExtResource("23_uriqu")]
-
-[node name="SelectorReact" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence"]
+[node name="SelectorReact" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence"]
 script = ExtResource("2_gwfqn")
 metadata/_custom_type_script = "uid://lc1dnoc2x4b"
 
-[node name="Wait" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact"]
+[node name="Wait" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/SelectorReact"]
 script = ExtResource("9_367ub")
 metadata/_custom_type_script = "uid://ddsynpu03eev2"
 
-[node name="IsTargetBusy" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("17_mx8te")]
+[node name="IsTargetBusy" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("17_mx8te")]
 
-[node name="GetWaitPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("18_gwfqn")]
+[node name="GetWaitPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("18_gwfqn")]
 
-[node name="MoveToPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("15_oxd8l")]
+[node name="MoveToPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("15_oxd8l")]
 
-[node name="ReachTarget" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact"]
+[node name="ReachTarget" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/SelectorReact"]
 script = ExtResource("9_367ub")
 metadata/_custom_type_script = "uid://ddsynpu03eev2"
 
-[node name="GetTargetPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("19_u33fa")]
+[node name="GetTargetPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("19_u33fa")]
 
-[node name="MoveToPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("15_oxd8l")]
+[node name="MoveToPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("15_oxd8l")]
 
-[node name="SetTargetReached" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("22_fhn60")]
+[node name="SetTargetReached" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("22_fhn60")]
 
 [node name="Sequence2" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector"]
 script = ExtResource("3_u33fa")
@@ -399,12 +361,6 @@ script = ExtResource("10_g81id")
 metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
 [node name="IsTargetValid" parent="SelectorReact/Petition/Selector2/Sequence/Inverter" instance=ExtResource("19_3e0ew")]
-
-[node name="Inverter2" type="Node" parent="SelectorReact/Petition/Selector2/Sequence"]
-script = ExtResource("10_g81id")
-metadata/_custom_type_script = "uid://cx07pxr1bsjba"
-
-[node name="IsTargetTrackable" parent="SelectorReact/Petition/Selector2/Sequence/Inverter2" instance=ExtResource("22_esc8u")]
 
 [node name="EndAction" parent="SelectorReact/Petition/Selector2/Sequence" instance=ExtResource("14_sa7yn")]
 
@@ -458,6 +414,8 @@ metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 script = ExtResource("41_68kkn")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
+[node name="EndAction" parent="SelectorReact/Shop/SelectorComposite/SequenceReactiveComposite/Sequence" instance=ExtResource("14_sa7yn")]
+
 [node name="EndAction" parent="SelectorReact/Shop/SelectorComposite" instance=ExtResource("14_sa7yn")]
 
 [node name="Theft" type="Node" parent="SelectorReact"]
@@ -478,8 +436,6 @@ metadata/_custom_type_script = "uid://ddsynpu03eev2"
 
 [node name="IsTargetValid" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite" instance=ExtResource("19_3e0ew")]
 
-[node name="IsTargetTrackable" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite" instance=ExtResource("22_esc8u")]
-
 [node name="Selector" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite"]
 script = ExtResource("7_nsp4m")
 metadata/_custom_type_script = "uid://cmlopw75b05c1"
@@ -494,61 +450,16 @@ metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
 [node name="IsTargetReached" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/IsTargetNotReached" instance=ExtResource("17_u33fa")]
 
-[node name="Selector" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact"]
-script = ExtResource("7_nsp4m")
-metadata/_custom_type_script = "uid://cmlopw75b05c1"
-
-[node name="SequenceReact" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector"]
+[node name="SequenceReact" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact"]
 script = ExtResource("9_367ub")
 metadata/_custom_type_script = "uid://ddsynpu03eev2"
 
-[node name="IsTargetNotInRange" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact"]
-script = ExtResource("10_g81id")
-metadata/_custom_type_script = "uid://cx07pxr1bsjba"
-
-[node name="IsTargetInRange" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact/IsTargetNotInRange" instance=ExtResource("23_uriqu")]
-
-[node name="Sequence" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact"]
-script = ExtResource("3_u33fa")
-metadata/_custom_type_script = "uid://jst6onxl5bwx"
-
-[node name="GetTargetLastPos" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact/Sequence"]
-script = ExtResource("24_bbaml")
-metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
-
-[node name="MoveToPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact/Sequence" instance=ExtResource("15_oxd8l")]
-
-[node name="Cooldown" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact/Sequence"]
-script = ExtResource("13_tcbdt")
-wait_time = 10.0
-metadata/_custom_type_script = "uid://brukbaqvfbt0y"
-
-[node name="Sequence" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact/Sequence/Cooldown"]
-script = ExtResource("3_u33fa")
-metadata/_custom_type_script = "uid://jst6onxl5bwx"
-
-[node name="GetRandomPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact/Sequence/Cooldown/Sequence" instance=ExtResource("14_qsook")]
-max_radius = 70.0
-centered = true
-
-[node name="MoveToPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/SequenceReact/Sequence/Cooldown/Sequence" instance=ExtResource("15_oxd8l")]
-
-[node name="Sequence" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector"]
-script = ExtResource("3_u33fa")
-metadata/_custom_type_script = "uid://jst6onxl5bwx"
-
-[node name="IsTargetInRange" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/Sequence" instance=ExtResource("23_uriqu")]
-
-[node name="SequenceReact" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/Sequence"]
-script = ExtResource("9_367ub")
-metadata/_custom_type_script = "uid://ddsynpu03eev2"
-
-[node name="GetTargetPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/Sequence/SequenceReact" instance=ExtResource("19_u33fa")]
+[node name="GetTargetPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/SequenceReact" instance=ExtResource("19_u33fa")]
 waypoint = 1
 
-[node name="MoveToPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/Sequence/SequenceReact" instance=ExtResource("15_oxd8l")]
+[node name="MoveToPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/SequenceReact" instance=ExtResource("15_oxd8l")]
 
-[node name="SetTargetReached" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/Selector/Sequence" instance=ExtResource("22_fhn60")]
+[node name="SetTargetReached" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact" instance=ExtResource("22_fhn60")]
 
 [node name="Sequence" type="Node" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector"]
 script = ExtResource("3_u33fa")
@@ -610,73 +521,83 @@ metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
 [node name="AssessCompleted" parent="SelectorReact/Interrogate/Selector/Sequence2" instance=ExtResource("41_inuhf")]
 
-[node name="SequenceReact" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2"]
+[node name="SelectorComposite" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2"]
+script = ExtResource("7_nsp4m")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="SequenceReact" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite"]
 script = ExtResource("9_367ub")
 metadata/_custom_type_script = "uid://ddsynpu03eev2"
 
-[node name="Selector2" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact"]
+[node name="IsTargetValid" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact" instance=ExtResource("19_3e0ew")]
+
+[node name="Selector" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact"]
 script = ExtResource("7_nsp4m")
 metadata/_custom_type_script = "uid://cmlopw75b05c1"
 
-[node name="IsTargetValid" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector2" instance=ExtResource("19_3e0ew")]
-
-[node name="EndAction" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector2" instance=ExtResource("14_sa7yn")]
-
-[node name="Selector" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact"]
-script = ExtResource("7_nsp4m")
-metadata/_custom_type_script = "uid://cmlopw75b05c1"
-
-[node name="Sequence" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector"]
+[node name="Sequence" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector"]
 script = ExtResource("3_u33fa")
 metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="IsTargetNotReached" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence"]
+[node name="IsTargetNotReached" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence"]
 script = ExtResource("10_g81id")
 metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
-[node name="IsTargetReached" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/IsTargetNotReached" instance=ExtResource("17_u33fa")]
+[node name="IsTargetReached" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/IsTargetNotReached" instance=ExtResource("17_u33fa")]
 
-[node name="SelectorReact" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence"]
+[node name="SelectorReact" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence"]
 script = ExtResource("2_gwfqn")
 metadata/_custom_type_script = "uid://lc1dnoc2x4b"
 
-[node name="Wait" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact"]
+[node name="Wait" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/SelectorReact"]
 script = ExtResource("9_367ub")
 metadata/_custom_type_script = "uid://ddsynpu03eev2"
 
-[node name="IsTargetBusy" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("17_mx8te")]
+[node name="IsTargetBusy" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("17_mx8te")]
 
-[node name="GetWaitPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("18_gwfqn")]
+[node name="GetWaitPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("18_gwfqn")]
 
-[node name="MoveToPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("15_oxd8l")]
+[node name="MoveToPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("15_oxd8l")]
 
-[node name="ReachTarget" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact"]
+[node name="ReachTarget" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/SelectorReact"]
 script = ExtResource("9_367ub")
 metadata/_custom_type_script = "uid://ddsynpu03eev2"
 
-[node name="GetTargetPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("19_u33fa")]
+[node name="GetTargetPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("19_u33fa")]
 
-[node name="MoveToPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("15_oxd8l")]
+[node name="MoveToPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("15_oxd8l")]
 
-[node name="SetTargetReached" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("22_fhn60")]
+[node name="SetTargetReached" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("22_fhn60")]
 
-[node name="Sequence2" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector"]
+[node name="Sequence2" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector"]
 script = ExtResource("3_u33fa")
 metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="IsTargetReached" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence2" instance=ExtResource("17_u33fa")]
+[node name="IsTargetReached" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence2" instance=ExtResource("17_u33fa")]
 
-[node name="Parallel" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence2"]
+[node name="Parallel" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence2"]
 script = ExtResource("24_sa7yn")
 metadata/_custom_type_script = "uid://u7kder1k34v5"
 
-[node name="InteractWithTarget" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence2/Parallel" instance=ExtResource("18_vephg")]
+[node name="InteractWithTarget" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence2/Parallel" instance=ExtResource("18_vephg")]
 
-[node name="InteractBehavior" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence2/Parallel" instance=ExtResource("16_sa7yn")]
+[node name="InteractBehavior" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence2/Parallel" instance=ExtResource("16_sa7yn")]
 
-[node name="FinishInterrogation" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SequenceReact/Selector/Sequence2"]
+[node name="FinishInterrogation" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence2"]
 script = ExtResource("35_4tqbr")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="SequenceComposite" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite"]
+script = ExtResource("3_u33fa")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="InverterDecorator" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceComposite"]
+script = ExtResource("10_g81id")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetValid" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceComposite/InverterDecorator" instance=ExtResource("19_3e0ew")]
+
+[node name="EndAction" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceComposite" instance=ExtResource("14_sa7yn")]
 
 [node name="Plant" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
@@ -766,4 +687,4 @@ max_radius = 100.0
 
 [node name="MoveToPosition" parent="SelectorReact/Dormant" instance=ExtResource("15_oxd8l")]
 
-[connection signal="timeout" from="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2/FinishTalking/Timer" to="SelectorReact/Talk/Selector/Sequence/Selector/SequenceReact2/Selector2/Sequence2/FinishTalking" method="_on_timer_timeout"]
+[connection signal="timeout" from="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence2/FinishTalking/Timer" to="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence2/FinishTalking" method="_on_timer_timeout"]

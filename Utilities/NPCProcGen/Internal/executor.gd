@@ -33,6 +33,8 @@ func start_action(action_data: Dictionary) -> void:
 	setup_data(action_data.action)
 	
 	action_stack.append(action_data)
+	Logger.info(procedural_tree.actor.name + " started action: "
+		+ Globals.get_action_string(action_data.action))
 
 	var stack_str = "Action stack of " + procedural_tree.actor.name + ": "
 	for action in action_stack:
@@ -47,39 +49,42 @@ func setup_data(action: Globals.Action):
 	var actor: Actor = procedural_tree.actor as Actor
 
 	if action == Globals.Action.PLANT:
-		print("Seed prop to make visible: ", actor.seed_prop)
 		actor.seed_prop.visible = true
-
-	match action:
-		Globals.Action.PURSUIT or Globals.Action.PLANT or Globals.Action.HARVEST:
-			WorldState.set_availability(actor, false)
+	
+	if [Globals.Action.PURSUIT, Globals.Action.PLANT, Globals.Action.HARVEST,
+		Globals.Action.FLEE].has(action):
+		WorldState.set_availability(actor, false)
 
 func end_action():
+	if action_stack.is_empty(): return
+
+	var tree_actor = procedural_tree.actor
+	if not is_instance_valid(tree_actor) or tree_actor.is_queued_for_deletion():
+		return
+
 	var completed_action = action_stack.pop_back()
 	assert(completed_action != null, "No action to end")
-	reset_data(completed_action)
+	Logger.info(procedural_tree.actor.name + " ended action: "
+		+ Globals.get_action_string(completed_action.action))
+	reset_data()
 
 	if not action_stack.is_empty():
 		var action_data = action_stack.pop_back()
 		start_action(action_data)
 		return
 	
-	print("Stack is empty for ", procedural_tree.actor.name, ". No more actions to execute.")
 	var npc = procedural_tree.actor as NPC
 	WorldState.set_current_action(npc, Globals.Action.NONE)
 	procedural_tree.blackboard.set_value("action", Globals.Action.NONE)
 	procedural_tree.blackboard.erase_value("data")
 	npc.start_timer()
 
-func reset_data(action_data: Dictionary):
+func reset_data():
 	var actor = procedural_tree.actor as Actor
 	actor.seed_prop.visible = false
 	WorldState.set_is_busy(actor, false)
-
-	match action_data.action:
-		Globals.Action.PURSUIT or Globals.Action.PLANT or Globals.Action.HARVEST:
-			WorldState.set_availability(actor, true)
-
+	WorldState.set_availability(actor, true)
+	
 	var blackboard = procedural_tree.blackboard
 	blackboard.set_value("target_reached", false)
 	blackboard.set_value("anim_finished", false)

@@ -17,7 +17,6 @@ var last_known_position: Vector2 = Vector2.INF:
 		decay_timer.start()
 
 var decay_timer: Timer
-var petition_timer: Timer
 
 func _init(memorizer: Memorizer):
 	decay_timer = Timer.new()

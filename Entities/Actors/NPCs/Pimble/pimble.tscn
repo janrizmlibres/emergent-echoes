@@ -21,13 +21,10 @@ metadata/_custom_type_script = "uid://cmda8gt6vuorb"
 procedural_tree = NodePath("PimbleBT")
 
 [node name="PimbleBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_vgnlq")]
-blackboard = NodePath("@Node@21914")
+blackboard = NodePath("@Node@212011")
 actor = NodePath("../..")
 
-[node name="SeedProp" parent="." index="8"]
-position = Vector2(0, -19)
-
-[node name="AnimationTree" parent="." index="15"]
+[node name="AnimationTree" parent="." index="16"]
 parameters/Idle/blend_position = 0.00240386
 
 [editable path="CarryProp"]

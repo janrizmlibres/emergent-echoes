@@ -2,6 +2,7 @@ class_name ResourceStat
 extends Node
 
 signal satiation_depleted
+signal total_food_updated(amount: int)
 
 const TANGIBLE_TYPES = [Globals.ResourceType.MONEY, Globals.ResourceType.FOOD]
 const INTEGER_TYPES = [
@@ -30,7 +31,7 @@ const MAX_VALUE = {
 const LOCAL_THRESHOLDS = {
 	Globals.ResourceType.MONEY: [100, 900],
 	Globals.ResourceType.FOOD: [5, 45],
-	Globals.ResourceType.SATIATION: [5, 90],
+	Globals.ResourceType.SATIATION: [20, 90],
 	Globals.ResourceType.COMPANIONSHIP: [10, 90],
 	Globals.ResourceType.DUTY: [30, 90]
 }
@@ -46,6 +47,9 @@ const DECAY_RATE: float = 0.2
 	set(value):
 		amount = clamp(value, 0, ResourceStat.MAX_VALUE[type])
 		amount = floor(amount) if INTEGER_TYPES.has(type) else amount
+
+		if type == Globals.ResourceType.TOTAL_FOOD:
+			total_food_updated.emit(amount)
 
 		if type == Globals.ResourceType.SATIATION and amount > 0:
 			damage_timer = 0

@@ -22,6 +22,6 @@ func after_run(actor: Node, _blackboard: Blackboard) -> void:
   WorldState.actor_state[npc].is_busy = false
 
   WorldState.total_food.amount -= 1
-  npc.modify_resource(Globals.ResourceType.SATIATION, 10)
+  npc.modify_resource(Globals.ResourceType.SATIATION, 20)
   npc.modify_resource(Globals.ResourceType.FOOD, -1)
   npc.executor.end_action()

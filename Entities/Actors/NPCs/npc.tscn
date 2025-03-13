@@ -10,9 +10,6 @@
 script = ExtResource("2_36x7w")
 evaluation_interval = Vector2(10, 20)
 
-[node name="Sprite2D" parent="." index="0"]
-frame = 0
-
 [node name="Traits" type="Node" parent="." index="1"]
 
 [node name="SurvivalTrait" type="Node" parent="Traits" index="0" node_paths=PackedStringArray("actor_node")]
@@ -38,13 +35,13 @@ one_shot = true
 [node name="Money" type="Node" parent="Resources" index="0"]
 script = ExtResource("11_wuycy")
 type = 2
-amount = 250.0
+amount = 300.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
 [node name="Food" type="Node" parent="Resources" index="1"]
 script = ExtResource("11_wuycy")
 type = 3
-amount = 10.0
+amount = 4.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
 [node name="Satiation" type="Node" parent="Resources" index="2"]
@@ -56,8 +53,11 @@ metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 [node name="Companionship" type="Node" parent="Resources" index="3"]
 script = ExtResource("11_wuycy")
 type = 5
-amount = 70.0
+amount = 10.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
+
+[node name="SeedProp" parent="." index="8"]
+position = Vector2(0, -17)
 
 [node name="DebugLabel" parent="." index="19" node_paths=PackedStringArray("actor")]
 actor = NodePath("..")

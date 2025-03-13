@@ -105,20 +105,62 @@ func start_interaction(target):
 func stop_interaction():
 	executor.end_action()
 
+func crime_witnessed(crime: Crime):
+	if lawful_trait != null:
+		crime.investigator = self
+		lawful_trait.assigned_case = crime
+		
+		var action_data = {
+			"action": Globals.Action.PURSUIT,
+			"data": {
+				"case": crime,
+				"target": crime.criminal,
+				"assess_completed": true
+			}
+		}
+		executor.start_action(action_data)
+		return
+
+	match crime.category:
+		Crime.Category.MURDER:
+			var action_data = {
+				"action": Globals.Action.FLEE,
+				"data": {}
+			}
+			executor.start_action(action_data)
+
+
 func apply_knockback(direction: Vector2, force: float):
 	velocity = direction * force
 	animation_state.travel("Idle")
 	is_in_knockback = true
 
 func _on_evaluation_timer_timeout():
-	var action_data: Dictionary = Strategiser.evaluation_action(self, Globals.SocialPractice.PROACTIVE)
+	var satiation = get_resource(Globals.ResourceType.SATIATION)
+
+	if satiation.amount < satiation.lower_threshold:
+		if override_evaluation(): return
+		
+	var action_data = Strategiser.evaluation_action(self, Globals.SocialPractice.PROACTIVE)
 
 	if not action_data.is_empty():
-		# print("Action evaluated by ", self.name, ": ", Globals.get_action_string(action_data.action))
 		executor.start_action(action_data)
 	else:
 		print("No action evaluated by ", self.name)
 		start_timer()
+
+func override_evaluation() -> bool:
+	if holds_resource(Globals.ResourceType.FOOD):
+		var action_data = {"action": Globals.Action.EAT, "data": {}}
+		executor.start_action(action_data)
+		return true
+	elif get_resource_amount(Globals.ResourceType.MONEY) > 10 \
+		and WorldState.shop.food_amount > 0:
+		var action_data = {"action": Globals.Action.SHOP, "data": {}}
+		executor.start_action(action_data)
+		return true
+
+	return false
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity):
 	if not is_in_knockback:

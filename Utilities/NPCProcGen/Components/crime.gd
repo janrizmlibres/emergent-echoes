@@ -31,6 +31,7 @@ func is_open():
 
 func get_random_participant():
 	var filtered_participants = participants.filter(func(p):
+		if not is_instance_valid(p): return false
 		if verifiers.has(p): return false
 		if falsifiers.has(p): return false
 		return true
@@ -50,13 +51,13 @@ func close(duty_increase: float) -> bool:
 	assert(investigator != null, "Cannot close case without investigator")
 
 	if randf() >= get_solve_probability():
-		print("Failed to solve case")
+		Logger.info(investigator.name + " failed to solve case")
 		status = Status.UNSOLVED
 		complete_investigation(duty_increase)
 		return true
 
-	if WorldState.is_captured(criminal):
-		print("Successfully solved case")
+	if not is_instance_valid(criminal) or WorldState.is_captured(criminal):
+		Logger.info(investigator.name + " successfully solved case")
 		status = Status.SOLVED
 		complete_investigation(duty_increase)
 		return true

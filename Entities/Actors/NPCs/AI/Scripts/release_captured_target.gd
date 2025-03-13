@@ -13,12 +13,16 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	target.visible = true
 
 	if target is Player:
-		target.collision_mask = 0b0011
+		npc.remove_child(target.remote_transform)
+		target.add_child(target.remote_transform)
 	else:
 		(target as NPC).executor.set_enable(true)
 
+	Logger.info(target.name + " was captured")
+	Logger.info(case.investigator.name + " successfully solved case")
 	case.status = Crime.Status.SOLVED
 	case.complete_investigation(10)
 
+	WorldState.set_captured(target, true)
 	npc.executor.end_action()
 	return SUCCESS

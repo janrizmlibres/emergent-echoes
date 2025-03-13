@@ -5,14 +5,10 @@
 [ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="3_ngslm"]
 
 [node name="Player" instance=ExtResource("1_h34l7")]
-collision_mask = 3
 script = ExtResource("2_ngslm")
 max_speed = 60
 acceleration = 8
 friction = 8
-
-[node name="Sprite2D" parent="." index="0"]
-frame = 0
 
 [node name="Money" type="Node" parent="Resources" index="0"]
 script = ExtResource("3_ngslm")
@@ -29,10 +25,7 @@ weight = 1.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
 [node name="SeedProp" parent="." index="4"]
-position = Vector2(0, -17)
-
-[node name="WeaponSprite" parent="Weapon" index="0"]
-frame = 4
+position = Vector2(0, -19)
 
 [node name="DebugLabel" parent="." index="15" node_paths=PackedStringArray("actor")]
 actor = NodePath("..")

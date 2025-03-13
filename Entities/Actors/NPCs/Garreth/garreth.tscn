@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="5_jlis0"]
 
 [node name="Garreth" instance=ExtResource("1_m3od5")]
+collision_mask = 1
 motion_mode = 0
 
 [node name="Sprite2D" parent="." index="0"]
@@ -22,7 +23,7 @@ metadata/_custom_type_script = "uid://mlbnetcoq4lk"
 procedural_tree = NodePath("GarrethBT")
 
 [node name="GarrethBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_jlis0")]
-blackboard = NodePath("@Node@140732")
+blackboard = NodePath("@Node@21912")
 actor = NodePath("../..")
 
 [node name="NavigationAgent2D" parent="." index="3"]
@@ -35,10 +36,7 @@ amount = 50.0
 weight = 0.6
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
-[node name="SeedProp" parent="." index="8"]
-position = Vector2(0, -18)
-
-[node name="AnimationTree" parent="." index="15"]
+[node name="AnimationTree" parent="." index="16"]
 parameters/Attack/blend_position = 0
 parameters/Eat/blend_position = 0
 parameters/Harvest/blend_position = 0

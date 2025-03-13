@@ -5,6 +5,8 @@ enum State {IDLE, MOVING, ATTACK}
 
 var state: State = State.MOVING
 
+@onready var remote_transform: RemoteTransform2D = $RemoteTransform2D
+
 func _ready():
 	super._ready()
 	setup_resources()

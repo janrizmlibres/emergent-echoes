@@ -67,7 +67,8 @@ func is_trackable(initiator: Actor) -> bool:
 	return false
 
 func is_valid_target() -> bool:
-	if WorldState.is_available(self): return true
+	if is_queued_for_deletion(): return false
+	if not WorldState.is_available(self): return false
 	return not WorldState.is_captured(self)
 
 func is_lawful() -> bool:
@@ -101,13 +102,31 @@ func _on_hurt_box_area_entered(area):
 
 	var direction = weapon.global_position.direction_to(global_position)
 	apply_knockback(direction, weapon.knockback)
-	apply_damage()
+	apply_damage(weapon.actor)
 
-func apply_damage():
+func apply_damage(damager: Actor = null):
 	hit_points -= 1
-	if hit_points <= 0:
-		WorldState.queue_free_actor(self)
-		queue_free()
+	if hit_points > 0: return
+
+	if self is NPC:
+		(self as NPC).executor.procedural_tree.disable()
+
+	WorldState.queue_free_actor(self)
+	queue_free()
+	
+	if damager == null:
+		Logger.info(name + " has perished!")
+		return
+
+	var participants = damager.actors_in_range.duplicate()
+	var crime: Crime = Crime.new(Crime.Category.MURDER, damager, participants)
+	WorldState.crimes.append(crime)
+
+	Logger.info(damager.name + " murdered " + name)
+
+	for participant in participants:
+		if participant is NPC:
+			(participant as NPC).crime_witnessed(crime)
 
 func apply_knockback(_direction: Vector2, _force: float):
 	pass

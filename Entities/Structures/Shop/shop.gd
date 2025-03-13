@@ -1,4 +1,4 @@
 class_name Shop
 extends Marker2D
 
-var food_amount = 0
+@export var food_amount: int = 0

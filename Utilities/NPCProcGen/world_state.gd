@@ -75,3 +75,9 @@ func queue_free_actor(actor: Actor):
 	for peer in get_peer_actors(actor):
 		peer.memorizer.actor_data.erase(actor)
 		peer.actors_in_range.erase(actor)
+
+	for crime in crimes:
+		if not crime.participants.has(actor): continue
+		if crime.verifiers.has(actor): continue
+		if not crime.falsifiers.has(actor):
+			crime.falsifiers.append(actor)
