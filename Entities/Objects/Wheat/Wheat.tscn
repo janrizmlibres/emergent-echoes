@@ -1,0 +1,71 @@
+[gd_scene load_steps=11 format=3 uid="uid://bbvfg1jotmlna"]
+
+[ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="1_mx2ts"]
+[ext_resource type="Script" uid="uid://ca47vfv6nvfkr" path="res://Entities/Objects/Wheat/Wheat.cs" id="1_rb2hj"]
+[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Interactions/interactable.tscn" id="2_3lbrb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2137r"]
+atlas = ExtResource("1_mx2ts")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wcdt5"]
+atlas = ExtResource("1_mx2ts")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lqp56"]
+atlas = ExtResource("1_mx2ts")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s81yg"]
+atlas = ExtResource("1_mx2ts")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v5a6l"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2137r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wcdt5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lqp56")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s81yg")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ha1vo"]
+size = Vector2(20, 8)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ttvvd"]
+radius = 17.0
+
+[node name="Wheat" type="StaticBody2D"]
+script = ExtResource("1_rb2hj")
+
+[node name="WheatSprite" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_v5a6l")
+frame = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_ha1vo")
+
+[node name="Interactable" parent="." instance=ExtResource("2_3lbrb")]
+PrimaryActionDescription = "Farm"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
+shape = SubResource("CircleShape2D_ttvvd")
+
+[node name="RegrowTimer" type="Timer" parent="."]
+wait_time = 30.0
+one_shot = true
+
+[connection signal="timeout" from="RegrowTimer" to="." method="OnPlantNextStage"]

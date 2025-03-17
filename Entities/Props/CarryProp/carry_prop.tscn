@@ -1,18 +1,15 @@
 [gd_scene load_steps=3 format=3 uid="uid://bk10dt7i8uqo6"]
 
-[ext_resource type="Script" uid="uid://bpagn40lql54c" path="res://Entities/Props/CarryProp/CarryProp.cs" id="1_12t75"]
-[ext_resource type="Texture2D" uid="uid://4mb1lonkqpsb" path="res://Entities/Actors/Data/tobin_texture.tres" id="2_3vnma"]
+[ext_resource type="Script" path="res://Entities/Props/CarryProp/carry_prop.gd" id="1_ruk1u"]
+[ext_resource type="Texture2D" uid="uid://bu4lgseyryu3n" path="res://Entities/Actors/NPCs/Toblin/Art/toblin.png" id="1_vd5d3"]
 
 [node name="CarryProp" type="Node2D"]
-scale = Vector2(-1, 1)
-script = ExtResource("1_12t75")
-metadata/_edit_group_ = true
-metadata/_edit_lock_ = true
+script = ExtResource("1_ruk1u")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(-3, -17)
+[node name="CarrySprite" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-4, -18)
 rotation = -1.5708
-texture = ExtResource("2_3vnma")
+texture = ExtResource("1_vd5d3")
 hframes = 8
 vframes = 6
-metadata/_edit_lock_ = true

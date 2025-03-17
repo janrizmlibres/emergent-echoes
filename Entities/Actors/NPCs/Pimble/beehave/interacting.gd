@@ -1,27 +1,21 @@
 extends ActionLeaf
 
 @onready var conversation_timer = $"../../../../ConversationTimer"
-@onready var emote_controller = $"../../../../EmoteController"
+@onready var emote_bubble = $"../../../../EmoteBubble"
 @onready var animation_tree = $"../../../../AnimationTree"
 @onready var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/playback")
-
-var chances = 0
+@onready var blackboard = $"../../../../Blackboard"
 
 func before_run(actor: Node, blackboard: Blackboard) -> void:
 	if blackboard.get_value("current_state") == "interacting":
 		animation_state.travel("Idle")
+		emote_bubble.activate()
 		conversation_timer.start()
 		return
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
 	if blackboard.get_value("current_state") == "interacting":
 		actor.npc_active = false
-		
-		if chances >= 5:
-			chances = 0
-			conversation_timer.stop()
-			blackboard.set_value("current_state", "done interacting")
-			
 		return RUNNING
 		
 	if blackboard.get_value("current_state") == "done interacting":
@@ -33,6 +27,6 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	return FAILURE
 
 func _on_conversation_timer_timeout() -> void:
-	emote_controller.ShowRandomEmote()
-	chances += 1
+	emote_bubble.deactivate()
+	blackboard.set_value("current_state", "done interacting")
 	pass # Replace with function body.

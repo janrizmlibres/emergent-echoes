@@ -1,43 +1,31 @@
-[gd_scene load_steps=5 format=3 uid="uid://bnmuhsutwyeye"]
+[gd_scene load_steps=4 format=3 uid="uid://jh8w0jv3rc0f"]
 
-[ext_resource type="PackedScene" uid="uid://dca6ru8aaidgk" path="res://Entities/Actors/actor.tscn" id="1_15eeh"]
-[ext_resource type="Script" uid="uid://mquu5kr20ocd" path="res://Entities/Actors/Player/Player.cs" id="1_idj2s"]
-[ext_resource type="Script" uid="uid://c3opdn48bdfcg" path="res://addons/NPCProcGen/Nodes/ActorTag2D/ActorTag2D.cs" id="3_tiunm"]
-[ext_resource type="Script" uid="uid://bgxm0q2ycclid" path="res://addons/beehave/blackboard.gd" id="4_5vy5m"]
+[ext_resource type="PackedScene" uid="uid://cmcj7lmi8c5yw" path="res://Entities/Actors/actor.tscn" id="1_h34l7"]
+[ext_resource type="Script" uid="uid://bmjvv7wfg7dpl" path="res://Entities/Actors/Player/player.gd" id="2_ngslm"]
+[ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="3_ngslm"]
 
-[node name="Player" instance=ExtResource("1_15eeh")]
-collision_mask = 3
-script = ExtResource("1_idj2s")
-MaxSpeed = 80
-Acceleration = 10
-Friction = 10
+[node name="Player" instance=ExtResource("1_h34l7")]
+script = ExtResource("2_ngslm")
+max_speed = 60
+acceleration = 8
+friction = 8
 
-[node name="RearMarker" parent="." index="8"]
-visible = false
+[node name="Money" type="Node" parent="Resources" index="0"]
+script = ExtResource("3_ngslm")
+type = 2
+amount = 500.0
+weight = 1.0
+metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
-[node name="AnimationTree" parent="." index="10"]
-parameters/Harvest/blend_position = 0
+[node name="Food" type="Node" parent="Resources" index="1"]
+script = ExtResource("3_ngslm")
+type = 3
+amount = 20.0
+weight = 1.0
+metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
-[node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="." index="13"]
-position = Vector2(0, -1)
-radius = 5.0
-metadata/_edit_lock_ = true
-
-[node name="ActorTag2D" type="Node" parent="." index="14" node_paths=PackedStringArray("ActorDetector", "RearMarker")]
-script = ExtResource("3_tiunm")
-MoneyAmount = 100
-FoodAmount = 5
-ActorDetector = NodePath("../ActorDetector")
-RearMarker = NodePath("../RearMarker/Marker2D")
-
-[node name="DebugLabel" parent="." index="15" node_paths=PackedStringArray("Actor")]
-Actor = NodePath("../ActorTag2D")
-
-[node name="Blackboard" type="Node" parent="." index="16"]
-script = ExtResource("4_5vy5m")
-blackboard = {
-"money": 100
-}
-metadata/_custom_type_script = "uid://bgxm0q2ycclid"
+[node name="SeedProp" parent="." index="4"]
+position = Vector2(0, -18)
 
 [editable path="CarryProp"]
+[editable path="EmoteBubble"]
