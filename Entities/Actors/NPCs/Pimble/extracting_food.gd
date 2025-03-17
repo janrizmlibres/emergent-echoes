@@ -2,27 +2,26 @@ extends ActionLeaf
 
 signal move_actor(set_state: String, patrol_location: Vector2)
 
-@onready var seed_prop = $"../../../../SeedProp"
 @onready var tending_timer = get_tree().get_nodes_in_group("CropTimer")
 @onready var crop_to_process = get_tree().get_nodes_in_group("Crops")
 
 var current_crop_index = 0
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
-	if blackboard.get_value("current_state") != "tending":
+	if blackboard.get_value("current_state") != "extracting food":
 		return FAILURE
 		
 	if current_crop_index < crop_to_process.size():
 		move_actor.emit(crop_to_process[current_crop_index].global_position)
 		if blackboard.get_value("agent_arrived") == true:
-			crop_to_process[current_crop_index].visible = true
+			crop_to_process[current_crop_index].frame = 0
+			crop_to_process[current_crop_index].visible = false
 			current_crop_index += 1
 			blackboard.set_value("agent_arrived", false)
 	else:
 		current_crop_index = 0
-		CropManager.are_there_crops = true
-		seed_prop.visible = false
-		tending_timer[0].start()
+		CropManager.crop_matured = false
+		CropManager.are_there_crops = false
 		blackboard.set_value("current_state", "going back home")
 		return SUCCESS
 	

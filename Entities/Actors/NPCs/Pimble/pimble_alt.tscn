@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://cejru5227hvql"]
+[gd_scene load_steps=27 format=3 uid="uid://cejru5227hvql"]
 
 [ext_resource type="Script" uid="uid://cukg3g5jvu3c7" path="res://Entities/Actors/NPCs/Pimble/beehave/pimble_alt.gd" id="1_ycgvp"]
 [ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Objects/Crop/Art/crops.png" id="2_0wisk"]
@@ -18,9 +18,11 @@
 [ext_resource type="Script" uid="uid://ddwxanmadak5m" path="res://Entities/Actors/NPCs/Pimble/beehave/wait_for_5_sec.gd" id="14_852xc"]
 [ext_resource type="Script" uid="uid://djo7m1wpaf31j" path="res://Entities/Actors/NPCs/Pimble/beehave/is_the_actor_being_interacted.gd" id="14_iwkt0"]
 [ext_resource type="Script" uid="uid://c2epnvv8x4xpl" path="res://Entities/Actors/NPCs/Pimble/beehave/interacting.gd" id="15_f0nv0"]
-[ext_resource type="Script" uid="uid://c4g0m2wnfbptd" path="res://Entities/Actors/NPCs/Pimble/is_the_actor_tending.gd" id="16_f0nv0"]
 [ext_resource type="Script" uid="uid://n5rohh5152su" path="res://Entities/Actors/NPCs/Pimble/beehave/patrolling.gd" id="16_wi14k"]
+[ext_resource type="Script" uid="uid://yiq68d8l883p" path="res://Entities/Actors/NPCs/Pimble/are_there_no_crops.gd" id="17_mpx0k"]
+[ext_resource type="Script" uid="uid://d300a3g8bmjhp" path="res://Entities/Actors/NPCs/Pimble/are_the_crops_matured.gd" id="17_r32o7"]
 [ext_resource type="Script" uid="uid://bkj44exdrdv7g" path="res://Entities/Actors/NPCs/Pimble/tending.gd" id="18_4rmvr"]
+[ext_resource type="Script" uid="uid://b22wxv7kfs7c0" path="res://Entities/Actors/NPCs/Pimble/extracting_food.gd" id="18_iadnp"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0trbs"]
 radius = 3.0
@@ -159,9 +161,6 @@ one_shot = true
 [node name="ConversationTimer" type="Timer" parent="."]
 wait_time = 3.0
 
-[node name="TendingTimer" type="Timer" parent="."]
-wait_time = 3.0
-
 [node name="Blackboard" type="Node" parent="."]
 script = ExtResource("10_a74vy")
 blackboard = {
@@ -197,12 +196,24 @@ metadata/_custom_type_script = "uid://5taa4qhf13r1"
 script = ExtResource("15_f0nv0")
 metadata/_custom_type_script = "uid://2xo58xxmeuvk"
 
+[node name="Extract Food" type="Node" parent="PimbleBehaviour/SelectorComposite"]
+script = ExtResource("12_a74vy")
+metadata/_custom_type_script = "uid://mtuuxj1jd0m2"
+
+[node name="Are The Crops Matured" type="Node" parent="PimbleBehaviour/SelectorComposite/Extract Food"]
+script = ExtResource("17_r32o7")
+metadata/_custom_type_script = "uid://5taa4qhf13r1"
+
+[node name="Extracting Food" type="Node" parent="PimbleBehaviour/SelectorComposite/Extract Food"]
+script = ExtResource("18_iadnp")
+metadata/_custom_type_script = "uid://2xo58xxmeuvk"
+
 [node name="Tending" type="Node" parent="PimbleBehaviour/SelectorComposite"]
 script = ExtResource("12_a74vy")
 metadata/_custom_type_script = "uid://mtuuxj1jd0m2"
 
-[node name="Is The Actor Tending" type="Node" parent="PimbleBehaviour/SelectorComposite/Tending"]
-script = ExtResource("16_f0nv0")
+[node name="Are There No Crops" type="Node" parent="PimbleBehaviour/SelectorComposite/Tending"]
+script = ExtResource("17_mpx0k")
 metadata/_custom_type_script = "uid://5taa4qhf13r1"
 
 [node name="Tending" type="Node" parent="PimbleBehaviour/SelectorComposite/Tending"]
@@ -226,10 +237,12 @@ script = ExtResource("16_wi14k")
 metadata/_custom_type_script = "uid://2xo58xxmeuvk"
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
+[connection signal="animation_finished" from="AnimationTree" to="PimbleBehaviour/SelectorComposite/Extract Food/Extracting Food" method="_on_animation_tree_animation_finished"]
 [connection signal="timeout" from="Timer" to="PimbleBehaviour/SelectorComposite/Patrolling/Wait For 5 Sec" method="_on_timer_timeout"]
 [connection signal="timeout" from="ConversationTimer" to="PimbleBehaviour/SelectorComposite/Interacted/Interacting" method="_on_conversation_timer_timeout"]
-[connection signal="timeout" from="TendingTimer" to="PimbleBehaviour/SelectorComposite/Tending/Tending" method="_on_tending_timer_timeout"]
 [connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Return Home" to="." method="move_actor"]
+[connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Extract Food/Extracting Food" to="." method="move_actor"]
+[connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Tending/Tending" to="." method="move_actor"]
 [connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Patrolling/Patrolling" to="." method="move_actor"]
 
 [editable path="CarryProp"]

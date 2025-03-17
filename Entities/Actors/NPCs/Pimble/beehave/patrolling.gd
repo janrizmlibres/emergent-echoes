@@ -7,8 +7,7 @@ signal move_actor(set_state: String, patrol_location: Vector2)
 
 var current_patrol_index: int = 0
 
-const patrol_locations = [Vector2(737, 632)]	
-#const patrol_locations = [Vector2(517, 535), Vector2(508, 283), Vector2(250, 474), Vector2(737, 632)]	
+const patrol_locations = [Vector2(517, 535), Vector2(508, 283), Vector2(250, 474), Vector2(737, 632)]	
 
 func before_run(actor: Node, blackboard: Blackboard) -> void:
 	if blackboard.get_value("current_state") == "patrolling":
