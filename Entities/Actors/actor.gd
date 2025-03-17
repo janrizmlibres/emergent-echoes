@@ -1,7 +1,7 @@
 class_name Actor
 extends CharacterBody2D
 
-@export var hit_points: float = 3
+@export var hit_points: float = 1
 @export var max_speed: int = 40
 @export var acceleration: int = 8
 @export var friction: int = 4

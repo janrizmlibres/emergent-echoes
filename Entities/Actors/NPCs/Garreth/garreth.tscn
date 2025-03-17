@@ -23,7 +23,7 @@ metadata/_custom_type_script = "uid://mlbnetcoq4lk"
 procedural_tree = NodePath("GarrethBT")
 
 [node name="GarrethBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_jlis0")]
-blackboard = NodePath("@Node@21912")
+blackboard = NodePath("@Node@85609")
 actor = NodePath("../..")
 
 [node name="NavigationAgent2D" parent="." index="3"]

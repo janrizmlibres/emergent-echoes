@@ -27,7 +27,6 @@ target_desired_distance = 2.0
 simplify_path = true
 avoidance_enabled = true
 radius = 5.0
-debug_enabled = true
 
 [node name="EvaluationTimer" type="Timer" parent="." index="4"]
 one_shot = true
@@ -41,13 +40,13 @@ metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 [node name="Food" type="Node" parent="Resources" index="1"]
 script = ExtResource("11_wuycy")
 type = 3
-amount = 4.0
+amount = 1.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
 [node name="Satiation" type="Node" parent="Resources" index="2"]
 script = ExtResource("11_wuycy")
 type = 4
-amount = 70.0
+amount = 36.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
 [node name="Companionship" type="Node" parent="Resources" index="3"]
@@ -55,9 +54,6 @@ script = ExtResource("11_wuycy")
 type = 5
 amount = 10.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
-
-[node name="SeedProp" parent="." index="8"]
-position = Vector2(0, -17)
 
 [node name="DebugLabel" parent="." index="19" node_paths=PackedStringArray("actor")]
 actor = NodePath("..")
