@@ -20,5 +20,4 @@ func _on_grow_timer_timeout() -> void:
 		
 	crop_stage += 1
 	grow_timer.start()
-	print(crop_stage)
 	pass # Replace with function body.

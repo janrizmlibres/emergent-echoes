@@ -1,46 +1,37 @@
-[gd_scene load_steps=68 format=3 uid="uid://etlq2q1jbury"]
+[gd_scene load_steps=63 format=3 uid="uid://cejru5227hvql"]
 
-[ext_resource type="Script" uid="uid://26mdhyaoq6g5" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/silas_alt.gd" id="1_17b4c"]
-[ext_resource type="Texture2D" uid="uid://u6qjhno0n6dl" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_hdw1b"]
-[ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="3_qtwxn"]
-[ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Interactions/npc_alt_detector.tscn" id="4_acgvc"]
-[ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="4_q63qr"]
-[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_vmoef"]
-[ext_resource type="Script" uid="uid://cmlopw75b05c1" path="res://addons/beehave/nodes/composites/selector.gd" id="5_a23i0"]
-[ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="5_l6iaq"]
-[ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Props/Weapon/Art/sword.png" id="5_vhpyg"]
-[ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_1ro2l"]
-[ext_resource type="Script" uid="uid://dqm47sqqitkoa" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/is_the_agent_idle.gd" id="8_4ytb8"]
-[ext_resource type="Script" uid="uid://6bjuegffhhld" path="res://Entities/Props/Weapon/weapon.gd" id="8_mhs7i"]
-[ext_resource type="Script" uid="uid://c72gcr33fwqoj" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/personality.gd" id="9_3lm7t"]
-[ext_resource type="Script" uid="uid://bnm6eqp75y8n4" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/patrol_action.gd" id="9_58j85"]
-[ext_resource type="Script" uid="uid://b52tibcmmrqne" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/physiological.gd" id="10_e21mu"]
-[ext_resource type="PackedScene" uid="uid://c45btaj8rrou0" path="res://Entities/UI/Indicators/EmoteBubble/emote_bubble.tscn" id="11_p3d2r"]
-[ext_resource type="Script" uid="uid://cgv34kx0prf7l" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/chase_actor.gd" id="12_q20m7"]
-[ext_resource type="Script" uid="uid://btp4ipyilapo1" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/steal_money_from_actor.gd" id="13_q0u1v"]
-[ext_resource type="Script" uid="uid://l2onprtrlq40" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/wait_for_5_sec.gd" id="13_sovwx"]
-[ext_resource type="Script" uid="uid://dawd1b7tdwl5c" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/go_to_house.gd" id="15_yth3l"]
-[ext_resource type="Script" uid="uid://cfeqjpwo537ir" path="res://addons/beehave/blackboard.gd" id="16_8orm2"]
-[ext_resource type="Script" uid="uid://c6ten17thx7g0" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/is_the_food_resource_low.gd" id="17_gn6mj"]
-[ext_resource type="Script" uid="uid://ciufjcucrk3da" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/go_to_market.gd" id="18_e1h5y"]
-[ext_resource type="Script" uid="uid://nanbxpy7rjtr" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/buy_food.gd" id="19_qbsuj"]
-[ext_resource type="Script" uid="uid://dmmlgm251npvd" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/eat_food.gd" id="21_oqw3x"]
+[ext_resource type="Script" uid="uid://cukg3g5jvu3c7" path="res://Entities/Actors/NPCs/Alts/Pimble/beehave/pimble_alt.gd" id="1_ycgvp"]
+[ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="2_0wisk"]
+[ext_resource type="Texture2D" uid="uid://cnxf1yrr65keq" path="res://Entities/Actors/NPCs/Pimble/Art/pimble.png" id="2_fr5lo"]
+[ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Props/Weapon/Art/sword.png" id="3_s0tkn"]
+[ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="4_nlchm"]
+[ext_resource type="Script" uid="uid://6bjuegffhhld" path="res://Entities/Props/Weapon/weapon.gd" id="5_4rmvr"]
+[ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="8_852xc"]
+[ext_resource type="PackedScene" uid="uid://c45btaj8rrou0" path="res://Entities/UI/Indicators/EmoteBubble/emote_bubble.tscn" id="8_r32o7"]
+[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="10_852xc"]
+[ext_resource type="Script" uid="uid://cfeqjpwo537ir" path="res://addons/beehave/blackboard.gd" id="10_a74vy"]
+[ext_resource type="Script" uid="uid://cmlopw75b05c1" path="res://addons/beehave/nodes/composites/selector.gd" id="11_0trbs"]
+[ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="12_a74vy"]
+[ext_resource type="Script" uid="uid://b3532v5qddiai" path="res://Entities/Actors/NPCs/Alts/Pimble/beehave/return_home.gd" id="13_mpx0k"]
+[ext_resource type="Script" uid="uid://ch4e5gtacl78u" path="res://Entities/Actors/NPCs/Alts/Pimble/beehave/is_the_agent_idle.gd" id="13_wi14k"]
+[ext_resource type="Script" uid="uid://ddwxanmadak5m" path="res://Entities/Actors/NPCs/Alts/Pimble/beehave/wait_for_5_sec.gd" id="14_852xc"]
+[ext_resource type="Script" uid="uid://djo7m1wpaf31j" path="res://Entities/Actors/NPCs/Alts/Pimble/beehave/is_the_actor_being_interacted.gd" id="14_iwkt0"]
+[ext_resource type="Script" uid="uid://c2epnvv8x4xpl" path="res://Entities/Actors/NPCs/Alts/Pimble/beehave/interacting.gd" id="15_f0nv0"]
+[ext_resource type="Script" uid="uid://n5rohh5152su" path="res://Entities/Actors/NPCs/Alts/Pimble/beehave/patrolling.gd" id="16_wi14k"]
+[ext_resource type="Script" uid="uid://dw6x6yqa0baxw" path="res://Entities/Actors/NPCs/Alts/Pimble/beehave/extract_crops.gd" id="17_iadnp"]
+[ext_resource type="Script" uid="uid://l604450y83ab" path="res://Entities/Actors/NPCs/Alts/Pimble/beehave/are_the_crops_matured.gd" id="17_r32o7"]
+[ext_resource type="Script" uid="uid://cgloxyp78ygp" path="res://Entities/Actors/NPCs/Alts/Pimble/beehave/are_there_no_crops.gd" id="18_4rmvr"]
+[ext_resource type="Script" uid="uid://bkj44exdrdv7g" path="res://Entities/Actors/NPCs/Alts/Pimble/beehave/tending.gd" id="19_r32o7"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30oj8"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0trbs"]
 radius = 3.0
 height = 10.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_eyjh3"]
-size = Vector2(24, 30)
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_5724d"]
-radius = 44.0454
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_n0527"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4mcxh"]
 radius = 6.0
 height = 16.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_e8msm"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2qd8b"]
 size = Vector2(26, 20)
 
 [sub_resource type="Animation" id="Animation_n10kc"]
@@ -896,68 +887,68 @@ _data = {
 &"move_right": SubResource("Animation_jou52")
 }
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7a12t"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jtjdw"]
 animation = &"attack_left"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_44nfd"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_eelfx"]
 animation = &"attack_right"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_7qwyo"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_7a12t")
+blend_point_0/node = SubResource("AnimationNodeAnimation_jtjdw")
 blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_44nfd")
+blend_point_1/node = SubResource("AnimationNodeAnimation_eelfx")
 blend_point_1/pos = 1.0
 blend_mode = 1
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_kede5"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_hoxam"]
 animation = &"eat_left"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ycnno"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ebb31"]
 animation = &"eat_right"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_wrnt0"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_kede5")
+blend_point_0/node = SubResource("AnimationNodeAnimation_hoxam")
 blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_ycnno")
+blend_point_1/node = SubResource("AnimationNodeAnimation_ebb31")
 blend_point_1/pos = 1.0
 blend_mode = 1
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_giqm5"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2mcm3"]
 animation = &"harvest_left"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_u5dbd"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_x6bs5"]
 animation = &"harvest_right"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_62n8s"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_giqm5")
+blend_point_0/node = SubResource("AnimationNodeAnimation_2mcm3")
 blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_u5dbd")
+blend_point_1/node = SubResource("AnimationNodeAnimation_x6bs5")
 blend_point_1/pos = 1.0
 blend_mode = 1
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_pcrwf"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_j2kl7"]
 animation = &"idle_left"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_vydub"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8gss0"]
 animation = &"idle_right"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_bv4e4"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_pcrwf")
+blend_point_0/node = SubResource("AnimationNodeAnimation_j2kl7")
 blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_vydub")
+blend_point_1/node = SubResource("AnimationNodeAnimation_8gss0")
 blend_point_1/pos = 1.0
 blend_mode = 1
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_getx2"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_apy1c"]
 animation = &"move_left"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lsqbo"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ijcho"]
 animation = &"move_right"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_uxave"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_getx2")
+blend_point_0/node = SubResource("AnimationNodeAnimation_apy1c")
 blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_lsqbo")
+blend_point_1/node = SubResource("AnimationNodeAnimation_ijcho")
 blend_point_1/pos = 1.0
 blend_mode = 1
 
@@ -980,7 +971,7 @@ advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_n10kc"]
 
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_6ymnp"]
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_d5nyg"]
 states/Attack/node = SubResource("AnimationNodeBlendSpace1D_7qwyo")
 states/Attack/position = Vector2(199.666, 26.4225)
 states/Eat/node = SubResource("AnimationNodeBlendSpace1D_wrnt0")
@@ -995,67 +986,54 @@ states/Move/position = Vector2(488.991, 100.568)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_7qwyo"), "Idle", "Eat", SubResource("AnimationNodeStateMachineTransition_p56hr"), "Eat", "Idle", SubResource("AnimationNodeStateMachineTransition_xi217"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_c1xyq"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_f1dfm"), "Attack", "Idle", SubResource("AnimationNodeStateMachineTransition_62n8s"), "Idle", "Harvest", SubResource("AnimationNodeStateMachineTransition_ifole"), "Harvest", "Idle", SubResource("AnimationNodeStateMachineTransition_yksan"), "Idle", "Attack", SubResource("AnimationNodeStateMachineTransition_n10kc")]
 graph_offset = Vector2(-66.349, -26.1609)
 
-[node name="SilasAlt" type="CharacterBody2D"]
-texture_filter = 1
-script = ExtResource("1_17b4c")
-metadata/_edit_group_ = true
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -9)
-texture = ExtResource("2_hdw1b")
-hframes = 8
-vframes = 6
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-rotation = 1.5708
-shape = SubResource("CapsuleShape2D_30oj8")
+[node name="pimbleAlt" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_ycgvp")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_desired_distance = 4.0
 target_desired_distance = 2.0
+simplify_path = true
 avoidance_enabled = true
 radius = 5.0
 debug_enabled = true
 
-[node name="StealArea" type="Area2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -9)
+texture = ExtResource("2_fr5lo")
+hframes = 8
+vframes = 6
+metadata/_edit_lock_ = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StealArea"]
-position = Vector2(0, -4)
-shape = SubResource("RectangleShape2D_eyjh3")
-
-[node name="NpcAltDetector" parent="." instance=ExtResource("4_acgvc")]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="NpcAltDetector"]
-shape = SubResource("CircleShape2D_5724d")
-
-[node name="Blackboard" type="Node" parent="."]
-script = ExtResource("16_8orm2")
-blackboard = {
-"agent_arrived": false,
-"current_state": "idle",
-"food_inventory": 5,
-"is_full": 50,
-"money": 100
-}
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(0, -1)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_0trbs")
+metadata/_edit_lock_ = true
 
 [node name="Timer" type="Timer" parent="."]
 process_callback = 0
 wait_time = 5.0
 one_shot = true
 
-[node name="Personality" type="Node" parent="."]
-script = ExtResource("9_3lm7t")
+[node name="ConversationTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
 
-[node name="Physiological" type="Node" parent="."]
-script = ExtResource("10_e21mu")
-
-[node name="HungerTimer" type="Timer" parent="."]
-wait_time = 30.0
+[node name="Blackboard" type="Node" parent="."]
+script = ExtResource("10_a74vy")
+blackboard = {
+"agent_arrived": false,
+"current_state": "idle",
+"food_inventory": 5,
+"money": 100
+}
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -17)
-texture = ExtResource("3_qtwxn")
+position = Vector2(0, -19)
+texture = ExtResource("2_0wisk")
 hframes = 6
 vframes = 2
 frame = 6
@@ -1066,24 +1044,24 @@ collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
 position = Vector2(0, -5)
-shape = SubResource("CapsuleShape2D_n0527")
+shape = SubResource("CapsuleShape2D_4mcxh")
 
 [node name="Weapon" type="Area2D" parent="."]
 visible = false
 collision_layer = 4
 collision_mask = 0
-script = ExtResource("8_mhs7i")
+script = ExtResource("5_4rmvr")
 
 [node name="WeaponSprite" type="Sprite2D" parent="Weapon"]
 position = Vector2(16, 0)
 rotation = 1.5708
-texture = ExtResource("5_vhpyg")
+texture = ExtResource("3_s0tkn")
 hframes = 4
 vframes = 3
 
 [node name="WeaponShape" type="CollisionShape2D" parent="Weapon"]
 position = Vector2(13, -6)
-shape = SubResource("RectangleShape2D_e8msm")
+shape = SubResource("RectangleShape2D_2qd8b")
 disabled = true
 
 [node name="CropProp" type="Node2D" parent="."]
@@ -1091,12 +1069,12 @@ disabled = true
 [node name="CropSprite" type="Sprite2D" parent="CropProp"]
 visible = false
 position = Vector2(7, -2)
-texture = ExtResource("3_qtwxn")
+texture = ExtResource("2_0wisk")
 hframes = 6
 vframes = 2
 frame = 11
 
-[node name="CarryProp" parent="." instance=ExtResource("4_q63qr")]
+[node name="CarryProp" parent="." instance=ExtResource("4_nlchm")]
 
 [node name="RearMarker" type="Node2D" parent="."]
 
@@ -1109,76 +1087,83 @@ libraries = {
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource("AnimationNodeStateMachine_6ymnp")
+tree_root = SubResource("AnimationNodeStateMachine_d5nyg")
 anim_player = NodePath("../AnimationPlayer")
-parameters/Attack/blend_position = 0
-parameters/Eat/blend_position = 0
-parameters/Harvest/blend_position = 0
-parameters/Idle/blend_position = 1.0
+parameters/Attack/blend_position = 1.0
+parameters/Eat/blend_position = 1.0
+parameters/Harvest/blend_position = 1.0
+parameters/Idle/blend_position = 0.00240386
 parameters/Move/blend_position = 1.0
 
-[node name="EmoteBubble" parent="." instance=ExtResource("11_p3d2r")]
+[node name="EmoteBubble" parent="." instance=ExtResource("8_r32o7")]
 position = Vector2(0, -14)
+interval_range = Vector2(1, 3)
 
-[node name="FloatTextController" parent="." instance=ExtResource("5_l6iaq")]
+[node name="FloatTextController" parent="." instance=ExtResource("8_852xc")]
 
-[node name="SilasBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
-script = ExtResource("4_vmoef")
+[node name="PimbleBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("10_852xc")
 blackboard = NodePath("../Blackboard")
 actor = NodePath("..")
 
-[node name="SelectorComposite" type="Node" parent="SilasBehaviour"]
-script = ExtResource("5_a23i0")
+[node name="SelectorComposite" type="Node" parent="PimbleBehaviour"]
+script = ExtResource("11_0trbs")
 
-[node name="Go To House" type="Node" parent="SilasBehaviour/SelectorComposite"]
-script = ExtResource("15_yth3l")
+[node name="Return Home" type="Node" parent="PimbleBehaviour/SelectorComposite"]
+script = ExtResource("13_mpx0k")
 
-[node name="Eat Food" type="Node" parent="SilasBehaviour/SelectorComposite"]
-script = ExtResource("21_oqw3x")
+[node name="Interacted" type="Node" parent="PimbleBehaviour/SelectorComposite"]
+script = ExtResource("12_a74vy")
 
-[node name="Buy Food" type="Node" parent="SilasBehaviour/SelectorComposite"]
-script = ExtResource("6_1ro2l")
+[node name="Is The Actor Being Interacted" type="Node" parent="PimbleBehaviour/SelectorComposite/Interacted"]
+script = ExtResource("14_iwkt0")
 
-[node name="Is The Food Resource Low" type="Node" parent="SilasBehaviour/SelectorComposite/Buy Food"]
-script = ExtResource("17_gn6mj")
+[node name="Interacting" type="Node" parent="PimbleBehaviour/SelectorComposite/Interacted"]
+script = ExtResource("15_f0nv0")
 
-[node name="Go To Market" type="Node" parent="SilasBehaviour/SelectorComposite/Buy Food"]
-script = ExtResource("18_e1h5y")
+[node name="Extract Crops" type="Node" parent="PimbleBehaviour/SelectorComposite"]
+script = ExtResource("12_a74vy")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="Buy Food" type="Node" parent="SilasBehaviour/SelectorComposite/Buy Food"]
-script = ExtResource("19_qbsuj")
+[node name="Are The Crops Matured" type="Node" parent="PimbleBehaviour/SelectorComposite/Extract Crops"]
+script = ExtResource("17_r32o7")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
 
-[node name="On Patrol" type="Node" parent="SilasBehaviour/SelectorComposite"]
-script = ExtResource("6_1ro2l")
+[node name="Extract Crops" type="Node" parent="PimbleBehaviour/SelectorComposite/Extract Crops"]
+script = ExtResource("17_iadnp")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
-[node name="Is The Agent Idle" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol"]
-script = ExtResource("8_4ytb8")
+[node name="Tend" type="Node" parent="PimbleBehaviour/SelectorComposite"]
+script = ExtResource("12_a74vy")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="Wait For 5 Sec" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol"]
-script = ExtResource("13_sovwx")
+[node name="Are There No Crops" type="Node" parent="PimbleBehaviour/SelectorComposite/Tend"]
+script = ExtResource("18_4rmvr")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
 
-[node name="Patrol Action" type="Node" parent="SilasBehaviour/SelectorComposite/On Patrol"]
-script = ExtResource("9_58j85")
+[node name="Tending" type="Node" parent="PimbleBehaviour/SelectorComposite/Tend"]
+script = ExtResource("19_r32o7")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
-[node name="On Steal" type="Node" parent="SilasBehaviour/SelectorComposite"]
-script = ExtResource("6_1ro2l")
+[node name="Patrolling" type="Node" parent="PimbleBehaviour/SelectorComposite"]
+script = ExtResource("12_a74vy")
 
-[node name="Chase Actor" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
-script = ExtResource("12_q20m7")
+[node name="Is The Agent Idle" type="Node" parent="PimbleBehaviour/SelectorComposite/Patrolling"]
+script = ExtResource("13_wi14k")
 
-[node name="Steal Money From Actor" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
-script = ExtResource("13_q0u1v")
+[node name="Wait For 5 Sec" type="Node" parent="PimbleBehaviour/SelectorComposite/Patrolling"]
+script = ExtResource("14_852xc")
+
+[node name="Patrolling" type="Node" parent="PimbleBehaviour/SelectorComposite/Patrolling"]
+script = ExtResource("16_wi14k")
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
-[connection signal="body_entered" from="StealArea" to="SilasBehaviour/SelectorComposite/On Steal/Chase Actor" method="_on_steal_area_body_entered"]
-[connection signal="body_entered" from="NpcAltDetector" to="Personality" method="_on_npc_alt_detector_body_entered"]
-[connection signal="timeout" from="Timer" to="SilasBehaviour/SelectorComposite/On Patrol/Wait For 5 Sec" method="_on_timer_timeout"]
-[connection signal="timeout" from="HungerTimer" to="Physiological" method="hunger_decay_timeout"]
-[connection signal="animation_finished" from="AnimationTree" to="SilasBehaviour/SelectorComposite/Eat Food" method="_on_animation_tree_animation_finished"]
-[connection signal="move_actor" from="SilasBehaviour/SelectorComposite/Go To House" to="." method="move_actor"]
-[connection signal="move_actor" from="SilasBehaviour/SelectorComposite/Buy Food/Go To Market" to="." method="move_actor"]
-[connection signal="move_actor" from="SilasBehaviour/SelectorComposite/On Patrol/Patrol Action" to="." method="move_actor"]
-[connection signal="move_actor" from="SilasBehaviour/SelectorComposite/On Steal/Chase Actor" to="." method="move_actor"]
+[connection signal="timeout" from="Timer" to="PimbleBehaviour/SelectorComposite/Patrolling/Wait For 5 Sec" method="_on_timer_timeout"]
+[connection signal="timeout" from="ConversationTimer" to="PimbleBehaviour/SelectorComposite/Interacted/Interacting" method="_on_conversation_timer_timeout"]
+[connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Return Home" to="." method="move_actor"]
+[connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Extract Crops/Extract Crops" to="." method="move_actor"]
+[connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Tend/Tending" to="." method="move_actor"]
+[connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Patrolling/Patrolling" to="." method="move_actor"]
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

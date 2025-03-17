@@ -1,12 +1,13 @@
-[gd_scene load_steps=13 format=4 uid="uid://b34vifoy3iq2x"]
+[gd_scene load_steps=14 format=4 uid="uid://b34vifoy3iq2x"]
 
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://Stages/Island/island.tres" id="2_4crdb"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="3_ss2fi"]
 [ext_resource type="PackedScene" uid="uid://jh8w0jv3rc0f" path="res://Entities/Actors/Player/player.tscn" id="4_l5eot"]
 [ext_resource type="PackedScene" uid="uid://etlq2q1jbury" path="res://Entities/Actors/NPCs/Alts/Silas/silas_alt.tscn" id="6_whi4o"]
 [ext_resource type="Script" uid="uid://cnmvoju8bx0ru" path="res://Stages/Island/crop_manager.gd" id="8_4ofr6"]
-[ext_resource type="PackedScene" uid="uid://cejru5227hvql" path="res://Entities/Actors/NPCs/Pimble/pimble_alt.tscn" id="8_au1bg"]
+[ext_resource type="PackedScene" uid="uid://cejru5227hvql" path="res://Entities/Actors/NPCs/Alts/Pimble/pimble_alt.tscn" id="8_au1bg"]
 [ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="8_ctmk4"]
+[ext_resource type="PackedScene" uid="uid://d173wdb7qbni2" path="res://Entities/Actors/NPCs/Alts/Toblin/toblin_alt.tscn" id="9_ctmk4"]
 [ext_resource type="PackedScene" uid="uid://c46vvjqepxr5c" path="res://Entities/Actors/NPCs/Alts/Garreth/garreth_alt.tscn" id="10_os2lh"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4ofr6"]
@@ -68,6 +69,9 @@ metadata/_edit_lock_ = true
 z_index = 3
 position = Vector2(647, 452)
 
+[node name="SeedProp" parent="Player" index="4"]
+position = Vector2(0, -19)
+
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
 remote_path = NodePath("../../Camera2D")
 
@@ -82,6 +86,10 @@ position = Vector2(676, 381)
 [node name="pimbleAlt" parent="." instance=ExtResource("8_au1bg")]
 z_index = 3
 position = Vector2(737, 565)
+
+[node name="ToblinAlt" parent="." instance=ExtResource("9_ctmk4")]
+z_index = 3
+position = Vector2(735, 476)
 
 [node name="GrowTimer" type="Timer" parent="." groups=["CropTimer"]]
 wait_time = 30.0

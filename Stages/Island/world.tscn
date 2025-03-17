@@ -129,14 +129,17 @@ position = Vector2(712, 460)
 [node name="Toblin" parent="." instance=ExtResource("6_ylrlt")]
 position = Vector2(696, 427)
 collision_mask = 1
+acceleration = 8
 
 [node name="Silas" parent="." instance=ExtResource("7_jsgrx")]
 position = Vector2(664, 427)
 collision_mask = 1
+acceleration = 8
 
 [node name="Pimble" parent="." instance=ExtResource("8_17gdt")]
 position = Vector2(664, 493)
 collision_mask = 1
+acceleration = 8
 
 [node name="Player" parent="." instance=ExtResource("9_6moo3")]
 position = Vector2(647, 460)

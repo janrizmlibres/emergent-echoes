@@ -14,6 +14,7 @@ func before_run(actor: Node, blackboard: Blackboard) -> void:
 	if blackboard.get_value("actor").get_name() == "Player":
 		blackboard.get_value("actor").start_interaction(actor)
 	else:
+		blackboard.get_value("actor").face_target(actor)
 		blackboard.get_value("actor").get_node("Blackboard").set_value("current_state", "interacted")
 	
 	actor.face_target(blackboard.get_value("actor"))

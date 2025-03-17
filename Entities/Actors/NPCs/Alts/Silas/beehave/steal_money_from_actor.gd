@@ -1,7 +1,6 @@
 extends ActionLeaf 
 
 @onready var float_text_controller = $"../../../../FloatTextController"
-@onready var emote_controller = $"../../../../EmoteController"
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
 	if blackboard.get_value("current_state") != "stealing":

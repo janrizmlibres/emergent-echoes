@@ -1,37 +1,37 @@
-[gd_scene load_steps=63 format=3 uid="uid://cejru5227hvql"]
+[gd_scene load_steps=63 format=3 uid="uid://d173wdb7qbni2"]
 
-[ext_resource type="Script" uid="uid://cukg3g5jvu3c7" path="res://Entities/Actors/NPCs/Pimble/beehave/pimble_alt.gd" id="1_ycgvp"]
-[ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="2_0wisk"]
-[ext_resource type="Texture2D" uid="uid://cnxf1yrr65keq" path="res://Entities/Actors/NPCs/Pimble/Art/pimble.png" id="2_fr5lo"]
-[ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Props/Weapon/Art/sword.png" id="3_s0tkn"]
-[ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="4_nlchm"]
-[ext_resource type="Script" uid="uid://6bjuegffhhld" path="res://Entities/Props/Weapon/weapon.gd" id="5_4rmvr"]
-[ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="8_852xc"]
-[ext_resource type="PackedScene" uid="uid://c45btaj8rrou0" path="res://Entities/UI/Indicators/EmoteBubble/emote_bubble.tscn" id="8_r32o7"]
-[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="10_852xc"]
-[ext_resource type="Script" uid="uid://cfeqjpwo537ir" path="res://addons/beehave/blackboard.gd" id="10_a74vy"]
-[ext_resource type="Script" uid="uid://cmlopw75b05c1" path="res://addons/beehave/nodes/composites/selector.gd" id="11_0trbs"]
-[ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="12_a74vy"]
-[ext_resource type="Script" uid="uid://b3532v5qddiai" path="res://Entities/Actors/NPCs/Pimble/return_home.gd" id="13_mpx0k"]
-[ext_resource type="Script" uid="uid://ch4e5gtacl78u" path="res://Entities/Actors/NPCs/Pimble/beehave/is_the_agent_idle.gd" id="13_wi14k"]
-[ext_resource type="Script" uid="uid://ddwxanmadak5m" path="res://Entities/Actors/NPCs/Pimble/beehave/wait_for_5_sec.gd" id="14_852xc"]
-[ext_resource type="Script" uid="uid://djo7m1wpaf31j" path="res://Entities/Actors/NPCs/Pimble/beehave/is_the_actor_being_interacted.gd" id="14_iwkt0"]
-[ext_resource type="Script" uid="uid://c2epnvv8x4xpl" path="res://Entities/Actors/NPCs/Pimble/beehave/interacting.gd" id="15_f0nv0"]
-[ext_resource type="Script" uid="uid://n5rohh5152su" path="res://Entities/Actors/NPCs/Pimble/beehave/patrolling.gd" id="16_wi14k"]
-[ext_resource type="Script" uid="uid://dw6x6yqa0baxw" path="res://Entities/Actors/NPCs/Pimble/extract_crops.gd" id="17_iadnp"]
-[ext_resource type="Script" uid="uid://l604450y83ab" path="res://Entities/Actors/NPCs/Pimble/are_the_crops_matured.gd" id="17_r32o7"]
-[ext_resource type="Script" uid="uid://cgloxyp78ygp" path="res://Entities/Actors/NPCs/Pimble/are_there_no_crops.gd" id="18_4rmvr"]
-[ext_resource type="Script" uid="uid://bkj44exdrdv7g" path="res://Entities/Actors/NPCs/Pimble/tending.gd" id="19_r32o7"]
+[ext_resource type="Script" uid="uid://uifi23m6o7n3" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/toblin_alt.gd" id="1_tx7vv"]
+[ext_resource type="Texture2D" uid="uid://bu4lgseyryu3n" path="res://Entities/Actors/NPCs/Toblin/Art/toblin.png" id="2_0okcu"]
+[ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="3_gpb4r"]
+[ext_resource type="Script" uid="uid://6bjuegffhhld" path="res://Entities/Props/Weapon/weapon.gd" id="4_y056n"]
+[ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Props/Weapon/Art/sword.png" id="5_64nr1"]
+[ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="6_p6fos"]
+[ext_resource type="PackedScene" uid="uid://c45btaj8rrou0" path="res://Entities/UI/Indicators/EmoteBubble/emote_bubble.tscn" id="7_tx7vv"]
+[ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="8_rniqr"]
+[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="9_2pq8y"]
+[ext_resource type="Script" uid="uid://b55hn03xn2aeq" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/physiological.gd" id="9_dwrfc"]
+[ext_resource type="Script" uid="uid://cfeqjpwo537ir" path="res://addons/beehave/blackboard.gd" id="9_tx7vv"]
+[ext_resource type="Script" uid="uid://cmlopw75b05c1" path="res://addons/beehave/nodes/composites/selector.gd" id="10_dwrfc"]
+[ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="12_rniqr"]
+[ext_resource type="Script" uid="uid://0l53ex1v7xgs" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/is_the_agent_idle.gd" id="13_2pq8y"]
+[ext_resource type="Script" uid="uid://ctd3pg1lfjcx0" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/eat_food.gd" id="13_p1lqy"]
+[ext_resource type="Script" uid="uid://ctsyqit1bvi0f" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/wait_for_5_sec.gd" id="14_dwrfc"]
+[ext_resource type="Script" uid="uid://bh1ds4vksevqj" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/is_the_actor_being_interacted.gd" id="15_e5sj3"]
+[ext_resource type="Script" uid="uid://d0f8a2w6loikm" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/patrol_action.gd" id="15_p1lqy"]
+[ext_resource type="Script" uid="uid://bb8omojsqq67r" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/is_the_food_resource_low.gd" id="15_pij4r"]
+[ext_resource type="Script" uid="uid://cpstm5klv3ckh" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/go_to_market.gd" id="16_ijihm"]
+[ext_resource type="Script" uid="uid://cuuq70qtu1pmy" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/interacting.gd" id="16_ulliq"]
+[ext_resource type="Script" uid="uid://j647ghm187mx" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/buy_food.gd" id="17_e5sj3"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0trbs"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fjhqg"]
 radius = 3.0
 height = 10.0
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4mcxh"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wrnt0"]
 radius = 6.0
 height = 16.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_2qd8b"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f3284"]
 size = Vector2(26, 20)
 
 [sub_resource type="Animation" id="Animation_n10kc"]
@@ -887,68 +887,68 @@ _data = {
 &"move_right": SubResource("Animation_jou52")
 }
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jtjdw"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_62n8s"]
 animation = &"attack_left"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_eelfx"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ifole"]
 animation = &"attack_right"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_7qwyo"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_jtjdw")
+blend_point_0/node = SubResource("AnimationNodeAnimation_62n8s")
 blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_eelfx")
+blend_point_1/node = SubResource("AnimationNodeAnimation_ifole")
 blend_point_1/pos = 1.0
 blend_mode = 1
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_hoxam"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_yksan"]
 animation = &"eat_left"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ebb31"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_n10kc"]
 animation = &"eat_right"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_wrnt0"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_hoxam")
+blend_point_0/node = SubResource("AnimationNodeAnimation_yksan")
 blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_ebb31")
+blend_point_1/node = SubResource("AnimationNodeAnimation_n10kc")
 blend_point_1/pos = 1.0
 blend_mode = 1
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2mcm3"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ywa66"]
 animation = &"harvest_left"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_x6bs5"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_1qgyj"]
 animation = &"harvest_right"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_62n8s"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_2mcm3")
+blend_point_0/node = SubResource("AnimationNodeAnimation_ywa66")
 blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_x6bs5")
+blend_point_1/node = SubResource("AnimationNodeAnimation_1qgyj")
 blend_point_1/pos = 1.0
 blend_mode = 1
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_j2kl7"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7qwyo"]
 animation = &"idle_left"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8gss0"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wrnt0"]
 animation = &"idle_right"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_bv4e4"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_j2kl7")
+blend_point_0/node = SubResource("AnimationNodeAnimation_7qwyo")
 blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_8gss0")
+blend_point_1/node = SubResource("AnimationNodeAnimation_wrnt0")
 blend_point_1/pos = 1.0
 blend_mode = 1
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_apy1c"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jou52"]
 animation = &"move_left"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ijcho"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_f3284"]
 animation = &"move_right"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_uxave"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_apy1c")
+blend_point_0/node = SubResource("AnimationNodeAnimation_jou52")
 blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_ijcho")
+blend_point_1/node = SubResource("AnimationNodeAnimation_f3284")
 blend_point_1/pos = 1.0
 blend_mode = 1
 
@@ -971,7 +971,7 @@ advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_n10kc"]
 
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_d5nyg"]
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ifole"]
 states/Attack/node = SubResource("AnimationNodeBlendSpace1D_7qwyo")
 states/Attack/position = Vector2(199.666, 26.4225)
 states/Eat/node = SubResource("AnimationNodeBlendSpace1D_wrnt0")
@@ -986,9 +986,16 @@ states/Move/position = Vector2(488.991, 100.568)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_7qwyo"), "Idle", "Eat", SubResource("AnimationNodeStateMachineTransition_p56hr"), "Eat", "Idle", SubResource("AnimationNodeStateMachineTransition_xi217"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_c1xyq"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_f1dfm"), "Attack", "Idle", SubResource("AnimationNodeStateMachineTransition_62n8s"), "Idle", "Harvest", SubResource("AnimationNodeStateMachineTransition_ifole"), "Harvest", "Idle", SubResource("AnimationNodeStateMachineTransition_yksan"), "Idle", "Attack", SubResource("AnimationNodeStateMachineTransition_n10kc")]
 graph_offset = Vector2(-66.349, -26.1609)
 
-[node name="pimbleAlt" type="CharacterBody2D"]
-motion_mode = 1
-script = ExtResource("1_ycgvp")
+[node name="ToblinAlt" type="CharacterBody2D"]
+collision_mask = 3
+script = ExtResource("1_tx7vv")
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -9)
+texture = ExtResource("2_0okcu")
+hframes = 8
+vframes = 6
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_desired_distance = 4.0
@@ -996,44 +1003,15 @@ target_desired_distance = 2.0
 simplify_path = true
 avoidance_enabled = true
 radius = 5.0
-debug_enabled = true
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -9)
-texture = ExtResource("2_fr5lo")
-hframes = 8
-vframes = 6
-metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
-position = Vector2(0, -1)
 rotation = 1.5708
-shape = SubResource("CapsuleShape2D_0trbs")
-metadata/_edit_lock_ = true
-
-[node name="Timer" type="Timer" parent="."]
-process_callback = 0
-wait_time = 5.0
-one_shot = true
-
-[node name="ConversationTimer" type="Timer" parent="."]
-wait_time = 5.0
-one_shot = true
-
-[node name="Blackboard" type="Node" parent="."]
-script = ExtResource("10_a74vy")
-blackboard = {
-"agent_arrived": false,
-"current_state": "idle",
-"food_inventory": 5,
-"money": 100
-}
+shape = SubResource("CapsuleShape2D_fjhqg")
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(0, -19)
-texture = ExtResource("2_0wisk")
+texture = ExtResource("3_gpb4r")
 hframes = 6
 vframes = 2
 frame = 6
@@ -1044,24 +1022,25 @@ collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
 position = Vector2(0, -5)
-shape = SubResource("CapsuleShape2D_4mcxh")
+shape = SubResource("CapsuleShape2D_wrnt0")
 
-[node name="Weapon" type="Area2D" parent="."]
+[node name="Weapon" type="Area2D" parent="." node_paths=PackedStringArray("actor")]
 visible = false
 collision_layer = 4
 collision_mask = 0
-script = ExtResource("5_4rmvr")
+script = ExtResource("4_y056n")
+actor = NodePath("..")
 
 [node name="WeaponSprite" type="Sprite2D" parent="Weapon"]
 position = Vector2(16, 0)
 rotation = 1.5708
-texture = ExtResource("3_s0tkn")
+texture = ExtResource("5_64nr1")
 hframes = 4
 vframes = 3
 
 [node name="WeaponShape" type="CollisionShape2D" parent="Weapon"]
 position = Vector2(13, -6)
-shape = SubResource("RectangleShape2D_2qd8b")
+shape = SubResource("RectangleShape2D_f3284")
 disabled = true
 
 [node name="CropProp" type="Node2D" parent="."]
@@ -1069,12 +1048,12 @@ disabled = true
 [node name="CropSprite" type="Sprite2D" parent="CropProp"]
 visible = false
 position = Vector2(7, -2)
-texture = ExtResource("2_0wisk")
+texture = ExtResource("3_gpb4r")
 hframes = 6
 vframes = 2
 frame = 11
 
-[node name="CarryProp" parent="." instance=ExtResource("4_nlchm")]
+[node name="CarryProp" parent="." instance=ExtResource("6_p6fos")]
 
 [node name="RearMarker" type="Node2D" parent="."]
 
@@ -1087,7 +1066,7 @@ libraries = {
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource("AnimationNodeStateMachine_d5nyg")
+tree_root = SubResource("AnimationNodeStateMachine_ifole")
 anim_player = NodePath("../AnimationPlayer")
 parameters/Attack/blend_position = 1.0
 parameters/Eat/blend_position = 1.0
@@ -1095,75 +1074,102 @@ parameters/Harvest/blend_position = 1.0
 parameters/Idle/blend_position = 0.00240386
 parameters/Move/blend_position = 1.0
 
-[node name="EmoteBubble" parent="." instance=ExtResource("8_r32o7")]
+[node name="EmoteBubble" parent="." instance=ExtResource("7_tx7vv")]
 position = Vector2(0, -14)
 interval_range = Vector2(1, 3)
 
-[node name="FloatTextController" parent="." instance=ExtResource("8_852xc")]
+[node name="FloatTextController" parent="." instance=ExtResource("8_rniqr")]
 
-[node name="PimbleBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
-script = ExtResource("10_852xc")
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[node name="HungerTimer" type="Timer" parent="."]
+wait_time = 30.0
+
+[node name="ConversationTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[node name="Physiological" type="Node" parent="."]
+script = ExtResource("9_dwrfc")
+
+[node name="Blackboard" type="Node" parent="."]
+script = ExtResource("9_tx7vv")
+blackboard = {
+"agent_arrived": false,
+"current_state": "idle",
+"food_inventory": 10,
+"is_full": 100,
+"money": 100
+}
+
+[node name="ToblinBehaviour" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("9_2pq8y")
 blackboard = NodePath("../Blackboard")
 actor = NodePath("..")
+metadata/_custom_type_script = "uid://da7jagy6am60c"
 
-[node name="SelectorComposite" type="Node" parent="PimbleBehaviour"]
-script = ExtResource("11_0trbs")
+[node name="SelectorComposite" type="Node" parent="ToblinBehaviour"]
+script = ExtResource("10_dwrfc")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
 
-[node name="Return Home" type="Node" parent="PimbleBehaviour/SelectorComposite"]
-script = ExtResource("13_mpx0k")
-
-[node name="Interacted" type="Node" parent="PimbleBehaviour/SelectorComposite"]
-script = ExtResource("12_a74vy")
-
-[node name="Is The Actor Being Interacted" type="Node" parent="PimbleBehaviour/SelectorComposite/Interacted"]
-script = ExtResource("14_iwkt0")
-
-[node name="Interacting" type="Node" parent="PimbleBehaviour/SelectorComposite/Interacted"]
-script = ExtResource("15_f0nv0")
-
-[node name="Extract Crops" type="Node" parent="PimbleBehaviour/SelectorComposite"]
-script = ExtResource("12_a74vy")
-metadata/_custom_type_script = "uid://jst6onxl5bwx"
-
-[node name="Are The Crops Matured" type="Node" parent="PimbleBehaviour/SelectorComposite/Extract Crops"]
-script = ExtResource("17_r32o7")
-metadata/_custom_type_script = "uid://dxlpexlc4dupq"
-
-[node name="Extract Crops" type="Node" parent="PimbleBehaviour/SelectorComposite/Extract Crops"]
-script = ExtResource("17_iadnp")
+[node name="Eat Food" type="Node" parent="ToblinBehaviour/SelectorComposite"]
+script = ExtResource("13_p1lqy")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
-[node name="Tend" type="Node" parent="PimbleBehaviour/SelectorComposite"]
-script = ExtResource("12_a74vy")
+[node name="Interacted" type="Node" parent="ToblinBehaviour/SelectorComposite"]
+script = ExtResource("12_rniqr")
 metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="Are There No Crops" type="Node" parent="PimbleBehaviour/SelectorComposite/Tend"]
-script = ExtResource("18_4rmvr")
+[node name="Is The Actor Being Interacted" type="Node" parent="ToblinBehaviour/SelectorComposite/Interacted"]
+script = ExtResource("15_e5sj3")
 metadata/_custom_type_script = "uid://dxlpexlc4dupq"
 
-[node name="Tending" type="Node" parent="PimbleBehaviour/SelectorComposite/Tend"]
-script = ExtResource("19_r32o7")
+[node name="Interacting" type="Node" parent="ToblinBehaviour/SelectorComposite/Interacted"]
+script = ExtResource("16_ulliq")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
-[node name="Patrolling" type="Node" parent="PimbleBehaviour/SelectorComposite"]
-script = ExtResource("12_a74vy")
+[node name="Buy Food" type="Node" parent="ToblinBehaviour/SelectorComposite"]
+script = ExtResource("12_rniqr")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="Is The Agent Idle" type="Node" parent="PimbleBehaviour/SelectorComposite/Patrolling"]
-script = ExtResource("13_wi14k")
+[node name="Is The Food Resource Low" type="Node" parent="ToblinBehaviour/SelectorComposite/Buy Food"]
+script = ExtResource("15_pij4r")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
 
-[node name="Wait For 5 Sec" type="Node" parent="PimbleBehaviour/SelectorComposite/Patrolling"]
-script = ExtResource("14_852xc")
+[node name="Go To Market" type="Node" parent="ToblinBehaviour/SelectorComposite/Buy Food"]
+script = ExtResource("16_ijihm")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
-[node name="Patrolling" type="Node" parent="PimbleBehaviour/SelectorComposite/Patrolling"]
-script = ExtResource("16_wi14k")
+[node name="Buy Food" type="Node" parent="ToblinBehaviour/SelectorComposite/Buy Food"]
+script = ExtResource("17_e5sj3")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Patrol" type="Node" parent="ToblinBehaviour/SelectorComposite"]
+script = ExtResource("12_rniqr")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="Is The Agent Idle" type="Node" parent="ToblinBehaviour/SelectorComposite/Patrol"]
+script = ExtResource("13_2pq8y")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="Wait For 5 Sec" type="Node" parent="ToblinBehaviour/SelectorComposite/Patrol"]
+script = ExtResource("14_dwrfc")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Patrol Action" type="Node" parent="ToblinBehaviour/SelectorComposite/Patrol"]
+script = ExtResource("15_p1lqy")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
-[connection signal="timeout" from="Timer" to="PimbleBehaviour/SelectorComposite/Patrolling/Wait For 5 Sec" method="_on_timer_timeout"]
-[connection signal="timeout" from="ConversationTimer" to="PimbleBehaviour/SelectorComposite/Interacted/Interacting" method="_on_conversation_timer_timeout"]
-[connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Return Home" to="." method="move_actor"]
-[connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Extract Crops/Extract Crops" to="." method="move_actor"]
-[connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Tend/Tending" to="." method="move_actor"]
-[connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Patrolling/Patrolling" to="." method="move_actor"]
+[connection signal="area_entered" from="HurtBox" to="." method="_on_hurt_box_area_entered"]
+[connection signal="animation_finished" from="AnimationTree" to="ToblinBehaviour/SelectorComposite/Eat Food" method="_on_animation_tree_animation_finished"]
+[connection signal="timeout" from="Timer" to="ToblinBehaviour/SelectorComposite/Patrol/Wait For 5 Sec" method="_on_timer_timeout"]
+[connection signal="timeout" from="HungerTimer" to="Physiological" method="hunger_decay_timeout"]
+[connection signal="timeout" from="ConversationTimer" to="ToblinBehaviour/SelectorComposite/Interacted/Interacting" method="_on_conversation_timer_timeout"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Buy Food/Go To Market" to="." method="move_actor"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Patrol/Patrol Action" to="." method="move_actor"]
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]
