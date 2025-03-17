@@ -1,8 +1,9 @@
 extends Node2D
 
 @onready var crops = $"."
-@onready var crop_stage = 2
+@onready var crop_stage = 0
 @onready var grow_timer = $"../GrowTimer"
+
 func _on_grow_timer_timeout() -> void:
 	var crops_to_process = crops.get_children()
 	var crop_index = 0
@@ -11,12 +12,13 @@ func _on_grow_timer_timeout() -> void:
 		crops_to_process[crop_index].frame = crop_stage
 		crop_index += 1
 		
-	if crop_stage > 3:
+	if crop_stage >= 3:
 		CropManager.crop_matured = true
-		crop_stage = 2
+		crop_index = 0
+		crop_stage = 0
 		return
 		
 	crop_stage += 1
 	grow_timer.start()
-		
+	print(crop_stage)
 	pass # Replace with function body.

@@ -15,6 +15,7 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	if current_crop_index < crop_to_process.size():
 		move_actor.emit(crop_to_process[current_crop_index].global_position)
 		if blackboard.get_value("agent_arrived") == true:
+			actor.current_location = Vector2.ZERO
 			crop_to_process[current_crop_index].visible = true
 			current_crop_index += 1
 			blackboard.set_value("agent_arrived", false)

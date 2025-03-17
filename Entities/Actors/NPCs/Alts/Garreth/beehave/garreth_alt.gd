@@ -47,6 +47,10 @@ func handle_animation() -> void:
 		animation_state.travel("Move")
 	else:
 		animation_state.travel("Idle")
+		
+func face_target(target):
+	var direction = global_position.direction_to(target.global_position)
+	animation_tree.set("parameters/Idle/blend_position", direction.x)		
 
 func move_actor(patrol_location: Vector2):
 	current_location = patrol_location

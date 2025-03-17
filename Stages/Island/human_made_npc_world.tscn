@@ -68,9 +68,6 @@ metadata/_edit_lock_ = true
 z_index = 3
 position = Vector2(647, 452)
 
-[node name="SeedProp" parent="Player" index="4"]
-position = Vector2(0, -17)
-
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
 remote_path = NodePath("../../Camera2D")
 
@@ -87,7 +84,7 @@ z_index = 3
 position = Vector2(737, 565)
 
 [node name="GrowTimer" type="Timer" parent="." groups=["CropTimer"]]
-wait_time = 5.0
+wait_time = 30.0
 one_shot = true
 
 [node name="Crops" type="Node2D" parent="."]

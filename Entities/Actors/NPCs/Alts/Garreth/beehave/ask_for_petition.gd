@@ -16,6 +16,7 @@ func before_run(actor: Node, blackboard: Blackboard) -> void:
 	else:
 		blackboard.get_value("actor").get_node("Blackboard").set_value("current_state", "interacted")
 	
+	actor.face_target(blackboard.get_value("actor"))
 	actor.npc_active = false
 	emote_bubble.activate()
 	conversation_timer.start()

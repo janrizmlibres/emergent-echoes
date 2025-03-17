@@ -1174,6 +1174,7 @@ script = ExtResource("13_q0u1v")
 [connection signal="body_entered" from="NpcAltDetector" to="Personality" method="_on_npc_alt_detector_body_entered"]
 [connection signal="timeout" from="Timer" to="SilasBehaviour/SelectorComposite/On Patrol/Wait For 5 Sec" method="_on_timer_timeout"]
 [connection signal="timeout" from="HungerTimer" to="Physiological" method="hunger_decay_timeout"]
+[connection signal="animation_finished" from="AnimationTree" to="SilasBehaviour/SelectorComposite/Eat Food" method="_on_animation_tree_animation_finished"]
 [connection signal="move_actor" from="SilasBehaviour/SelectorComposite/Go To House" to="." method="move_actor"]
 [connection signal="move_actor" from="SilasBehaviour/SelectorComposite/Buy Food/Go To Market" to="." method="move_actor"]
 [connection signal="move_actor" from="SilasBehaviour/SelectorComposite/On Patrol/Patrol Action" to="." method="move_actor"]

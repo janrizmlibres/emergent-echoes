@@ -7,6 +7,7 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		return FAILURE
 		
 	if blackboard.get_value("agent_arrived") == true:
+		actor.current_location = Vector2.ZERO
 		blackboard.set_value("current_state", "idle")
 		blackboard.set_value("agent_arrived", false)
 		return SUCCESS
