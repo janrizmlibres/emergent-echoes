@@ -15,5 +15,6 @@ func _process(delta: float) -> void:
 		blackboard.set_value("current_state", "hungry")
 
 func hunger_decay_timeout() -> void:
-	blackboard.set_value("is_full", blackboard.get_value("is_full") - 10)
+	if blackboard.get_value("cutscene_state") == null:
+		blackboard.set_value("is_full", blackboard.get_value("is_full") - 10)
 	pass # Replace with function body.

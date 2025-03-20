@@ -5,6 +5,12 @@ extends Node
 @onready var emote_bubble = $"../EmoteBubble"
 
 func _on_npc_alt_detector_body_entered(body: Node2D) -> void:
+	if blackboard.get_value("cutscene_state") == "garreth is looking for you":
+		return
+		
+	if blackboard.get_value("current_state") == "interrupted":
+		return
+		
 	if body.get_name() == "GarrethAlt":
 		blackboard.set_value("current_state", "going back home")
 		return

@@ -21,7 +21,7 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 			blackboard.set_value("agent_arrived", false)
 	else:
 		current_crop_index = 0
-		CropManager.are_there_crops = true
+		GameManager.are_there_crops = true
 		seed_prop.visible = false
 		tending_timer[0].start()
 		blackboard.set_value("current_state", "going back home")

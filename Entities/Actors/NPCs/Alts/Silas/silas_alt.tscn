@@ -1,4 +1,4 @@
-[gd_scene load_steps=68 format=3 uid="uid://etlq2q1jbury"]
+[gd_scene load_steps=78 format=3 uid="uid://etlq2q1jbury"]
 
 [ext_resource type="Script" uid="uid://26mdhyaoq6g5" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/silas_alt.gd" id="1_17b4c"]
 [ext_resource type="Texture2D" uid="uid://u6qjhno0n6dl" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_hdw1b"]
@@ -25,6 +25,16 @@
 [ext_resource type="Script" uid="uid://ciufjcucrk3da" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/go_to_market.gd" id="18_e1h5y"]
 [ext_resource type="Script" uid="uid://nanbxpy7rjtr" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/buy_food.gd" id="19_qbsuj"]
 [ext_resource type="Script" uid="uid://dmmlgm251npvd" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/eat_food.gd" id="21_oqw3x"]
+[ext_resource type="Script" uid="uid://hblafnx31nmj" path="res://Entities/Actors/NPCs/Alts/Silas/be_interrogated_by_garreth.gd" id="26_e8msm"]
+[ext_resource type="Script" uid="uid://bqlrwrwhs34cs" path="res://addons/beehave/nodes/decorators/delayer.gd" id="27_6ymnp"]
+[ext_resource type="Script" uid="uid://34onbfqwvpxg" path="res://Entities/Actors/NPCs/Alts/Silas/finished_being_interrogated_by_garreth.gd" id="28_qgr1q"]
+[ext_resource type="Script" uid="uid://dokes1clk2mdw" path="res://Entities/Actors/NPCs/Alts/Silas/go_to_farm.gd" id="29_6ymnp"]
+[ext_resource type="Script" uid="uid://jvafc3a1cspq" path="res://Entities/Actors/NPCs/Alts/Silas/idle_at_the_farm.gd" id="30_a6fwn"]
+[ext_resource type="Script" uid="uid://ssxiwo2df23q" path="res://Entities/Actors/NPCs/Alts/Silas/go_to_bonfire.gd" id="31_dixl5"]
+[ext_resource type="Script" uid="uid://cxnkgc02ybbpw" path="res://Entities/Actors/NPCs/Alts/Silas/finished_discussing_with_group.gd" id="32_psoa5"]
+[ext_resource type="Script" uid="uid://bgdvnoex84o1r" path="res://Entities/Actors/NPCs/Alts/Silas/idle_at_the_bonfire.gd" id="33_nfsjm"]
+[ext_resource type="Script" uid="uid://dsp2mo8wbdvjk" path="res://Entities/Actors/NPCs/Alts/Silas/go_to_market_to_buy_food.gd" id="34_dixl5"]
+[ext_resource type="Script" uid="uid://s44w2kkw5vke" path="res://Entities/Actors/NPCs/Alts/Silas/death_by_being_hungry.gd" id="35_psoa5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30oj8"]
 radius = 3.0
@@ -1054,7 +1064,7 @@ wait_time = 30.0
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -17)
+position = Vector2(0, -18)
 texture = ExtResource("3_qtwxn")
 hframes = 6
 vframes = 2
@@ -1169,16 +1179,75 @@ script = ExtResource("12_q20m7")
 [node name="Steal Money From Actor" type="Node" parent="SilasBehaviour/SelectorComposite/On Steal"]
 script = ExtResource("13_q0u1v")
 
+[node name="Cutscene" type="Node" parent="SilasBehaviour/SelectorComposite"]
+script = ExtResource("6_1ro2l")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="Be Interrogated By Garreth" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("26_e8msm")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_6ymnp")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Finished Being Interrogated By Garreth" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene/DelayDecorator"]
+script = ExtResource("28_qgr1q")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Go To Farm" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("29_6ymnp")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Idle At The Farm" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("30_a6fwn")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Go To Bonfire" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("31_dixl5")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator2" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_6ymnp")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Finished Discussing With Group" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene/DelayDecorator2"]
+script = ExtResource("32_psoa5")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Idle At The Bonfire" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("33_nfsjm")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Go To Market To Buy Food" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("34_dixl5")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator3" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_6ymnp")
+wait_time = 15.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Death By Being Hungry" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene/DelayDecorator3"]
+script = ExtResource("35_psoa5")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="body_entered" from="StealArea" to="SilasBehaviour/SelectorComposite/On Steal/Chase Actor" method="_on_steal_area_body_entered"]
 [connection signal="body_entered" from="NpcAltDetector" to="Personality" method="_on_npc_alt_detector_body_entered"]
 [connection signal="timeout" from="Timer" to="SilasBehaviour/SelectorComposite/On Patrol/Wait For 5 Sec" method="_on_timer_timeout"]
 [connection signal="timeout" from="HungerTimer" to="Physiological" method="hunger_decay_timeout"]
+[connection signal="area_entered" from="HurtBox" to="." method="_on_hurt_box_area_entered"]
 [connection signal="animation_finished" from="AnimationTree" to="SilasBehaviour/SelectorComposite/Eat Food" method="_on_animation_tree_animation_finished"]
 [connection signal="move_actor" from="SilasBehaviour/SelectorComposite/Go To House" to="." method="move_actor"]
 [connection signal="move_actor" from="SilasBehaviour/SelectorComposite/Buy Food/Go To Market" to="." method="move_actor"]
 [connection signal="move_actor" from="SilasBehaviour/SelectorComposite/On Patrol/Patrol Action" to="." method="move_actor"]
 [connection signal="move_actor" from="SilasBehaviour/SelectorComposite/On Steal/Chase Actor" to="." method="move_actor"]
+[connection signal="move_actor" from="SilasBehaviour/SelectorComposite/Cutscene/Go To Farm" to="." method="move_actor"]
+[connection signal="move_actor" from="SilasBehaviour/SelectorComposite/Cutscene/Go To Bonfire" to="." method="move_actor"]
+[connection signal="move_actor" from="SilasBehaviour/SelectorComposite/Cutscene/Go To Market To Buy Food" to="." method="move_actor"]
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

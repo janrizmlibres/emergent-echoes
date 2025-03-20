@@ -1032,7 +1032,7 @@ blackboard = {
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -19)
+position = Vector2(0, -18)
 texture = ExtResource("2_0wisk")
 hframes = 6
 vframes = 2
@@ -1160,6 +1160,7 @@ script = ExtResource("16_wi14k")
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="timeout" from="Timer" to="PimbleBehaviour/SelectorComposite/Patrolling/Wait For 5 Sec" method="_on_timer_timeout"]
 [connection signal="timeout" from="ConversationTimer" to="PimbleBehaviour/SelectorComposite/Interacted/Interacting" method="_on_conversation_timer_timeout"]
+[connection signal="area_entered" from="HurtBox" to="." method="_on_hurt_box_area_entered"]
 [connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Return Home" to="." method="move_actor"]
 [connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Extract Crops/Extract Crops" to="." method="move_actor"]
 [connection signal="move_actor" from="PimbleBehaviour/SelectorComposite/Tend/Tending" to="." method="move_actor"]

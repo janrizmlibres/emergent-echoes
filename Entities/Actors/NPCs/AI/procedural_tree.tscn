@@ -13,7 +13,7 @@
 [ext_resource type="Script" uid="uid://brukbaqvfbt0y" path="res://addons/beehave/nodes/decorators/cooldown.gd" id="13_tcbdt"]
 [ext_resource type="PackedScene" uid="uid://uhfkpgur3ldd" path="res://Entities/Actors/NPCs/AI/Nodes/get_random_position.tscn" id="14_qsook"]
 [ext_resource type="PackedScene" uid="uid://5fj0qtxhah7q" path="res://Entities/Actors/NPCs/AI/Nodes/end_action.tscn" id="14_sa7yn"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/AI/Scripts/is_flee_action.gd" id="15_1o703"]
+[ext_resource type="Script" uid="uid://ci52epml5ek04" path="res://Entities/Actors/NPCs/AI/Scripts/is_flee_action.gd" id="15_1o703"]
 [ext_resource type="PackedScene" uid="uid://qwnvuvh4d71a" path="res://Entities/Actors/NPCs/AI/Nodes/move_to_position.tscn" id="15_oxd8l"]
 [ext_resource type="PackedScene" uid="uid://cb4fd3upbur04" path="res://Entities/Actors/NPCs/AI/Nodes/interact_behavior.tscn" id="16_sa7yn"]
 [ext_resource type="PackedScene" uid="uid://iv5s8ex501af" path="res://Entities/Actors/NPCs/AI/Nodes/is_target_busy.tscn" id="17_mx8te"]
@@ -26,7 +26,7 @@
 [ext_resource type="Script" uid="uid://bfb1iie7tep5i" path="res://addons/beehave/nodes/decorators/succeeder.gd" id="20_inuhf"]
 [ext_resource type="Script" uid="uid://c675j3b420sch" path="res://Entities/Actors/NPCs/AI/Scripts/is_petition_action.gd" id="21_ucmxx"]
 [ext_resource type="PackedScene" uid="uid://brb88fpudatxy" path="res://Entities/Actors/NPCs/AI/Nodes/set_target_reached.tscn" id="22_fhn60"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/AI/Scripts/get_random_target.gd" id="24_joxsq"]
+[ext_resource type="Script" uid="uid://cigo0bvj4vp0i" path="res://Entities/Actors/NPCs/AI/Scripts/get_random_target.gd" id="24_joxsq"]
 [ext_resource type="Script" uid="uid://u7kder1k34v5" path="res://addons/beehave/nodes/composites/simple_parallel.gd" id="24_sa7yn"]
 [ext_resource type="Script" uid="uid://c72p2icilb0bh" path="res://Entities/Actors/NPCs/AI/Scripts/finish_petition.gd" id="25_mx8te"]
 [ext_resource type="Script" uid="uid://b7rw8f72qvwqy" path="res://Entities/Actors/NPCs/AI/Scripts/is_eat_action.gd" id="26_k78s6"]
@@ -58,7 +58,7 @@
 
 [node name="ProceduralTree" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_mx8te")
-blackboard = NodePath("@Node@85606")
+blackboard = NodePath("@Node@21886")
 actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 metadata/_edit_vertical_guides_ = [-159.0]

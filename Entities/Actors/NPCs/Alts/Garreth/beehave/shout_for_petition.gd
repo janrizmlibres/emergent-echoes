@@ -6,6 +6,7 @@ extends ActionLeaf
 @onready var animation_tree = $"../../../../AnimationTree"
 @onready var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/playback")
 
+@onready var blackboard = $"../../../../Blackboard"
 
 var chances = 0
 
@@ -29,6 +30,9 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	return RUNNING
 
 func _on_timer_timeout() -> void:
+	if blackboard.get_value("current_state") != "shouting" && blackboard.get_value("current_state") != "surveying":
+		return
+		
 	timer.start()
 	emote_bubble.show_emote_bubble(Globals.Emote.EXCLAMATION)
 	chances += 1

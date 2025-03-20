@@ -3,9 +3,7 @@ extends ActionLeaf
 @onready var float_text_controller = $"../../../../FloatTextController"
 @onready var emote_bubble = $"../../../../EmoteBubble"
 @onready var conversation_timer = $"../../../../ConversationTimer"
-@onready var animation_tree =$"../../../../AnimationTree"
 @onready var blackboard = $"../../../../Blackboard"
-@onready var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/playback")
 
 func before_run(actor: Node, blackboard: Blackboard) -> void:
 	if blackboard.get_value("current_state") != "petitioning":
@@ -21,7 +19,7 @@ func before_run(actor: Node, blackboard: Blackboard) -> void:
 	actor.npc_active = false
 	emote_bubble.activate()
 	conversation_timer.start()
-	animation_state.travel("Idle")
+	actor.set_animation_to_idle()
 	return
 
 func tick(actor: Node, blackboard: Blackboard) -> int:

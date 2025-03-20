@@ -58,3 +58,11 @@ func face_target(target):
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
 	velocity = safe_velocity
 	pass # Replace with function body.
+
+func _on_hurt_box_area_entered(area: Area2D) -> void:
+	if area.get_name() == "Weapon":
+		GameManager.farmer_death_location = global_position
+		GameManager.cutscene_start()
+		queue_free()
+		return
+	pass # Replace with function body.

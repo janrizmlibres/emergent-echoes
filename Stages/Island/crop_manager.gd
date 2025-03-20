@@ -13,7 +13,7 @@ func _on_grow_timer_timeout() -> void:
 		crop_index += 1
 		
 	if crop_stage >= 3:
-		CropManager.crop_matured = true
+		GameManager.crop_matured = true
 		crop_index = 0
 		crop_stage = 0
 		return

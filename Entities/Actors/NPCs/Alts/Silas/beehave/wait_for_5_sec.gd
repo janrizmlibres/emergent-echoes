@@ -1,8 +1,5 @@
 extends ActionLeaf
 
-@onready var animation_tree = $"../../../../AnimationTree"
-@onready var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/playback")
-
 @onready var timer = $"../../../../Timer"
 
 var timeout = false
@@ -16,7 +13,7 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	if blackboard.get_value("current_state") != "waiting":
 		return FAILURE
 	
-	animation_state.travel("Idle")
+	actor.set_animation_to_idle()
 	
 	if timeout:
 		timeout = false

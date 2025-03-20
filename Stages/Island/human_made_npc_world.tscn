@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://b34vifoy3iq2x"]
+[gd_scene load_steps=16 format=4 uid="uid://b34vifoy3iq2x"]
 
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://Stages/Island/island.tres" id="2_4crdb"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="3_ss2fi"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cejru5227hvql" path="res://Entities/Actors/NPCs/Alts/Pimble/pimble_alt.tscn" id="8_au1bg"]
 [ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="8_ctmk4"]
 [ext_resource type="PackedScene" uid="uid://d173wdb7qbni2" path="res://Entities/Actors/NPCs/Alts/Toblin/toblin_alt.tscn" id="9_ctmk4"]
+[ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/press_start_regular.ttf" id="10_4ofr6"]
 [ext_resource type="PackedScene" uid="uid://c46vvjqepxr5c" path="res://Entities/Actors/NPCs/Alts/Garreth/garreth_alt.tscn" id="10_os2lh"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4ofr6"]
@@ -31,6 +32,10 @@ vertices = PackedVector2Array(174, 322, 162, 322, 162, 295, 174, 295)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(156, 289, 180, 289, 180, 328, 156, 328)])
 agent_radius = 6.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_ukkkd"]
+font = ExtResource("10_4ofr6")
+font_size = 8
 
 [node name="World" type="Node2D"]
 z_as_relative = false
@@ -65,21 +70,18 @@ tile_map_data = PackedByteArray("AAAGABEACgACAAAAAAAHAAUAAQADAAEAAAAHABMAAgADAAU
 tile_set = ExtResource("2_4crdb")
 metadata/_edit_lock_ = true
 
-[node name="Player" parent="." instance=ExtResource("4_l5eot")]
+[node name="Player" parent="." groups=["Player"] instance=ExtResource("4_l5eot")]
 z_index = 3
 position = Vector2(647, 452)
-
-[node name="SeedProp" parent="Player" index="4"]
-position = Vector2(0, -19)
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
 remote_path = NodePath("../../Camera2D")
 
-[node name="SilasAlt" parent="." instance=ExtResource("6_whi4o")]
+[node name="SilasAlt" parent="." groups=["Silas"] instance=ExtResource("6_whi4o")]
 z_index = 3
 position = Vector2(854, 237)
 
-[node name="GarrethAlt" parent="." instance=ExtResource("10_os2lh")]
+[node name="GarrethAlt" parent="." groups=["Garreth"] instance=ExtResource("10_os2lh")]
 z_index = 3
 position = Vector2(676, 381)
 
@@ -87,7 +89,7 @@ position = Vector2(676, 381)
 z_index = 3
 position = Vector2(737, 565)
 
-[node name="ToblinAlt" parent="." instance=ExtResource("9_ctmk4")]
+[node name="ToblinAlt" parent="." groups=["Toblin"] instance=ExtResource("9_ctmk4")]
 z_index = 3
 position = Vector2(735, 476)
 
@@ -174,6 +176,30 @@ position = Vector2(-647, -460)
 
 [node name="BottomRight" parent="Camera2D" index="1"]
 position = Vector2(569, 388)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="TotalFoodLabel" type="Label" parent="HUD" groups=["Hud"]]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -88.0
+offset_bottom = 8.0
+grow_horizontal = 0
+text = "Total Food In Market: 4"
+label_settings = SubResource("LabelSettings_ukkkd")
+
+[node name="DeathIndicator" type="Label" parent="HUD" groups=["Hud"]]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -319.0
+offset_top = 133.0
+offset_right = 1.0
+offset_bottom = 179.0
+grow_horizontal = 0
+label_settings = SubResource("LabelSettings_ukkkd")
+vertical_alignment = 2
 
 [connection signal="timeout" from="GrowTimer" to="Crops" method="_on_grow_timer_timeout"]
 

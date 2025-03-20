@@ -50,7 +50,20 @@ func move_actor(patrol_location: Vector2):
 	current_location = patrol_location
 	npc_active = true
 	pass # Replace with function body.
+	
+func set_animation_to_idle():
+	animation_state.travel("Idle")
+	
+func face_target(target):
+	var direction = global_position.direction_to(target.global_position)
+	animation_tree.set("parameters/Idle/blend_position", direction.x)	
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
 	velocity = safe_velocity
+	pass # Replace with function body.
+
+func _on_hurt_box_area_entered(area: Area2D) -> void:
+	if area.get_name() == "Weapon":
+		queue_free()
+		return
 	pass # Replace with function body.

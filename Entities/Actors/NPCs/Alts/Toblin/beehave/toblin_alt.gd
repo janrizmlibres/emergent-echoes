@@ -13,6 +13,9 @@ const npc_name: String = "Silas"
 var npc_active: bool = false
 var current_location: Vector2
 
+var player_reached = false
+var garreth_reached = false
+
 func _physics_process(_delta: float) -> void:
 	if npc_active and current_location:
 		navigation_agent_2d.target_position = current_location
@@ -46,6 +49,9 @@ func handle_animation() -> void:
 	else:
 		animation_state.travel("Idle")
 		
+func set_animation_to_idle():
+	animation_state.travel("Idle")
+		
 func move_actor(patrol_location: Vector2):
 	current_location = patrol_location
 	npc_active = true
@@ -57,4 +63,27 @@ func face_target(target):
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
 	velocity = safe_velocity
+	pass # Replace with function body.
+	
+func _on_hurt_box_area_entered(area: Area2D) -> void:
+	if area.get_name() == "Weapon":
+		queue_free()
+		return
+	pass # Replace with function body.
+
+func _on_alt_detector_body_entered(body: Node2D) -> void:
+	if body.get_name() == "ToblinAlt":
+		pass
+	
+	if blackboard.get_value("cutscene_state") == "go to garreth" && body.get_name() == "GarrethAlt":
+		garreth_reached = true
+		pass
+	
+	if blackboard.get_value("cutscene_state") == "go to garreth to inform" && body.get_name() == "GarrethAlt":
+		garreth_reached = true
+		pass
+	
+	if blackboard.get_value("cutscene_state") == "go to the player" && body.get_name() == "Player":
+		player_reached = true
+		pass
 	pass # Replace with function body.

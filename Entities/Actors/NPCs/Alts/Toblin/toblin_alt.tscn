@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://d173wdb7qbni2"]
+[gd_scene load_steps=83 format=3 uid="uid://d173wdb7qbni2"]
 
 [ext_resource type="Script" uid="uid://uifi23m6o7n3" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/toblin_alt.gd" id="1_tx7vv"]
 [ext_resource type="Texture2D" uid="uid://bu4lgseyryu3n" path="res://Entities/Actors/NPCs/Toblin/Art/toblin.png" id="2_0okcu"]
@@ -22,6 +22,28 @@
 [ext_resource type="Script" uid="uid://cpstm5klv3ckh" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/go_to_market.gd" id="16_ijihm"]
 [ext_resource type="Script" uid="uid://cuuq70qtu1pmy" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/interacting.gd" id="16_ulliq"]
 [ext_resource type="Script" uid="uid://j647ghm187mx" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/buy_food.gd" id="17_e5sj3"]
+[ext_resource type="Script" uid="uid://bk4700gm2nrog" path="res://Entities/Actors/NPCs/Alts/Toblin/is_the_farmer_dead.gd" id="23_clxxx"]
+[ext_resource type="Script" uid="uid://dq15xx8kefr7t" path="res://Entities/Actors/NPCs/Alts/Toblin/inspect_the_farmer.gd" id="24_m8wrh"]
+[ext_resource type="Script" uid="uid://b20t0rwjrm0kf" path="res://Entities/Actors/NPCs/Alts/Toblin/go_to_garreth.gd" id="25_iqtio"]
+[ext_resource type="Script" uid="uid://dcq1otjonx3i8" path="res://Entities/Actors/NPCs/Alts/Toblin/report_to_garreth.gd" id="26_w1bvq"]
+[ext_resource type="Script" uid="uid://bqlrwrwhs34cs" path="res://addons/beehave/nodes/decorators/delayer.gd" id="27_cbbtj"]
+[ext_resource type="Script" uid="uid://bvaocvct58plx" path="res://Entities/Actors/NPCs/Alts/Toblin/finished_reporting_to_garreth.gd" id="28_uf7mv"]
+[ext_resource type="Script" uid="uid://di6tlp785dcfm" path="res://Entities/Actors/NPCs/Alts/Toblin/go_to_farm.gd" id="29_w1bvq"]
+[ext_resource type="Script" uid="uid://c1anhyjlr4ax5" path="res://Entities/Actors/NPCs/Alts/Toblin/idle_at_the_farm.gd" id="30_cbbtj"]
+[ext_resource type="Script" uid="uid://dg5quded0he3" path="res://Entities/Actors/NPCs/Alts/Toblin/go_to_bonfire.gd" id="31_65knc"]
+[ext_resource type="Script" uid="uid://bdw3xb0qtpevk" path="res://Entities/Actors/NPCs/Alts/Toblin/finished_discussing_with_group.gd" id="32_m3qoh"]
+[ext_resource type="Script" uid="uid://b8snd1uqbrrm0" path="res://Entities/Actors/NPCs/Alts/Toblin/go_to_the_player.gd" id="33_m3qoh"]
+[ext_resource type="Script" uid="uid://di4ew6wq7gntp" path="res://Entities/Actors/NPCs/Alts/Toblin/talk_to_the_player.gd" id="34_anupk"]
+[ext_resource type="Script" uid="uid://hgim76bhjb8e" path="res://Entities/Actors/NPCs/Alts/Toblin/finished_talking_to_player.gd" id="35_pit3e"]
+[ext_resource type="Script" uid="uid://bj1oh87ppmmot" path="res://Entities/Actors/NPCs/Alts/Toblin/go_to_garreth_to_inform.gd" id="36_6lnot"]
+[ext_resource type="Script" uid="uid://d0ydqhnwr5evm" path="res://Entities/Actors/NPCs/Alts/Toblin/inform_garreth.gd" id="37_tx6q2"]
+[ext_resource type="Script" uid="uid://cvqy5tqvy76uv" path="res://Entities/Actors/NPCs/Alts/Toblin/finished_informing_to_garreth.gd" id="38_t7t42"]
+[ext_resource type="Script" uid="uid://fm0tcmhagykm" path="res://Entities/Actors/NPCs/Alts/Toblin/idle_at_the_bonfire.gd" id="39_bdn6w"]
+[ext_resource type="Script" uid="uid://bvj4ywql6eabn" path="res://Entities/Actors/NPCs/Alts/Toblin/go_to_market_to_buy_food.gd" id="40_tx6q2"]
+[ext_resource type="Script" uid="uid://dgo8hlp7k0u5a" path="res://Entities/Actors/NPCs/Alts/Toblin/death_by_being_hungry.gd" id="41_t7t42"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w1bvq"]
+size = Vector2(19, 20)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fjhqg"]
 radius = 3.0
@@ -991,6 +1013,12 @@ collision_mask = 3
 script = ExtResource("1_tx7vv")
 metadata/_edit_group_ = true
 
+[node name="AltDetector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AltDetector"]
+position = Vector2(0.5, -5)
+shape = SubResource("RectangleShape2D_w1bvq")
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -9)
 texture = ExtResource("2_0okcu")
@@ -1010,7 +1038,7 @@ shape = SubResource("CapsuleShape2D_fjhqg")
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -19)
+position = Vector2(0, -17)
 texture = ExtResource("3_gpb4r")
 hframes = 6
 vframes = 2
@@ -1099,6 +1127,7 @@ script = ExtResource("9_tx7vv")
 blackboard = {
 "agent_arrived": false,
 "current_state": "idle",
+"cutscene_state": "idle",
 "food_inventory": 10,
 "is_full": 100,
 "money": 100
@@ -1162,6 +1191,113 @@ metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 script = ExtResource("15_p1lqy")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
+[node name="Cutscene" type="Node" parent="ToblinBehaviour/SelectorComposite"]
+script = ExtResource("12_rniqr")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="Is The Farmer Dead" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("23_clxxx")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
+[node name="Inspect The Farmer" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("24_m8wrh")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator2" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_cbbtj")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Go To Garreth" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator2"]
+script = ExtResource("25_iqtio")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Report To Garreth" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("26_w1bvq")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_cbbtj")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Finished Reporting To Garreth" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator"]
+script = ExtResource("28_uf7mv")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Go To Farm" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("29_w1bvq")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Idle At The Farm" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("30_cbbtj")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Go To Bonfire" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("31_65knc")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator3" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_cbbtj")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Finished Discussing With Group" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator3"]
+script = ExtResource("32_m3qoh")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Go To The Player" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("33_m3qoh")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Talk To The Player" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("34_anupk")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator4" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_cbbtj")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Finished Talking To Player" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator4"]
+script = ExtResource("35_pit3e")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Go To Garreth To Inform" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("36_6lnot")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Inform Garreth" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("37_tx6q2")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator5" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_cbbtj")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Finished Informing To Garreth" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator5"]
+script = ExtResource("38_t7t42")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Idle At The Bonfire" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("39_bdn6w")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Go To Market To Buy Food" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("40_tx6q2")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator6" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_cbbtj")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Death By Being Hungry" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator6"]
+script = ExtResource("41_t7t42")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[connection signal="body_entered" from="AltDetector" to="." method="_on_alt_detector_body_entered"]
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="area_entered" from="HurtBox" to="." method="_on_hurt_box_area_entered"]
 [connection signal="animation_finished" from="AnimationTree" to="ToblinBehaviour/SelectorComposite/Eat Food" method="_on_animation_tree_animation_finished"]
@@ -1170,6 +1306,13 @@ metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 [connection signal="timeout" from="ConversationTimer" to="ToblinBehaviour/SelectorComposite/Interacted/Interacting" method="_on_conversation_timer_timeout"]
 [connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Buy Food/Go To Market" to="." method="move_actor"]
 [connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Patrol/Patrol Action" to="." method="move_actor"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/Inspect The Farmer" to="." method="move_actor"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator2/Go To Garreth" to="." method="move_actor"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/Go To Farm" to="." method="move_actor"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/Go To Bonfire" to="." method="move_actor"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/Go To The Player" to="." method="move_actor"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/Go To Garreth To Inform" to="." method="move_actor"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/Go To Market To Buy Food" to="." method="move_actor"]
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

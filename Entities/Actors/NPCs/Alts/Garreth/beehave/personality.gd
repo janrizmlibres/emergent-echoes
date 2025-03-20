@@ -10,6 +10,9 @@ func _on_npc_alt_detector_body_entered(body: Node2D) -> void:
 		
 	if blackboard.get_value("current_state") != "shouting":
 		return
+	
+	if blackboard.get_value("cutscene_state") == "toblin is looking for you":
+		return
 
 	if body.get_name() == "SilasAlt":
 		return
