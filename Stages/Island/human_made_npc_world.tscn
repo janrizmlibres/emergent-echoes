@@ -74,6 +74,9 @@ metadata/_edit_lock_ = true
 z_index = 3
 position = Vector2(647, 452)
 
+[node name="SeedProp" parent="Player" index="4"]
+position = Vector2(0, -18)
+
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
 remote_path = NodePath("../../Camera2D")
 

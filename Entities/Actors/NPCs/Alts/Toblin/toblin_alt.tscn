@@ -1,4 +1,4 @@
-[gd_scene load_steps=83 format=3 uid="uid://d173wdb7qbni2"]
+[gd_scene load_steps=84 format=3 uid="uid://d173wdb7qbni2"]
 
 [ext_resource type="Script" uid="uid://uifi23m6o7n3" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/toblin_alt.gd" id="1_tx7vv"]
 [ext_resource type="Texture2D" uid="uid://bu4lgseyryu3n" path="res://Entities/Actors/NPCs/Toblin/Art/toblin.png" id="2_0okcu"]
@@ -1008,6 +1008,9 @@ states/Move/position = Vector2(488.991, 100.568)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_7qwyo"), "Idle", "Eat", SubResource("AnimationNodeStateMachineTransition_p56hr"), "Eat", "Idle", SubResource("AnimationNodeStateMachineTransition_xi217"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_c1xyq"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_f1dfm"), "Attack", "Idle", SubResource("AnimationNodeStateMachineTransition_62n8s"), "Idle", "Harvest", SubResource("AnimationNodeStateMachineTransition_ifole"), "Harvest", "Idle", SubResource("AnimationNodeStateMachineTransition_yksan"), "Idle", "Attack", SubResource("AnimationNodeStateMachineTransition_n10kc")]
 graph_offset = Vector2(-66.349, -26.1609)
 
+[sub_resource type="LabelSettings" id="LabelSettings_t7t42"]
+font_size = 12
+
 [node name="ToblinAlt" type="CharacterBody2D"]
 collision_mask = 3
 script = ExtResource("1_tx7vv")
@@ -1038,7 +1041,7 @@ shape = SubResource("CapsuleShape2D_fjhqg")
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -17)
+position = Vector2(0, -18)
 texture = ExtResource("3_gpb4r")
 hframes = 6
 vframes = 2
@@ -1296,6 +1299,14 @@ metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
 [node name="Death By Being Hungry" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator6"]
 script = ExtResource("41_t7t42")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Label" type="Label" parent="."]
+offset_left = -17.0
+offset_top = 3.0
+offset_right = 19.0
+offset_bottom = 20.0
+text = "Toblin"
+label_settings = SubResource("LabelSettings_t7t42")
 
 [connection signal="body_entered" from="AltDetector" to="." method="_on_alt_detector_body_entered"]
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]

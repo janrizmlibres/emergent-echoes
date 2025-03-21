@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=3 uid="uid://etlq2q1jbury"]
+[gd_scene load_steps=79 format=3 uid="uid://etlq2q1jbury"]
 
 [ext_resource type="Script" uid="uid://26mdhyaoq6g5" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/silas_alt.gd" id="1_17b4c"]
 [ext_resource type="Texture2D" uid="uid://u6qjhno0n6dl" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_hdw1b"]
@@ -1005,6 +1005,9 @@ states/Move/position = Vector2(488.991, 100.568)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_7qwyo"), "Idle", "Eat", SubResource("AnimationNodeStateMachineTransition_p56hr"), "Eat", "Idle", SubResource("AnimationNodeStateMachineTransition_xi217"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_c1xyq"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_f1dfm"), "Attack", "Idle", SubResource("AnimationNodeStateMachineTransition_62n8s"), "Idle", "Harvest", SubResource("AnimationNodeStateMachineTransition_ifole"), "Harvest", "Idle", SubResource("AnimationNodeStateMachineTransition_yksan"), "Idle", "Attack", SubResource("AnimationNodeStateMachineTransition_n10kc")]
 graph_offset = Vector2(-66.349, -26.1609)
 
+[sub_resource type="LabelSettings" id="LabelSettings_psoa5"]
+font_size = 12
+
 [node name="SilasAlt" type="CharacterBody2D"]
 texture_filter = 1
 script = ExtResource("1_17b4c")
@@ -1025,7 +1028,6 @@ path_desired_distance = 4.0
 target_desired_distance = 2.0
 avoidance_enabled = true
 radius = 5.0
-debug_enabled = true
 
 [node name="StealArea" type="Area2D" parent="."]
 
@@ -1064,7 +1066,7 @@ wait_time = 30.0
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -18)
+position = Vector2(0, -19)
 texture = ExtResource("3_qtwxn")
 hframes = 6
 vframes = 2
@@ -1233,6 +1235,14 @@ metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
 [node name="Death By Being Hungry" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene/DelayDecorator3"]
 script = ExtResource("35_psoa5")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Label" type="Label" parent="."]
+offset_left = -13.0
+offset_top = 3.0
+offset_right = 14.0
+offset_bottom = 20.0
+text = "Silas"
+label_settings = SubResource("LabelSettings_psoa5")
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="body_entered" from="StealArea" to="SilasBehaviour/SelectorComposite/On Steal/Chase Actor" method="_on_steal_area_body_entered"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://cejru5227hvql"]
+[gd_scene load_steps=64 format=3 uid="uid://cejru5227hvql"]
 
 [ext_resource type="Script" uid="uid://cukg3g5jvu3c7" path="res://Entities/Actors/NPCs/Alts/Pimble/beehave/pimble_alt.gd" id="1_ycgvp"]
 [ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="2_0wisk"]
@@ -986,6 +986,9 @@ states/Move/position = Vector2(488.991, 100.568)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_7qwyo"), "Idle", "Eat", SubResource("AnimationNodeStateMachineTransition_p56hr"), "Eat", "Idle", SubResource("AnimationNodeStateMachineTransition_xi217"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_c1xyq"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_f1dfm"), "Attack", "Idle", SubResource("AnimationNodeStateMachineTransition_62n8s"), "Idle", "Harvest", SubResource("AnimationNodeStateMachineTransition_ifole"), "Harvest", "Idle", SubResource("AnimationNodeStateMachineTransition_yksan"), "Idle", "Attack", SubResource("AnimationNodeStateMachineTransition_n10kc")]
 graph_offset = Vector2(-66.349, -26.1609)
 
+[sub_resource type="LabelSettings" id="LabelSettings_qt4a3"]
+font_size = 12
+
 [node name="pimbleAlt" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_ycgvp")
@@ -996,7 +999,6 @@ target_desired_distance = 2.0
 simplify_path = true
 avoidance_enabled = true
 radius = 5.0
-debug_enabled = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -9)
@@ -1156,6 +1158,14 @@ script = ExtResource("14_852xc")
 
 [node name="Patrolling" type="Node" parent="PimbleBehaviour/SelectorComposite/Patrolling"]
 script = ExtResource("16_wi14k")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -15.0
+offset_top = 3.0
+offset_right = 25.0
+offset_bottom = 20.0
+text = "Pimble"
+label_settings = SubResource("LabelSettings_qt4a3")
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="timeout" from="Timer" to="PimbleBehaviour/SelectorComposite/Patrolling/Wait For 5 Sec" method="_on_timer_timeout"]
