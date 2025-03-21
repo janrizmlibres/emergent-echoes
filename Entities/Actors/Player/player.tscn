@@ -24,11 +24,8 @@ amount = 20.0
 weight = 1.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
-[node name="SeedProp" parent="." index="4"]
-position = Vector2(0, -19)
-
-[node name="DebugLabel" parent="." index="15" node_paths=PackedStringArray("actor")]
-actor = NodePath("..")
+[node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="." index="15"]
+radius = 4.0
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

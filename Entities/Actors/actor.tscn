@@ -1002,7 +1002,7 @@ shape = SubResource("CapsuleShape2D_fjhqg")
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -17)
+position = Vector2(0, -18)
 texture = ExtResource("4_f3284")
 hframes = 6
 vframes = 2

@@ -55,9 +55,6 @@ type = 5
 amount = 10.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
-[node name="DebugLabel" parent="." index="19" node_paths=PackedStringArray("actor")]
-actor = NodePath("..")
-
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="timeout" from="EvaluationTimer" to="." method="_on_evaluation_timer_timeout"]
 [connection signal="satiation_depleted" from="Resources/Satiation" to="." method="_on_satiation_satiation_depleted"]

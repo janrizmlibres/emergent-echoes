@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://7ju7mpc0by18"]
+[gd_scene load_steps=19 format=4 uid="uid://7ju7mpc0by18"]
 
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="1_pp8dq"]
 [ext_resource type="Script" uid="uid://b3y4asqmbsqma" path="res://Stages/Testing/world.gd" id="1_x2f32"]
@@ -37,6 +37,9 @@ agent_radius = 6.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_17gdt"]
 size = Vector2(46, 15)
+
+[sub_resource type="LabelSettings" id="LabelSettings_17gdt"]
+font_size = 8
 
 [node name="World" type="Node2D"]
 y_sort_enabled = true
@@ -126,17 +129,106 @@ food_amount = 40
 [node name="Garreth" parent="." instance=ExtResource("5_78a5b")]
 position = Vector2(712, 460)
 
+[node name="Label" type="Label" parent="Garreth"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -24.0
+offset_right = 20.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Garreth"
+label_settings = SubResource("LabelSettings_17gdt")
+horizontal_alignment = 1
+vertical_alignment = 2
+
 [node name="Toblin" parent="." instance=ExtResource("6_ylrlt")]
 position = Vector2(696, 427)
 collision_mask = 1
+
+[node name="Label" type="Label" parent="Toblin"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -24.0
+offset_right = 20.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Toblin"
+label_settings = SubResource("LabelSettings_17gdt")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Toblin2" parent="." instance=ExtResource("6_ylrlt")]
+position = Vector2(696, 491)
+collision_mask = 1
+
+[node name="Label" type="Label" parent="Toblin2"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -24.0
+offset_right = 20.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Toblin2"
+label_settings = SubResource("LabelSettings_17gdt")
+horizontal_alignment = 1
+vertical_alignment = 2
 
 [node name="Silas" parent="." instance=ExtResource("7_jsgrx")]
 position = Vector2(664, 427)
 collision_mask = 1
 
+[node name="Label" type="Label" parent="Silas"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -24.0
+offset_right = 20.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Silas"
+label_settings = SubResource("LabelSettings_17gdt")
+horizontal_alignment = 1
+vertical_alignment = 2
+
 [node name="Pimble" parent="." instance=ExtResource("8_17gdt")]
 position = Vector2(664, 493)
 collision_mask = 1
+
+[node name="Label" type="Label" parent="Pimble"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -24.0
+offset_right = 20.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Pimble"
+label_settings = SubResource("LabelSettings_17gdt")
+horizontal_alignment = 1
+vertical_alignment = 2
 
 [node name="Player" parent="." instance=ExtResource("9_6moo3")]
 position = Vector2(647, 460)
