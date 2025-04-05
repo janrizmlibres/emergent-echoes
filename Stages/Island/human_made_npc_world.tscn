@@ -1,6 +1,10 @@
 [gd_scene load_steps=7 format=4 uid="uid://bggj07uc8a2hg"]
 
+<<<<<<< HEAD
+[ext_resource type="Script" uid="uid://bectnmxrpw1ch" path="res://Stages/Island/World.cs" id="1_p84l6"]
+=======
 [ext_resource type="Script" path="res://Stages/Island/World.cs.txt" id="1_p84l6"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="2_jbp0r"]
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://Stages/Island/island.tres" id="3_o4uk0"]
 [ext_resource type="PackedScene" uid="uid://etlq2q1jbury" path="res://Entities/Actors/NPCs/Alts/Silas/silas_alt.tscn" id="6_whi4o"]
@@ -59,3 +63,4 @@ position = Vector2(800, 128)
 
 [editable path="Camera2D"]
 [editable path="Player"]
+[editable path="Player/CarryProp"]

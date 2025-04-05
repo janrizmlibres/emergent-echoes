@@ -11,7 +11,11 @@ config_version=5
 [application]
 
 config/name="Emergent Echoes"
+<<<<<<< HEAD
+run/main_scene="res://Stages/Testing/world_test1.tscn"
+=======
 run/main_scene="uid://7ju7mpc0by18"
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 config/features=PackedStringArray("4.4", "C#", "GL Compatibility")
 
 [autoload]

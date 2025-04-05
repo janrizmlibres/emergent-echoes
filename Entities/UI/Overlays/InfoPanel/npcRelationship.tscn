@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://bcw71ah0pwnpd"]
+
+[ext_resource type="PackedScene" uid="uid://c0ee67a3a37o5" path="res://Entities/UI/HUD/Status Bar/heart_bar/heart_bar.tscn" id="1_4cyog"]
+[ext_resource type="Texture2D" uid="uid://bjydk2dmap8pf" path="res://Entities/UI/HUD/Prompt/NPC Icon.png" id="2_uqyqc"]
+
+[node name="NPCIcon" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -201.0
+offset_bottom = -44.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HeartBar" parent="." instance=ExtResource("1_4cyog")]
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_top = 17.0
+offset_right = 120.0
+offset_bottom = 137.0
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("2_uqyqc")

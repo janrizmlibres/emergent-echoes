@@ -1,5 +1,14 @@
-[gd_scene load_steps=10 format=3 uid="uid://c3s3r5aucrjod"]
+[gd_scene load_steps=8 format=3 uid="uid://c3s3r5aucrjod"]
 
+<<<<<<< HEAD:Entities/UI/HUD/Prompt/prompt.tscn
+[ext_resource type="Texture2D" uid="uid://chebn1ujnluva" path="res://Entities/UI/HUD/Prompt/Prompt BG.png" id="1_t75cs"]
+[ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/PressStart2P-Regular.ttf" id="2_jkvan"]
+[ext_resource type="Script" uid="uid://dqf2vaa58h0bf" path="res://Entities/UI/HUD/Prompt/Scripts/NpcName.cs" id="3_ibojn"]
+[ext_resource type="FontFile" uid="uid://brdooo1e25vgt" path="res://Assets/Fonts/PixelifySans-VariableFont_wght.ttf" id="3_tt8x5"]
+[ext_resource type="Script" uid="uid://dwe0ss5rjt8wf" path="res://Entities/UI/HUD/Prompt/Scripts/NpcDescription.cs" id="5_ax7q8"]
+[ext_resource type="Script" uid="uid://6k6c3gtma8kb" path="res://Entities/UI/HUD/Prompt/Scripts/Traits.cs" id="6_dplg3"]
+[ext_resource type="PackedScene" uid="uid://bcw71ah0pwnpd" path="res://Entities/UI/HUD/Prompt/npcRelationship.tscn" id="7_y04ul"]
+=======
 [ext_resource type="Texture2D" uid="uid://chebn1ujnluva" path="res://Entities/UI/Overlays/InfoPanel/Art/bg_five.png" id="1_bj2c8"]
 [ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/press_start_regular.ttf" id="2_omato"]
 [ext_resource type="Script" uid="uid://bdn6yvju8rbme" path="res://Entities/UI/Overlays/InfoPanel/Scripts/NpcName.cs" id="3_a0llo"]
@@ -9,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://c0ee67a3a37o5" path="res://Entities/UI/Hearts/heart_bar.tscn" id="7_yiwhv"]
 [ext_resource type="Texture2D" uid="uid://u6qjhno0n6dl" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="8_vefx3"]
 [ext_resource type="Texture2D" uid="uid://bq8qo5fpoqcxt" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="9_g6y3h"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032:Entities/UI/Overlays/InfoPanel/info_panel.tscn
 
 [node name="DescriptionPrompt" type="CanvasLayer"]
 layer = 10
@@ -91,12 +101,28 @@ script = ExtResource("6_yfrj7")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Prompt"]
 layout_mode = 0
-offset_left = 76.5075
-offset_top = 193.0
-offset_right = 400.507
-offset_bottom = 233.0
+offset_left = 74.6269
+offset_top = 185.455
+offset_right = 398.626
+offset_bottom = 225.455
 theme_override_constants/separation = 70
 
+<<<<<<< HEAD:Entities/UI/HUD/Prompt/prompt.tscn
+[node name="NPCIcon" parent="Prompt/HBoxContainer" instance=ExtResource("7_y04ul")]
+layout_mode = 2
+
+[node name="NPCIcon2" parent="Prompt/HBoxContainer" instance=ExtResource("7_y04ul")]
+layout_mode = 2
+
+[node name="NPCIcon3" parent="Prompt/HBoxContainer" instance=ExtResource("7_y04ul")]
+layout_mode = 2
+
+[node name="NPCIcon4" parent="Prompt/HBoxContainer" instance=ExtResource("7_y04ul")]
+layout_mode = 2
+
+[node name="NPCIcon5" parent="Prompt/HBoxContainer" instance=ExtResource("7_y04ul")]
+layout_mode = 2
+=======
 [node name="HeartBar1" parent="Prompt/HBoxContainer" instance=ExtResource("7_yiwhv")]
 layout_mode = 2
 
@@ -125,3 +151,4 @@ texture = ExtResource("9_g6y3h")
 hframes = 8
 vframes = 6
 frame = 5
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032:Entities/UI/Overlays/InfoPanel/info_panel.tscn

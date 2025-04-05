@@ -1,6 +1,10 @@
 [gd_scene load_steps=2 format=3 uid="uid://dt0tf8aaxnjcl"]
 
+<<<<<<< HEAD
+[ext_resource type="Script" uid="uid://cb0xpx83jdy2l" path="res://Utilities/Game/FloatTextController/FloatTextController.cs" id="1_4612p"]
+=======
 [ext_resource type="Script" path="res://Utilities/Game/FloatTextController/float_text_controller.gd" id="1_a7ngm"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 
 [node name="FloatTextController" type="Node2D"]
 script = ExtResource("1_a7ngm")

@@ -1,5 +1,17 @@
 [gd_scene load_steps=51 format=3 uid="uid://cmcj7lmi8c5yw"]
 
+<<<<<<< HEAD
+[ext_resource type="Texture2D" uid="uid://c4yk4o5mx8jr6" path="res://Entities/Actors/Player/Art/hero_elf.png" id="1_0mpyb"]
+[ext_resource type="Script" uid="uid://p1xq4wwkak7r" path="res://Entities/Actors/Actor.cs" id="1_8atlb"]
+[ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Objects/Crop/Art/crops.png" id="3_fhexf"]
+[ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Objects/Sword/Art/sword.png" id="4_8vutq"]
+[ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="5_3jllg"]
+[ext_resource type="AnimationLibrary" uid="uid://sue3u4agdpf" path="res://Entities/Actors/actor_anim_library.res" id="6_c4mth"]
+[ext_resource type="AnimationNodeStateMachine" uid="uid://bluo3agl14ob3" path="res://Entities/Actors/actor_anim_sm.tres" id="7_k0erk"]
+[ext_resource type="PackedScene" uid="uid://b3yvf8qu2yh4k" path="res://Utilities/Game/EmoteController/emote_controller.tscn" id="9_epc3o"]
+[ext_resource type="Script" uid="uid://cjx8focp4mj78" path="res://Entities/Debugging/DebugLabel/DebugLabel.cs" id="10_afexo"]
+[ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="10_snfxc"]
+=======
 [ext_resource type="Script" uid="uid://cb1rxtodur2tm" path="res://Entities/Actors/actor.gd" id="1_fjhqg"]
 [ext_resource type="Script" uid="uid://b8wl584h3jq0m" path="res://Utilities/NPCProcGen/Internal/memorizer.gd" id="2_3ijp3"]
 [ext_resource type="Texture2D" uid="uid://jvowy0xvcekr" path="res://Entities/Actors/Player/Art/player.png" id="2_f3284"]
@@ -9,6 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Props/Weapon/Art/sword.png" id="5_uxave"]
 [ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="6_7qwyo"]
 [ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="8_7qwyo"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fjhqg"]
 radius = 3.0

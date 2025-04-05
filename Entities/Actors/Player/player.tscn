@@ -1,8 +1,17 @@
+<<<<<<< HEAD
+[gd_scene load_steps=5 format=3 uid="uid://bnmuhsutwyeye"]
+
+[ext_resource type="PackedScene" uid="uid://dca6ru8aaidgk" path="res://Entities/Actors/actor.tscn" id="1_15eeh"]
+[ext_resource type="Script" uid="uid://mquu5kr20ocd" path="res://Entities/Actors/Player/Player.cs" id="1_idj2s"]
+[ext_resource type="Script" uid="uid://c3opdn48bdfcg" path="res://addons/NPCProcGen/Nodes/ActorTag2D/ActorTag2D.cs" id="3_tiunm"]
+[ext_resource type="PackedScene" uid="uid://ddv2dvtqnrekh" path="res://Utilities/Interactions/interacting_component.tscn" id="4_5vy5m"]
+=======
 [gd_scene load_steps=4 format=3 uid="uid://jh8w0jv3rc0f"]
 
 [ext_resource type="PackedScene" uid="uid://cmcj7lmi8c5yw" path="res://Entities/Actors/actor.tscn" id="1_h34l7"]
 [ext_resource type="Script" uid="uid://bmjvv7wfg7dpl" path="res://Entities/Actors/Player/player.gd" id="2_ngslm"]
 [ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="3_ngslm"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 
 [node name="Player" instance=ExtResource("1_h34l7")]
 script = ExtResource("2_ngslm")
@@ -24,8 +33,25 @@ amount = 20.0
 weight = 1.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 
+<<<<<<< HEAD
+[node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="." index="13"]
+position = Vector2(0, -1)
+radius = 5.0
+metadata/_edit_lock_ = true
+
+[node name="ActorTag2D" type="Node" parent="." index="14" node_paths=PackedStringArray("RearMarker")]
+script = ExtResource("3_tiunm")
+RearMarker = NodePath("../RearMarker/Marker2D")
+
+[node name="DebugLabel" parent="." index="15" node_paths=PackedStringArray("Actor")]
+Actor = NodePath("../ActorTag2D")
+=======
 [node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="." index="15"]
 radius = 4.0
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
+
+[node name="InteractingComponent" parent="." index="16" instance=ExtResource("4_5vy5m")]
+visible = true
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

@@ -1,6 +1,12 @@
 [gd_scene load_steps=19 format=4 uid="uid://7ju7mpc0by18"]
 
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="1_pp8dq"]
+<<<<<<< HEAD
+[ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://forestcombined.tres" id="2_jcyte"]
+[ext_resource type="PackedScene" uid="uid://bnmuhsutwyeye" path="res://Entities/Actors/Player/player.tscn" id="2_ne4id"]
+[ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/npc.tscn" id="4_gun4a"]
+[ext_resource type="PackedScene" uid="uid://c0o0ox45oqj1h" path="res://Entities/Actors/NPCs/Garreth/garreth.tscn" id="5_5sidg"]
+=======
 [ext_resource type="Script" uid="uid://b3y4asqmbsqma" path="res://Stages/Testing/world.gd" id="1_x2f32"]
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://Stages/Island/island.tres" id="2_am56c"]
 [ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/press_start_regular.ttf" id="3_17gdt"]
@@ -12,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://bt3gcxbonxwfd" path="res://Entities/Actors/NPCs/Silas/silas.tscn" id="7_jsgrx"]
 [ext_resource type="PackedScene" uid="uid://wlg2sv2h5f5b" path="res://Entities/Actors/NPCs/Pimble/pimble.tscn" id="8_17gdt"]
 [ext_resource type="PackedScene" uid="uid://jh8w0jv3rc0f" path="res://Entities/Actors/Player/player.tscn" id="9_6moo3"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 
 [sub_resource type="LabelSettings" id="LabelSettings_6moo3"]
 font = ExtResource("3_17gdt")

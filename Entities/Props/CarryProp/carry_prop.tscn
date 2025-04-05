@@ -1,7 +1,12 @@
 [gd_scene load_steps=3 format=3 uid="uid://bk10dt7i8uqo6"]
 
+<<<<<<< HEAD
+[ext_resource type="Script" uid="uid://bpagn40lql54c" path="res://Entities/Props/CarryProp/CarryProp.cs" id="1_12t75"]
+[ext_resource type="Texture2D" uid="uid://4mb1lonkqpsb" path="res://Entities/Actors/Data/tobin_texture.tres" id="2_3vnma"]
+=======
 [ext_resource type="Script" path="res://Entities/Props/CarryProp/carry_prop.gd" id="1_ruk1u"]
 [ext_resource type="Texture2D" uid="uid://bu4lgseyryu3n" path="res://Entities/Actors/NPCs/Toblin/Art/toblin.png" id="1_vd5d3"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 
 [node name="CarryProp" type="Node2D"]
 script = ExtResource("1_ruk1u")

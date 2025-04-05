@@ -1,6 +1,10 @@
 [gd_scene load_steps=23 format=3 uid="uid://xpm7rofy6voc"]
 
+<<<<<<< HEAD:mainMenu.tscn
+[ext_resource type="Script" uid="uid://djglgfc7r1p08" path="res://MainMenu.cs" id="1_s4qlx"]
+=======
 [ext_resource type="Script" uid="uid://c28mb8fm5e10l" path="res://Stages/Menu/MainMenu.cs" id="1_s4qlx"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032:Stages/Menu/mainMenu.tscn
 [ext_resource type="Texture2D" uid="uid://byngch822lh17" path="res://Assets/world_pic.png" id="1_stypl"]
 [ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/press_start_regular.ttf" id="2_8o3tb"]
 [ext_resource type="Theme" uid="uid://debfb0bqgb1kc" path="res://Stages/Menu/menu.tres" id="3_eo53n"]

@@ -1,3 +1,15 @@
+<<<<<<< HEAD
+[gd_scene load_steps=7 format=3 uid="uid://diiesf6ffioa7"]
+
+[ext_resource type="PackedScene" uid="uid://dca6ru8aaidgk" path="res://Entities/Actors/actor.tscn" id="1_r1c1o"]
+[ext_resource type="Script" uid="uid://deyp47gqckq56" path="res://Entities/Actors/NPCs/NPC.cs" id="1_scutl"]
+[ext_resource type="Script" uid="uid://wbvg6olqk38i" path="res://addons/NPCProcGen/Nodes/NPCAgent2D/NPCAgent2D.cs" id="3_x7obk"]
+[ext_resource type="Texture2D" uid="uid://u36eed1tu2hk" path="res://Entities/Actors/NPCs/Tobin/Art/tobin.png" id="4_a6455"]
+[ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Interactions/interactable.tscn" id="5_lbp4f"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jlstl"]
+radius = 20.0
+=======
 [gd_scene load_steps=6 format=3 uid="uid://8w0pyr8skfw7"]
 
 [ext_resource type="PackedScene" uid="uid://cmcj7lmi8c5yw" path="res://Entities/Actors/actor.tscn" id="1_1dey1"]
@@ -5,6 +17,7 @@
 [ext_resource type="Script" uid="uid://b2w31tcpkshsc" path="res://Utilities/NPCProcGen/Traits/survival_trait.gd" id="11_w50q2"]
 [ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="11_wuycy"]
 [ext_resource type="Script" uid="uid://x8h723av8g65" path="res://Utilities/NPCProcGen/Internal/executor.gd" id="13_c1v6p"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 
 [node name="NPC" instance=ExtResource("1_1dey1")]
 script = ExtResource("2_36x7w")
@@ -58,6 +71,12 @@ metadata/_custom_type_script = "uid://w1ekbi28ftm7"
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="timeout" from="EvaluationTimer" to="." method="_on_evaluation_timer_timeout"]
 [connection signal="satiation_depleted" from="Resources/Satiation" to="." method="_on_satiation_satiation_depleted"]
+
+[node name="Interactable" parent="." index="17" instance=ExtResource("5_lbp4f")]
+PrimaryActionDescription = "View SIlas"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable" index="0"]
+shape = SubResource("CircleShape2D_jlstl")
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]
