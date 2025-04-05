@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://qwnvuvh4d71a"]
+
+[ext_resource type="Script" uid="uid://b6l3wiyllimf5" path="res://Entities/Actors/NPCs/AI/Nodes/move_to_position.gd" id="1_njj80"]
+
+[node name="MoveToPosition" type="Node"]
+script = ExtResource("1_njj80")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"

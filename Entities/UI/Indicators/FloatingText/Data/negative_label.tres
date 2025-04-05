@@ -1,9 +1,9 @@
 [gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://djh501x5a6a10"]
 
-[ext_resource type="FontFile" uid="uid://cvj72gjhqsumb" path="res://Assets/Fonts/floating_font.ttf" id="1_k0ywa"]
+[ext_resource type="FontFile" uid="uid://cvj72gjhqsumb" path="res://Assets/Fonts/floating_font.ttf" id="1_oqa26"]
 
 [resource]
-font = ExtResource("1_k0ywa")
+font = ExtResource("1_oqa26")
 font_size = 10
 font_color = Color(1, 0.196078, 0.196078, 1)
 outline_size = 4

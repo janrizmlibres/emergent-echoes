@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://dderfoygjxyaf"]
+
+[ext_resource type="Script" uid="uid://cfnm1e4n1lv1e" path="res://Entities/Structures/CropTile/crop_tile.gd" id="1_4427g"]
+[ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="1_uqa38"]
+
+[node name="CropTile" type="Node2D" groups=["CropTiles"]]
+script = ExtResource("1_4427g")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -4)
+texture = ExtResource("1_uqa38")
+hframes = 6
+vframes = 2
+frame = 10

@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://d2icout5w8g1e"]
+
+[ext_resource type="PackedScene" uid="uid://8w0pyr8skfw7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_gkis2"]
+[ext_resource type="Texture2D" uid="uid://bu4lgseyryu3n" path="res://Entities/Actors/NPCs/Toblin/Art/toblin.png" id="2_4hnsp"]
+[ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/Actors/NPCs/AI/procedural_tree.tscn" id="3_u7be1"]
+
+[node name="Toblin" instance=ExtResource("1_gkis2")]
+motion_mode = 0
+
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_4hnsp")
+
+[node name="Executor" parent="." index="2" node_paths=PackedStringArray("procedural_tree")]
+procedural_tree = NodePath("ToblinBT")
+
+[node name="ToblinBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_u7be1")]
+blackboard = NodePath("@Node@21911")
+actor = NodePath("../..")
+
+[node name="SeedProp" parent="." index="8"]
+position = Vector2(0, -19)
+
+[node name="AnimationTree" parent="." index="15"]
+parameters/Idle/blend_position = 0.00240386
+
+[editable path="CarryProp"]
+[editable path="EmoteBubble"]

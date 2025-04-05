@@ -1,12 +1,25 @@
+<<<<<<< HEAD
 [gd_scene load_steps=5 format=3 uid="uid://c0o0ox45oqj1h"]
 
 [ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_bfh3u"]
 [ext_resource type="Texture2D" uid="uid://8uhj6bpw43fi" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_m84m3"]
 [ext_resource type="PackedScene" uid="uid://c3s3r5aucrjod" path="res://Entities/UI/HUD/Prompt/prompt.tscn" id="3_7ptt5"]
 [ext_resource type="Script" uid="uid://b5ya23kh35v2o" path="res://Entities/UI/HUD/Prompt/Scripts/GarrethPrompt.cs" id="4_jlis0"]
+=======
+[gd_scene load_steps=6 format=3 uid="uid://gbb818jb3u6v"]
 
-[node name="Garreth" instance=ExtResource("1_bfh3u")]
+[ext_resource type="PackedScene" uid="uid://8w0pyr8skfw7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_m3od5"]
+[ext_resource type="Texture2D" uid="uid://bq8qo5fpoqcxt" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_7ptt5"]
+[ext_resource type="Script" uid="uid://mlbnetcoq4lk" path="res://Utilities/NPCProcGen/Traits/lawful_trait.gd" id="3_7ptt5"]
+[ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/Actors/NPCs/AI/procedural_tree.tscn" id="3_jlis0"]
+[ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="5_jlis0"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 
+[node name="Garreth" instance=ExtResource("1_m3od5")]
+collision_mask = 1
+motion_mode = 0
+
+<<<<<<< HEAD
 [node name="NPCAgent2D" parent="." index="0"]
 SatiationAmount = 15
 CompanionshipAmount = 10
@@ -14,12 +27,40 @@ Survival = 0.4
 Lawful = 1.0
 MoneyAmount = 100
 FoodAmount = 5
+=======
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_7ptt5")
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 
-[node name="NavigationAgent2D" parent="." index="1"]
+[node name="LawfulTrait" type="Node" parent="Traits" index="1" node_paths=PackedStringArray("actor_node")]
+script = ExtResource("3_7ptt5")
+weight = 1.0
+actor_node = NodePath("../..")
+metadata/_custom_type_script = "uid://mlbnetcoq4lk"
+
+[node name="Executor" parent="." index="2" node_paths=PackedStringArray("procedural_tree")]
+procedural_tree = NodePath("GarrethBT")
+
+[node name="GarrethBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_jlis0")]
+blackboard = NodePath("@Node@85609")
+actor = NodePath("../..")
+
+[node name="NavigationAgent2D" parent="." index="3"]
 navigation_layers = 3
 
-[node name="Sprite2D" parent="." index="2"]
-texture = ExtResource("2_m84m3")
+[node name="Duty" type="Node" parent="Resources" index="4"]
+script = ExtResource("5_jlis0")
+type = 6
+amount = 50.0
+weight = 0.6
+metadata/_custom_type_script = "uid://w1ekbi28ftm7"
+
+[node name="AnimationTree" parent="." index="16"]
+parameters/Attack/blend_position = 0
+parameters/Eat/blend_position = 0
+parameters/Harvest/blend_position = 0
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 
 [node name="Interactable" parent="." index="17"]
 PrimaryActionDescription = "View Garreth"
@@ -29,3 +70,4 @@ visible = false
 script = ExtResource("4_jlis0")
 
 [editable path="CarryProp"]
+[editable path="EmoteBubble"]

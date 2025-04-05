@@ -1,17 +1,40 @@
+<<<<<<< HEAD
 [gd_scene load_steps=5 format=3 uid="uid://blypn5fdqy1iv"]
 
 [ext_resource type="PackedScene" uid="uid://diiesf6ffioa7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_npgde"]
 [ext_resource type="Texture2D" uid="uid://bni44g000tsk4" path="res://Entities/Actors/NPCs/Pimble/Art/pimble.png" id="2_xaarx"]
 [ext_resource type="PackedScene" uid="uid://c3s3r5aucrjod" path="res://Entities/UI/HUD/Prompt/prompt.tscn" id="3_nokag"]
 [ext_resource type="Script" uid="uid://dtyfd1ptvbth2" path="res://Entities/UI/HUD/Prompt/Scripts/PimblePrompt.cs" id="4_nokag"]
+=======
+[gd_scene load_steps=5 format=3 uid="uid://wlg2sv2h5f5b"]
 
-[node name="Pimble" instance=ExtResource("1_npgde")]
+[ext_resource type="PackedScene" uid="uid://8w0pyr8skfw7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_87dmx"]
+[ext_resource type="Texture2D" uid="uid://cnxf1yrr65keq" path="res://Entities/Actors/NPCs/Pimble/Art/pimble.png" id="2_nokag"]
+[ext_resource type="Script" uid="uid://cmda8gt6vuorb" path="res://Utilities/NPCProcGen/Traits/farmer_trait.gd" id="3_nokag"]
+[ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/Actors/NPCs/AI/procedural_tree.tscn" id="3_vgnlq"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 
-[node name="NPCAgent2D" parent="." index="0"]
-Farmer = 1.0
+[node name="Pimble" instance=ExtResource("1_87dmx")]
+motion_mode = 0
 
-[node name="Sprite2D" parent="." index="2"]
-texture = ExtResource("2_xaarx")
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_nokag")
+
+[node name="FarmerTrait" type="Node" parent="Traits" index="1" node_paths=PackedStringArray("actor_node")]
+script = ExtResource("3_nokag")
+weight = 1.0
+actor_node = NodePath("../..")
+metadata/_custom_type_script = "uid://cmda8gt6vuorb"
+
+[node name="Executor" parent="." index="2" node_paths=PackedStringArray("procedural_tree")]
+procedural_tree = NodePath("PimbleBT")
+
+[node name="PimbleBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_vgnlq")]
+blackboard = NodePath("@Node@212011")
+actor = NodePath("../..")
+
+[node name="AnimationTree" parent="." index="16"]
+parameters/Idle/blend_position = 0.00240386
 
 [node name="Interactable" parent="." index="17"]
 PrimaryActionDescription = "View Pimble"
@@ -21,3 +44,4 @@ visible = false
 script = ExtResource("4_nokag")
 
 [editable path="CarryProp"]
+[editable path="EmoteBubble"]

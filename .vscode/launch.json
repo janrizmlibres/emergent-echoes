@@ -1,47 +1,15 @@
 {
-  "version": "2.0.0",
+  "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch",
+      "name": "Play",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "D:/Apps/Godot_v4.3-stable_mono_win64/Godot_v4.3-stable_mono_win64.exe",
-      "args": ["--path", "${workspaceFolder}"],
-      "console": "internalConsole",
+      "program": "${env:GODOT4}",
+      "args": [],
       "cwd": "${workspaceFolder}",
-      "stopAtEntry": false
-    },
-    {
-      "name": "Launch (Select Scene)",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "build",
-      "program": "D:/Apps/Godot_v4.3-stable_mono_win64/Godot_v4.3-stable_mono_win64.exe",
-      "cwd": "${workspaceFolder}",
-      "console": "internalConsole",
       "stopAtEntry": false,
-      "args": [
-        "--path",
-        "${workspaceRoot}",
-        "${command:godot.csharp.getLaunchScene}"
-      ]
-    },
-    {
-      "name": "Launch Editor",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "build",
-      "program": "D:/Apps/Godot_v4.3-stable_mono_win64/Godot_v4.3-stable_mono_win64.exe",
-      "cwd": "${workspaceFolder}",
-      "console": "internalConsole",
-      "stopAtEntry": false,
-      "args": ["--path", "${workspaceRoot}", "--editor"]
-    },
-    {
-      "name": "Attach to Process",
-      "type": "coreclr",
-      "request": "attach"
     }
   ]
 }

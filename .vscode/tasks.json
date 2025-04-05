@@ -4,19 +4,10 @@
     {
       "label": "build",
       "command": "dotnet",
-      "type": "shell",
+      "type": "process",
       "args": [
-        "build",
-        "/property:GenerateFullPaths=true",
-        "/consoleloggerparameters:NoSummary"
+        "build"
       ],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "presentation": {
-        "reveal": "silent"
-      },
       "problemMatcher": "$msCompile"
     }
   ]

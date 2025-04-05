@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://jvn4mcn3jeji"]
+
+[ext_resource type="Texture2D" uid="uid://dpflenkkcyrvn" path="res://Entities/UI/HUD/HungerBar/Art/bg.png" id="2_1d7cv"]
+[ext_resource type="Texture2D" uid="uid://blllmw0lg77mg" path="res://Entities/UI/HUD/HungerBar/Art/fill.png" id="3_6ms58"]
+
+[node name="Hunger Bar" type="HBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="."]
+layout_mode = 2
+value = 50.0
+texture_under = ExtResource("2_1d7cv")
+texture_progress = ExtResource("3_6ms58")
+texture_progress_offset = Vector2(4, 7.5)

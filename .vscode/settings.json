@@ -1,13 +1,4 @@
 {
-  "files.exclude": {
-    "**/*.godot": true,
-    "**/*.mono": true,
-    "**/*.vscode": true,
-    ".gitattributes": true,
-    ".gitignore": true,
-    "**/*.csproj": true,
-    "**/*.sln": true,
-    "README.md": true
-  },
-  "godotTools.editorPath.godot4": "d:\\Apps\\Godot_v4.3-stable_mono_win64\\Godot_v4.3-stable_mono_win64.exe"
+  "editor.insertSpaces": false,
+  "editor.tabSize": 4
 }
