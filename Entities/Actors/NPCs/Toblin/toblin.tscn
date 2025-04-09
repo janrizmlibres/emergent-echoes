@@ -14,13 +14,14 @@ texture = ExtResource("2_4hnsp")
 procedural_tree = NodePath("ToblinBT")
 
 [node name="ToblinBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_u7be1")]
-blackboard = NodePath("@Node@21911")
+enabled = false
+blackboard = NodePath("@Node@23072")
 actor = NodePath("../..")
 
 [node name="SeedProp" parent="." index="8"]
-position = Vector2(0, -19)
+position = Vector2(0, -17)
 
-[node name="AnimationTree" parent="." index="15"]
+[node name="AnimationTree" parent="." index="16"]
 parameters/Idle/blend_position = 0.00240386
 
 [editable path="CarryProp"]

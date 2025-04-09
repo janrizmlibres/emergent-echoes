@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://0esw0i5rv0cx"]
+
+[node name="BaseCamera" type="Camera2D"]
+limit_smoothed = true
+position_smoothing_enabled = true
+
+[node name="Limits" type="CanvasLayer" parent="."]
+
+[node name="TopLeft" type="Marker2D" parent="Limits"]
+
+[node name="BottomRight" type="Marker2D" parent="Limits"]

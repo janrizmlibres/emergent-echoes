@@ -1,38 +1,32 @@
 using Godot;
-using System;
 
 namespace EmergentEchoes
 {
-	public partial class MainMenu : Control
+	public partial class MainMenu : Node2D
 	{
+		private Sprite2D _titleTexture;
 		private Button _startButton;
 		private Button _exitButton;
-		private Button _musicController;
 		private AudioStreamPlayer _backgroundMusic;
-		private bool _isMusicPlaying = false;
+		private PathFollow2D _pathFollow;
 
-		private Texture2D _musicEnabledIcon;
-		private Texture2D _musicDisabledIcon;
+		private float _timeElapsed = 0;
 
-		// Called when the node enters the scene tree for the first time.
 		public override void _Ready()
 		{
-			_startButton = GetNode<Button>("HBoxContainer/StartButton");
-			_exitButton = GetNode<Button>("HBoxContainer/ExitButton");
-			_musicController = GetNode<Button>("MusicController");
-			_backgroundMusic = GetNode<AudioStreamPlayer>("BackgroundMusic");
-		
-			_musicEnabledIcon = GD.Load<Texture2D>("res://Assets/Button/Rect-Medium/34_Music (3)Cyan.png");
-			_musicDisabledIcon = GD.Load<Texture2D>("res://Assets/Button/Rect-Medium/33_Music_Disable (3)Cyan.png");
+			_titleTexture = GetNode<Sprite2D>("MenuLayer/TitleSprite");
+			_startButton = GetNode<Button>("MenuLayer/HBoxContainer/StartButton");
+			_exitButton = GetNode<Button>("MenuLayer/HBoxContainer/ExitButton");
 
-			// Resize the icons
-			_musicEnabledIcon = ResizeTexture(_musicEnabledIcon, 15, 15);
-			_musicDisabledIcon = ResizeTexture(_musicDisabledIcon, 15, 15);
+			_backgroundMusic = GetNode<AudioStreamPlayer>("BackgroundMusic");
+			_backgroundMusic.Play();
+
+			_pathFollow = GetNode<PathFollow2D>("Path2D/PathFollow2D");
 
 			if (_startButton != null)
 			{
 				GD.Print("StartButton found");
-				_startButton.Connect("pressed", Callable.From(_OnStartButtonPressed));
+				_startButton.Connect("pressed", Callable.From(OnStartButtonPressed));
 			}
 			else
 			{
@@ -42,65 +36,39 @@ namespace EmergentEchoes
 			if (_exitButton != null)
 			{
 				GD.Print("ExitButton found");
-				_exitButton.Connect("pressed", Callable.From(_OnExitButtonPressed));
+				_exitButton.Connect("pressed", Callable.From(OnExitButtonPressed));
 			}
 			else
 			{
 				GD.PrintErr("ExitButton not found");
 			}
-
-			if (_musicController != null)
-			{
-				GD.Print("MusicController found");
-				_musicController.Connect("pressed", Callable.From(_OnMusicControllerPressed));
-				_musicController.Icon = _musicDisabledIcon; // Set initial icon
-			}
-			else
-			{
-				GD.PrintErr("MusicController not found");
-			}
 		}
 
-		private Texture2D ResizeTexture(Texture2D texture, int width, int height)
+		public override void _Process(double delta)
 		{
-			Image img = texture.GetImage();
-			img.Resize(width, height);
-			Texture2D resizedTexture = ImageTexture.CreateFromImage(img);
-			return resizedTexture;
+			_timeElapsed += (float)delta;
+
+			_pathFollow.ProgressRatio += (float)(delta * 0.01);
+			Vector2 title_pos = _titleTexture.GlobalPosition;
+			title_pos.Y = 70 + 6 * Mathf.Sin(_timeElapsed);
+			_titleTexture.GlobalPosition = title_pos;
 		}
 
-		private void _OnStartButtonPressed()
+		private void OnStartButtonPressed()
 		{
-			GD.Print("Start button pressed");
-			GetTree().ChangeSceneToFile("res://world.tscn");
+			_startButton.Disabled = true;
+			_exitButton.Disabled = true;
+			GetNode<AnimationPlayer>("AnimationPlayer").Play("fade_out");
 		}
 
-		private void _OnExitButtonPressed()
+		private void OnExitButtonPressed()
 		{
-			GD.Print("Exit button pressed");
 			GetTree().Quit();
 		}
 
-		private void _OnMusicControllerPressed()
+		private void ChangeSceneToOpening()
 		{
-			_isMusicPlaying = !_isMusicPlaying;
-			if (_isMusicPlaying)
-			{
-				GD.Print("Music enabled");
-				_backgroundMusic.Play();
-				_musicController.Icon = _musicEnabledIcon;
-			}
-			else
-			{
-				GD.Print("Music disabled");
-				_backgroundMusic.Stop();
-				_musicController.Icon = _musicDisabledIcon;
-			}
-		}
-
-		// Called every frame. 'delta' is the elapsed time since the previous frame.
-		public override void _Process(double delta)
-		{
+			GetTree().ChangeSceneToFile("res://Stages/Interior/interior_house.tscn");
 		}
 	}
 }

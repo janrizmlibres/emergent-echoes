@@ -1,7 +1,6 @@
 extends Node2D
 
 @onready var total_food: ResourceStat = $TotalFood
-@onready var label: Label = $HUD/TotalFoodLabel
 
 func _ready():
 	var shop: Shop = $Shop
@@ -17,8 +16,3 @@ func _ready():
 
 	total_food.lower_threshold = thresholds[food][0] * actor_count
 	total_food.upper_threshold = thresholds[food][1] * actor_count
-
-	label.text = "Total Food: " + str(total_food.amount)
-
-func _on_total_food_total_food_updated(amount: int):
-	label.text = "Total Food: " + str(amount)

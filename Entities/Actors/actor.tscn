@@ -3,16 +3,13 @@
 [ext_resource type="Script" uid="uid://cb1rxtodur2tm" path="res://Entities/Actors/actor.gd" id="1_fjhqg"]
 [ext_resource type="Script" uid="uid://b8wl584h3jq0m" path="res://Utilities/NPCProcGen/Internal/memorizer.gd" id="2_3ijp3"]
 [ext_resource type="Texture2D" uid="uid://jvowy0xvcekr" path="res://Entities/Actors/Player/Art/player.png" id="2_f3284"]
+[ext_resource type="Shape2D" uid="uid://d1qq52c6b6lku" path="res://Entities/Actors/actor_shape.tres" id="4_62n8s"]
 [ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="4_f3284"]
 [ext_resource type="Script" uid="uid://6bjuegffhhld" path="res://Entities/Props/Weapon/weapon.gd" id="5_62n8s"]
 [ext_resource type="PackedScene" uid="uid://c45btaj8rrou0" path="res://Entities/UI/Indicators/EmoteBubble/emote_bubble.tscn" id="5_jou52"]
 [ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Props/Weapon/Art/sword.png" id="5_uxave"]
-[ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="6_7qwyo"]
+[ext_resource type="PackedScene" uid="uid://2m12kxf7rpad" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="6_7qwyo"]
 [ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="8_7qwyo"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fjhqg"]
-radius = 3.0
-height = 10.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wrnt0"]
 radius = 6.0
@@ -998,21 +995,21 @@ metadata/_custom_type_script = "uid://b8wl584h3jq0m"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
-shape = SubResource("CapsuleShape2D_fjhqg")
+shape = ExtResource("4_62n8s")
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -19)
+position = Vector2(0, -17)
 texture = ExtResource("4_f3284")
 hframes = 6
 vframes = 2
 frame = 6
 
-[node name="HurtBox" type="Area2D" parent="."]
+[node name="HitBox" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 position = Vector2(0, -5)
 shape = SubResource("CapsuleShape2D_wrnt0")
 
@@ -1064,6 +1061,7 @@ libraries = {
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
+active = false
 tree_root = SubResource("AnimationNodeStateMachine_ifole")
 anim_player = NodePath("../AnimationPlayer")
 parameters/Attack/blend_position = 1.0
@@ -1077,9 +1075,7 @@ position = Vector2(0, -14)
 
 [node name="FloatTextController" parent="." instance=ExtResource("8_7qwyo")]
 
-[connection signal="area_entered" from="HurtBox" to="." method="_on_hurt_box_area_entered"]
+[connection signal="area_entered" from="HitBox" to="." method="_on_hurt_box_area_entered"]
 [connection signal="body_entered" from="ActorDetector" to="." method="_on_actor_detector_body_entered"]
 [connection signal="body_exited" from="ActorDetector" to="." method="_on_actor_detector_body_exited"]
 [connection signal="animation_finished" from="AnimationTree" to="." method="_on_animation_tree_animation_finished"]
-
-[editable path="CarryProp"]

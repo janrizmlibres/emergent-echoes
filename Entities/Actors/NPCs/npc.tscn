@@ -12,9 +12,8 @@ evaluation_interval = Vector2(10, 20)
 
 [node name="Traits" type="Node" parent="." index="1"]
 
-[node name="SurvivalTrait" type="Node" parent="Traits" index="0" node_paths=PackedStringArray("actor_node")]
+[node name="SurvivalTrait" type="Node" parent="Traits" index="0"]
 script = ExtResource("11_w50q2")
-actor_node = NodePath("../..")
 metadata/_custom_type_script = "uid://b2w31tcpkshsc"
 
 [node name="Executor" type="Node" parent="." index="2"]
@@ -54,6 +53,9 @@ script = ExtResource("11_wuycy")
 type = 5
 amount = 10.0
 metadata/_custom_type_script = "uid://w1ekbi28ftm7"
+
+[node name="SeedProp" parent="." index="8"]
+position = Vector2(0, -18)
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="timeout" from="EvaluationTimer" to="." method="_on_evaluation_timer_timeout"]

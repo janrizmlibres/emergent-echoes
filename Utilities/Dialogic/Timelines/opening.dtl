@@ -1,0 +1,15 @@
+label intro
+toblin: Ah, good, you're awake! Quick question - you didn't happen to borrow my whetstone yesterday, did you? Can't seem to put my hands on it this morning.
+- No, wasn't me, Toblin.
+	toblin: No? Drat. Must've left it out near the woodpile again then... Anyway, thanks. Well, best let you get on with your day. I've got to keep searching!
+	[signal arg="fail_exit"]
+- Hmm, maybe? Things were a bit hectic. I can check my things.
+	toblin: Ah, right, well... if you do happen to stumble across it... give us a shout, would you? Driving me mad! Anyway, I'll leave you be. See you around!
+	[signal arg="fail_exit"]
+- Ah, yes! Sorry, I did borrow it. It's just over here somewhere.
+	toblin: Aha! Knew it! No worries at all, happens to us all. Just need it to sharpen up a few tools, you know. Could you grab it for me now? I can wait here by the door for a moment.
+	[signal arg="give"]
+[end_timeline]
+label outro
+toblin: Brilliant! Thanks a bunch. You've saved me a lot of searching this morning. Right then, I'm actually off now! See you outside!
+[signal arg="success_exit"]

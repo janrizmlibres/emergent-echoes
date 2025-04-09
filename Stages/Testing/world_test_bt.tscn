@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://d2icout5w8g1e" path="res://Entities/Actors/NPCs/Toblin/toblin.tscn" id="6_0lw8q"]
 [ext_resource type="PackedScene" uid="uid://drbup72u7bkho" path="res://Entities/Structures/Shop/shop.tscn" id="6_qxqqk"]
 [ext_resource type="PackedScene" uid="uid://jh8w0jv3rc0f" path="res://Entities/Actors/Player/player.tscn" id="7_ksgwm"]
-[ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/camera_2d.tscn" id="8_0lw8q"]
+[ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/base_camera.tscn" id="8_0lw8q"]
 [ext_resource type="PackedScene" uid="uid://wlg2sv2h5f5b" path="res://Entities/Actors/NPCs/Pimble/pimble.tscn" id="8_t0h3a"]
 [ext_resource type="PackedScene" uid="uid://gbb818jb3u6v" path="res://Entities/Actors/NPCs/Garreth/garreth.tscn" id="9_qxqqk"]
 

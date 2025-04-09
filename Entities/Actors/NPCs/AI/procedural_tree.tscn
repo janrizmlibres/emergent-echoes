@@ -58,7 +58,7 @@
 
 [node name="ProceduralTree" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_mx8te")
-blackboard = NodePath("@Node@85606")
+blackboard = NodePath("@Node@23073")
 actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 metadata/_edit_vertical_guides_ = [-159.0]

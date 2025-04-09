@@ -65,7 +65,7 @@ func _physics_process(_delta):
 
 func face_target(target):
 	var direction = global_position.direction_to(target.global_position)
-	animation_tree.set("parameters/Idle/blend_position", direction.x)
+	set_blend_positions(direction.x)
 	stop_agent()
 
 func stop_agent():
@@ -164,8 +164,8 @@ func override_evaluation() -> bool:
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity):
 	if not is_in_knockback:
-			velocity = safe_velocity
-			move_and_slide()
+		velocity = safe_velocity
+		move_and_slide()
 
 func _on_animation_tree_animation_finished(_anim_name: StringName):
 	executor.procedural_tree.blackboard.set_value("anim_finished", true)
