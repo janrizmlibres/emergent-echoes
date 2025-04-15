@@ -7,17 +7,6 @@ var state: State = State.ACTIVE
 
 @onready var remote_transform: RemoteTransform2D = $RemoteTransform2D
 
-func _ready():
-	super._ready()
-	setup_resources()
-
-func setup_resources():
-	var money_resource = get_node("Resources/Money")
-	resources.append(money_resource)
-
-	var food_resource = get_node("Resources/Food")
-	resources.append(food_resource)
-
 func _physics_process(_delta):
 	match state:
 		State.DORMANT:
@@ -27,12 +16,15 @@ func _physics_process(_delta):
 		State.ATTACK:
 			attack_state()
 
-	if Input.is_action_just_pressed("use"):
-		state = State.ATTACK
-
 func active_state():
 	var input_vector = Input.get_vector("left", "right", "up", "down")
 	move(input_vector)
+
+	if Input.is_action_just_pressed("use"):
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			set_blend_positions(get_global_mouse_position().x)
+
+		state = State.ATTACK
 	
 func attack_state():
 	velocity = Vector2.ZERO

@@ -7,7 +7,7 @@ var actor_data: Dictionary[Actor, ActorData] = {}
 
 func initialize(actors: Array) -> void:
 	for actor in actors:
-		var new_data = ActorData.new(self)
+		var new_data = ActorData.new()
 		new_data.last_known_position = actor.global_position
 		actor_data[actor] = new_data
 

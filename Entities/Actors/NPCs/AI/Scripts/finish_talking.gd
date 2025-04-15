@@ -9,18 +9,18 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	var npc = actor as NPC
 	var target = blackboard.get_value("target")
 
-	npc.modify_resource(Globals.ResourceType.COMPANIONSHIP, companionship_increase)
+	npc.modify_resource(PCG.ResourceType.COMPANIONSHIP, companionship_increase)
 	npc.memorizer.modify_relationship(target, relationship_increase)
 	npc.float_text_controller.show_float_text(
-		Globals.ResourceType.COMPANIONSHIP,
+		PCG.ResourceType.COMPANIONSHIP,
 		String.num_int64(companionship_increase),
 		true
 	)
 
-	target.modify_resource(Globals.ResourceType.COMPANIONSHIP, target_increase)
+	target.modify_resource(PCG.ResourceType.COMPANIONSHIP, target_increase)
 	target.memorizer.modify_relationship(npc, relationship_increase)
 	target.float_text_controller.show_float_text(
-		Globals.ResourceType.COMPANIONSHIP,
+		PCG.ResourceType.COMPANIONSHIP,
 		String.num_int64(target_increase),
 		true
 	)

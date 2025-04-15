@@ -21,6 +21,7 @@ BeehaveGlobalDebugger="*res://addons/beehave/debug/global_debugger.gd"
 WorldState="*res://Utilities/NPCProcGen/world_state.gd"
 Logger="*res://Utilities/Game/logger.gd"
 Dialogic="*res://addons/dialogic/Core/DialogicGameHandler.gd"
+PCG="*res://Utilities/NPCProcGen/pcg.gd"
 
 [dialogic]
 

@@ -1,64 +1,114 @@
 extends Node
 
-class ActorState:
-	var current_action: Globals.Action = Globals.Action.NONE
-	var is_busy: bool = false
-	var is_available: bool = true
-	var is_captured: bool = false
+var npc_manager := NPCManager.new()
+var resource_manager := ResourceManager.new()
+var memory_manager := MemoryManager.new()
 
 var global_events: Array[String] = []
-var actor_state: Dictionary[Actor, ActorState] = {}
-var crimes: Array[Crime] = []
 
-var total_food: ResourceStat
-var shop: Shop
+var _actor_state: Dictionary[Actor, ActorState] = {}
+var _crimes: Array[Crime] = []
 
-func initialize(_total_food: ResourceStat, _shop: Shop, actors: Array) -> void:
-	total_food = _total_food
-	shop = _shop
+var _prisons: Array[Prison] = []
+var _crops: Array[CropTile] = []
+var _shop: Shop
 
+func _ready():
+	var state_container = Node.new()
+	state_container.name = "ActorStates"
+	add_child(state_container)
+
+	npc_manager.name = "NPCManager"
+	resource_manager.name = "ResourceManager"
+	memory_manager.name = "MemoryManager"
+	add_child(npc_manager)
+	add_child(resource_manager)
+	add_child(memory_manager)
+
+func initialize(actors: Array) -> void:
 	for actor in actors:
 		var peer_actors = actors.duplicate()
 		peer_actors.erase(actor)
 		actor.memorizer.initialize(peer_actors)
-		
-		actor_state[actor] = ActorState.new()
-		total_food.amount += actor.get_resource_amount(Globals.ResourceType.FOOD)
+
+func register_actor(actor: Actor) -> void:
+	var pcg_agent := get_pcg_agent(actor)
+	assert(pcg_agent != null, "ActorState: Agent node not found in actor node tree.")
+
+	_actor_state[actor] = ActorState.new()
+	_actor_state[actor].name = actor.name
+	get_node("ActorStates").add_child(_actor_state[actor])
+
+	if pcg_agent is NPCAgent:
+		assert(actor is NPC, "NPCManager: Actor is not NPC.")
+		npc_manager.register_npc(actor, pcg_agent)
+
+	resource_manager.register_actor(actor, pcg_agent)
+	memory_manager.register_actor(actor)
+
+func get_pcg_agent(root: Node) -> Node:
+	for child in root.get_children():
+		if child is PCGAgent:
+			return child
+	return null
+	
+func register_prison(prison: Prison) -> void:
+	_prisons.append(prison)
+
+func register_crop(crop: CropTile) -> void:
+	_crops.append(crop)
+
+func register_shop(shop_arg: Shop) -> void:
+	_shop = shop_arg
+	resource_manager.total_food.amount += _shop.food_amount
 
 func get_peer_actors(actor: Actor) -> Array[Actor]:
-	var peer_actors = actor_state.keys().duplicate()
+	var peer_actors := _actor_state.keys().duplicate()
 	peer_actors.erase(actor)
 	return peer_actors
 
 func get_actor_count() -> int:
-	return actor_state.size()
+	return _actor_state.size()
 
 func get_current_action(actor):
-	return actor_state[actor].current_action
+	return _actor_state[actor].current_action
 
 func set_current_action(actor, action):
-	actor_state[actor].current_action = action
+	_actor_state[actor].current_action = action
 
-func is_busy(actor):
-	return actor_state[actor].is_busy
+func actor_in_status(actor, status) -> bool:
+	return _actor_state[actor].status == status
 
-func set_is_busy(actor, value):
-	actor_state[actor].is_busy = value
+func is_trackable(initiator: Actor, target: Actor) -> bool:
+	var target_last_position = initiator.memorizer.get_last_known_position(target)
+	if target_last_position != Vector2.INF: return true
+	if initiator.actors_in_range.has(self): return true
+	return false
 
-func is_available(actor):
-	return actor_state[actor].is_available
+func is_valid_target(target: Actor) -> bool:
+	if target.is_queued_for_deletion(): return false
 
-func set_availability(actor, value):
-	actor_state[actor].is_available = value
+	var status := _actor_state[target].status
+	if status == ActorState.State.FREE:
+		return true
+	return status == ActorState.State.OCCUPIED
 
-func is_captured(actor):
-	return actor_state[actor].is_captured
+func is_actor_lawful(actor: Actor) -> bool:
+	if actor is Player: return false
+	return (actor as NPC).lawful_trait != null
+	# ! TODO: This is a temporary solution, we need to check if the actor is a lawful NPC
 
-func set_captured(actor, value):
-	actor_state[actor].is_captured = value
+func has_crimes() -> bool:
+	return _crimes.size() > 0
+
+func some_crop_in_status(status: CropTile.Status) -> bool:
+	for crop in _crops:
+		if crop.status == status:
+			return true
+	return false
 
 func get_open_case(investigator: NPC) -> Crime:
-	for crime in crimes:
+	for crime in _crimes:
 		if not crime.is_open(): continue
 		crime.investigator = investigator
 		
@@ -70,13 +120,13 @@ func get_open_case(investigator: NPC) -> Crime:
 	return null
 
 func queue_free_actor(actor: Actor):
-	actor_state.erase(actor)
+	_actor_state.erase(actor)
 
 	for peer in get_peer_actors(actor):
 		peer.memorizer.actor_data.erase(actor)
 		peer.actors_in_range.erase(actor)
 
-	for crime in crimes:
+	for crime in _crimes:
 		if not crime.participants.has(actor): continue
 		if crime.verifiers.has(actor): continue
 		if not crime.falsifiers.has(actor):

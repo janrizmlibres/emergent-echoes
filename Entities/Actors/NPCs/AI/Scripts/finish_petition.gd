@@ -18,7 +18,7 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	if not accepted:
 		npc.memorizer.modify_relationship(target, relationship_decrease)
 		npc.float_text_controller.show_float_text(
-			Globals.ResourceType.COMPANIONSHIP,
+			PCG.ResourceType.COMPANIONSHIP,
 			str(relationship_decrease),
 			true
 		)

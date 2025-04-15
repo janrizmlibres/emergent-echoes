@@ -13,12 +13,12 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
   return RUNNING
 
 func interrupt(actor: Node, _blackboard: Blackboard) -> void:
-  WorldState.actor_state[actor as NPC].is_busy = false
+  WorldState._actor_state[actor as NPC].is_busy = false
 
 func before_run(actor: Node, _blackboard: Blackboard) -> void:
-  WorldState.actor_state[actor as NPC].is_busy = true
+  WorldState._actor_state[actor as NPC].is_busy = true
 
 func after_run(actor: Node, _blackboard: Blackboard) -> void:
-  WorldState.actor_state[actor as NPC].is_busy = false
+  WorldState._actor_state[actor as NPC].is_busy = false
   WorldState.total_food.amount += 1
-  WorldState.shop.food_amount += 1
+  WorldState._shop.food_amount += 1

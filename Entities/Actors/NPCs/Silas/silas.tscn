@@ -1,36 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://bt3gcxbonxwfd"]
+[gd_scene load_steps=5 format=3 uid="uid://bt3gcxbonxwfd"]
 
 [ext_resource type="PackedScene" uid="uid://8w0pyr8skfw7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_sprwr"]
 [ext_resource type="Texture2D" uid="uid://u6qjhno0n6dl" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_8j1os"]
-[ext_resource type="Script" uid="uid://b6dhi4y7p1aqr" path="res://Utilities/NPCProcGen/Traits/thief_trait.gd" id="3_8j1os"]
 [ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/Actors/NPCs/AI/procedural_tree.tscn" id="3_lha76"]
 [ext_resource type="Texture2D" uid="uid://bu4lgseyryu3n" path="res://Entities/Actors/NPCs/Toblin/Art/toblin.png" id="5_lha76"]
-
-[sub_resource type="GDScript" id="GDScript_wrnt0"]
-script/source = "class_name CarryProp
-extends Node2D
-
-@onready var carry_sprite: Sprite2D = $CarrySprite
-
-func set_texture(actor_name: String) -> void:
-	var texture_name = \"res://Entities/Actors/\"
-	
-	if actor_name == \"Player\":
-		texture_name += \"Player/Art/player.png\"
-	else:
-		texture_name += \"NPCs/\" + actor_name + \"/Art/\" + actor_name.to_lower() + \".png\"
-
-	var texture = load(texture_name)
-	carry_sprite.texture = texture
-
-func show_sprite():
-	print(\"Showing carry sprite\")
-	carry_sprite.visible = true
-
-func hide_sprite():
-	print(\"Hiding carry sprite\")
-	carry_sprite.visible = false
-"
 
 [node name="Silas" instance=ExtResource("1_sprwr")]
 motion_mode = 0
@@ -39,32 +12,10 @@ metadata/_edit_vertical_guides_ = [138.0]
 [node name="Sprite2D" parent="." index="0"]
 texture = ExtResource("2_8j1os")
 
-[node name="ThiefTrait" type="Node" parent="Traits" index="1" node_paths=PackedStringArray("actor_node")]
-script = ExtResource("3_8j1os")
-weight = 0.8
-actor_node = NodePath("../..")
-metadata/_custom_type_script = "uid://b6dhi4y7p1aqr"
-
-[node name="Executor" parent="." index="2" node_paths=PackedStringArray("procedural_tree")]
-procedural_tree = NodePath("SilasBT")
-
-[node name="SilasBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_lha76")]
-blackboard = NodePath("@Node@95526")
-actor = NodePath("../..")
-
-[node name="Money" parent="Resources" index="0"]
-amount = 100.0
-
-[node name="Food" parent="Resources" index="1"]
-amount = 2.0
-
-[node name="SeedProp" parent="." index="8"]
+[node name="SeedProp" parent="." index="2"]
 position = Vector2(0, -17)
 
-[node name="CarryProp" parent="." index="13"]
-script = SubResource("GDScript_wrnt0")
-
-[node name="CarrySprite" type="Sprite2D" parent="CarryProp" index="0"]
+[node name="CarrySprite2" type="Sprite2D" parent="CarryProp" index="0"]
 visible = false
 position = Vector2(-4, -18)
 rotation = -1.5708
@@ -72,7 +23,15 @@ texture = ExtResource("5_lha76")
 hframes = 8
 vframes = 6
 
-[node name="AnimationTree" parent="." index="16"]
+[node name="AnimationTree" parent="." index="9"]
 parameters/Idle/blend_position = 0.00240386
 
+[node name="Executor" parent="." index="13" node_paths=PackedStringArray("procedural_tree")]
+procedural_tree = NodePath("SilasBT")
+
+[node name="SilasBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_lha76")]
+blackboard = NodePath("@Node@69054")
+actor = NodePath("../..")
+
+[editable path="CarryProp"]
 [editable path="EmoteBubble"]

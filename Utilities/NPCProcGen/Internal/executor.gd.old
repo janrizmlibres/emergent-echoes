@@ -8,10 +8,10 @@ enum State {
 	STATE_MACHINE
 }
 
-var procedural_actions: Dictionary[Globals.Action, PackedScene] = {
-	Globals.Action.PETITION:
+var procedural_actions: Dictionary[PCG.Action, PackedScene] = {
+	PCG.Action.PETITION:
 		preload("res://Entities/Actors/NPCs/AI/Actions/petition_action.tscn"),
-	Globals.Action.TALK:
+	PCG.Action.TALK:
 		preload("res://Entities/Actors/NPCs/AI/Actions/talk_action.tscn")
 }
 
@@ -57,7 +57,7 @@ func end_current_action():
 		actor.start_timer()
 		state = State.DORMANT
 
-func run_action(action_name: Globals.Action, data: Array):
+func run_action(action_name: PCG.Action, data: Array):
 	setup_data(action_name, data)
 
 	if action_name not in procedural_actions:
@@ -68,21 +68,21 @@ func run_action(action_name: Globals.Action, data: Array):
 	procedural_bt.add_child(action_tree)
 	state = State.PROCEDURAL
 
-func setup_data(action_name: Globals.Action, data: Array):
+func setup_data(action_name: PCG.Action, data: Array):
 	WorldState.actor_state[actor].current_action = action_name
 	state_machine_bt.blackboard.set_value("action", action_name)
 
 	match action_name:
-		Globals.Action.PETITION:
+		PCG.Action.PETITION:
 			WorldState.actor_state[actor].current_petition_resource = data[1]
 			procedural_bt.blackboard.set_value("target", data[0])
 			procedural_bt.blackboard.set_value("resource_type", data[1])
-		Globals.Action.INTERACT:
+		PCG.Action.INTERACT:
 			state_machine_bt.blackboard.set_value("target", data[0])
 
-func clean_up(action_name: Globals.Action):
-	WorldState.actor_state[actor].current_action = Globals.Action.NONE
-	WorldState.actor_state[actor].current_petition_resource = Globals.ResourceType.NONE
+func clean_up(action_name: PCG.Action):
+	WorldState.actor_state[actor].current_action = PCG.Action.NONE
+	WorldState.actor_state[actor].current_petition_resource = PCG.ResourceType.NONE
 	WorldState.actor_state[actor].is_busy = false
 
 	if action_name in procedural_actions:
@@ -96,7 +96,7 @@ func add_action(new_action: Array) -> void:
 		var current_action = active_actions[active_actions.size() - 1]
 		clean_up(current_action[0])
 
-		if current_action[0] == Globals.Action.INTERACT:
+		if current_action[0] == PCG.Action.INTERACT:
 			active_actions.pop_back()
 
 	run_action(action_name, data)

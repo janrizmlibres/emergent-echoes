@@ -2,26 +2,16 @@
 
 [ext_resource type="PackedScene" uid="uid://cmcj7lmi8c5yw" path="res://Entities/Actors/actor.tscn" id="1_h34l7"]
 [ext_resource type="Script" uid="uid://bmjvv7wfg7dpl" path="res://Entities/Actors/Player/player.gd" id="2_ngslm"]
-[ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="3_ngslm"]
+[ext_resource type="Script" uid="uid://ducc6yrseljan" path="res://Utilities/NPCProcGen/Nodes/player_agent.gd" id="3_ngslm"]
 
 [node name="Player" instance=ExtResource("1_h34l7")]
 script = ExtResource("2_ngslm")
 
-[node name="Money" type="Node" parent="Resources" index="0"]
+[node name="PlayerAgent" type="Node" parent="." index="12"]
 script = ExtResource("3_ngslm")
-type = 2
-amount = 500.0
-weight = 1.0
-metadata/_custom_type_script = "uid://w1ekbi28ftm7"
+metadata/_custom_type_script = "uid://ducc6yrseljan"
 
-[node name="Food" type="Node" parent="Resources" index="1"]
-script = ExtResource("3_ngslm")
-type = 3
-amount = 20.0
-weight = 1.0
-metadata/_custom_type_script = "uid://w1ekbi28ftm7"
-
-[node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="." index="15"]
+[node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="." index="13"]
 radius = 4.0
 
 [editable path="CarryProp"]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=15 format=3 uid="uid://dxdxocng71jb2"]
 
 [ext_resource type="Script" uid="uid://b3y4asqmbsqma" path="res://Stages/Testing/world.gd" id="1_smujd"]
-[ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="2_iutls"]
+[ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Resources/base_resource.gd" id="2_iutls"]
 [ext_resource type="PackedScene" uid="uid://cggrn3eu6010x" path="res://Entities/Structures/Prison/prison.tscn" id="3_0lw8q"]
 [ext_resource type="PackedScene" uid="uid://dderfoygjxyaf" path="res://Entities/Structures/CropTile/crop_tile.tscn" id="3_iutls"]
 [ext_resource type="PackedScene" uid="uid://bt3gcxbonxwfd" path="res://Entities/Actors/NPCs/Silas/silas.tscn" id="4_0lw8q"]

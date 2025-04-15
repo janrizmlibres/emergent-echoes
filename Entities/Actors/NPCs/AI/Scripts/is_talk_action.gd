@@ -3,4 +3,4 @@ extends ConditionLeaf
 
 func tick(_actor: Node, blackboard: Blackboard) -> int:
 	var action = blackboard.get_value("action")
-	return SUCCESS if action == Globals.Action.TALK else FAILURE
+	return SUCCESS if action == PCG.Action.TALK else FAILURE

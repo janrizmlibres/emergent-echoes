@@ -20,8 +20,8 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	target.give_resource(npc, resource_type, steal_amount)
 
 	var participants: Array = npc.actors_in_range.duplicate()
-	WorldState.crimes.append(Crime.new(Crime.Category.THEFT, npc, participants))
-	print("Open cases: " + str(WorldState.crimes.filter(func(x): return x.is_open()).size()))
+	WorldState._crimes.append(Crime.new(Crime.Category.THEFT, npc, participants))
+	print("Open cases: " + str(WorldState._crimes.filter(func(x): return x.is_open()).size()))
 
 	npc.float_text_controller.show_float_text(
 		resource_type,

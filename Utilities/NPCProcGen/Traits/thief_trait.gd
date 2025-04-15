@@ -2,17 +2,19 @@ class_name ThiefTrait
 extends BaseTrait
 
 func evaluation_proactive_action():
-	for resource_type in ResourceStat.TANGIBLE_TYPES:
-		var actor_candidates = get_actor_candidates(resource_type)
-		actor_candidates = actor_candidates.filter(func(actor): return not actor.is_lawful())
+	add_targetted_action(
+		PCG.Action.THEFT,
+		PCG.ResourceType.MONEY,
+		choose_actor,
+		func(actor): return not actor.is_lawful()
+	)
 
-		var target_actor = choose_actor(actor_candidates)
-		if (target_actor == null): continue
-
-		add_action(Globals.Action.THEFT, resource_type, {
-			"target": target_actor,
-			"resource_type": resource_type
-		})
+	add_targetted_action(
+		PCG.Action.THEFT,
+		PCG.ResourceType.FOOD,
+		choose_actor,
+		func(actor): return not actor.is_lawful()
+	)
 
 func choose_actor(candidates: Array[Actor]) -> Actor:
 	for actor in candidates:

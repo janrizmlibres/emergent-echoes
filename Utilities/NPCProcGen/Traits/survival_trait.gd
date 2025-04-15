@@ -2,25 +2,12 @@ class_name SurvivalTrait
 extends BaseTrait
 
 func evaluation_proactive_action():
-	for resource_type in ResourceStat.TANGIBLE_TYPES:
-		var actor_candidates = get_actor_candidates(resource_type)
+	add_targetted_action(PCG.Action.PETITION, PCG.ResourceType.MONEY, choose_actor)
+	add_targetted_action(PCG.Action.PETITION, PCG.ResourceType.FOOD, choose_actor)
 
-		var target_actor = choose_actor(actor_candidates)
-		if (target_actor == null): continue
-
-		add_action(Globals.Action.PETITION, resource_type, {
-			"target": target_actor,
-			"resource_type": resource_type
-		})
-		
-	add_action(Globals.Action.TALK, Globals.ResourceType.COMPANIONSHIP)
-
-	if actor_node.holds_resource(Globals.ResourceType.FOOD):
-		add_action(Globals.Action.EAT, Globals.ResourceType.SATIATION)
-	
-	if actor_node.get_resource_amount(Globals.ResourceType.MONEY) > 10 \
-		and WorldState.shop.food_amount > 0:
-		add_action(Globals.Action.SHOP, Globals.ResourceType.SATIATION)
+	add_action(PCG.Action.SHOP, PCG.ResourceType.FOOD)
+	add_action(PCG.Action.EAT, PCG.ResourceType.SATIATION)
+	add_action(PCG.Action.TALK, PCG.ResourceType.COMPANIONSHIP)
 
 func choose_actor(candidates: Array[Actor]) -> Actor:
 	for actor in candidates:

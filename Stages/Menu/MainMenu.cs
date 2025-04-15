@@ -50,14 +50,14 @@ namespace EmergentEchoes
 
 			_pathFollow.ProgressRatio += (float)(delta * 0.01);
 			Vector2 title_pos = _titleTexture.GlobalPosition;
-			title_pos.Y = 70 + 6 * Mathf.Sin(_timeElapsed);
+			title_pos.Y = 70 + 4 * Mathf.Sin(_timeElapsed);
 			_titleTexture.GlobalPosition = title_pos;
 		}
 
 		private void OnStartButtonPressed()
 		{
-			_startButton.Disabled = true;
-			_exitButton.Disabled = true;
+			_startButton.MouseFilter = Control.MouseFilterEnum.Ignore;
+			_exitButton.MouseFilter = Control.MouseFilterEnum.Ignore;
 			GetNode<AnimationPlayer>("AnimationPlayer").Play("fade_out");
 		}
 

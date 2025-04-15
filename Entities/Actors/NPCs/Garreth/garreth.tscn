@@ -1,10 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://gbb818jb3u6v"]
+[gd_scene load_steps=4 format=3 uid="uid://gbb818jb3u6v"]
 
 [ext_resource type="PackedScene" uid="uid://8w0pyr8skfw7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_m3od5"]
 [ext_resource type="Texture2D" uid="uid://bq8qo5fpoqcxt" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_7ptt5"]
-[ext_resource type="Script" uid="uid://mlbnetcoq4lk" path="res://Utilities/NPCProcGen/Traits/lawful_trait.gd" id="3_7ptt5"]
 [ext_resource type="PackedScene" uid="uid://pihkxvmclolw" path="res://Entities/Actors/NPCs/AI/procedural_tree.tscn" id="3_jlis0"]
-[ext_resource type="Script" uid="uid://w1ekbi28ftm7" path="res://Utilities/NPCProcGen/Components/resource_stat.gd" id="5_jlis0"]
 
 [node name="Garreth" instance=ExtResource("1_m3od5")]
 collision_mask = 1
@@ -13,36 +11,23 @@ motion_mode = 0
 [node name="Sprite2D" parent="." index="0"]
 texture = ExtResource("2_7ptt5")
 
-[node name="LawfulTrait" type="Node" parent="Traits" index="1" node_paths=PackedStringArray("actor_node")]
-script = ExtResource("3_7ptt5")
-weight = 1.0
-actor_node = NodePath("../..")
-metadata/_custom_type_script = "uid://mlbnetcoq4lk"
-
-[node name="Executor" parent="." index="2" node_paths=PackedStringArray("procedural_tree")]
-procedural_tree = NodePath("GarrethBT")
-
-[node name="GarrethBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_jlis0")]
-blackboard = NodePath("@Node@21898")
-actor = NodePath("../..")
-
-[node name="NavigationAgent2D" parent="." index="3"]
-navigation_layers = 3
-
-[node name="Duty" type="Node" parent="Resources" index="4"]
-script = ExtResource("5_jlis0")
-type = 6
-amount = 50.0
-weight = 0.6
-metadata/_custom_type_script = "uid://w1ekbi28ftm7"
-
-[node name="SeedProp" parent="." index="8"]
+[node name="SeedProp" parent="." index="2"]
 position = Vector2(0, -19)
 
-[node name="AnimationTree" parent="." index="16"]
+[node name="AnimationTree" parent="." index="9"]
 parameters/Attack/blend_position = 0
 parameters/Eat/blend_position = 0
 parameters/Harvest/blend_position = 0
+
+[node name="Executor" parent="." index="13" node_paths=PackedStringArray("procedural_tree")]
+procedural_tree = NodePath("GarrethBT")
+
+[node name="GarrethBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_jlis0")]
+blackboard = NodePath("@Node@68778")
+actor = NodePath("../..")
+
+[node name="NavigationAgent2D" parent="." index="15"]
+navigation_layers = 3
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 

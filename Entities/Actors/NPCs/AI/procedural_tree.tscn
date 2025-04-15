@@ -13,7 +13,7 @@
 [ext_resource type="Script" uid="uid://brukbaqvfbt0y" path="res://addons/beehave/nodes/decorators/cooldown.gd" id="13_tcbdt"]
 [ext_resource type="PackedScene" uid="uid://uhfkpgur3ldd" path="res://Entities/Actors/NPCs/AI/Nodes/get_random_position.tscn" id="14_qsook"]
 [ext_resource type="PackedScene" uid="uid://5fj0qtxhah7q" path="res://Entities/Actors/NPCs/AI/Nodes/end_action.tscn" id="14_sa7yn"]
-[ext_resource type="Script" path="res://Entities/Actors/NPCs/AI/Scripts/is_flee_action.gd" id="15_1o703"]
+[ext_resource type="Script" uid="uid://ci52epml5ek04" path="res://Entities/Actors/NPCs/AI/Scripts/is_flee_action.gd" id="15_1o703"]
 [ext_resource type="PackedScene" uid="uid://qwnvuvh4d71a" path="res://Entities/Actors/NPCs/AI/Nodes/move_to_position.tscn" id="15_oxd8l"]
 [ext_resource type="PackedScene" uid="uid://cb4fd3upbur04" path="res://Entities/Actors/NPCs/AI/Nodes/interact_behavior.tscn" id="16_sa7yn"]
 [ext_resource type="PackedScene" uid="uid://iv5s8ex501af" path="res://Entities/Actors/NPCs/AI/Nodes/is_target_busy.tscn" id="17_mx8te"]
@@ -58,10 +58,9 @@
 
 [node name="ProceduralTree" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_mx8te")
-blackboard = NodePath("@Node@23073")
+blackboard = NodePath("@Node@23349")
 actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
-metadata/_edit_vertical_guides_ = [-159.0]
 
 [node name="SelectorReact" type="Node" parent="."]
 script = ExtResource("2_gwfqn")
@@ -91,11 +90,11 @@ metadata/_custom_type_script = "uid://bfb1iie7tep5i"
 script = ExtResource("3_u33fa")
 metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="InverterDecorator" type="Node" parent="SelectorReact/Pursuit/Selector/Sequence/AlwaysSucceedDecorator/SequenceComposite"]
+[node name="AssessNotCompleted" type="Node" parent="SelectorReact/Pursuit/Selector/Sequence/AlwaysSucceedDecorator/SequenceComposite"]
 script = ExtResource("10_g81id")
 metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
-[node name="AssessCompleted" parent="SelectorReact/Pursuit/Selector/Sequence/AlwaysSucceedDecorator/SequenceComposite/InverterDecorator" instance=ExtResource("41_inuhf")]
+[node name="AssessCompleted" parent="SelectorReact/Pursuit/Selector/Sequence/AlwaysSucceedDecorator/SequenceComposite/AssessNotCompleted" instance=ExtResource("41_inuhf")]
 
 [node name="AssessCase" parent="SelectorReact/Pursuit/Selector/Sequence/AlwaysSucceedDecorator/SequenceComposite" instance=ExtResource("34_wed3x")]
 

@@ -32,7 +32,7 @@ func evaluation_proactive_action():
 	print("A case has been assigned to ", actor_node.name)
 	var target = assigned_case.get_random_participant()
 	if target != null:
-		add_action(Globals.Action.INTERROGATE, Globals.ResourceType.DUTY, {
+		add_action(PCG.Action.INTERROGATE, PCG.ResourceType.DUTY, {
 			"case": assigned_case,
 			"target": target,
 			"assess_completed": false
@@ -45,7 +45,7 @@ func evaluation_proactive_action():
 func resolve_case():
 	if assigned_case.close(10): return
 
-	add_action(Globals.Action.PURSUIT, Globals.ResourceType.DUTY, {
+	add_action(PCG.Action.PURSUIT, PCG.ResourceType.DUTY, {
 		"case": assigned_case,
 		"target": assigned_case.criminal,
 		"assess_completed": false

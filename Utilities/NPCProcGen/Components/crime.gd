@@ -66,13 +66,17 @@ func close(duty_increase: float) -> bool:
 
 func complete_investigation(duty_increase: float):
 	investigator.lawful_trait.assigned_case = null
-	investigator.modify_resource(Globals.ResourceType.DUTY, duty_increase)
+	WorldState.resource_manager.modify_resource(
+		investigator,
+		PCG.ResourceType.DUTY,
+		duty_increase
+	)
 	investigator.float_text_controller.show_float_text(
-		Globals.ResourceType.DUTY,
+		PCG.ResourceType.DUTY,
 		str(duty_increase),
 		true
 	)
-	print("Open cases: " + str(WorldState.crimes.filter(func(x): return x.is_open()).size()))
+	print("Open cases: " + str(WorldState._crimes.filter(func(x): return x.is_open()).size()))
 
 func get_solve_probability():
 	if participants.size() > 3:
