@@ -14,6 +14,7 @@ func register_npc(npc: NPC, npc_agent: NPCAgent):
 	npc_container.add_child(setup_traits(npc, npc_agent))
 	
 	_strategisers[npc] = Strategiser.new(npc, npc_agent)
+	_strategisers[npc].name = "Strategiser"
 	npc_container.add_child(_strategisers[npc])
 
 func setup_traits(npc: NPC, npc_agent: NPCAgent) -> Node:
@@ -21,22 +22,27 @@ func setup_traits(npc: NPC, npc_agent: NPCAgent) -> Node:
 	traits_container.name = "Traits"
 
 	_traits[npc] = {}
-	_traits[npc]["survival"] = SurvivalTrait.new(npc_agent.survival)
-	traits_container.add_child(_traits[npc]["survival"])
+	add_trait(npc, SurvivalTrait.new(npc_agent.survival), "survival",  traits_container)
 
 	if npc_agent.thief > 0:
-		_traits[npc]["thief"] = ThiefTrait.new(npc_agent.thief)
-		traits_container.add_child(_traits[npc]["thief"])
+		add_trait(npc, ThiefTrait.new(npc_agent.thief), "thief",  traits_container)
 
 	if npc_agent.lawful > 0:
 		_traits[npc]["lawful"] = LawfulTrait.new(npc_agent.lawful)
+		_traits[npc]["lawful"].name = "Lawful"
 		traits_container.add_child(_traits[npc]["lawful"])
 
 	if npc_agent.farmer > 0:
 		_traits[npc]["farmer"] = FarmerTrait.new(npc_agent.farmer)
+		_traits[npc]["farmer"].name = "Farmer"
 		traits_container.add_child(_traits[npc]["farmer"])
 	
 	return traits_container
+
+func add_trait(npc: NPC, module: BaseTrait, trait_name: String, container: Node):
+	_traits[npc][trait_name] = module
+	_traits[npc][trait_name].name = trait_name.capitalize()
+	container.add_child(_traits[npc][trait_name])
 
 func run_npc(npc: NPC) -> void:
 	assert(npc in _traits, "NPCManager: NPC not registered")

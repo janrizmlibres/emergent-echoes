@@ -25,12 +25,6 @@ func _ready():
 	add_child(resource_manager)
 	add_child(memory_manager)
 
-func initialize(actors: Array) -> void:
-	for actor in actors:
-		var peer_actors = actors.duplicate()
-		peer_actors.erase(actor)
-		actor.memorizer.initialize(peer_actors)
-
 func register_actor(actor: Actor) -> void:
 	var pcg_agent := get_pcg_agent(actor)
 	assert(pcg_agent != null, "ActorState: Agent node not found in actor node tree.")

@@ -17,15 +17,15 @@ func register_actor(actor: Actor, agent: PCGAgent):
 
 	_actor_resources[actor] = []
 
-	store_resource(actor, MoneyResource.new(agent.money_final), actor_container)
-	store_resource(actor, FoodResource.new(agent.food_final), actor_container)
+	store_resource(actor, MoneyResource.new(agent.money_final), "Money", actor_container)
+	store_resource(actor, FoodResource.new(agent.food_final), "Food", actor_container)
 	
 	if agent is NPCAgent:
-		store_resource(actor, SatiationResource.new(agent.money_amount), actor_container)
-		store_resource(actor, CompanionshipResource.new(agent.duty_amount), actor_container)
+		store_resource(actor, SatiationResource.new(agent.money_amount), "Satiation", actor_container)
+		store_resource(actor, CompanionshipResource.new(agent.duty_amount), "Companionship", actor_container)
 
 		if WorldState.npc_manager.is_lawful(actor):
-			store_resource(actor, DutyResource.new(agent.duty_amount), actor_container)
+			store_resource(actor, DutyResource.new(agent.duty_amount), "Duty", actor_container)
 	
 	update_total_food(actor)
 
@@ -36,8 +36,9 @@ func update_total_food(actor: Actor):
 	total_food.lower_threshold = PCG.food_lower_threshold * actor_count
 	total_food.upper_threshold = PCG.food_upper_threshold * actor_count
 
-func store_resource(actor: Actor, resource: BaseResource, container: Node):
+func store_resource(actor: Actor, resource: BaseResource, node_name: String, container: Node):
 	_actor_resources[actor].append(resource)
+	resource.name = node_name
 	container.add_child(resource)
 	
 func holds_resource(actor: Actor, type: PCG.ResourceType) -> bool:

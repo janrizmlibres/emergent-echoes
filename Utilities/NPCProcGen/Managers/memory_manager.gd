@@ -13,13 +13,14 @@ func register_actor(actor: Actor) -> void:
 	_memories[actor] = {}
 
 	for peer_actor in _memories.keys():
-		actor_container.add_child(store_data(actor, peer_actor))
-		get_node(peer_actor.name).add_child(store_data(peer_actor, actor))
+		store_data(actor, peer_actor, actor_container)
+		store_data(peer_actor, actor, get_node(peer_actor.name as NodePath))
 
-func store_data(actor: Actor, query: Actor):
+func store_data(actor: Actor, query: Actor, container: Node) -> void:
 	_memories[actor][query] = ActorData.new()
+	_memories[actor][query].name = query.name
+	container.add_child(_memories[actor][query])
 	_memories[actor][query].last_known_position = query.global_position
-	return _memories[actor][query]
 
 func is_friendly(actor: Actor, query: Actor) -> bool:
 	return _memories[actor][query].relationship >= 5
