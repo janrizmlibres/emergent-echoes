@@ -58,7 +58,7 @@
 
 [node name="ProceduralTree" type="Node" node_paths=PackedStringArray("blackboard")]
 script = ExtResource("1_joxsq")
-blackboard = NodePath("@Node@167157")
+blackboard = NodePath("@Node@165612")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
 [node name="SelectorReact" type="Node" parent="."]

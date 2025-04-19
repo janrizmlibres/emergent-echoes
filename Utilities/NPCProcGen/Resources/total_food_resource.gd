@@ -1,7 +1,7 @@
 class_name TotalFoodResource
 extends BaseResource
 
-func _ready():
+func _init():
 	type = PCG.ResourceType.TOTAL_FOOD
 	max_value = Globals.INT_MAX
 	is_tangible = true

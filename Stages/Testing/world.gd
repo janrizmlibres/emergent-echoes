@@ -5,3 +5,5 @@ func _ready():
 	
 	for actor in actors:
 		WorldState.register_actor(actor)
+	
+	WorldState.register_shop($Shop)

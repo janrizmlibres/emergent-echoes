@@ -2,16 +2,14 @@
 extends ActionLeaf
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
-	var target = blackboard.get_value("target")
-	(actor as NPC).face_target(target)
+	var target = blackboard.get_value("data").target
+	actor.face_target(target)
 	return RUNNING
 
 func interrupt(actor: Node, _blackboard: Blackboard) -> void:
-	var npc = actor as NPC
-	npc.emote_bubble.deactivate()
-	WorldState.set_is_busy(npc, false)
+	actor.emote_bubble.deactivate()
+	WorldState.set_status(actor, ActorState.State.FREE)
 
 func before_run(actor: Node, _blackboard: Blackboard) -> void:
-	var npc = actor as NPC
-	npc.emote_bubble.activate()
-	WorldState.set_is_busy(npc, true)
+	actor.emote_bubble.activate()
+	WorldState.set_status(actor, ActorState.State.OCCUPIED)

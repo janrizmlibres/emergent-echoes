@@ -1,93 +1,74 @@
 class_name Executor
 extends Node
 
-@export var procedural_tree: BeehaveTree
+var starting_bt: PackedScene = preload("res://Entities/Actors/NPCs/AI/Trees/wander_bt.tscn")
 
-var action_stack: Array = []
+var pending_action: ActionData
+var current_action: BTData
 
 func _ready():
-	var blackboard = procedural_tree.blackboard
+	instantiate_bt(starting_bt, PCG.Action.NONE)
 
-	blackboard.set_value("action", PCG.Action.NONE)
-	blackboard.set_value("data", null)
-	blackboard.set_value("move_position", null)
+func start_action(action: PCG.Action, data: Dictionary) -> void:
+	var action_string := PCG.action_to_string(action).to_lower()
+	var bt_scene: PackedScene = load(
+		"res://Entities/Actors/NPCs/AI/Trees/" + action_string + "_bt.tscn"
+	)
 
-	blackboard.set_value("target", null)
-	blackboard.set_value("target_reached", false)
-	blackboard.set_value("anim_finished", false)
+	var bt := instantiate_bt(bt_scene, action, data)
+	bt.blackboard.set_value("data", data)
+	WorldState.set_current_action(bt.actor, action)
+	PCG.stop_evaluation(bt.actor)
 
-	blackboard.set_value("prison_marker", null)
-	blackboard.set_value("crop_tile", null)
-	blackboard.set_value("shop", null)
+func end_action() -> void:
+	current_action.tree.queue_free()
 
-func start_action(action_data: ActionData) -> void:
-	var blackboard = procedural_tree.blackboard
-	blackboard.set_value("action", action_data.action)
-	blackboard.set_value("target", action_data.data.get("target"))
-	blackboard.set_value("data", action_data.data)
+	if pending_action == null:
+		var bt := instantiate_bt(starting_bt, PCG.Action.NONE)
+		PCG.run_evaluation(bt.actor)
+	else:
+		start_action(pending_action.action, pending_action.data)
+		pending_action = null
 
-	var last_action = action_stack.back() if not action_stack.is_empty() else null
-	if last_action != null and last_action.action == PCG.Action.INTERACT:
-		action_stack.pop_back()
+func instantiate_bt(bt_scene: PackedScene, action: PCG.Action, data := {}) -> BeehaveTree:
+	var bt: BeehaveTree = bt_scene.instantiate()
+	bt.actor_node_path = get_parent().get_path()
+	current_action = BTData.new(ActionData.new(action, data), bt)
+	add_child.call_deferred(bt)
+	return bt
 
-	setup_data(action_data.action)
-	
-	action_stack.append(action_data)
-	Logger.info(procedural_tree.actor.name + " started action: "
-		+ PCG.get_action_string(action_data.action))
+func set_blackboard_value(key: Variant, value: Variant) -> void:
+	assert(current_action != null, "current_action is null")
+	current_action.tree.blackboard.set_value(key, value)
 
-	var stack_str = "Action stack of " + procedural_tree.actor.name + ": "
-	for action in action_stack:
-		stack_str += PCG.get_action_string(action.action) + " -> "
-	print(stack_str)
+# func setup_data(action: PCG.Action):
+# 	var actor: Actor = bt.actor as Actor
+# 	if action == PCG.Action.PLANT:
+# 		actor.seed_prop.visible = true
+# 	if [PCG.Action.PURSUIT, PCG.Action.PLANT, PCG.Action.HARVEST,
+# 		PCG.Action.FLEE].has(action):
+# 		WorldState.set_availability(actor, false)
+# func end_action():
+# 	var npc = bt.actor as NPC
+# 	WorldState.set_current_action(npc, PCG.Action.NONE)
+# 	bt.blackboard.set_value("action", PCG.Action.NONE)
+# 	bt.blackboard.erase_value("data")
+# 	npc.start_timer()
+# func reset_data():
+# 	var actor = bt.actor as Actor
+# 	actor.seed_prop.visible = false
+# 	WorldState.set_is_busy(actor, false)
+# 	WorldState.set_availability(actor, true)
+# 	var blackboard = bt.blackboard
+# 	blackboard.set_value("target_reached", false)
+# 	blackboard.set_value("anim_finished", false)
+# func set_enable(value: bool):
+# 	bt.enabled = value
 
-	var npc = procedural_tree.actor as NPC
-	WorldState.set_current_action(npc, action_data.action)
-	npc.evaluation_timer.stop()
+class BTData:
+	var action_data: ActionData
+	var tree: BeehaveTree
 
-func setup_data(action: PCG.Action):
-	var actor: Actor = procedural_tree.actor as Actor
-
-	if action == PCG.Action.PLANT:
-		actor.seed_prop.visible = true
-	
-	if [PCG.Action.PURSUIT, PCG.Action.PLANT, PCG.Action.HARVEST,
-		PCG.Action.FLEE].has(action):
-		WorldState.set_availability(actor, false)
-
-func end_action():
-	if action_stack.is_empty(): return
-
-	var tree_actor = procedural_tree.actor
-	if not is_instance_valid(tree_actor) or tree_actor.is_queued_for_deletion():
-		return
-
-	var completed_action = action_stack.pop_back()
-	assert(completed_action != null, "No action to end")
-	Logger.info(procedural_tree.actor.name + " ended action: "
-		+ PCG.get_action_string(completed_action.action))
-	reset_data()
-
-	if not action_stack.is_empty():
-		var action_data = action_stack.pop_back()
-		start_action(action_data)
-		return
-	
-	var npc = procedural_tree.actor as NPC
-	WorldState.set_current_action(npc, PCG.Action.NONE)
-	procedural_tree.blackboard.set_value("action", PCG.Action.NONE)
-	procedural_tree.blackboard.erase_value("data")
-	npc.start_timer()
-
-func reset_data():
-	var actor = procedural_tree.actor as Actor
-	actor.seed_prop.visible = false
-	WorldState.set_is_busy(actor, false)
-	WorldState.set_availability(actor, true)
-	
-	var blackboard = procedural_tree.blackboard
-	blackboard.set_value("target_reached", false)
-	blackboard.set_value("anim_finished", false)
-
-func set_enable(value: bool):
-	procedural_tree.enabled = value
+	func _init(_action_data: ActionData, _tree: BeehaveTree):
+		action_data = _action_data
+		tree = _tree

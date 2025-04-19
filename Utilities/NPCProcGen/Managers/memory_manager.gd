@@ -10,9 +10,10 @@ func register_actor(actor: Actor) -> void:
 	actor_container.name = actor.name
 	add_child(actor_container)
 
+	var peer_actors := _memories.keys()
 	_memories[actor] = {}
 
-	for peer_actor in _memories.keys():
+	for peer_actor in peer_actors:
 		store_data(actor, peer_actor, actor_container)
 		store_data(peer_actor, actor, get_node(peer_actor.name as NodePath))
 

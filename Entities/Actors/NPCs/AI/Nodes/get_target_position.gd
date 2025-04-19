@@ -9,11 +9,10 @@ enum Waypoint {
 }
 
 @export var waypoint: Waypoint = Waypoint.LATERAL
-@export var position_offset: float = 12
+@export var position_offset: float = 15
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
-	var npc = actor as NPC
-	var target: Actor = blackboard.get_value("target")
+	var target: Actor = blackboard.get_value("data").target
 
 	var target_position: Vector2
 	match waypoint:
@@ -22,11 +21,9 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		Waypoint.REAR:
 			target_position = target.rear_marker.global_position
 		Waypoint.LATERAL:
-			target_position = get_lateral_waypoint(npc.global_position, target.global_position)
+			target_position = get_lateral_waypoint(actor.global_position, target.global_position)
 		Waypoint.OMNI:
-			target_position = get_omni_waypoint(npc.global_position, target.global_position)
-		_:
-			assert(false, "Invalid waypoint")
+			target_position = get_omni_waypoint(actor.global_position, target.global_position)
 
 	blackboard.set_value("move_position", target_position)
 	return SUCCESS

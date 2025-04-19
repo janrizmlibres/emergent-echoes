@@ -2,10 +2,14 @@
 extends ActionLeaf
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
-  var peers = WorldState.get_peer_actors(actor as Actor)
-  peers = peers.filter(func(x): x.is_valid_target())
+  var peers = WorldState.get_peer_actors(actor as Actor).filter(
+    func(x): WorldState.is_valid_target(x)
+  )
 
-  if peers.is_empty(): return FAILURE
+  if peers.is_empty():
+    return FAILURE
 
-  blackboard.set_value("target", peers.pick_random())
+  var data = blackboard.get_value("data")
+  data["target"] = peers.pick_random()
+  blackboard.set_value("data", data)
   return SUCCESS

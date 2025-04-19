@@ -22,20 +22,22 @@ signal action_evaluated(action_data: ActionData)
 @export_range(0, 1, 0.01) var food_weight := 0.5
 
 @export_subgroup("Satiation")
-@export_range(0, 100, 1) var satiation_amount := 100
+@export_range(0, 100, 1) var satiation_amount := 100.0
 @export_range(0, 1, 0.01) var satiation_weight := 0.5
 
 @export_subgroup("Companionship")
-@export_range(0, 100, 1) var companionship_amount := 100
+@export_range(0, 100, 1) var companionship_amount := 100.0
 @export_range(0, 1, 0.01) var companionship_weight := 0.5
 
 @export_subgroup("Duty")
-@export_range(0, 100, 1) var duty_amount := 100
+@export_range(0, 100, 1) var duty_amount := 100.0
 @export_range(0, 1, 0.01) var duty_weight := 0.5
 
 func _ready():
-	money_final = money_amount
-	food_final = food_amount
+	money_final_amount = money_amount
+	money_final_weight = money_weight
+	food_final_amount = food_amount
+	food_final_weight = food_weight
 
 func emit_action_evaluated(action_data: ActionData) -> void:
 	action_evaluated.emit(action_data)

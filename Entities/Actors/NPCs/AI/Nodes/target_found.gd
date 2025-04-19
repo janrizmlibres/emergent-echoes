@@ -2,4 +2,5 @@
 extends ConditionLeaf
 
 func tick(_actor: Node, blackboard: Blackboard) -> int:
-  return SUCCESS if blackboard.has_value("target") else FAILURE
+  var data: Dictionary = blackboard.get_value("data")
+  return SUCCESS if data.has("target") else FAILURE

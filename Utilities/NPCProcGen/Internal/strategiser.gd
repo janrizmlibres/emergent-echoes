@@ -41,6 +41,15 @@ func start_timer():
 	var interval := npc_agent.evaluation_interval
 	eval_timer.start(randf_range(interval.x, interval.y))
 
+func stop_timer():
+	eval_timer.stop()
+
+func pause_timer():
+	eval_timer.paused = true
+
+func resume_timer():
+	eval_timer.paused = false
+
 func on_eval_timer_timeout() -> void:
 	var action_data := evaluation_action(PCG.SocialPractice.PROACTIVE)
 

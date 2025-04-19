@@ -17,17 +17,36 @@ func register_actor(actor: Actor, agent: PCGAgent):
 
 	_actor_resources[actor] = []
 
-	store_resource(actor, MoneyResource.new(agent.money_final), "Money", actor_container)
-	store_resource(actor, FoodResource.new(agent.food_final), "Food", actor_container)
+	var money_resource := MoneyResource.new(agent.money_final_amount, agent.money_final_weight)
+	store_resource(actor, money_resource, "Money", actor_container)
+
+	var food_resource := FoodResource.new(agent.food_final_amount, agent.food_final_weight)
+	store_resource(actor, food_resource, "Food", actor_container)
 	
 	if agent is NPCAgent:
-		store_resource(actor, SatiationResource.new(agent.money_amount), "Satiation", actor_container)
-		store_resource(actor, CompanionshipResource.new(agent.duty_amount), "Companionship", actor_container)
+		var satiation_resource := SatiationResource.new(
+			agent.satiation_amount,
+			agent.satiation_weight
+		)
+		store_resource(actor, satiation_resource, "Satiation", actor_container)
+
+		var companionship_resource := CompanionshipResource.new(
+			agent.companionship_amount,
+			agent.companionship_weight
+		)
+		store_resource(actor, companionship_resource, "Companionship", actor_container)
 
 		if WorldState.npc_manager.is_lawful(actor):
-			store_resource(actor, DutyResource.new(agent.duty_amount), "Duty", actor_container)
+			var duty_resource := DutyResource.new(agent.duty_amount, agent.duty_weight)
+			store_resource(actor, duty_resource, "Duty", actor_container)
 	
 	update_total_food(actor)
+
+func store_resource(actor: Actor, resource: BaseResource, node_name: String, container: Node):
+	print("Stored resource amount: ", resource.amount)
+	_actor_resources[actor].append(resource)
+	resource.name = node_name
+	container.add_child(resource)
 
 func update_total_food(actor: Actor):
 	total_food.amount += get_resource_amount(actor, PCG.ResourceType.FOOD)
@@ -35,11 +54,6 @@ func update_total_food(actor: Actor):
 	var actor_count := WorldState.get_actor_count()
 	total_food.lower_threshold = PCG.food_lower_threshold * actor_count
 	total_food.upper_threshold = PCG.food_upper_threshold * actor_count
-
-func store_resource(actor: Actor, resource: BaseResource, node_name: String, container: Node):
-	_actor_resources[actor].append(resource)
-	resource.name = node_name
-	container.add_child(resource)
 	
 func holds_resource(actor: Actor, type: PCG.ResourceType) -> bool:
 	var resource = get_resource(actor, type)

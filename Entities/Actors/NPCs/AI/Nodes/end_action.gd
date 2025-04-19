@@ -2,5 +2,5 @@
 extends ActionLeaf
 
 func tick(actor: Node, _blackboard: Blackboard) -> int:
-  (actor as NPC).executor.end_action()
+  actor.end_action()
   return SUCCESS

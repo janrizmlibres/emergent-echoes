@@ -22,10 +22,10 @@ func setup_traits(npc: NPC, npc_agent: NPCAgent) -> Node:
 	traits_container.name = "Traits"
 
 	_traits[npc] = {}
-	add_trait(npc, SurvivalTrait.new(npc_agent.survival), "survival",  traits_container)
+	add_trait(npc, SurvivalTrait.new(npc_agent.survival), "survival", traits_container)
 
 	if npc_agent.thief > 0:
-		add_trait(npc, ThiefTrait.new(npc_agent.thief), "thief",  traits_container)
+		add_trait(npc, ThiefTrait.new(npc_agent.thief), "thief", traits_container)
 
 	if npc_agent.lawful > 0:
 		_traits[npc]["lawful"] = LawfulTrait.new(npc_agent.lawful)
@@ -44,9 +44,17 @@ func add_trait(npc: NPC, module: BaseTrait, trait_name: String, container: Node)
 	_traits[npc][trait_name].name = trait_name.capitalize()
 	container.add_child(_traits[npc][trait_name])
 
-func run_npc(npc: NPC) -> void:
+func run_evaluation(npc: NPC) -> void:
 	assert(npc in _traits, "NPCManager: NPC not registered")
 	_strategisers[npc].start_timer()
 
-func is_lawful(npc: NPC) -> bool:
-	return _traits[npc].has("lawful")
+func stop_evaluation(npc: NPC) -> void:
+	assert(npc in _traits, "NPCManager: NPC not registered")
+	_strategisers[npc].stop_timer()
+
+func pause_evaluation(npc: NPC) -> void:
+	assert(npc in _traits, "NPCManager: NPC not registered")
+	_strategisers[npc].pause_timer()
+
+func has_trait(npc: NPC, trait_name: String) -> bool:
+	return _traits[npc].has(trait_name)

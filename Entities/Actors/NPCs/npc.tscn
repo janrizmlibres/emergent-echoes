@@ -8,7 +8,6 @@
 
 [node name="NPC" instance=ExtResource("1_1dey1")]
 script = ExtResource("2_36x7w")
-evaluation_interval = Vector2(10, 20)
 
 [node name="NPCAgent" type="Node" parent="." index="12"]
 script = ExtResource("3_lbp4f")

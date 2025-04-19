@@ -2,26 +2,21 @@
 extends ActionLeaf
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
-  var npc = actor as NPC
-  var anim_finished = blackboard.get_value("anim_finished")
-  
-  if anim_finished:
+  if blackboard.get_value("eat_finished"):
     return SUCCESS
 
-  npc.animation_state.travel("Eat")
+  actor.animation_state.travel("Eat")
   return RUNNING
 
 func interrupt(actor: Node, _blackboard: Blackboard) -> void:
-  WorldState._actor_state[actor as NPC].is_busy = false
+  WorldState.set_status(actor, ActorState.State.FREE)
 
 func before_run(actor: Node, _blackboard: Blackboard) -> void:
-  WorldState._actor_state[actor as NPC].is_busy = true
+  WorldState.set_status(actor, ActorState.State.OCCUPIED)
 
 func after_run(actor: Node, _blackboard: Blackboard) -> void:
-  var npc = actor as NPC
-  WorldState._actor_state[npc].is_busy = false
-
+  WorldState.set_status(actor, ActorState.State.FREE)
   WorldState.total_food.amount -= 1
-  npc.modify_resource(PCG.ResourceType.SATIATION, 20)
-  npc.modify_resource(PCG.ResourceType.FOOD, -1)
-  npc.executor.end_action()
+  WorldState.resource_manager.modify_resource(actor, PCG.ResourceType.SATIATION, 20)
+  WorldState.resource_manager.modify_resource(actor, PCG.ResourceType.FOOD, -1)
+  actor.end_action()

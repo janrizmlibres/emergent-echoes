@@ -37,7 +37,7 @@ func get_actor_candidates(
 		if actor is Player and randf() > 0.2: continue
 		if not actor.holds_resource(resource_type): continue
 
-		if actor.is_trackable(actor_node) and actor.is_valid_target():
+		if actor.is_valid_target():
 			candidates.append(actor)
 	
 	return candidates

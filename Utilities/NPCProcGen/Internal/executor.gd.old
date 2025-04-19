@@ -1,103 +1,89 @@
-extends Node
+# class_name Executor
+# extends Node
 
-@export var actor: NPC
+# @export var procedural_tree: BeehaveTree
 
-enum State {
-	DORMANT,
-	PROCEDURAL,
-	STATE_MACHINE
-}
+# var action_stack: Array = []
 
-var procedural_actions: Dictionary[PCG.Action, PackedScene] = {
-	PCG.Action.PETITION:
-		preload("res://Entities/Actors/NPCs/AI/Actions/petition_action.tscn"),
-	PCG.Action.TALK:
-		preload("res://Entities/Actors/NPCs/AI/Actions/talk_action.tscn")
-}
+# func _ready():
+# 	var blackboard = procedural_tree.blackboard
 
-var state: State = State.DORMANT
-var active_actions: Array = []
+# 	blackboard.set_value("action", PCG.Action.NONE)
+# 	blackboard.set_value("data", null)
+# 	blackboard.set_value("move_position", null)
 
-@onready var dormant_bt: BeehaveTree = $DormantBT
-@onready var procedural_bt: BeehaveTree = $ProceduralBT
-@onready var state_machine_bt: BeehaveTree = $StateMachineBT
+# 	blackboard.set_value("target", null)
+# 	blackboard.set_value("target_reached", false)
+# 	blackboard.set_value("anim_finished", false)
 
-func _physics_process(_delta):
-	match state:
-		State.DORMANT:
-			dormant_bt.enabled = true
-			procedural_bt.enabled = false
-			state_machine_bt.enabled = false
-		State.PROCEDURAL:
-			dormant_bt.enabled = false
-			procedural_bt.enabled = true
-			state_machine_bt.enabled = false
-		State.STATE_MACHINE:
-			dormant_bt.enabled = false
-			procedural_bt.enabled = false
-			state_machine_bt.enabled = true
+# 	blackboard.set_value("prison_marker", null)
+# 	blackboard.set_value("crop_tile", null)
+# 	blackboard.set_value("shop", null)
 
-	var finish_statuses = [BeehaveTree.SUCCESS, BeehaveTree.FAILURE]
-	var is_procedural_finished = procedural_bt.status in finish_statuses
-	var is_state_machine_finished = state_machine_bt.status in finish_statuses
+# func start_action(action_data: ActionData) -> void:
+# 	var blackboard = procedural_tree.blackboard
+# 	blackboard.set_value("action", action_data.action)
+# 	blackboard.set_value("target", action_data.data.get("target"))
+# 	blackboard.set_value("data", action_data.data)
 
-	if is_procedural_finished or is_state_machine_finished:
-		end_current_action()
+# 	var last_action = action_stack.back() if not action_stack.is_empty() else null
+# 	if last_action != null and last_action.action == PCG.Action.INTERACT:
+# 		action_stack.pop_back()
 
-func end_current_action():
-	var completed_action = active_actions.pop_back()
-
-	if completed_action != null:
-		clean_up(completed_action[0])
+# 	setup_data(action_data.action)
 	
-	if not active_actions.is_empty():
-		var last_action = active_actions[active_actions.size() - 1]
-		run_action(last_action[0], last_action[1])
-	else:
-		actor.start_timer()
-		state = State.DORMANT
+# 	action_stack.append(action_data)
+# 	Logger.info(procedural_tree.actor.name + " started action: "
+# 		+ PCG.get_action_string(action_data.action))
 
-func run_action(action_name: PCG.Action, data: Array):
-	setup_data(action_name, data)
+# 	var stack_str = "Action stack of " + procedural_tree.actor.name + ": "
+# 	for action in action_stack:
+# 		stack_str += PCG.get_action_string(action.action) + " -> "
+# 	print(stack_str)
 
-	if action_name not in procedural_actions:
-		state = State.STATE_MACHINE
-		return
+# 	var npc = procedural_tree.actor as NPC
+# 	WorldState.set_current_action(npc, action_data.action)
+# 	npc.evaluation_timer.stop()
+
+# func setup_data(action: PCG.Action):
+# 	var actor: Actor = procedural_tree.actor as Actor
+
+# 	if action == PCG.Action.PLANT:
+# 		actor.seed_prop.visible = true
 	
-	var action_tree = procedural_actions[action_name].instance()
-	procedural_bt.add_child(action_tree)
-	state = State.PROCEDURAL
+# 	if [PCG.Action.PURSUIT, PCG.Action.PLANT, PCG.Action.HARVEST,
+# 		PCG.Action.FLEE].has(action):
+# 		WorldState.set_availability(actor, false)
 
-func setup_data(action_name: PCG.Action, data: Array):
-	WorldState.actor_state[actor].current_action = action_name
-	state_machine_bt.blackboard.set_value("action", action_name)
+# func end_action():
+# 	if action_stack.is_empty(): return
 
-	match action_name:
-		PCG.Action.PETITION:
-			WorldState.actor_state[actor].current_petition_resource = data[1]
-			procedural_bt.blackboard.set_value("target", data[0])
-			procedural_bt.blackboard.set_value("resource_type", data[1])
-		PCG.Action.INTERACT:
-			state_machine_bt.blackboard.set_value("target", data[0])
+# 	var completed_action = action_stack.pop_back()
+# 	assert(completed_action != null, "No action to end")
+# 	Logger.info(procedural_tree.actor.name + " ended action: "
+# 		+ PCG.get_action_string(completed_action.action))
+# 	reset_data()
 
-func clean_up(action_name: PCG.Action):
-	WorldState.actor_state[actor].current_action = PCG.Action.NONE
-	WorldState.actor_state[actor].current_petition_resource = PCG.ResourceType.NONE
-	WorldState.actor_state[actor].is_busy = false
+# 	if not action_stack.is_empty():
+# 		var action_data = action_stack.pop_back()
+# 		start_action(action_data)
+# 		return
+	
+# 	var npc = procedural_tree.actor as NPC
+# 	WorldState.set_current_action(npc, PCG.Action.NONE)
+# 	procedural_tree.blackboard.set_value("action", PCG.Action.NONE)
+# 	procedural_tree.blackboard.erase_value("data")
+# 	npc.start_timer()
 
-	if action_name in procedural_actions:
-		procedural_bt.get_child(0).queue_free()
+# func reset_data():
+# 	var actor = procedural_tree.actor as Actor
+# 	actor.seed_prop.visible = false
+# 	WorldState.set_is_busy(actor, false)
+# 	WorldState.set_availability(actor, true)
+	
+# 	var blackboard = procedural_tree.blackboard
+# 	blackboard.set_value("target_reached", false)
+# 	blackboard.set_value("anim_finished", false)
 
-func add_action(new_action: Array) -> void:
-	var action_name = new_action[0]
-	var data = new_action[1]
-
-	if not active_actions.is_empty():
-		var current_action = active_actions[active_actions.size() - 1]
-		clean_up(current_action[0])
-
-		if current_action[0] == PCG.Action.INTERACT:
-			active_actions.pop_back()
-
-	run_action(action_name, data)
-	active_actions.append(new_action)
+# func set_enable(value: bool):
+# 	procedural_tree.enabled = value

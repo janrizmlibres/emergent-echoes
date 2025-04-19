@@ -17,7 +17,7 @@ parameters/Idle/blend_position = 0.00240386
 procedural_tree = NodePath("PimbleBT")
 
 [node name="PimbleBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_vgnlq")]
-blackboard = NodePath("@Node@69469")
+blackboard = NodePath("@Node@23387")
 actor = NodePath("../..")
 
 [editable path="CarryProp"]

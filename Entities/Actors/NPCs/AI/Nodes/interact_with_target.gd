@@ -14,16 +14,13 @@ func tick(_actor: Node, _blackboard: Blackboard) -> int:
 	return RUNNING
 
 func interrupt(_actor: Node, blackboard: Blackboard) -> void:
-	var target = blackboard.get_value("target")
-	if target == null: return
+	var target: Actor = blackboard.get_value("data").target
 	target.stop_interaction()
 
 func before_run(actor: Node, blackboard: Blackboard) -> void:
-	timer = duration
-	var npc = actor as NPC
-	var target = blackboard.get_value("target")
-	target.start_interaction(npc)
+	var target: Actor = blackboard.get_value("data").target
+	target.start_interaction(actor)
 
 func after_run(_actor: Node, blackboard: Blackboard) -> void:
-	var target = blackboard.get_value("target")
+	var target: Actor = blackboard.get_value("data").target
 	target.stop_interaction()

@@ -23,7 +23,7 @@ parameters/Harvest/blend_position = 0
 procedural_tree = NodePath("GarrethBT")
 
 [node name="GarrethBT" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_jlis0")]
-blackboard = NodePath("@Node@68778")
+blackboard = NodePath("@Node@23352")
 actor = NodePath("../..")
 
 [node name="NavigationAgent2D" parent="." index="15"]

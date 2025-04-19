@@ -51,7 +51,7 @@ func apply_damage(damager: Actor = null):
 	if hit_points > 0: return
 
 	if self is NPC:
-		(self as NPC).executor.procedural_tree.disable()
+		(self as NPC).executor.bt.disable()
 
 	WorldState.queue_free_actor(self)
 	queue_free()
