@@ -1,5 +1,8 @@
 [gd_scene load_steps=7 format=4 uid="uid://bggj07uc8a2hg"]
 
+<<<<<<< HEAD
+[ext_resource type="Script" uid="uid://bectnmxrpw1ch" path="res://Stages/Island/World.cs" id="1_p84l6"]
+=======
 [ext_resource type="Script" path="res://Stages/Island/World.cs.txt" id="1_p84l6"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/base_camera.tscn" id="2_jbp0r"]
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://Stages/Island/island.tres" id="3_o4uk0"]
@@ -59,3 +62,4 @@ position = Vector2(800, 128)
 
 [editable path="Camera2D"]
 [editable path="Player"]
+[editable path="Player/CarryProp"]

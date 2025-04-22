@@ -8,6 +8,15 @@
 motion_mode = 0
 metadata/_edit_vertical_guides_ = [138.0]
 
+<<<<<<< HEAD
+[node name="NPCAgent2D" parent="." index="0"]
+SatiationAmount = 15
+CompanionshipAmount = 10
+Survival = 0.4
+Thief = 0.6
+MoneyAmount = 100
+FoodAmount = 5
+=======
 [node name="Sprite2D" parent="." index="0"]
 texture = ExtResource("2_8j1os")
 

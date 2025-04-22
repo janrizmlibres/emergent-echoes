@@ -1,7 +1,12 @@
 [gd_scene load_steps=11 format=3 uid="uid://bbvfg1jotmlna"]
 
+<<<<<<< HEAD:Entities/Objects/Crop/Wheat/Wheat.tscn
+[ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Objects/Crop/Art/crops.png" id="1_mx2ts"]
+[ext_resource type="Script" uid="uid://d1smcqey5y8ep" path="res://Entities/Objects/Crop/Wheat/Wheat.cs" id="1_rb2hj"]
+=======
 [ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="1_mx2ts"]
 [ext_resource type="Script" uid="uid://ca47vfv6nvfkr" path="res://Entities/Objects/Wheat/Wheat.cs" id="1_rb2hj"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032:Entities/Objects/Wheat/Wheat.tscn
 [ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Interactions/interactable.tscn" id="2_3lbrb"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2137r"]

@@ -1,8 +1,14 @@
 [gd_scene load_steps=4 format=3 uid="uid://c0ee67a3a37o5"]
 
+<<<<<<< HEAD:Entities/UI/HUD/Status Bar/heart_bar/heart_bar.tscn
+[ext_resource type="Texture2D" uid="uid://dpvlt8y6ncbpv" path="res://Entities/UI/HUD/Status Bar/heart_bar/Art/emptyHeart.png" id="1_k56vi"]
+[ext_resource type="Script" uid="uid://decn2qv6g4pf2" path="res://Entities/UI/HUD/Status Bar/heart_bar/HeartBar.cs" id="1_mw6c7"]
+[ext_resource type="Texture2D" uid="uid://d8hi452w23s1" path="res://Entities/UI/HUD/Status Bar/heart_bar/Art/fullHeart.png" id="3_5p76u"]
+=======
 [ext_resource type="Texture2D" uid="uid://dpvlt8y6ncbpv" path="res://Entities/UI/Hearts/Art/empty_heart.png" id="1_k56vi"]
 [ext_resource type="Script" uid="uid://d3disdptvpcpl" path="res://Entities/UI/Hearts/HeartBar.cs" id="1_mw6c7"]
 [ext_resource type="Texture2D" uid="uid://d8hi452w23s1" path="res://Entities/UI/Hearts/Art/full_heart.png" id="3_5p76u"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032:Entities/UI/Hearts/heart_bar.tscn
 
 [node name="HeartBar" type="Control"]
 layout_mode = 3

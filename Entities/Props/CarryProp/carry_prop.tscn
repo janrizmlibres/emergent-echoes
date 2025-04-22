@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c2mdma7a43gj8" path="res://Entities/Props/CarryProp/carry_prop.gd" id="1_ruk1u"]
 [ext_resource type="Texture2D" uid="uid://bu4lgseyryu3n" path="res://Entities/Actors/NPCs/Toblin/Art/toblin.png" id="1_vd5d3"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 
 [node name="CarryProp" type="Node2D"]
 script = ExtResource("1_ruk1u")

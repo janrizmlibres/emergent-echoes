@@ -1,6 +1,10 @@
 [gd_scene load_steps=2 format=3 uid="uid://dgbo1efdlkji0"]
 
+<<<<<<< HEAD
+[ext_resource type="Script" uid="uid://cbpgc4e38gnad" path="res://Utilities/Interactions/Interactable.cs" id="1_c2lyc"]
+=======
 [ext_resource type="Script" uid="uid://day8uunruseqh" path="res://Utilities/Interactions/Interactable.cs" id="1_c2lyc"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 
 [node name="Interactable" type="Area2D"]
 collision_layer = 2

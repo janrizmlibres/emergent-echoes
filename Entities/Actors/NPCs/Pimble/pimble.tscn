@@ -12,5 +12,12 @@ texture = ExtResource("2_nokag")
 [node name="AnimationTree" parent="." index="9"]
 parameters/Idle/blend_position = 0.00240386
 
+[node name="Interactable" parent="." index="17"]
+PrimaryActionDescription = "View Pimble"
+
+[node name="DescriptionPrompt" parent="." index="18" instance=ExtResource("3_nokag")]
+visible = false
+script = ExtResource("4_nokag")
+
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

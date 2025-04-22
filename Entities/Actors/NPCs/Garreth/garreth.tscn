@@ -23,5 +23,12 @@ navigation_layers = 3
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 
+[node name="Interactable" parent="." index="17"]
+PrimaryActionDescription = "View Garreth"
+
+[node name="DescriptionPrompt" parent="." index="18" instance=ExtResource("3_7ptt5")]
+visible = false
+script = ExtResource("4_jlis0")
+
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

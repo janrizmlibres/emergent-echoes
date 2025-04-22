@@ -1,7 +1,11 @@
 [gd_scene load_steps=8 format=3 uid="uid://boawcqhrg67eg"]
 
 [ext_resource type="Texture2D" uid="uid://cfb2no4xxnn2l" path="res://Entities/Objects/Tree/Art/forest_resources.png" id="1_1wpv6"]
+<<<<<<< HEAD
+[ext_resource type="Script" uid="uid://n0dvfmq7dvkx" path="res://Entities/Objects/Tree/Tree.cs" id="1_wpbbf"]
+=======
 [ext_resource type="Script" uid="uid://ftxpsntkcuyl" path="res://Entities/Objects/Tree/Tree.cs" id="1_wpbbf"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 [ext_resource type="PackedScene" uid="uid://dgbo1efdlkji0" path="res://Utilities/Interactions/interactable.tscn" id="2_tpp7v"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_02270"]

@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://88lyt0r5veus" path="res://Entities/Actors/NPCs/AI/Trees/wander_bt.tscn" id="5_jlstl"]
 [ext_resource type="PackedScene" uid="uid://5gkp1uhyoheo" path="res://Entities/UI/Popups/RadialMenu/radial_menu.tscn" id="7_sdssa"]
 [ext_resource type="Script" uid="uid://x8h723av8g65" path="res://Utilities/NPCProcGen/Internal/executor.gd" id="13_c1v6p"]
+>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032
 
 [node name="NPC" instance=ExtResource("1_1dey1")]
 script = ExtResource("2_36x7w")
