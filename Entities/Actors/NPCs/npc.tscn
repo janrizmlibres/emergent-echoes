@@ -1,31 +1,42 @@
-[gd_scene load_steps=6 format=3 uid="uid://8w0pyr8skfw7"]
+[gd_scene load_steps=8 format=3 uid="uid://8w0pyr8skfw7"]
 
 [ext_resource type="PackedScene" uid="uid://cmcj7lmi8c5yw" path="res://Entities/Actors/actor.tscn" id="1_1dey1"]
 [ext_resource type="Script" uid="uid://cgutu5snnscr2" path="res://Entities/Actors/NPCs/npc.gd" id="2_36x7w"]
 [ext_resource type="Script" uid="uid://dlxq51song2ga" path="res://Entities/Actors/NPCs/vision_cone.gd" id="3_jlstl"]
 [ext_resource type="Script" uid="uid://4b83pkjjabxr" path="res://Utilities/NPCProcGen/Nodes/npc_agent.gd" id="3_lbp4f"]
+[ext_resource type="PackedScene" uid="uid://88lyt0r5veus" path="res://Entities/Actors/NPCs/AI/Trees/wander_bt.tscn" id="5_jlstl"]
+[ext_resource type="PackedScene" uid="uid://5gkp1uhyoheo" path="res://Entities/UI/Popups/RadialMenu/radial_menu.tscn" id="7_sdssa"]
 [ext_resource type="Script" uid="uid://x8h723av8g65" path="res://Utilities/NPCProcGen/Internal/executor.gd" id="13_c1v6p"]
 
 [node name="NPC" instance=ExtResource("1_1dey1")]
 script = ExtResource("2_36x7w")
+acceleration = 8
 
-[node name="NPCAgent" type="Node" parent="." index="12"]
+[node name="NPCAgent" type="Node" parent="." index="13"]
 script = ExtResource("3_lbp4f")
 metadata/_custom_type_script = "uid://4b83pkjjabxr"
 
-[node name="Executor" type="Node" parent="." index="13"]
+[node name="Executor" type="Node" parent="." index="14"]
 script = ExtResource("13_c1v6p")
 metadata/_custom_type_script = "uid://x8h723av8g65"
 
-[node name="VisionCone" type="Node2D" parent="." index="14"]
+[node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("5_jlstl")]
+blackboard = NodePath("@Node@303521")
+actor = NodePath("../..")
+
+[node name="VisionCone" type="Node2D" parent="." index="15"]
 script = ExtResource("3_jlstl")
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." index="15"]
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." index="16"]
 path_desired_distance = 4.0
 target_desired_distance = 2.0
-simplify_path = true
 avoidance_enabled = true
-radius = 5.0
+radius = 7.0
+
+[node name="RadialMenu" parent="." index="17" instance=ExtResource("7_sdssa")]
+visible = false
+offset_top = -13.0
+offset_bottom = -13.0
 
 [connection signal="action_evaluated" from="NPCAgent" to="." method="_on_npc_agent_action_evaluated"]
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]

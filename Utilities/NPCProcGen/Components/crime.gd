@@ -51,13 +51,11 @@ func close(duty_increase: float) -> bool:
 	assert(investigator != null, "Cannot close case without investigator")
 
 	if randf() >= get_solve_probability():
-		Logger.info(investigator.name + " failed to solve case")
 		status = Status.UNSOLVED
 		complete_investigation(duty_increase)
 		return true
 
 	if not is_instance_valid(criminal) or WorldState.is_captured(criminal):
-		Logger.info(investigator.name + " successfully solved case")
 		status = Status.SOLVED
 		complete_investigation(duty_increase)
 		return true

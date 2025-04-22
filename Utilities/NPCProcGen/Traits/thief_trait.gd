@@ -18,7 +18,7 @@ func evaluation_proactive_action():
 
 func choose_actor(candidates: Array[Actor]) -> Actor:
 	for actor in candidates:
-		if not WorldState.memory_manager.is_trusted(actor_node, actor):
+		if not WorldState.memory_manager.is_trusted(npc, actor):
 			return actor
 	
 	return candidates[0] if not candidates.is_empty() else null

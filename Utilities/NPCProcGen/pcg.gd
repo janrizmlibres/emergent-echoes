@@ -1,7 +1,7 @@
 extends Node
 
 signal crime_committed(criminal: Actor)
-signal danger_detected(source: Actor)
+signal danger_occured(source: Actor)
 
 enum ResourceType {
 	NONE,
@@ -19,7 +19,7 @@ enum SocialPractice {
 }
 
 enum Action {
-	NONE,
+	WANDER,
 	PETITION,
 	TALK,
 	EAT,
@@ -29,6 +29,7 @@ enum Action {
 	PURSUIT,
 	PLANT,
 	HARVEST,
+	PURSUIT_REACT,
 	INTERACT,
 	CAUTIOUS,
 	FLEE
@@ -38,10 +39,10 @@ var food_lower_threshold := 5
 var food_upper_threshold := 45
 
 func run_evaluation(npc: NPC) -> void:
-	WorldState.npc_manager.run_evaluation(npc)
+	WorldState.npc_manager.evaluators[npc].start_timer()
 
 func stop_evaluation(npc: NPC) -> void:
-	WorldState.npc_manager.stop_evaluation(npc)
+	WorldState.npc_manager.evaluators[npc].stop_timer()
 
 func execute_petition(npc: NPC, target: Actor, resource_type: ResourceType) -> Array:
 	return PetitionController.execute(npc, target, resource_type)
@@ -56,11 +57,24 @@ func emit_crime_committed(criminal: Actor) -> void:
 	crime_committed.emit(criminal)
 
 func emit_danger_detected(source: Actor) -> void:
-	danger_detected.emit(source)
+	danger_occured.emit(source)
+
+func is_action_reactive(action: Action) -> bool:
+	var reactive_actions = [
+		Action.PURSUIT_REACT,
+		Action.INTERACT,
+		Action.CAUTIOUS,
+		Action.FLEE,
+	]
+
+	if reactive_actions.has(action):
+		return true
+
+	return false
 
 func action_to_string(action: Action) -> String:
 	match action:
-		Action.NONE: return "None"
+		Action.WANDER: return "Wander"
 		Action.PETITION: return "Petition"
 		Action.TALK: return "Talk"
 		Action.EAT: return "Eat"
@@ -74,3 +88,69 @@ func action_to_string(action: Action) -> String:
 		Action.CAUTIOUS: return "Cautious"
 		Action.FLEE: return "Flee"
 		_: return "Unknown"
+	
+func map_action_to_main_state(action: Action) -> NPC.MainState:
+	match action:
+		Action.WANDER:
+			return NPC.MainState.WANDER
+		Action.PETITION:
+			return NPC.MainState.PETITION
+		Action.TALK:
+			return NPC.MainState.TALK
+		Action.EAT:
+			return NPC.MainState.EAT
+		Action.SHOP:
+			return NPC.MainState.SHOP
+		Action.THEFT:
+			return NPC.MainState.THEFT
+		Action.INTERROGATE:
+			return NPC.MainState.INTERROGATE
+		Action.PURSUIT:
+			return NPC.MainState.PURSUIT
+		Action.PLANT:
+			return NPC.MainState.PLANT
+		Action.HARVEST:
+			return NPC.MainState.HARVEST
+		_:
+			print_debug("Invalid action: ", action)
+			return NPC.MainState.WANDER
+
+func map_main_state_to_action(main_state: NPC.MainState) -> PCG.Action:
+	match main_state:
+		NPC.MainState.WANDER:
+			return PCG.Action.WANDER
+		NPC.MainState.PETITION:
+			return PCG.Action.PETITION
+		NPC.MainState.TALK:
+			return PCG.Action.TALK
+		NPC.MainState.EAT:
+			return PCG.Action.EAT
+		NPC.MainState.SHOP:
+			return PCG.Action.SHOP
+		NPC.MainState.THEFT:
+			return PCG.Action.THEFT
+		NPC.MainState.INTERROGATE:
+			return PCG.Action.INTERROGATE
+		NPC.MainState.PURSUIT:
+			return PCG.Action.PURSUIT
+		NPC.MainState.PLANT:
+			return PCG.Action.PLANT
+		NPC.MainState.HARVEST:
+			return PCG.Action.HARVEST
+		_:
+			print_debug("Invalid main state: ", main_state)
+			return PCG.Action.WANDER
+
+func map_react_state_to_action(react_state: NPC.ReactState) -> PCG.Action:
+	match react_state:
+		NPC.ReactState.PURSUIT:
+			return PCG.Action.PURSUIT_REACT
+		NPC.ReactState.INTERACT:
+			return PCG.Action.INTERACT
+		NPC.ReactState.CAUTIOUS:
+			return PCG.Action.CAUTIOUS
+		NPC.ReactState.FLEE:
+			return PCG.Action.FLEE
+		_:
+			print_debug("Invalid react state: ", react_state)
+			return PCG.Action.WANDER

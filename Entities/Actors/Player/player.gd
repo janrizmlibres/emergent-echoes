@@ -22,7 +22,8 @@ func active_state():
 
 	if Input.is_action_just_pressed("use"):
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			set_blend_positions(get_global_mouse_position().x)
+			var click_direction := global_position.direction_to(get_global_mouse_position())
+			set_blend_positions(click_direction.x)
 
 		state = State.ATTACK
 	

@@ -20,7 +20,7 @@
 
 [node name="PetitionBT" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_ssoqa")
-blackboard = NodePath("@Node@26227")
+blackboard = NodePath("@Node@118902")
 actor = NodePath("..")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
@@ -39,6 +39,7 @@ metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 [node name="IsTargetValid" parent="SelectorReactiveComposite/SequenceComposite/InverterDecorator" instance=ExtResource("3_iuhl5")]
 
 [node name="EndAction" parent="SelectorReactiveComposite/SequenceComposite" instance=ExtResource("6_ssoqa")]
+is_reactive = false
 
 [node name="SequenceReactiveComposite" type="Node" parent="SelectorReactiveComposite"]
 script = ExtResource("2_ssoqa")
@@ -65,7 +66,6 @@ script = ExtResource("2_ssoqa")
 metadata/_custom_type_script = "uid://ddsynpu03eev2"
 
 [node name="GetTargetPosition" parent="SelectorReactiveComposite/SequenceComposite2/SequenceReactiveComposite" instance=ExtResource("11_0uwjv")]
-position_offset = 12.0
 
 [node name="MoveToPosition" parent="SelectorReactiveComposite/SequenceComposite2/SequenceReactiveComposite" instance=ExtResource("10_e1xqd")]
 

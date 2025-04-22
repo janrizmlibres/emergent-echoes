@@ -55,20 +55,22 @@ func apply_damage(damager: Actor = null):
 
 	WorldState.queue_free_actor(self)
 	queue_free()
-	
-	if damager == null:
-		Logger.info(name + " has perished!")
-		return
 
 	var participants = damager.actors_in_range.duplicate()
 	var crime: Crime = Crime.new(Crime.Category.MURDER, damager, participants)
 	WorldState._crimes.append(crime)
-
-	Logger.info(damager.name + " murdered " + name)
 
 	for participant in participants:
 		if participant is NPC:
 			(participant as NPC).crime_witnessed(crime)
 
 func apply_knockback(_direction: Vector2, _force: float):
+	pass
+
+func _on_hover_area_input_event(_viewport, event, _shape_idx):
+	if event is InputEventMouseButton:
+		if event.is_released() and event.button_index == MOUSE_BUTTON_RIGHT:
+			actor_pressed()
+
+func actor_pressed():
 	pass

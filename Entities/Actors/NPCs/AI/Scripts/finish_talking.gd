@@ -16,5 +16,5 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		true
 	)
 
-	actor.executor.end_action()
+	actor.set_main_state(NPC.MainState.WANDER)
 	return SUCCESS

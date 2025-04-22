@@ -11,7 +11,7 @@ func evaluation_proactive_action():
 
 func choose_actor(candidates: Array[Actor]) -> Actor:
 	for actor in candidates:
-		if actor_node.memorizer.is_friendly(actor):
+		if WorldState.memory_manager.is_friendly(npc, actor):
 			return actor
 	
 	return candidates[0] if not candidates.is_empty() else null

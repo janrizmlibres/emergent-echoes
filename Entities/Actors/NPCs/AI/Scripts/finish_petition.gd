@@ -16,9 +16,9 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	else:
 		actor.float_text_controller.show_float_text(
 			PCG.ResourceType.COMPANIONSHIP,
-			str(PCG.PETITION_DECREASE),
+			str(result[2]),
 			true
 		)
 
-	actor.executor.end_action()
+	actor.set_main_state(NPC.MainState.WANDER)
 	return SUCCESS

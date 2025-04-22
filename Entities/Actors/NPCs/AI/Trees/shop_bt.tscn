@@ -13,7 +13,7 @@
 
 [node name="ShopBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_8hdc6")
-blackboard = NodePath("@Node@39506")
+blackboard = NodePath("@Node@119393")
 actor = NodePath("..")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
@@ -42,6 +42,7 @@ script = ExtResource("6_ir7ga")
 metadata/_custom_type_script = "uid://dxlpexlc4dupq"
 
 [node name="EndAction" parent="SelectorReactiveComposite/SequenceComposite" instance=ExtResource("7_qmx5s")]
+is_reactive = false
 
 [node name="SequenceCompsite" type="Node" parent="SelectorReactiveComposite"]
 script = ExtResource("3_a3nmq")
@@ -58,3 +59,4 @@ script = ExtResource("10_kgl2f")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [node name="EndAction" parent="SelectorReactiveComposite/SequenceCompsite" instance=ExtResource("7_qmx5s")]
+is_reactive = false

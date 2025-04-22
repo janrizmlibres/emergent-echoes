@@ -8,5 +8,5 @@ enum State {
 	CAPTURED
 }
 
-var current_action := PCG.Action.NONE
+var current_action := PCG.Action.WANDER
 var status := State.FREE

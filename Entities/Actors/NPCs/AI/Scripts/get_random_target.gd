@@ -7,6 +7,7 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
   )
 
   if peers.is_empty():
+    print_debug("Failed to get random target")
     return FAILURE
 
   var data = blackboard.get_value("data")

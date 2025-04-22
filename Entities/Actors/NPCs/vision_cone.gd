@@ -8,7 +8,7 @@ extends Node2D
 var npc_owner: NPC
 
 func _ready():
-	npc_owner = get_parent() as NPC
+	npc_owner = get_parent()
 	
 	if not npc_owner:
 		print("VisionCone: No NPC owner found.")

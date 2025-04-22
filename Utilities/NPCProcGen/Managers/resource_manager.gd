@@ -36,14 +36,13 @@ func register_actor(actor: Actor, agent: PCGAgent):
 		)
 		store_resource(actor, companionship_resource, "Companionship", actor_container)
 
-		if WorldState.npc_manager.is_lawful(actor):
+		if WorldState.npc_manager.has_trait(actor, "lawful"):
 			var duty_resource := DutyResource.new(agent.duty_amount, agent.duty_weight)
 			store_resource(actor, duty_resource, "Duty", actor_container)
 	
 	update_total_food(actor)
 
 func store_resource(actor: Actor, resource: BaseResource, node_name: String, container: Node):
-	print("Stored resource amount: ", resource.amount)
 	_actor_resources[actor].append(resource)
 	resource.name = node_name
 	container.add_child(resource)

@@ -4,31 +4,36 @@ const RELATIONSHIP_INCREASE := 3
 const RELATIONSHIP_DECREASE := 1
 
 static func execute(npc: NPC, target: Actor, resource_type: PCG.ResourceType) -> Array:
-	WorldState.npc_manager.execute_petition(npc, target, resource_type)
-	var relationship = target.memorizer.get_relationship(npc)
+	var memory_mgr = WorldState.memory_manager
+	var resource_mgr = WorldState.resource_manager
+
+	var relationship = memory_mgr.get_relationship(target, npc)
 	var probability = get_petition_probability(relationship)
 
-	var accepted = randf() <= probability and target.holds_resource(resource_type)
+	var accepted = randf() <= probability and resource_mgr.holds_resource(
+		target,
+		resource_type
+	)
 
 	if not accepted:
-		WorldState.memory_manager.modify_relationship(
+		memory_mgr.modify_relationship(
 			npc,
 			target,
 			(-RELATIONSHIP_DECREASE)
 		)
-		return [false, 0]
+		return [false, 0, RELATIONSHIP_DECREASE]
 
-	var target_resource = target.get_resource(resource_type)
+	var target_resource = resource_mgr.get_resource(target, resource_type)
 	var deficiency_point = target_resource.get_deficiency_point()
 	var amount_to_give = max(1, (target_resource.amount - deficiency_point) * probability)
-	target.give_resource(npc, resource_type, amount_to_give)
+	resource_mgr.transfer_resource(target, npc, resource_type, amount_to_give)
 
-	WorldState.memory_manager.modify_relationship(
+	memory_mgr.modify_relationship(
 		npc,
 		target,
 		RELATIONSHIP_INCREASE
 	)
-	return [true, amount_to_give]
+	return [true, amount_to_give, RELATIONSHIP_INCREASE]
 
 static func get_petition_probability(relationship_level: float) -> float:
 	const THRESHOLDS = {

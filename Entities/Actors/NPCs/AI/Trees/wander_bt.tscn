@@ -9,8 +9,8 @@
 
 [node name="WanderBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_vqc1w")
-blackboard = NodePath("@Node@146006")
-actor = NodePath("..")
+blackboard = NodePath("@Node@29780")
+actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
 [node name="SequenceComposite" type="Node" parent="."]

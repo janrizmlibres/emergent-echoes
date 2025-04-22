@@ -13,11 +13,12 @@ func _ready():
 	eval_timer.one_shot = true
 	eval_timer.timeout.connect(on_eval_timer_timeout)
 	add_child(eval_timer)
+	start_timer()
 
 func evaluation_action(practice: PCG.SocialPractice) -> ActionData:
 	var candidates: Array[ActionCandidate] = []
 
-	for trait_mod in npc.traits:
+	for trait_mod in WorldState.npc_manager.get_traits(npc):
 		var action_candidates: Array[ActionCandidate] = trait_mod.evaluation_action(practice)
 
 		for candidate in action_candidates:
@@ -43,12 +44,6 @@ func start_timer():
 
 func stop_timer():
 	eval_timer.stop()
-
-func pause_timer():
-	eval_timer.paused = true
-
-func resume_timer():
-	eval_timer.paused = false
 
 func on_eval_timer_timeout() -> void:
 	var action_data := evaluation_action(PCG.SocialPractice.PROACTIVE)

@@ -23,13 +23,13 @@ func evaluation_proactive_action():
 		return
 
 	if assigned_case == null:
-		assigned_case = WorldState.get_open_case(actor_node as NPC)
+		assigned_case = WorldState.get_open_case(npc)
 	
 	if assigned_case == null:
 		print("No open cases")
 		return
 
-	print("A case has been assigned to ", actor_node.name)
+	print("A case has been assigned to ", npc.name)
 	var target = assigned_case.get_random_participant()
 	if target != null:
 		add_action(PCG.Action.INTERROGATE, PCG.ResourceType.DUTY, {

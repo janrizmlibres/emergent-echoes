@@ -1,13 +1,13 @@
 class_name BaseTrait
 extends Node
 
+var npc: NPC
 var weight: float
-
-@export var actor_node: NPC
 
 var action_candidates: Array[ActionCandidate] = []
 
-func _init(_weight: float):
+func _init(_npc: NPC, _weight: float):
+	npc = _npc
 	weight = _weight
 
 func evaluation_action(social_practice: PCG.SocialPractice) -> Array[ActionCandidate]:
@@ -27,7 +27,7 @@ func get_actor_candidates(
 	filter: Callable = Callable()
 ) -> Array[Actor]:
 	var candidates: Array[Actor] = []
-	var peer_actors: Array[Actor] = WorldState.get_peer_actors(actor_node).duplicate()
+	var peer_actors: Array[Actor] = WorldState.get_peer_actors(npc).duplicate()
 	peer_actors.shuffle()
 
 	if not filter.is_null():
@@ -35,9 +35,10 @@ func get_actor_candidates(
 	
 	for actor in peer_actors:
 		if actor is Player and randf() > 0.2: continue
-		if not actor.holds_resource(resource_type): continue
+		if not WorldState.resource_manager.holds_resource(actor, resource_type):
+			continue
 
-		if actor.is_valid_target():
+		if WorldState.is_valid_target(actor):
 			candidates.append(actor)
 	
 	return candidates
@@ -68,9 +69,14 @@ func add_targetted_action(
 func validate_action(action: PCG.Action) -> bool:
 	match action:
 		PCG.Action.SHOP:
-			if not actor_node.get_resource_amount(PCG.ResourceType.MONEY) > 10:
+			var amount := WorldState.resource_manager.get_resource_amount(
+				npc, PCG.ResourceType.MONEY
+			)
+
+			if not amount > 10:
 				return false
-			return WorldState._shop.food_amount > 0
+
+			return WorldState.shop.food_amount > 0
 		PCG.Action.PLANT:
 			return WorldState.some_crop_in_status(CropTile.Status.DORMANT)
 		PCG.Action.HARVEST:
@@ -79,7 +85,7 @@ func validate_action(action: PCG.Action) -> bool:
 			return true
 	
 func calculate_weight(resource_type: PCG.ResourceType) -> float:
-	var chosen_resource: BaseResource = actor_node.get_resource(resource_type)
+	var chosen_resource := WorldState.resource_manager.get_resource(npc, resource_type)
 	var deficiency_point = chosen_resource.get_deficiency_point()
 	var variance = chosen_resource.amount - deficiency_point
 	

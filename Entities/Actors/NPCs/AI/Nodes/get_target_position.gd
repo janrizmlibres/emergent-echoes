@@ -9,7 +9,7 @@ enum Waypoint {
 }
 
 @export var waypoint: Waypoint = Waypoint.LATERAL
-@export var position_offset: float = 15
+@export var position_offset: float = 14
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
 	var target: Actor = blackboard.get_value("data").target

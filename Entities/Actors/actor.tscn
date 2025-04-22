@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://cmcj7lmi8c5yw"]
+[gd_scene load_steps=50 format=3 uid="uid://cmcj7lmi8c5yw"]
 
 [ext_resource type="Script" uid="uid://cb1rxtodur2tm" path="res://Entities/Actors/actor.gd" id="1_fjhqg"]
 [ext_resource type="Texture2D" uid="uid://jvowy0xvcekr" path="res://Entities/Actors/Player/Art/player.png" id="2_f3284"]
@@ -972,6 +972,9 @@ states/Move/position = Vector2(488.991, 100.568)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_7qwyo"), "Idle", "Eat", SubResource("AnimationNodeStateMachineTransition_p56hr"), "Eat", "Idle", SubResource("AnimationNodeStateMachineTransition_xi217"), "Idle", "Move", SubResource("AnimationNodeStateMachineTransition_c1xyq"), "Move", "Idle", SubResource("AnimationNodeStateMachineTransition_f1dfm"), "Attack", "Idle", SubResource("AnimationNodeStateMachineTransition_62n8s"), "Idle", "Harvest", SubResource("AnimationNodeStateMachineTransition_ifole"), "Harvest", "Idle", SubResource("AnimationNodeStateMachineTransition_yksan"), "Idle", "Attack", SubResource("AnimationNodeStateMachineTransition_n10kc")]
 graph_offset = Vector2(-66.349, -26.1609)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7qwyo"]
+size = Vector2(10, 14)
+
 [node name="Actor" type="CharacterBody2D" groups=["Actors"]]
 collision_mask = 3
 motion_mode = 1
@@ -1061,5 +1064,12 @@ position = Vector2(0, -14)
 
 [node name="FloatTextController" parent="." instance=ExtResource("8_7qwyo")]
 
+[node name="HoverArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HoverArea"]
+position = Vector2(0, -5)
+shape = SubResource("RectangleShape2D_7qwyo")
+
 [connection signal="area_entered" from="HitBox" to="." method="_on_hurt_box_area_entered"]
 [connection signal="animation_finished" from="AnimationTree" to="." method="_on_animation_tree_animation_finished"]
+[connection signal="input_event" from="HoverArea" to="." method="_on_hover_area_input_event"]

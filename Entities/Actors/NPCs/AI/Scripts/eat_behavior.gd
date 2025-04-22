@@ -19,4 +19,4 @@ func after_run(actor: Node, _blackboard: Blackboard) -> void:
   WorldState.total_food.amount -= 1
   WorldState.resource_manager.modify_resource(actor, PCG.ResourceType.SATIATION, 20)
   WorldState.resource_manager.modify_resource(actor, PCG.ResourceType.FOOD, -1)
-  actor.end_action()
+  actor.set_main_state(NPC.MainState.WANDER)

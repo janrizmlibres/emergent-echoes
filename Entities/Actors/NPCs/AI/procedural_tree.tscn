@@ -56,9 +56,10 @@
 [ext_resource type="Script" uid="uid://d0lkdn2nj7bcb" path="res://Entities/Actors/NPCs/AI/Scripts/is_harvest_action.gd" id="46_cd634"]
 [ext_resource type="Script" uid="uid://cgexvh6s1rans" path="res://Entities/Actors/NPCs/AI/Scripts/harvest_crop.gd" id="47_cd634"]
 
-[node name="ProceduralTree" type="Node" node_paths=PackedStringArray("blackboard")]
+[node name="ProceduralTree" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_joxsq")
-blackboard = NodePath("@Node@167157")
+blackboard = NodePath("@Node@115996")
+actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
 [node name="SelectorReact" type="Node" parent="."]
@@ -123,6 +124,7 @@ script = ExtResource("39_f81io")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [node name="EndAction" parent="SelectorReact/Pursuit/Selector" instance=ExtResource("14_sa7yn")]
+is_reactive = null
 
 [node name="Flee" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
@@ -139,6 +141,7 @@ min_radius = 150.0
 [node name="MoveToPosition" parent="SelectorReact/Flee" instance=ExtResource("15_oxd8l")]
 
 [node name="EndAction" parent="SelectorReact/Flee" instance=ExtResource("14_sa7yn")]
+is_reactive = null
 
 [node name="Interact" type="Node" parent="SelectorReact"]
 script = ExtResource("9_367ub")
@@ -181,6 +184,7 @@ script = ExtResource("24_joxsq")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [node name="EndAction" parent="SelectorReact/Talk/Selector/SequenceComposite/SelectorComposite" instance=ExtResource("14_sa7yn")]
+is_reactive = null
 
 [node name="SequenceComposite2" type="Node" parent="SelectorReact/Talk/Selector"]
 script = ExtResource("3_u33fa")
@@ -361,6 +365,7 @@ metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 [node name="IsTargetValid" parent="SelectorReact/Petition/Selector2/Sequence/Inverter" instance=ExtResource("19_3e0ew")]
 
 [node name="EndAction" parent="SelectorReact/Petition/Selector2/Sequence" instance=ExtResource("14_sa7yn")]
+is_reactive = null
 
 [node name="Eat" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
@@ -413,8 +418,10 @@ script = ExtResource("41_68kkn")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [node name="EndAction" parent="SelectorReact/Shop/SelectorComposite/SequenceReactiveComposite/Sequence" instance=ExtResource("14_sa7yn")]
+is_reactive = null
 
 [node name="EndAction" parent="SelectorReact/Shop/SelectorComposite" instance=ExtResource("14_sa7yn")]
+is_reactive = null
 
 [node name="Theft" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
@@ -476,6 +483,7 @@ min_radius = 150.0
 [node name="MoveToPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/Sequence" instance=ExtResource("15_oxd8l")]
 
 [node name="EndAction" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/Sequence" instance=ExtResource("14_sa7yn")]
+is_reactive = null
 
 [node name="SequenceComposite2" type="Node" parent="SelectorReact/Theft/SelectorComposite"]
 script = ExtResource("3_u33fa")
@@ -488,6 +496,7 @@ metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 [node name="IsTargetValid" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite2/InverterDecorator" instance=ExtResource("19_3e0ew")]
 
 [node name="EndAction" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite2" instance=ExtResource("14_sa7yn")]
+is_reactive = null
 
 [node name="Interrogate" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
@@ -596,6 +605,7 @@ metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 [node name="IsTargetValid" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceComposite/InverterDecorator" instance=ExtResource("19_3e0ew")]
 
 [node name="EndAction" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceComposite" instance=ExtResource("14_sa7yn")]
+is_reactive = null
 
 [node name="Plant" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
@@ -625,6 +635,7 @@ metadata/_custom_type_script = "uid://jst6onxl5bwx"
 [node name="ModifyCrop" parent="SelectorReact/Plant/UntilFail/TimeLimiterDecorator/Sequence" instance=ExtResource("45_u3nau")]
 
 [node name="EndAction" parent="SelectorReact/Plant" instance=ExtResource("14_sa7yn")]
+is_reactive = null
 
 [node name="Harvest" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
@@ -660,6 +671,7 @@ script = ExtResource("47_cd634")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [node name="EndAction" parent="SelectorReact/Harvest" instance=ExtResource("14_sa7yn")]
+is_reactive = null
 
 [node name="Dormant" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
