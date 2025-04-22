@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://blq5o010g7ra8"
-path="res://.godot/imported/button_disabled.png-7a1a3734b6f01a13e560846987cde053.ctex"
+path="res://.godot/imported/button_disabled.png-7d2296e1e4ab90937d84fe39f2112cf7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entities/UI/HUD/Petition/button_disabled.png"
-dest_files=["res://.godot/imported/button_disabled.png-7a1a3734b6f01a13e560846987cde053.ctex"]
+source_file="res://Entities/UI/Overlays/Petition/Art/button_disabled.png"
+dest_files=["res://.godot/imported/button_disabled.png-7d2296e1e4ab90937d84fe39f2112cf7.ctex"]
 
 [params]
 

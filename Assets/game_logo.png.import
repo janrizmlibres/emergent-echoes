@@ -2,13 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-<<<<<<< HEAD:Entities/UI/HUD/Prompt/Prompt BG.png.import
-uid="uid://chebn1ujnluva"
-path="res://.godot/imported/Prompt BG.png-e8e2927dd655ba7791520617b6ea7118.ctex"
-=======
-uid="uid://cvquecdsaxooi"
+uid="uid://ch6ytm1to0e5x"
 path="res://.godot/imported/game_logo.png-ce467ffdaaac5a2681832e254fdd51ce.ctex"
->>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032:Assets/game_logo.png.import
 metadata={
 "vram_texture": false
 }

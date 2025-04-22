@@ -2,26 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-<<<<<<<< HEAD:Entities/UI/Overlays/Petition/Art/minus.png.import
-uid="uid://c00k2xv0jfhg3"
-path="res://.godot/imported/minus.png-ef9257d454c43ff0cf0aa6d2d46956bb.ctex"
-========
-uid="uid://chebn1ujnluva"
-path="res://.godot/imported/bg_five.png-2c2565d44380cc2add7dbc92dc103a72.ctex"
->>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032:Entities/UI/Overlays/InfoPanel/Art/bg_five.png.import
+uid="uid://jk0eh8p1tk3d"
+path="res://.godot/imported/minus.png-b077d256090aff68d71447068ef96dc7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-<<<<<<<< HEAD:Entities/UI/Overlays/Petition/Art/minus.png.import
-source_file="res://Entities/UI/HUD/Petition/minus.png"
-dest_files=["res://.godot/imported/minus.png-ef9257d454c43ff0cf0aa6d2d46956bb.ctex"]
-========
-source_file="res://Entities/UI/Overlays/InfoPanel/Art/bg_five.png"
-dest_files=["res://.godot/imported/bg_five.png-2c2565d44380cc2add7dbc92dc103a72.ctex"]
->>>>>>>> 2018e27dc2ba92e52360933b43ad784a8bc2e032:Entities/UI/Overlays/InfoPanel/Art/bg_five.png.import
+source_file="res://Entities/UI/Overlays/Petition/Art/minus.png"
+dest_files=["res://.godot/imported/minus.png-b077d256090aff68d71447068ef96dc7.ctex"]
 
 [params]
 

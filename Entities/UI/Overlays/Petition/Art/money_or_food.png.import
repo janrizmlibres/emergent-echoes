@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://brmnoxys67cqu"
-path="res://.godot/imported/money_or_food.png-74ca74d9b2c1773ae9b3de20530323b9.ctex"
+path="res://.godot/imported/money_or_food.png-779841a561d6f4551457cb0d6e000de1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entities/UI/HUD/Petition/money_or_food.png"
-dest_files=["res://.godot/imported/money_or_food.png-74ca74d9b2c1773ae9b3de20530323b9.ctex"]
+source_file="res://Entities/UI/Overlays/Petition/Art/money_or_food.png"
+dest_files=["res://.godot/imported/money_or_food.png-779841a561d6f4551457cb0d6e000de1.ctex"]
 
 [params]
 

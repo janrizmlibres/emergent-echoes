@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bm0e7p2re1ffv"
-path="res://.godot/imported/slots.png-1f59a26dbca8db0eb12357f5251e4490.ctex"
+path="res://.godot/imported/slots.png-655d7f9f215784b4bd40b9e0128a3ab2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entities/UI/HUD/Petition/slots.png"
-dest_files=["res://.godot/imported/slots.png-1f59a26dbca8db0eb12357f5251e4490.ctex"]
+source_file="res://Entities/UI/Overlays/Petition/Art/slots.png"
+dest_files=["res://.godot/imported/slots.png-655d7f9f215784b4bd40b9e0128a3ab2.ctex"]
 
 [params]
 

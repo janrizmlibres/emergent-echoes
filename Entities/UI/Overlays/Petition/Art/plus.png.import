@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b5nu6e4lalsdt"
-path="res://.godot/imported/plus.png-c88ed2c609eef86927eda13a8991cd92.ctex"
+path="res://.godot/imported/plus.png-43ecb5225f2181d53c9bd4c588037949.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entities/UI/HUD/Petition/plus.png"
-dest_files=["res://.godot/imported/plus.png-c88ed2c609eef86927eda13a8991cd92.ctex"]
+source_file="res://Entities/UI/Overlays/Petition/Art/plus.png"
+dest_files=["res://.godot/imported/plus.png-43ecb5225f2181d53c9bd4c588037949.ctex"]
 
 [params]
 

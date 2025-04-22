@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cwb0apf0b32kg"
-path="res://.godot/imported/player_petition.png-8b2b6dde498f58013e147ae290a8986b.ctex"
+path="res://.godot/imported/player_petition.png-5473073a4591a99bf72bef34b7b4fcc4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entities/UI/HUD/Petition/player_petition.png"
-dest_files=["res://.godot/imported/player_petition.png-8b2b6dde498f58013e147ae290a8986b.ctex"]
+source_file="res://Entities/UI/Overlays/Petition/Art/player_petition.png"
+dest_files=["res://.godot/imported/player_petition.png-5473073a4591a99bf72bef34b7b4fcc4.ctex"]
 
 [params]
 
