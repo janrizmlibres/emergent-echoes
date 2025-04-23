@@ -15,6 +15,7 @@ func tick(_actor: Node, _blackboard: Blackboard) -> int:
 
 func interrupt(_actor: Node, blackboard: Blackboard) -> void:
 	var target: Actor = blackboard.get_value("data").target
+	if target.is_queued_for_deletion(): return
 	target.stop_interaction()
 
 func before_run(actor: Node, blackboard: Blackboard) -> void:

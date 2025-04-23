@@ -31,7 +31,6 @@ var is_in_knockback := false
 
 func _ready():
 	super._ready()
-	PCG.crime_committed.connect(on_crime_committed)
 	PCG.danger_occured.connect(on_danger_occured)
 
 func _physics_process(_delta):
@@ -128,31 +127,31 @@ func _on_npc_agent_action_evaluated(action_data: ActionData):
 	# var main_state := PCG.map_action_to_main_state(action_data.action)
 	set_main_state(action_data.action as int, action_data.data)
 
-func on_crime_committed(criminal: Actor, victim: Actor):
-	if criminal == self: return
-	if criminal not in actors_in_range and victim not in actors_in_range:
-		return
-
-	if not WorldState.actor_has_trait(self, "lawful"):
-		executor.start_action(PCG.Action.FLEE, {"target": criminal})
-		return
+func notify_npc_crime_committed(crime: Crime):
+	pass
+	# if not WorldState.actor_has_trait(self, "lawful"):
+	# 	executor.start_action(PCG.Action.FLEE, {"target": crime.criminal})
+	# 	return
 	
-	executor.start_action(PCG.Action.PURSUIT_REACT, {"target": criminal})
+	# executor.start_action(PCG.Action.PURSUIT_REACT, {"target": crime.criminal})
 
 func on_danger_occured(source: Actor):
-	if source == self or source not in actors_in_range:
-		return
+	pass
+	# if source == self or source not in actors_in_range:
+	# 	return
 
-	executor.pending_action = executor.current_tree.action_data
-	executor.start_action(PCG.Action.CAUTIOUS, {"target": source})
+	# executor.start_action(PCG.Action.CAUTIOUS, {"target": source})
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity):
 	if not is_in_knockback:
 		velocity = safe_velocity
 		move_and_slide()
 
-func _on_animation_tree_animation_finished(_anim_name: StringName):
-	executor.set_blackboard_value("eat_finished", true)
+func _on_animation_tree_animation_finished(anim_name: StringName):
+	if anim_name.contains("eat"):
+		executor.set_blackboard_value("eat_finished", true)
+	elif anim_name.contains("harvest"):
+		executor.set_blackboard_value("harvest_finished", true)
 
 func actor_pressed():
 	radial_menu.toggle()

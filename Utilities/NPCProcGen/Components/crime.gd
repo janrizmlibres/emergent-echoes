@@ -13,39 +13,44 @@ enum Status {
 }
 
 var investigator: NPC = null
-var status: Status = Status.PENDING
+var status := Status.PENDING
 var category: Category
 var criminal: Actor
-var participants: Array[Actor]
 
-var verifiers: Array[Actor] = []
-var falsifiers: Array[Actor] = []
+var _participants: Dictionary[Actor, bool] = {}
+var _verifiers: Dictionary[Actor, bool] = {}
+var _falsifiers: Dictionary[Actor, bool] = {}
 
-func _init(_category: Category, _criminal: Actor, _participants):
+func _init(_category: Category, _criminal: Actor):
 	category = _category
 	criminal = _criminal
-	participants = _participants
 
 func is_open():
 	return investigator == null and status == Status.PENDING
 
+func record_participant(actor: Actor):
+	_participants[actor] = true
+
+func cleanse_actor(actor: Actor):
+	# if actor is the investigator or criminal, do something
+	_participants.erase(actor)
+	_verifiers.erase(actor)
+	_falsifiers.erase(actor)
+
 func get_random_participant():
-	var filtered_participants = participants.filter(func(p):
+	var filtered_participants = _participants.keys().filter(func(p):
 		if not is_instance_valid(p): return false
-		if verifiers.has(p): return false
-		if falsifiers.has(p): return false
+		if _verifiers.has(p): return false
+		if _falsifiers.has(p): return false
 		return true
 	)
 
-	if not filtered_participants.is_empty():
-		return filtered_participants.pick_random()
-	
-	return null
+	return filtered_participants.pick_random()
 
 func all_participants_cleared():
-	var cleared = verifiers.size() + falsifiers.size()
-	assert(cleared <= participants.size(), "Cleared more participants then actual count")
-	return verifiers.size() + falsifiers.size() == participants.size()
+	var cleared = _verifiers.size() + _falsifiers.size()
+	assert(cleared <= _participants.size(), "Cleared more _participants then actual count")
+	return _verifiers.size() + _falsifiers.size() == _participants.size()
 
 func close(duty_increase: float) -> bool:
 	assert(investigator != null, "Cannot close case without investigator")
@@ -77,7 +82,7 @@ func complete_investigation(duty_increase: float):
 	print("Open cases: " + str(WorldState._crimes.filter(func(x): return x.is_open()).size()))
 
 func get_solve_probability():
-	if participants.size() > 3:
-		return float(verifiers.size()) / participants.size()
+	if _participants.size() > 3:
+		return float(_verifiers.size()) / _participants.size()
 	
-	return 0.1 + 0.2 * verifiers.size()
+	return 0.1 + 0.2 * _verifiers.size()

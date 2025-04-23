@@ -2,7 +2,11 @@
 extends ActionLeaf
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
-	var target = blackboard.get_value("data").target
+	var target: Actor = blackboard.get_value("data").target
+	
+	if target.is_queued_for_deletion():
+		return FAILURE
+
 	actor.face_target(target)
 	return RUNNING
 

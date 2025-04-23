@@ -19,14 +19,26 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		Waypoint.POINT:
 			target_position = target.global_position
 		Waypoint.REAR:
-			target_position = target.rear_marker.global_position
+			target_position = get_rear_waypoint(
+				target.global_position,
+				target.rear_marker.global_position
+			)
 		Waypoint.LATERAL:
-			target_position = get_lateral_waypoint(actor.global_position, target.global_position)
+			target_position = get_lateral_waypoint(
+				actor.global_position,
+				target.global_position
+			)
 		Waypoint.OMNI:
-			target_position = get_omni_waypoint(actor.global_position, target.global_position)
+			target_position = get_omni_waypoint(
+				actor.global_position,
+				target.global_position
+			)
 
 	blackboard.set_value("move_position", target_position)
 	return SUCCESS
+
+func get_rear_waypoint(target_pos: Vector2, marker: Vector2):
+	return target_pos + target_pos.direction_to(marker) * position_offset
 
 func get_lateral_waypoint(origin: Vector2, move_position: Vector2):
 	var offset1: Vector2 = Vector2(position_offset, 0)

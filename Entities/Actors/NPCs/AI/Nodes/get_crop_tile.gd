@@ -9,14 +9,12 @@ enum Status {
 @export var status: Status = Status.DORMANT
 
 func tick(_actor: Node, blackboard: Blackboard) -> int:
-	var crop_tiles = get_tree().get_nodes_in_group("CropTiles")
+	var crop_tile := WorldState.get_crop_in_status(status as int)
 	
-	for crop_tile in crop_tiles:
-		var tile = crop_tile as CropTile
-		if tile.status == status and not tile.is_attended:
-			tile.is_attended = true
-			blackboard.set_value("crop_tile", tile)
-			blackboard.set_value("move_position", tile.global_position)
-			return SUCCESS
+	if crop_tile != null:
+		crop_tile.is_attended = true
+		blackboard.set_value("crop_tile", crop_tile)
+		blackboard.set_value("move_position", crop_tile.global_position)
+		return SUCCESS
 	
 	return FAILURE

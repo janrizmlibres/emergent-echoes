@@ -1,0 +1,42 @@
+[gd_scene load_steps=9 format=3 uid="uid://cerl3egcfcs8f"]
+
+[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_co5rt"]
+[ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="2_xrfkp"]
+[ext_resource type="Script" uid="uid://xir4dkvi8wq3" path="res://addons/beehave/nodes/decorators/until_fail.gd" id="3_e00ft"]
+[ext_resource type="Script" uid="uid://pjnt4it6euru" path="res://addons/beehave/nodes/decorators/time_limiter.gd" id="4_iuafa"]
+[ext_resource type="PackedScene" uid="uid://c8mncoh4iemp3" path="res://Entities/Actors/NPCs/AI/Nodes/get_crop_tile.tscn" id="5_21qvk"]
+[ext_resource type="PackedScene" uid="uid://qwnvuvh4d71a" path="res://Entities/Actors/NPCs/AI/Nodes/move_to_position.tscn" id="6_yym33"]
+[ext_resource type="PackedScene" uid="uid://u3lyh1wujfr0" path="res://Entities/Actors/NPCs/AI/Nodes/modify_crop.tscn" id="7_y74mi"]
+[ext_resource type="PackedScene" uid="uid://5fj0qtxhah7q" path="res://Entities/Actors/NPCs/AI/Nodes/end_action.tscn" id="8_6su4d"]
+
+[node name="PlantBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("1_co5rt")
+blackboard = NodePath("@Node@57369")
+actor = NodePath("..")
+metadata/_custom_type_script = "uid://da7jagy6am60c"
+
+[node name="SequenceComposite" type="Node" parent="."]
+script = ExtResource("2_xrfkp")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="UntilFailDecorator" type="Node" parent="SequenceComposite"]
+script = ExtResource("3_e00ft")
+metadata/_custom_type_script = "uid://xir4dkvi8wq3"
+
+[node name="TimeLimiterDecorator" type="Node" parent="SequenceComposite/UntilFailDecorator"]
+script = ExtResource("4_iuafa")
+wait_time = 60.0
+metadata/_custom_type_script = "uid://pjnt4it6euru"
+
+[node name="SequenceComposite" type="Node" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator"]
+script = ExtResource("2_xrfkp")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="GetCropTile" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator/SequenceComposite" instance=ExtResource("5_21qvk")]
+
+[node name="MoveToPosition" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator/SequenceComposite" instance=ExtResource("6_yym33")]
+
+[node name="ModifyCrop" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator/SequenceComposite" instance=ExtResource("7_y74mi")]
+
+[node name="EndAction" parent="SequenceComposite" instance=ExtResource("8_6su4d")]
+is_reactive = false

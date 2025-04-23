@@ -2,7 +2,7 @@ class_name NPCManager
 extends Node
 
 var _traits: Dictionary[NPC, Dictionary] = {}
-var evaluators: Dictionary[NPC, Strategiser] = {}
+var evaluators: Dictionary[NPC, Evaluator] = {}
 
 func register_npc(npc: NPC, npc_agent: NPCAgent):
 	assert(npc not in _traits, "NPCManager: NPC already registered")
@@ -13,9 +13,14 @@ func register_npc(npc: NPC, npc_agent: NPCAgent):
 
 	npc_container.add_child(setup_traits(npc, npc_agent))
 	
-	evaluators[npc] = Strategiser.new(npc, npc_agent)
-	evaluators[npc].name = "Strategiser"
+	evaluators[npc] = Evaluator.new(npc, npc_agent)
+	evaluators[npc].name = "Evaluator"
 	npc_container.add_child(evaluators[npc])
+
+func unregister_npc(npc: NPC):
+	get_node(NodePath(npc.name)).queue_free()
+	_traits.erase(npc)
+	evaluators.erase(npc)
 
 func setup_traits(npc: NPC, npc_agent: NPCAgent) -> Node:
 	var traits_container = Node.new()
@@ -28,14 +33,10 @@ func setup_traits(npc: NPC, npc_agent: NPCAgent) -> Node:
 		add_trait(npc, ThiefTrait.new(npc, npc_agent.thief), "thief", traits_container)
 
 	if npc_agent.lawful > 0:
-		_traits[npc]["lawful"] = LawfulTrait.new(npc, npc_agent.lawful)
-		_traits[npc]["lawful"].name = "Lawful"
-		traits_container.add_child(_traits[npc]["lawful"])
+		add_trait(npc, LawfulTrait.new(npc, npc_agent.lawful), "lawful", traits_container)
 
 	if npc_agent.farmer > 0:
-		_traits[npc]["farmer"] = FarmerTrait.new(npc, npc_agent.farmer)
-		_traits[npc]["farmer"].name = "Farmer"
-		traits_container.add_child(_traits[npc]["farmer"])
+		add_trait(npc, FarmerTrait.new(npc, npc_agent.farmer), "farmer", traits_container)
 	
 	return traits_container
 
@@ -43,6 +44,9 @@ func add_trait(npc: NPC, module: BaseTrait, trait_name: String, container: Node)
 	_traits[npc][trait_name] = module
 	_traits[npc][trait_name].name = trait_name.capitalize()
 	container.add_child(_traits[npc][trait_name])
+
+func get_trait(npc: NPC, trait_name: String) -> BaseTrait:
+	return _traits[npc][trait_name]
 
 func get_traits(npc: NPC) -> Array:
 	return _traits[npc].values()

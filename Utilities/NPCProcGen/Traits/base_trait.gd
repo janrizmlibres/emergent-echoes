@@ -85,7 +85,13 @@ func validate_action(action: PCG.Action) -> bool:
 			return true
 	
 func calculate_weight(resource_type: PCG.ResourceType) -> float:
-	var chosen_resource := WorldState.resource_manager.get_resource(npc, resource_type)
+	var chosen_resource: BaseResource
+
+	if resource_type == PCG.ResourceType.TOTAL_FOOD:
+		chosen_resource = WorldState.resource_manager.total_food
+	else:
+		chosen_resource = WorldState.resource_manager.get_resource(npc, resource_type)
+
 	var deficiency_point = chosen_resource.get_deficiency_point()
 	var variance = chosen_resource.amount - deficiency_point
 	

@@ -11,9 +11,9 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	var probability = get_interrogation_probability(relationship)
 
 	if randf() < probability:
-		case.verifiers.append(target)
+		case._verifiers.append(target)
 	else:
-		case.falsifiers.append(target)
+		case._falsifiers.append(target)
 
 	npc.executor.end_action()
 	return SUCCESS

@@ -16,6 +16,10 @@ func register_actor(actor: Actor) -> void:
 	for peer_actor in peer_actors:
 		store_data(actor, peer_actor, actor_container)
 		store_data(peer_actor, actor, get_node(peer_actor.name as NodePath))
+	
+func unregister_actor(actor: Actor) -> void:
+	get_node(NodePath(actor.name)).queue_free()
+	_memories.erase(actor)
 
 func store_data(actor: Actor, query: Actor, container: Node) -> void:
 	_memories[actor][query] = ActorData.new()

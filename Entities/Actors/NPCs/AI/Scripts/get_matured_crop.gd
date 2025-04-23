@@ -2,13 +2,11 @@
 extends ActionLeaf
 
 func tick(_actor: Node, blackboard: Blackboard) -> int:
-	var crop_tiles = get_tree().get_nodes_in_group("CropTiles")
-	
-	for crop_tile in crop_tiles:
-		var tile = crop_tile as CropTile
-		if tile.status == CropTile.Status.MATURE and not tile.is_attended:
-			tile.is_attended = true
-			blackboard.set_value("crop_tile", tile)
-			return SUCCESS
+	var crop_tile := WorldState.get_crop_in_status(CropTile.Status.MATURE)
+
+	if crop_tile != null:
+		crop_tile.is_attended = true
+		blackboard.set_value("crop_tile", crop_tile)
+		return SUCCESS
 	
 	return FAILURE

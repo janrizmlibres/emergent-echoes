@@ -1,4 +1,4 @@
-class_name Strategiser
+class_name Evaluator
 extends Node
 
 var npc: NPC

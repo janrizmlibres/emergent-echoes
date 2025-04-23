@@ -6,15 +6,21 @@ func evaluation_proactive_action():
 		PCG.Action.THEFT,
 		PCG.ResourceType.MONEY,
 		choose_actor,
-		func(actor): return not actor.is_lawful()
+		validate_actor
 	)
 
 	add_targetted_action(
 		PCG.Action.THEFT,
 		PCG.ResourceType.FOOD,
 		choose_actor,
-		func(actor): return not actor.is_lawful()
+		validate_actor
 	)
+
+func validate_actor(actor: Actor) -> bool:
+	if actor is Player:
+		return true
+	
+	return not WorldState.npc_manager.has_trait(actor, "lawful")
 
 func choose_actor(candidates: Array[Actor]) -> Actor:
 	for actor in candidates:

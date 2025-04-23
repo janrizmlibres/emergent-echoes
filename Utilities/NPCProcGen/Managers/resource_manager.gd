@@ -42,6 +42,10 @@ func register_actor(actor: Actor, agent: PCGAgent):
 	
 	update_total_food(actor)
 
+func unregister_actor(actor: Actor):
+	get_node(NodePath(actor.name)).queue_free()
+	_actor_resources.erase(actor)
+
 func store_resource(actor: Actor, resource: BaseResource, node_name: String, container: Node):
 	_actor_resources[actor].append(resource)
 	resource.name = node_name
@@ -51,8 +55,10 @@ func update_total_food(actor: Actor):
 	total_food.amount += get_resource_amount(actor, PCG.ResourceType.FOOD)
 
 	var actor_count := WorldState.get_actor_count()
-	total_food.lower_threshold = PCG.food_lower_threshold * actor_count
-	total_food.upper_threshold = PCG.food_upper_threshold * actor_count
+	total_food.set_thresholds(
+		PCG.food_lower_threshold * actor_count,
+		PCG.food_upper_threshold * actor_count
+	)
 	
 func holds_resource(actor: Actor, type: PCG.ResourceType) -> bool:
 	var resource = get_resource(actor, type)

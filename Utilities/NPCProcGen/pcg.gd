@@ -1,6 +1,6 @@
 extends Node
 
-signal crime_committed(criminal: Actor)
+signal crime_committed(crime: Crime)
 signal danger_occured(source: Actor)
 
 enum ResourceType {
@@ -52,6 +52,9 @@ func execute_talk(npc: NPC, target: Actor) -> Array[int]:
 
 func execute_shop(npc: NPC) -> int:
 	return ShopController.execute(npc)
+
+func execute_theft(npc: NPC, target: Actor, resource_type: ResourceType) -> int:
+	return TheftController.execute(npc, target, resource_type)
 
 func emit_crime_committed(criminal: Actor) -> void:
 	crime_committed.emit(criminal)

@@ -6,13 +6,14 @@
 
 [node name="Player" instance=ExtResource("1_h34l7")]
 script = ExtResource("2_ngslm")
+max_speed = 60
 acceleration = 8
 
-[node name="PlayerAgent" type="Node" parent="." index="14"]
+[node name="PlayerAgent" type="Node" parent="." index="13"]
 script = ExtResource("3_ngslm")
 metadata/_custom_type_script = "uid://ducc6yrseljan"
 
-[node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="." index="15"]
+[node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="." index="14"]
 radius = 6.0
 
 [editable path="CarryProp"]

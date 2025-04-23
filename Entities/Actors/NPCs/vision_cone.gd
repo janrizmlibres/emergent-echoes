@@ -42,12 +42,16 @@ func _physics_process(_delta):
 	
 	for actor in npc_owner.actors_in_range.keys():
 		if actor not in detected_actors:
-			WorldState.memory_manager.set_last_known_position(
-				npc_owner,
-				actor,
-				actor.global_position
-			)
 			npc_owner.actors_in_range.erase(actor)
+
+			if is_instance_valid(actor):
+				WorldState.memory_manager.set_last_known_position(
+					npc_owner,
+					actor,
+					actor.global_position
+				)
+			else:
+				pass
 
 		detected_actors.erase(actor)
 

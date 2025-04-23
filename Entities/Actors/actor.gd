@@ -1,10 +1,10 @@
 class_name Actor
 extends CharacterBody2D
 
-@export var hit_points: float = 1
-@export var max_speed: int = 40
-@export var acceleration: int = 8
-@export var friction: int = 4
+@export var hit_points := 5
+@export var max_speed := 40
+@export var acceleration := 8
+@export var friction := 4
 
 var actors_in_range := {}
 
@@ -21,6 +21,7 @@ var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("par
 
 func _ready():
 	animation_tree.active = true
+	PCG.crime_committed.connect(_on_crime_committed)
 
 func set_blend_positions(x: float):
 	animation_tree.set("parameters/Idle/blend_position", x)
@@ -46,23 +47,26 @@ func _on_hurt_box_area_entered(area):
 	apply_knockback(direction, weapon.knockback)
 	apply_damage(weapon.actor)
 
+func _on_crime_committed(crime: Crime):
+	if crime.criminal != self and crime.criminal in actors_in_range:
+		crime.record_participant(self)
+	
+	notify_npc_crime_committed(crime)
+
+func notify_npc_crime_committed(_crime: Crime):
+	pass
+
 func apply_damage(damager: Actor = null):
 	hit_points -= 1
-	if hit_points > 0: return
 
-	if self is NPC:
-		(self as NPC).executor.bt.disable()
-
-	WorldState.queue_free_actor(self)
-	queue_free()
-
-	var participants = damager.actors_in_range.duplicate()
-	var crime: Crime = Crime.new(Crime.Category.MURDER, damager, participants)
-	WorldState._crimes.append(crime)
-
-	for participant in participants:
-		if participant is NPC:
-			(participant as NPC).crime_witnessed(crime)
+	if hit_points <= 0:
+		var crime := Crime.new(Crime.Category.MURDER, damager)
+		WorldState.record_crime(crime)
+		WorldState.unregister_actor(self)
+		PCG.crime_committed.emit(crime)
+		queue_free()
+	else:
+		PCG.danger_occured.emit(damager)
 
 func apply_knockback(_direction: Vector2, _force: float):
 	pass

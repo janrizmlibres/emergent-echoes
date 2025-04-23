@@ -31,7 +31,7 @@ func register_actor(actor: Actor) -> void:
 
 	_actor_state[actor] = ActorState.new()
 	_actor_state[actor].name = actor.name
-	get_node("ActorStates").add_child(_actor_state[actor])
+	$ActorStates.add_child(_actor_state[actor])
 
 	if pcg_agent is NPCAgent:
 		assert(actor is NPC, "NPCManager: Actor is not NPC.")
@@ -76,14 +76,8 @@ func set_status(actor, status):
 func actor_in_status(actor, status) -> bool:
 	return _actor_state[actor].status == status
 
-# func is_trackable(initiator: Actor, target: Actor) -> bool:
-# 	var target_last_position = initiator.memorizer.get_last_known_position(target)
-# 	if target_last_position != Vector2.INF: return true
-# 	if initiator.actors_in_range.has(self): return true
-# 	return false
-
 func is_valid_target(target: Actor) -> bool:
-	if target.is_queued_for_deletion():
+	if not _actor_state.has(target):
 		return false
 
 	var status := _actor_state[target].status
@@ -98,36 +92,45 @@ func actor_has_trait(actor: Actor, trait_name: String) -> bool:
 	if actor is Player: return false
 	return npc_manager.has_trait(actor, trait_name)
 
+func record_crime(crime: Crime):
+	_crimes.append(crime)
+
 func has_crimes() -> bool:
 	return _crimes.size() > 0
 
 func some_crop_in_status(status: CropTile.Status) -> bool:
 	for crop in _crops:
-		if crop.status == status:
+		if crop.status == status and !crop.is_attended:
 			return true
 	return false
 
-func get_open_case(investigator: NPC) -> Crime:
-	for crime in _crimes:
-		if not crime.is_open(): continue
-		crime.investigator = investigator
-		
-		if crime.participants.has(investigator):
-			crime.verifiers.append(investigator)
-		
-		return crime
-
+func get_crop_in_status(status: CropTile.Status) -> CropTile:
+	for crop in _crops:
+		if crop.status == status and !crop.is_attended:
+			return crop
 	return null
 
-# func queue_free_actor(actor: Actor):
-# 	_actor_state.erase(actor)
+func unregister_actor(actor: Actor):
+	_actor_state[actor].queue_free()
+	_actor_state.erase(actor)
 
-# 	for peer in get_peer_actors(actor):
-# 		peer.memorizer.actor_data.erase(actor)
-# 		peer.actors_in_range.erase(actor)
+	for crime in _crimes:
+		crime.cleanse_actor(actor)
+	
+	if actor is NPC:
+		npc_manager.unregister_npc(actor)
+	
+	resource_manager.unregister_actor(actor)
+	memory_manager.unregister_actor(actor)
 
+# func get_open_case(investigator: NPC) -> Crime:
 # 	for crime in _crimes:
-# 		if not crime.participants.has(actor): continue
-# 		if crime.verifiers.has(actor): continue
-# 		if not crime.falsifiers.has(actor):
-# 			crime.falsifiers.append(actor)
+# 		if not crime.is_open(): continue
+# 		crime.investigator = investigator
+		
+# 		if crime._participants.has(investigator):
+# 			crime._verifiers.append(investigator)
+		
+# 		return crime
+
+# 	return null
