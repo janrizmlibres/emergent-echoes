@@ -347,6 +347,7 @@ position = Vector2(658, 433)
 position = Vector2(680, 450)
 
 [node name="NavRegions" type="Node2D" parent="."]
+visible = false
 
 [node name="MainArea" type="NavigationRegion2D" parent="NavRegions"]
 navigation_polygon = SubResource("NavigationPolygon_17gdt")
@@ -384,6 +385,7 @@ position = Vector2(960, 391)
 food_amount = 40
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+process_mode = 3
 stream = ExtResource("14_a75b7")
 autoplay = true
 

@@ -14,7 +14,7 @@
 
 [node name="TheftBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_uf0po")
-blackboard = NodePath("@Node@187190")
+blackboard = NodePath("@Node@23198")
 actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 

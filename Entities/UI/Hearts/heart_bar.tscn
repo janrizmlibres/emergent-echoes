@@ -2,32 +2,25 @@
 
 [ext_resource type="Texture2D" uid="uid://dpvlt8y6ncbpv" path="res://Entities/UI/Hearts/Art/empty_heart.png" id="1_k56vi"]
 [ext_resource type="Script" uid="uid://d3disdptvpcpl" path="res://Entities/UI/Hearts/HeartBar.cs" id="1_mw6c7"]
-[ext_resource type="Texture2D" uid="uid://d8hi452w23s1" path="res://Entities/UI/Hearts/Art/full_heart.png" id="3_5p76u"]
+[ext_resource type="Texture2D" uid="uid://d8hi452w23s1" path="res://Entities/UI/Hearts/Art/full_heart.png" id="2_npeq1"]
 
-[node name="HeartBar" type="Control"]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("1_mw6c7")
-FullHeart = ExtResource("3_5p76u")
-EmptyHeart = ExtResource("1_k56vi")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 0
+[node name="HeartBar" type="HBoxContainer"]
 offset_right = 154.0
 offset_bottom = 40.0
 scale = Vector2(0.3, 0.3)
 theme_override_constants/separation = 5
+script = ExtResource("1_mw6c7")
+FullHeart = ExtResource("2_npeq1")
+EmptyHeart = ExtResource("1_k56vi")
 
-[node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 2
 texture = ExtResource("1_k56vi")
 
-[node name="TextureRect2" type="TextureRect" parent="HBoxContainer"]
+[node name="TextureRect2" type="TextureRect" parent="."]
 layout_mode = 2
 texture = ExtResource("1_k56vi")
 
-[node name="TextureRect3" type="TextureRect" parent="HBoxContainer"]
+[node name="TextureRect3" type="TextureRect" parent="."]
 layout_mode = 2
 texture = ExtResource("1_k56vi")

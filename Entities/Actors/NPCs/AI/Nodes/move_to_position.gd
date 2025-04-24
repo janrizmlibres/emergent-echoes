@@ -9,4 +9,5 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		return SUCCESS
 	
 	actor.move_agent()
+	actor.handle_animations()
 	return RUNNING

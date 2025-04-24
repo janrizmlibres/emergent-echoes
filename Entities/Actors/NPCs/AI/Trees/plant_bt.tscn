@@ -11,8 +11,8 @@
 
 [node name="PlantBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_co5rt")
-blackboard = NodePath("@Node@57369")
-actor = NodePath("..")
+blackboard = NodePath("@Node@23232")
+actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
 [node name="SequenceComposite" type="Node" parent="."]
@@ -35,6 +35,7 @@ metadata/_custom_type_script = "uid://jst6onxl5bwx"
 [node name="GetCropTile" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator/SequenceComposite" instance=ExtResource("5_21qvk")]
 
 [node name="MoveToPosition" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator/SequenceComposite" instance=ExtResource("6_yym33")]
+cautious_mode = null
 
 [node name="ModifyCrop" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator/SequenceComposite" instance=ExtResource("7_y74mi")]
 

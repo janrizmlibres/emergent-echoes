@@ -20,8 +20,8 @@
 
 [node name="PetitionBT" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_ssoqa")
-blackboard = NodePath("@Node@164849")
-actor = NodePath("")
+blackboard = NodePath("@Node@104976")
+actor = NodePath("..")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
 [node name="SelectorReactiveComposite" type="Node" parent="."]

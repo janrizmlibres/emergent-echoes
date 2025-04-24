@@ -47,17 +47,21 @@ func move(direction_vector: Vector2):
 
 	move_and_slide()
 
-func start_interaction(target):
-	var direction = global_position.direction_to(target.global_position)
-	set_blend_positions(direction.x)
-	state = State.DORMANT
-
-func stop_interaction():
-	state = State.ACTIVE
-
 func apply_knockback(direction: Vector2, force: float):
 	velocity = direction * force
 
 func _on_animation_tree_animation_finished(anim_name: StringName):
 	if anim_name.contains("attack"):
 		state = State.ACTIVE
+
+func _on_radius_actionable_body_entered(body: Node2D):
+	if body == self or body is not NPC:
+		return
+	
+	body.radial_menu.enable_petition()
+
+func _on_radius_actionable_body_exited(body: Node2D):
+	if body is not NPC:
+		return
+	
+	body.radial_menu.disable_petition()

@@ -30,8 +30,10 @@ func instantiate_bt(bt_scene: PackedScene) -> BeehaveTree:
 	return current_tree
 
 func set_blackboard_value(key: Variant, value: Variant) -> void:
-	assert(current_tree != null, "current_tree is null")
 	current_tree.blackboard.set_value(key, value)
+
+func get_blackboard_value(key: Variant) -> Variant:
+	return current_tree.blackboard.get_value(key)
 
 # class BTData:
 # 	var action_data: ActionData

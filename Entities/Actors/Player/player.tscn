@@ -1,8 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://jh8w0jv3rc0f"]
+[gd_scene load_steps=6 format=3 uid="uid://jh8w0jv3rc0f"]
 
 [ext_resource type="PackedScene" uid="uid://cmcj7lmi8c5yw" path="res://Entities/Actors/actor.tscn" id="1_h34l7"]
 [ext_resource type="Script" uid="uid://bmjvv7wfg7dpl" path="res://Entities/Actors/Player/player.gd" id="2_ngslm"]
 [ext_resource type="Script" uid="uid://ducc6yrseljan" path="res://Utilities/NPCProcGen/Nodes/player_agent.gd" id="3_ngslm"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ngslm"]
+radius = 18.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ngslm"]
+height = 32.0
 
 [node name="Player" instance=ExtResource("1_h34l7")]
 script = ExtResource("2_ngslm")
@@ -15,6 +21,20 @@ metadata/_custom_type_script = "uid://ducc6yrseljan"
 
 [node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="." index="14"]
 radius = 6.0
+
+[node name="RadiusActionable" type="Area2D" parent="." index="15"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RadiusActionable" index="0"]
+shape = SubResource("CircleShape2D_ngslm")
+
+[node name="LateralActionable" type="Area2D" parent="." index="16"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LateralActionable" index="0"]
+position = Vector2(5, 0)
+shape = SubResource("CapsuleShape2D_ngslm")
+
+[connection signal="body_entered" from="RadiusActionable" to="." method="_on_radius_actionable_body_entered"]
+[connection signal="body_exited" from="RadiusActionable" to="." method="_on_radius_actionable_body_exited"]
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

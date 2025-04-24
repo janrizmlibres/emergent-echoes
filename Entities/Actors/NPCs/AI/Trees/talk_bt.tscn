@@ -23,45 +23,45 @@
 
 [node name="TalkBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_ua0k4")
-blackboard = NodePath("@Node@23060")
-actor = NodePath("")
+blackboard = NodePath("@Node@102121")
+actor = NodePath("..")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
 [node name="SelectorReactiveComposite" type="Node" parent="."]
 script = ExtResource("11_anpka")
 metadata/_custom_type_script = "uid://lc1dnoc2x4b"
 
-[node name="SequenceComposite3" type="Node" parent="SelectorReactiveComposite"]
+[node name="SequenceComposite" type="Node" parent="SelectorReactiveComposite"]
 script = ExtResource("3_5pjq2")
 metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="SelectorComposite" type="Node" parent="SelectorReactiveComposite/SequenceComposite3"]
+[node name="SelectorComposite" type="Node" parent="SelectorReactiveComposite/SequenceComposite"]
 script = ExtResource("4_j76gq")
 metadata/_custom_type_script = "uid://cmlopw75b05c1"
 
-[node name="InverterDecorator" type="Node" parent="SelectorReactiveComposite/SequenceComposite3/SelectorComposite"]
+[node name="InverterDecorator" type="Node" parent="SelectorReactiveComposite/SequenceComposite/SelectorComposite"]
 script = ExtResource("4_ydwgd")
 metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
-[node name="TargetFound" parent="SelectorReactiveComposite/SequenceComposite3/SelectorComposite/InverterDecorator" instance=ExtResource("5_xccwn")]
+[node name="TargetFound" parent="SelectorReactiveComposite/SequenceComposite/SelectorComposite/InverterDecorator" instance=ExtResource("5_xccwn")]
 
-[node name="InverterDecorator2" type="Node" parent="SelectorReactiveComposite/SequenceComposite3/SelectorComposite"]
+[node name="InverterDecorator2" type="Node" parent="SelectorReactiveComposite/SequenceComposite/SelectorComposite"]
 script = ExtResource("4_ydwgd")
 metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
-[node name="IsTargetValid" parent="SelectorReactiveComposite/SequenceComposite3/SelectorComposite/InverterDecorator2" instance=ExtResource("9_opvra")]
+[node name="IsTargetValid" parent="SelectorReactiveComposite/SequenceComposite/SelectorComposite/InverterDecorator2" instance=ExtResource("9_opvra")]
 
-[node name="GetRandomTarget" type="Node" parent="SelectorReactiveComposite/SequenceComposite3"]
+[node name="GetRandomTarget" type="Node" parent="SelectorReactiveComposite/SequenceComposite"]
 script = ExtResource("6_nmur2")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
-[node name="InverterDecorator" type="Node" parent="SelectorReactiveComposite/SequenceComposite3"]
+[node name="InverterDecorator" type="Node" parent="SelectorReactiveComposite/SequenceComposite"]
 script = ExtResource("4_ydwgd")
 metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
-[node name="TargetFound" parent="SelectorReactiveComposite/SequenceComposite3/InverterDecorator" instance=ExtResource("5_xccwn")]
+[node name="TargetFound" parent="SelectorReactiveComposite/SequenceComposite/InverterDecorator" instance=ExtResource("5_xccwn")]
 
-[node name="EndAction" parent="SelectorReactiveComposite/SequenceComposite3" instance=ExtResource("7_7v0nh")]
+[node name="EndAction" parent="SelectorReactiveComposite/SequenceComposite" instance=ExtResource("7_7v0nh")]
 is_reactive = false
 
 [node name="SequenceReactiveComposite" type="Node" parent="SelectorReactiveComposite"]

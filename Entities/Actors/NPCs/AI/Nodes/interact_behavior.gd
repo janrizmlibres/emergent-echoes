@@ -8,6 +8,7 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		return FAILURE
 
 	actor.face_target(target)
+	actor.stop_agent()
 	return RUNNING
 
 func interrupt(actor: Node, _blackboard: Blackboard) -> void:

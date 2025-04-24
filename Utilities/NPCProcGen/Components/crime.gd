@@ -31,6 +31,14 @@ func is_open():
 func record_participant(actor: Actor):
 	_participants[actor] = true
 
+func mark_as_verifier(actor: Actor):
+	assert(_participants.has(actor), "Actor is not a participant")
+	_verifiers[actor] = true
+
+func mark_as_falsifier(actor: Actor):
+	assert(_participants.has(actor), "Actor is not a participant")
+	_falsifiers[actor] = true
+
 func cleanse_actor(actor: Actor):
 	# if actor is the investigator or criminal, do something
 	_participants.erase(actor)

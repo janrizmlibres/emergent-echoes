@@ -27,11 +27,11 @@ var is_in_knockback := false
 
 @onready var executor: Executor = $Executor
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
-@onready var radial_menu: Control = $RadialMenu
+@onready var radial_menu: RadialMenu = $RadialMenu
 
 func _ready():
 	super._ready()
-	PCG.danger_occured.connect(on_danger_occured)
+	PCG.threat_present.connect(_on_threat_present)
 
 func _physics_process(_delta):
 	if is_in_knockback:
@@ -44,7 +44,6 @@ func move_agent():
 	var direction = global_position.direction_to(destination)
 	var new_velocity = velocity.move_toward(direction * max_speed, acceleration)
 	set_agent_velocity(new_velocity)
-	handle_animations()
 
 func stop_agent():
 	var new_velocity = velocity.move_toward(Vector2.ZERO, friction)
@@ -88,10 +87,17 @@ func stop_interaction():
 func face_target(target: Actor) -> void:
 	var direction = global_position.direction_to(target.global_position)
 	set_blend_positions(direction.x)
-	stop_agent()
 
 func set_main_state(new_main: MainState, data := {}):
 	assert(state.react == ReactState.NONE, "Cannot set main state while in react state")
+
+	if state.main.state == MainState.PLANT:
+		seed_prop.hide()
+		var crop_tile: CropTile = executor.get_blackboard_value("crop_tile")
+
+		if crop_tile != null:
+			crop_tile.is_attended = false
+
 	state.main = MainData.new(new_main, data)
 	run_main_state(new_main, data)
 
@@ -111,36 +117,40 @@ func set_react_state(new_react: ReactState, data := {}):
 		emote_bubble.activate()
 		WorldState.set_status(self, ActorState.State.OCCUPIED)
 	
-	# var action := PCG.map_react_state_to_action(new_react)
 	executor.start_action(new_react as int, data)
 
 func run_main_state(main_state: MainState, data := {}):
 	if main_state == MainState.WANDER:
 		PCG.run_evaluation(self)
+	elif main_state == MainState.PLANT:
+		seed_prop.show()
 	
 	# var action := PCG.map_main_state_to_action(main_state)
 	executor.start_action(main_state as int, data)
 
 # func exit_state( data := {}):
 
+func notify_npc_crime_committed(crime: Crime):
+	if not WorldState.actor_has_trait(self, "lawful"):
+		set_react_state(NPC.ReactState.FLEE, {"target": crime.criminal})
+		return
+	
+	set_react_state(NPC.ReactState.PURSUIT, {"target": crime.criminal})
+
+func react_from_attack(attacker: Actor):
+	pass
+	#! Incomplete
+	# set_react_state(NPC.ReactState.FLEE)
+
 func _on_npc_agent_action_evaluated(action_data: ActionData):
 	# var main_state := PCG.map_action_to_main_state(action_data.action)
 	set_main_state(action_data.action as int, action_data.data)
 
-func notify_npc_crime_committed(crime: Crime):
-	pass
-	# if not WorldState.actor_has_trait(self, "lawful"):
-	# 	executor.start_action(PCG.Action.FLEE, {"target": crime.criminal})
-	# 	return
-	
-	# executor.start_action(PCG.Action.PURSUIT_REACT, {"target": crime.criminal})
+func _on_threat_present(source: Actor, recipient: Actor):
+	if source == self or recipient == self or source not in actors_in_range:
+		return
 
-func on_danger_occured(source: Actor):
-	pass
-	# if source == self or source not in actors_in_range:
-	# 	return
-
-	# executor.start_action(PCG.Action.CAUTIOUS, {"target": source})
+	set_react_state(NPC.ReactState.CAUTIOUS, {"target": source})
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity):
 	if not is_in_knockback:

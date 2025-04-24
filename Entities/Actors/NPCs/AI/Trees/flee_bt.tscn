@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=3 uid="uid://duay2jxwu74pg"]
+
+[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_8lcwy"]
+[ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="2_xs8pe"]
+[ext_resource type="Script" uid="uid://ddsynpu03eev2" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="3_qpac4"]
+[ext_resource type="PackedScene" uid="uid://dk8go1ye7kdwd" path="res://Entities/Actors/NPCs/AI/Nodes/get_target_position.tscn" id="4_0vc45"]
+[ext_resource type="PackedScene" uid="uid://qwnvuvh4d71a" path="res://Entities/Actors/NPCs/AI/Nodes/move_to_position.tscn" id="5_fgykr"]
+
+[node name="FleeBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("1_8lcwy")
+blackboard = NodePath("@Node@23244")
+actor = NodePath("")
+metadata/_custom_type_script = "uid://da7jagy6am60c"
+
+[node name="SequenceComposite" type="Node" parent="."]
+script = ExtResource("2_xs8pe")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="SequenceReactiveComposite" type="Node" parent="SequenceComposite"]
+script = ExtResource("3_qpac4")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="GetTargetPosition" parent="SequenceComposite/SequenceReactiveComposite" instance=ExtResource("4_0vc45")]
+
+[node name="MoveToPosition" parent="SequenceComposite/SequenceReactiveComposite" instance=ExtResource("5_fgykr")]
+cautious_mode = null

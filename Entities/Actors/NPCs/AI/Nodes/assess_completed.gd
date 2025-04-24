@@ -2,5 +2,5 @@
 extends ConditionLeaf
 
 func tick(_actor: Node, blackboard: Blackboard) -> int:
-  var data = blackboard.get_value("data")
-  return SUCCESS if data.assess_completed else FAILURE
+  var assess_completed: bool = blackboard.get_value("data").assess_completed
+  return SUCCESS if assess_completed else FAILURE

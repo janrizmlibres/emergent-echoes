@@ -9,7 +9,7 @@ motion_mode = 0
 [node name="Sprite2D" parent="." index="0"]
 texture = ExtResource("2_nokag")
 
-[node name="AnimationTree" parent="." index="9"]
+[node name="AnimationTree" parent="." index="10"]
 parameters/Idle/blend_position = 0.00240386
 
 [node name="NPCAgent" parent="." index="13"]
@@ -17,7 +17,7 @@ survival = 0.6
 farmer = 0.7
 
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
-blackboard = NodePath("@Node@193842")
+blackboard = NodePath("@Node@23195")
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

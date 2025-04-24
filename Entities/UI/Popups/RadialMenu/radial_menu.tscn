@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://5gkp1uhyoheo"]
+[gd_scene load_steps=7 format=3 uid="uid://5gkp1uhyoheo"]
 
 [ext_resource type="Script" uid="uid://x8hvxaly3q0b" path="res://Entities/UI/Popups/RadialMenu/radial_menu.gd" id="1_u6fpj"]
-[ext_resource type="Texture2D" uid="uid://bjs34tu500ui6" path="res://Entities/UI/Indicators/FloatingText/Art/duty.png" id="3_ydjiu"]
-[ext_resource type="Texture2D" uid="uid://c5rojmrfyk17j" path="res://Entities/UI/Indicators/FloatingText/Art/food.png" id="4_ftmg2"]
+[ext_resource type="Texture2D" uid="uid://123s670ygm6c" path="res://Entities/UI/Popups/RadialMenu/Art/tile_0013.png" id="2_7slf2"]
+[ext_resource type="Texture2D" uid="uid://sitbd7yvy3go" path="res://Entities/UI/Popups/RadialMenu/Art/information.png" id="3_7slf2"]
+[ext_resource type="Texture2D" uid="uid://d0kc87rvhnptr" path="res://Entities/UI/Popups/RadialMenu/Art/tile_0012.png" id="3_ydjiu"]
+[ext_resource type="Texture2D" uid="uid://iix8thos1om2" path="res://Entities/UI/Popups/RadialMenu/Art/tile_0065.png" id="4_ydjiu"]
+[ext_resource type="Texture2D" uid="uid://cvob7qxdeb5ui" path="res://Entities/UI/Popups/RadialMenu/Art/plus.png" id="5_5y3ki"]
 
 [node name="RadialMenu" type="Control"]
 z_index = 1
@@ -16,7 +19,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_u6fpj")
 
-[node name="CooldownButton" type="TextureButton" parent="."]
+[node name="InfoButton" type="TextureButton" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -30,8 +33,28 @@ grow_vertical = 2
 size_flags_horizontal = 4
 button_mask = 3
 texture_normal = ExtResource("3_ydjiu")
+texture_pressed = ExtResource("3_ydjiu")
+texture_hover = ExtResource("4_ydjiu")
+texture_disabled = ExtResource("2_7slf2")
 
-[node name="CooldownButton2" type="TextureButton" parent="."]
+[node name="TextureRect" type="TextureRect" parent="InfoButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 5.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_7slf2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PetitionButton" type="TextureButton" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -42,5 +65,30 @@ offset_right = 16.0
 offset_bottom = 16.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 4
+disabled = true
 button_mask = 3
-texture_normal = ExtResource("4_ftmg2")
+texture_normal = ExtResource("3_ydjiu")
+texture_pressed = ExtResource("3_ydjiu")
+texture_hover = ExtResource("4_ydjiu")
+texture_disabled = ExtResource("2_7slf2")
+
+[node name="TextureRect" type="TextureRect" parent="PetitionButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 5.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_5y3ki")
+expand_mode = 1
+stretch_mode = 5
+
+[connection signal="button_up" from="InfoButton" to="." method="_on_info_button_button_up"]
+[connection signal="button_up" from="PetitionButton" to="." method="_on_petition_button_button_up"]

@@ -64,6 +64,11 @@ func get_peer_actors(actor: Actor) -> Array[Actor]:
 func get_actor_count() -> int:
 	return _actor_state.size()
 
+func get_player() -> Player:
+	var actors := _actor_state.keys()
+	var idx := actors.find_custom(func(a): return a is Player)
+	return actors[idx] if idx != -1 else null
+
 func get_current_action(actor):
 	return _actor_state[actor].current_action
 

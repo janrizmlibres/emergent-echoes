@@ -51,6 +51,9 @@ func get_trait(npc: NPC, trait_name: String) -> BaseTrait:
 func get_traits(npc: NPC) -> Array:
 	return _traits[npc].values()
 
+func get_traits_as_text(npc: NPC) -> Array:
+	return _traits[npc].keys()
+
 func run_evaluation(npc: NPC) -> void:
 	evaluators[npc].start_timer()
 

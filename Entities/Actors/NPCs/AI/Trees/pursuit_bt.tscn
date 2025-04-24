@@ -1,0 +1,80 @@
+[gd_scene load_steps=15 format=3 uid="uid://bec6sien0uvpb"]
+
+[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_qq0cw"]
+[ext_resource type="Script" uid="uid://lc1dnoc2x4b" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="2_py2n1"]
+[ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="3_5go8b"]
+[ext_resource type="Script" uid="uid://cx07pxr1bsjba" path="res://addons/beehave/nodes/decorators/inverter.gd" id="4_ae3ru"]
+[ext_resource type="PackedScene" uid="uid://c124x0mip4ii3" path="res://Entities/Actors/NPCs/AI/Nodes/assess_completed.tscn" id="5_sssf0"]
+[ext_resource type="PackedScene" uid="uid://5p51sjohtuli" path="res://Entities/Actors/NPCs/AI/Nodes/assess_case.tscn" id="6_o0wxy"]
+[ext_resource type="PackedScene" uid="uid://cualnqewkna60" path="res://Entities/Actors/NPCs/AI/Nodes/is_target_valid.tscn" id="7_fmfek"]
+[ext_resource type="PackedScene" uid="uid://5fj0qtxhah7q" path="res://Entities/Actors/NPCs/AI/Nodes/end_action.tscn" id="8_2outk"]
+[ext_resource type="Script" uid="uid://ddsynpu03eev2" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="9_pttjv"]
+[ext_resource type="PackedScene" uid="uid://dk8go1ye7kdwd" path="res://Entities/Actors/NPCs/AI/Nodes/get_target_position.tscn" id="10_bq85u"]
+[ext_resource type="PackedScene" uid="uid://qwnvuvh4d71a" path="res://Entities/Actors/NPCs/AI/Nodes/move_to_position.tscn" id="11_r0poc"]
+[ext_resource type="Script" uid="uid://bekltbw08stn8" path="res://Entities/Actors/NPCs/AI/Scripts/detain_target.gd" id="12_6yxb1"]
+[ext_resource type="Script" uid="uid://bybu8q3l0svgx" path="res://Entities/Actors/NPCs/AI/Scripts/get_prison_location.gd" id="13_guquh"]
+[ext_resource type="Script" uid="uid://dbjk2had23xqa" path="res://Entities/Actors/NPCs/AI/Scripts/release_captured_target.gd" id="14_yd821"]
+
+[node name="PursuitBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("1_qq0cw")
+blackboard = NodePath("@Node@23240")
+actor = NodePath("")
+metadata/_custom_type_script = "uid://da7jagy6am60c"
+
+[node name="SelectorReactiveComposite" type="Node" parent="."]
+script = ExtResource("2_py2n1")
+metadata/_custom_type_script = "uid://lc1dnoc2x4b"
+
+[node name="SequenceComposite2" type="Node" parent="SelectorReactiveComposite"]
+script = ExtResource("3_5go8b")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="InverterDecorator" type="Node" parent="SelectorReactiveComposite/SequenceComposite2"]
+script = ExtResource("4_ae3ru")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="AssessCompleted" parent="SelectorReactiveComposite/SequenceComposite2/InverterDecorator" instance=ExtResource("5_sssf0")]
+
+[node name="AssessCase" parent="SelectorReactiveComposite/SequenceComposite2" instance=ExtResource("6_o0wxy")]
+
+[node name="SequenceComposite3" type="Node" parent="SelectorReactiveComposite"]
+script = ExtResource("3_5go8b")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="InverterDecorator" type="Node" parent="SelectorReactiveComposite/SequenceComposite3"]
+script = ExtResource("4_ae3ru")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetValid" parent="SelectorReactiveComposite/SequenceComposite3/InverterDecorator" instance=ExtResource("7_fmfek")]
+
+[node name="EndAction" parent="SelectorReactiveComposite/SequenceComposite3" instance=ExtResource("8_2outk")]
+is_reactive = false
+
+[node name="SequenceComposite" type="Node" parent="SelectorReactiveComposite"]
+script = ExtResource("3_5go8b")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="SequenceReactiveComposite" type="Node" parent="SelectorReactiveComposite/SequenceComposite"]
+script = ExtResource("9_pttjv")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="GetTargetPosition" parent="SelectorReactiveComposite/SequenceComposite/SequenceReactiveComposite" instance=ExtResource("10_bq85u")]
+waypoint = 3
+
+[node name="MoveToPosition" parent="SelectorReactiveComposite/SequenceComposite/SequenceReactiveComposite" instance=ExtResource("11_r0poc")]
+cautious_mode = null
+
+[node name="DetainTarget" type="Node" parent="SelectorReactiveComposite/SequenceComposite"]
+script = ExtResource("12_6yxb1")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="GetPrisonLocation" type="Node" parent="SelectorReactiveComposite/SequenceComposite"]
+script = ExtResource("13_guquh")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="MoveToPosition" parent="SelectorReactiveComposite/SequenceComposite" instance=ExtResource("11_r0poc")]
+cautious_mode = null
+
+[node name="ReleaseCapturedTarget" type="Node" parent="SelectorReactiveComposite/SequenceComposite"]
+script = ExtResource("14_yd821")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"

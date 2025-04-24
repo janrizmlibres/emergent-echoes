@@ -18,8 +18,6 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	else:
 		(target as NPC).executor.set_enable(true)
 
-	Logger.info(target.name + " was captured")
-	Logger.info(case.investigator.name + " successfully solved case")
 	case.status = Crime.Status.SOLVED
 	case.complete_investigation(10)
 

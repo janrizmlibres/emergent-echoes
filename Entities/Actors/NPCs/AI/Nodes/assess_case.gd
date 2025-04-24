@@ -10,7 +10,7 @@ func tick(_actor: Node, blackboard: Blackboard) -> int:
 
 	if timer <= 0:
 		var data = blackboard.get_value("data")
-		data.assess_completed = true
+		data["assess_completed"] = true
 		blackboard.set_value("data", data)
 		return SUCCESS
 

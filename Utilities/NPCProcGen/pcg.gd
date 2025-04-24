@@ -1,7 +1,7 @@
 extends Node
 
 signal crime_committed(crime: Crime)
-signal danger_occured(source: Actor)
+signal threat_present(source: Actor, recipient: Actor)
 
 enum ResourceType {
 	NONE,
@@ -44,8 +44,13 @@ func run_evaluation(npc: NPC) -> void:
 func stop_evaluation(npc: NPC) -> void:
 	WorldState.npc_manager.evaluators[npc].stop_timer()
 
-func execute_petition(npc: NPC, target: Actor, resource_type: ResourceType) -> Array:
-	return PetitionController.execute(npc, target, resource_type)
+func execute_petition(
+	petitioner: Actor,
+	target: Actor,
+	resource_type,
+	desired_quantity := Globals.INT_MAX
+) -> Array:
+	return PetitionController.execute(petitioner, target, resource_type, desired_quantity)
 
 func execute_talk(npc: NPC, target: Actor) -> Array[int]:
 	return TalkController.execute(npc, target)
@@ -56,11 +61,11 @@ func execute_shop(npc: NPC) -> int:
 func execute_theft(npc: NPC, target: Actor, resource_type: ResourceType) -> int:
 	return TheftController.execute(npc, target, resource_type)
 
-func emit_crime_committed(criminal: Actor) -> void:
-	crime_committed.emit(criminal)
+func emit_crime_committed(crime: Crime) -> void:
+	crime_committed.emit(crime)
 
-func emit_danger_detected(source: Actor) -> void:
-	danger_occured.emit(source)
+func emit_threat_present(source: Actor, recipient: Actor) -> void:
+	threat_present.emit(source, recipient)
 
 func is_action_reactive(action: Action) -> bool:
 	var reactive_actions = [
@@ -74,6 +79,17 @@ func is_action_reactive(action: Action) -> bool:
 		return true
 
 	return false
+
+func resource_to_string(type: ResourceType) -> String:
+	match type:
+		ResourceType.NONE: return "None"
+		ResourceType.TOTAL_FOOD: return "Total Food"
+		ResourceType.MONEY: return "Money"
+		ResourceType.FOOD: return "Food"
+		ResourceType.SATIATION: return "Satiation"
+		ResourceType.COMPANIONSHIP: return "Companionship"
+		ResourceType.DUTY: return "Duty"
+		_: return "Unknown"
 
 func action_to_string(action: Action) -> String:
 	match action:

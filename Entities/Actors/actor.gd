@@ -48,7 +48,10 @@ func _on_hurt_box_area_entered(area):
 	apply_damage(weapon.actor)
 
 func _on_crime_committed(crime: Crime):
-	if crime.criminal != self and crime.criminal in actors_in_range:
+	if crime.criminal == self:
+		return
+
+	if crime.criminal in actors_in_range:
 		crime.record_participant(self)
 	
 	notify_npc_crime_committed(crime)
@@ -56,17 +59,23 @@ func _on_crime_committed(crime: Crime):
 func notify_npc_crime_committed(_crime: Crime):
 	pass
 
-func apply_damage(damager: Actor = null):
+func apply_damage(attacker: Actor = null):
 	hit_points -= 1
 
 	if hit_points <= 0:
-		var crime := Crime.new(Crime.Category.MURDER, damager)
-		WorldState.record_crime(crime)
+		if attacker != null:
+			var crime := Crime.new(Crime.Category.MURDER, attacker)
+			WorldState.record_crime(crime)
+			PCG.emit_crime_committed(crime)
+
 		WorldState.unregister_actor(self)
-		PCG.crime_committed.emit(crime)
 		queue_free()
-	else:
-		PCG.danger_occured.emit(damager)
+	elif attacker != null:
+		PCG.emit_threat_present(attacker, self)
+		react_from_attack(attacker)
+
+func react_from_attack(_attacker: Actor):
+	pass
 
 func apply_knockback(_direction: Vector2, _force: float):
 	pass

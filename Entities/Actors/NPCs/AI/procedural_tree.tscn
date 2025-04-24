@@ -58,7 +58,7 @@
 
 [node name="ProceduralTree" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_joxsq")
-blackboard = NodePath("@Node@115996")
+blackboard = NodePath("@Node@23234")
 actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
@@ -108,6 +108,7 @@ metadata/_custom_type_script = "uid://ddsynpu03eev2"
 waypoint = 3
 
 [node name="MoveToPosition" parent="SelectorReact/Pursuit/Selector/Sequence/SequenceReact" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [node name="DetainTarget" type="Node" parent="SelectorReact/Pursuit/Selector/Sequence"]
 script = ExtResource("39_efgux")
@@ -118,13 +119,14 @@ script = ExtResource("38_wjh3t")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [node name="MoveToPosition" parent="SelectorReact/Pursuit/Selector/Sequence" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [node name="ReleaseCapturedTarget" type="Node" parent="SelectorReact/Pursuit/Selector/Sequence"]
 script = ExtResource("39_f81io")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [node name="EndAction" parent="SelectorReact/Pursuit/Selector" instance=ExtResource("14_sa7yn")]
-is_reactive = null
+is_reactive = false
 
 [node name="Flee" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
@@ -139,9 +141,10 @@ max_radius = 200.0
 min_radius = 150.0
 
 [node name="MoveToPosition" parent="SelectorReact/Flee" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [node name="EndAction" parent="SelectorReact/Flee" instance=ExtResource("14_sa7yn")]
-is_reactive = null
+is_reactive = false
 
 [node name="Interact" type="Node" parent="SelectorReact"]
 script = ExtResource("9_367ub")
@@ -184,7 +187,7 @@ script = ExtResource("24_joxsq")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [node name="EndAction" parent="SelectorReact/Talk/Selector/SequenceComposite/SelectorComposite" instance=ExtResource("14_sa7yn")]
-is_reactive = null
+is_reactive = false
 
 [node name="SequenceComposite2" type="Node" parent="SelectorReact/Talk/Selector"]
 script = ExtResource("3_u33fa")
@@ -229,6 +232,7 @@ metadata/_custom_type_script = "uid://ddsynpu03eev2"
 [node name="GetWaitPosition" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/SelectorReact/Wait" instance=ExtResource("18_gwfqn")]
 
 [node name="MoveToPosition" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/SelectorReact/Wait" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [node name="ReachTarget" type="Node" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/SelectorReact"]
 script = ExtResource("9_367ub")
@@ -237,6 +241,7 @@ metadata/_custom_type_script = "uid://ddsynpu03eev2"
 [node name="GetTargetPosition" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/SelectorReact/ReachTarget" instance=ExtResource("19_u33fa")]
 
 [node name="MoveToPosition" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/SelectorReact/ReachTarget" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [node name="SetTargetReached" parent="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence/SelectorReact/ReachTarget" instance=ExtResource("22_fhn60")]
 
@@ -321,6 +326,7 @@ metadata/_custom_type_script = "uid://ddsynpu03eev2"
 [node name="GetWaitPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("18_gwfqn")]
 
 [node name="MoveToPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [node name="ReachTarget" type="Node" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/SelectorReact"]
 script = ExtResource("9_367ub")
@@ -329,6 +335,7 @@ metadata/_custom_type_script = "uid://ddsynpu03eev2"
 [node name="GetTargetPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("19_u33fa")]
 
 [node name="MoveToPosition" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [node name="SetTargetReached" parent="SelectorReact/Petition/Selector2/SequenceComposite/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("22_fhn60")]
 
@@ -365,7 +372,7 @@ metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 [node name="IsTargetValid" parent="SelectorReact/Petition/Selector2/Sequence/Inverter" instance=ExtResource("19_3e0ew")]
 
 [node name="EndAction" parent="SelectorReact/Petition/Selector2/Sequence" instance=ExtResource("14_sa7yn")]
-is_reactive = null
+is_reactive = false
 
 [node name="Eat" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
@@ -412,16 +419,17 @@ script = ExtResource("40_kc3wj")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [node name="MoveToPosition" parent="SelectorReact/Shop/SelectorComposite/SequenceReactiveComposite/Sequence" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [node name="BuyFood" type="Node" parent="SelectorReact/Shop/SelectorComposite/SequenceReactiveComposite/Sequence"]
 script = ExtResource("41_68kkn")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [node name="EndAction" parent="SelectorReact/Shop/SelectorComposite/SequenceReactiveComposite/Sequence" instance=ExtResource("14_sa7yn")]
-is_reactive = null
+is_reactive = false
 
 [node name="EndAction" parent="SelectorReact/Shop/SelectorComposite" instance=ExtResource("14_sa7yn")]
-is_reactive = null
+is_reactive = false
 
 [node name="Theft" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
@@ -463,6 +471,7 @@ metadata/_custom_type_script = "uid://ddsynpu03eev2"
 waypoint = 1
 
 [node name="MoveToPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact/SequenceReact" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [node name="SetTargetReached" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/SequenceReact" instance=ExtResource("22_fhn60")]
 
@@ -481,9 +490,10 @@ max_radius = 300.0
 min_radius = 150.0
 
 [node name="MoveToPosition" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/Sequence" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [node name="EndAction" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite/Selector/Sequence" instance=ExtResource("14_sa7yn")]
-is_reactive = null
+is_reactive = false
 
 [node name="SequenceComposite2" type="Node" parent="SelectorReact/Theft/SelectorComposite"]
 script = ExtResource("3_u33fa")
@@ -496,7 +506,7 @@ metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 [node name="IsTargetValid" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite2/InverterDecorator" instance=ExtResource("19_3e0ew")]
 
 [node name="EndAction" parent="SelectorReact/Theft/SelectorComposite/SequenceComposite2" instance=ExtResource("14_sa7yn")]
-is_reactive = null
+is_reactive = false
 
 [node name="Interrogate" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
@@ -565,6 +575,7 @@ metadata/_custom_type_script = "uid://ddsynpu03eev2"
 [node name="GetWaitPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("18_gwfqn")]
 
 [node name="MoveToPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/SelectorReact/Wait" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [node name="ReachTarget" type="Node" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/SelectorReact"]
 script = ExtResource("9_367ub")
@@ -573,6 +584,7 @@ metadata/_custom_type_script = "uid://ddsynpu03eev2"
 [node name="GetTargetPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("19_u33fa")]
 
 [node name="MoveToPosition" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [node name="SetTargetReached" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceReact/Selector/Sequence/SelectorReact/ReachTarget" instance=ExtResource("22_fhn60")]
 
@@ -605,7 +617,7 @@ metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 [node name="IsTargetValid" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceComposite/InverterDecorator" instance=ExtResource("19_3e0ew")]
 
 [node name="EndAction" parent="SelectorReact/Interrogate/Selector/Sequence2/SelectorComposite/SequenceComposite" instance=ExtResource("14_sa7yn")]
-is_reactive = null
+is_reactive = false
 
 [node name="Plant" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
@@ -631,11 +643,12 @@ metadata/_custom_type_script = "uid://jst6onxl5bwx"
 [node name="GetCropTile" parent="SelectorReact/Plant/UntilFail/TimeLimiterDecorator/Sequence" instance=ExtResource("44_cd634")]
 
 [node name="MoveToPosition" parent="SelectorReact/Plant/UntilFail/TimeLimiterDecorator/Sequence" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [node name="ModifyCrop" parent="SelectorReact/Plant/UntilFail/TimeLimiterDecorator/Sequence" instance=ExtResource("45_u3nau")]
 
 [node name="EndAction" parent="SelectorReact/Plant" instance=ExtResource("14_sa7yn")]
-is_reactive = null
+is_reactive = false
 
 [node name="Harvest" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
@@ -662,6 +675,7 @@ metadata/_custom_type_script = "uid://jst6onxl5bwx"
 status = 2
 
 [node name="MoveToPosition" parent="SelectorReact/Harvest/UntilFail/TimeLimiter/Sequence" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [node name="ModifyCrop" parent="SelectorReact/Harvest/UntilFail/TimeLimiter/Sequence" instance=ExtResource("45_u3nau")]
 status = 0
@@ -671,7 +685,7 @@ script = ExtResource("47_cd634")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [node name="EndAction" parent="SelectorReact/Harvest" instance=ExtResource("14_sa7yn")]
-is_reactive = null
+is_reactive = false
 
 [node name="Dormant" type="Node" parent="SelectorReact"]
 script = ExtResource("3_u33fa")
@@ -696,5 +710,6 @@ metadata/_custom_type_script = "uid://dxlpexlc4dupq"
 max_radius = 100.0
 
 [node name="MoveToPosition" parent="SelectorReact/Dormant" instance=ExtResource("15_oxd8l")]
+cautious_mode = null
 
 [connection signal="timeout" from="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence2/FinishTalking/Timer" to="SelectorReact/Talk/Selector/SequenceComposite2/Selector2/SequenceReact2/Selector2/Sequence2/FinishTalking" method="_on_timer_timeout"]
