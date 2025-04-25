@@ -1,12 +1,11 @@
 [gd_scene load_steps=4 format=3 uid="uid://c27rcdohyjih5"]
 
 [ext_resource type="PackedScene" uid="uid://cmcj7lmi8c5yw" path="res://Entities/Actors/actor.tscn" id="1_nmndn"]
-[ext_resource type="Script" uid="uid://bmjvv7wfg7dpl" path="res://Entities/Actors/Player/player.gd" id="2_bfj04"]
+[ext_resource type="Script" uid="uid://dfr7fnansedqw" path="res://Entities/Actors/Player/Alt/player_alt.gd" id="2_kv7ua"]
 [ext_resource type="Script" uid="uid://ducc6yrseljan" path="res://Utilities/NPCProcGen/Nodes/player_agent.gd" id="3_6qiq3"]
 
 [node name="Player" instance=ExtResource("1_nmndn")]
-script = ExtResource("2_bfj04")
-max_speed = 60
+script = ExtResource("2_kv7ua")
 acceleration = 8
 
 [node name="PlayerAgent" type="Node" parent="." index="13"]

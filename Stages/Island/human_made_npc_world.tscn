@@ -1,15 +1,16 @@
 [gd_scene load_steps=16 format=4 uid="uid://b34vifoy3iq2x"]
 
+[ext_resource type="PackedScene" uid="uid://bl0lf3j2kaill" path="res://Entities/UI/HUD/hud_interface.tscn" id="1_4ofr6"]
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://Stages/Island/island.tres" id="2_4crdb"]
+[ext_resource type="Script" uid="uid://csadocvti42q2" path="res://Entities/UI/HUD/hud_interface_alt.gd" id="2_ukkkd"]
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/base_camera.tscn" id="3_ss2fi"]
-[ext_resource type="PackedScene" uid="uid://c27rcdohyjih5" path="res://Entities/Actors/Player/player_alt.tscn" id="4_4ofr6"]
+[ext_resource type="PackedScene" uid="uid://c27rcdohyjih5" path="res://Entities/Actors/Player/Alt/player_alt.tscn" id="4_4ofr6"]
 [ext_resource type="PackedScene" uid="uid://c46vvjqepxr5c" path="res://Entities/Actors/NPCs/Alts/Garreth/garreth_alt.tscn" id="5_4ofr6"]
 [ext_resource type="PackedScene" uid="uid://etlq2q1jbury" path="res://Entities/Actors/NPCs/Alts/Silas/silas_alt.tscn" id="6_whi4o"]
 [ext_resource type="Script" uid="uid://cnmvoju8bx0ru" path="res://Stages/Island/crop_manager.gd" id="8_4ofr6"]
 [ext_resource type="PackedScene" uid="uid://cejru5227hvql" path="res://Entities/Actors/NPCs/Alts/Pimble/pimble_alt.tscn" id="8_au1bg"]
 [ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="8_ctmk4"]
 [ext_resource type="PackedScene" uid="uid://d173wdb7qbni2" path="res://Entities/Actors/NPCs/Alts/Toblin/toblin_alt.tscn" id="9_ctmk4"]
-[ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/press_start_regular.ttf" id="10_4ofr6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4ofr6"]
 atlas = ExtResource("8_ctmk4")
@@ -33,14 +34,15 @@ polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(156, 286, 180, 286, 180, 331, 156, 331)])
 agent_radius = 8.0
 
-[sub_resource type="LabelSettings" id="LabelSettings_ukkkd"]
-font = ExtResource("10_4ofr6")
-font_size = 8
-
 [node name="World" type="Node2D"]
 z_as_relative = false
 y_sort_enabled = true
 texture_filter = 1
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Interface" parent="HUD" instance=ExtResource("1_4ofr6")]
+script = ExtResource("2_ukkkd")
 
 [node name="Maps" type="Node2D" parent="."]
 use_parent_material = true
@@ -66,61 +68,59 @@ tile_set = ExtResource("2_4crdb")
 y_sort_enabled = true
 
 [node name="Crops" type="Node2D" parent="YSort"]
-
-[node name="Crops" type="Node2D" parent="YSort/Crops"]
 z_index = 2
 position = Vector2(802, 448)
 script = ExtResource("8_4ofr6")
 
-[node name="Crop" type="Sprite2D" parent="YSort/Crops/Crops" groups=["Crops"]]
+[node name="Crop" type="Sprite2D" parent="YSort/Crops" groups=["Crops"]]
 visible = false
 position = Vector2(-17, -20)
 texture = SubResource("AtlasTexture_4ofr6")
 hframes = 4
 
-[node name="Crop2" type="Sprite2D" parent="YSort/Crops/Crops" groups=["Crops"]]
+[node name="Crop2" type="Sprite2D" parent="YSort/Crops" groups=["Crops"]]
 visible = false
 position = Vector2(0, -20)
 texture = SubResource("AtlasTexture_4ofr6")
 hframes = 4
 
-[node name="Crop3" type="Sprite2D" parent="YSort/Crops/Crops" groups=["Crops"]]
+[node name="Crop3" type="Sprite2D" parent="YSort/Crops" groups=["Crops"]]
 visible = false
 position = Vector2(16, -20)
 texture = SubResource("AtlasTexture_4ofr6")
 hframes = 4
 
-[node name="Crop4" type="Sprite2D" parent="YSort/Crops/Crops" groups=["Crops"]]
+[node name="Crop4" type="Sprite2D" parent="YSort/Crops" groups=["Crops"]]
 visible = false
 position = Vector2(17, -6)
 texture = SubResource("AtlasTexture_4ofr6")
 hframes = 4
 
-[node name="Crop5" type="Sprite2D" parent="YSort/Crops/Crops" groups=["Crops"]]
+[node name="Crop5" type="Sprite2D" parent="YSort/Crops" groups=["Crops"]]
 visible = false
 position = Vector2(0, -6)
 texture = SubResource("AtlasTexture_4ofr6")
 hframes = 4
 
-[node name="Crop6" type="Sprite2D" parent="YSort/Crops/Crops" groups=["Crops"]]
+[node name="Crop6" type="Sprite2D" parent="YSort/Crops" groups=["Crops"]]
 visible = false
 position = Vector2(-17, -6)
 texture = SubResource("AtlasTexture_4ofr6")
 hframes = 4
 
-[node name="Crop7" type="Sprite2D" parent="YSort/Crops/Crops" groups=["Crops"]]
+[node name="Crop7" type="Sprite2D" parent="YSort/Crops" groups=["Crops"]]
 visible = false
 position = Vector2(-17, 11)
 texture = SubResource("AtlasTexture_4ofr6")
 hframes = 4
 
-[node name="Crop8" type="Sprite2D" parent="YSort/Crops/Crops" groups=["Crops"]]
+[node name="Crop8" type="Sprite2D" parent="YSort/Crops" groups=["Crops"]]
 visible = false
 position = Vector2(0, 11)
 texture = SubResource("AtlasTexture_4ofr6")
 hframes = 4
 
-[node name="Crop9" type="Sprite2D" parent="YSort/Crops/Crops" groups=["Crops"]]
+[node name="Crop9" type="Sprite2D" parent="YSort/Crops" groups=["Crops"]]
 visible = false
 position = Vector2(17, 11)
 texture = SubResource("AtlasTexture_4ofr6")
@@ -131,10 +131,10 @@ y_sort_enabled = true
 tile_map_data = PackedByteArray("AAAGABEACgACAAAAAAAHAAUAAQADAAEAAAAHABMAAgADAAUAAAAJAAYAAQACAAEAAAAJABMAAgAIAAkAAAAKABIAAgAJAAcAAAALAAUAAQADAAEAAAALABMAAgAKAAkAAAANAAYAAQAEAAMAAAARABMAAQABAAEAAAATAAYAAQABAAEAAAAlABMAAQADAAEAAAAmABUAAgAIAAMAAAAsAB0AAQAGAAgAAAAtAAQAAQABAAQAAAAFAAwAAgAFAAUAAAAFAA0AAgABAAgAAAAFAA4AAgABAAcAAAAFAA8AAgABAAcAAAAFABAAAgABAAcAAAAFABEAAgABAAcAAAAFABIAAgABAAgAAAAFABMAAgACAAUAAAAFABgAAQABAAQAAAAGAAgAAQADAAEAAAAGAAwAAgADAAUAAAAGABMAAgADAAUAAAAGACwAAQADAAEAAAAGAC4AAQADAAEAAAAHAAwAAgADAAUAAAAHABEACgADAAUAAAAHABwAAQABAAEAAAAHACQAAQABAAMAAAAHACkAAQADAAEAAAAIAAgAAQACAAMAAAAIAAwAAgADAAUAAAAIABMAAgADAAUAAAAIABgAAQACAAEAAAAIACcAAQADAAEAAAAJAAkAAQAGAAEAAAAJAAwAAgADAAUAAAAJABIAAgAIAAcAAAAKAAgAAQAEAAQAAAAKAAwAAgADAAUAAAAKABcAAQAGAAEAAAAKABwAAQAIAAQAAAAKAB0AAQAEAAMAAAAKACAAAQAEAAMAAAAKAC4AAQADAAEAAAALAAwAAgADAAUAAAALABIAAgAKAAcAAAALABsAAQAEAAQAAAALACUAAQABAAQAAAALACgAAQADAAEAAAAMAAgAAQADAAEAAAAMAAwAAgADAAUAAAAMABMAAgADAAUAAAAMACEAAQACAAMAAAAMACsAAQADAAEAAAAMAC4AAQADAAEAAAANAAwAAgADAAUAAAANABMAAgADAAUAAAANABsAAQAFAAQAAAANAB4AAQACAAMAAAANAB8AAQAFAAMAAAANACkAAQADAAEAAAAOAAQAAQAGAAEAAAAOAAwAAgADAAUAAAAOABMAAgADAAUAAAAOABcAAQABAAEAAAAOACIAAQAEAAMAAAAPAAwAAgAHAAUAAAAPAA0AAgABAAgAAAAPAA4AAgABAAgAAAAPAA8AAgABAAcA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AAAgAAQAAQACAAEAAAAcAAQAAQAGAAEAAAAcAAkAAgABAAkAAAAtABUAAQADAAUAAAAtABQACgACAAAAAAAwABUAAQABAAMAAAAvABUACgAEAAAAAAAQABAAAQABAAEAAAAQAA8AAQABAAEAAAATAAsAAQABAAQAAAAxAAoAAQADAAEAAAA1AAoABAACAAIAAAA5AAgAAQADAAEAAAA5AAoAAQADAAEAAAAPACIACgABAAIAAAANABoAAQACAAMAAAAQAA0ACgADAAIAAAAHABQAAgAIAAEAAAAiACAAAgAIAAMAAAAYACUAAQADAAEAAAA/ACgACgAEAAAAAAAwACIAAQADAAEAAAAwACUACgAEAAAAAAANAAoAAQAGAAEAAAASABkAAgAIAAEAAAATABIAAgAIAAMAAAATABwAAQACAAMAAAAVABIAAQAJAAIAAAAVABUAAQABAAQAAAAVABsAAQABAAEAAAAYABMAAQABAAQAAAAYAB0AAQADAAEAAAAdABYAAQABAAQAAAAhABkAAQABAAMAAAAhABwACgACAAAAAAAiABMAAQABAAMAAAAiAAoACgAEAAAAAAAsAAoAAQAGAAEAAAAtAA8AAQABAAQAAAA5ABwAAQABAAEAAAA4AAwAAQABAAUAAAA6AAwAAgAEAAMAAABAAAwAAQAGAAEAAABCAA4AAQABAAEAAAA8AAoAAQABAAQAAABBAAkAAQABAAEAAAA5ABcACgAEAAAAAAA=")
 tile_set = ExtResource("2_4crdb")
 
-[node name="Player" parent="YSort" groups=["Player"] instance=ExtResource("4_4ofr6")]
+[node name="PlayerAlt" parent="YSort" groups=["Player"] instance=ExtResource("4_4ofr6")]
 position = Vector2(643, 454)
 
-[node name="RemoteTransform2D" type="RemoteTransform2D" parent="YSort/Player"]
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="YSort/PlayerAlt"]
 remote_path = NodePath("../../../Camera2D")
 
 [node name="GarrethAlt" parent="YSort" groups=["Garreth"] instance=ExtResource("5_4ofr6")]
@@ -169,30 +169,6 @@ navigation_layers = 2
 [node name="Camera2D" parent="." instance=ExtResource("3_ss2fi")]
 position = Vector2(643, 454)
 
-[node name="HUD" type="CanvasLayer" parent="."]
-
-[node name="TotalFoodLabel" type="Label" parent="HUD" groups=["Hud"]]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -88.0
-offset_bottom = 8.0
-grow_horizontal = 0
-text = "Total Food In Market: 4"
-label_settings = SubResource("LabelSettings_ukkkd")
-
-[node name="DeathIndicator" type="Label" parent="HUD" groups=["Hud"]]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -319.0
-offset_top = 133.0
-offset_right = 1.0
-offset_bottom = 179.0
-grow_horizontal = 0
-label_settings = SubResource("LabelSettings_ukkkd")
-vertical_alignment = 2
-
-[connection signal="timeout" from="GrowTimer" to="YSort/Crops/Crops" method="_on_grow_timer_timeout"]
+[connection signal="timeout" from="GrowTimer" to="YSort/Crops" method="_on_grow_timer_timeout"]
 
 [editable path="Camera2D"]

@@ -1,4 +1,4 @@
-class_name Player
+class_name PlayerAlt
 extends Actor
 
 enum State {DORMANT, ACTIVE, ATTACK}
@@ -118,3 +118,11 @@ func _on_player_shop_body_entered(body: Node2D):
 func _on_player_shop_body_exited(body: Node2D):
 	if body == self:
 		can_buy = false
+
+func start_interaction(target):
+	var direction = global_position.direction_to(target.global_position)
+	animation_tree.set("parameters/Idle/blend_position", direction.x)
+	state = State.DORMANT
+
+func stop_interaction():
+	state = State.ACTIVE
