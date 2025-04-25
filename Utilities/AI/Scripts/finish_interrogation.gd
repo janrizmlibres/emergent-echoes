@@ -8,9 +8,12 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	var probability = get_interrogation_probability(relationship)
 
 	if randf() < probability:
-		data.case.mark_as_verifier(data.target)
+		data.case.mark_verifier(data.target)
 	else:
-		data.case.mark_as_falsifier(data.target)
+		data.case.mark_falsifier(data.target)
+
+	if data.case.all_participants_cleared():
+		data.case.close_case()
 
 	actor.set_main_state(NPC.MainState.WANDER)
 	return SUCCESS

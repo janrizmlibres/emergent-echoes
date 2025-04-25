@@ -20,8 +20,8 @@ layout_mode = 0
 offset_left = 3.0
 offset_top = 3.0
 offset_right = 209.0
-offset_bottom = 110.0
-scale = Vector2(0.2, 0.2)
+offset_bottom = 72.0
+scale = Vector2(0.3, 0.3)
 theme_override_constants/separation = -1
 
 [node name="HealthBar" parent="VBoxContainer" instance=ExtResource("1_00wiu")]
@@ -43,6 +43,7 @@ grow_horizontal = 0
 
 [node name="MoneyLabel" type="Label" parent="VBoxContainer2"]
 layout_mode = 2
+theme_override_constants/outline_size = 4
 theme_override_fonts/font = ExtResource("4_linqv")
 theme_override_font_sizes/font_size = 8
 text = "Money: 10"
@@ -50,10 +51,26 @@ horizontal_alignment = 2
 
 [node name="FoodLabel" type="Label" parent="VBoxContainer2"]
 layout_mode = 2
+theme_override_constants/outline_size = 4
 theme_override_fonts/font = ExtResource("4_linqv")
 theme_override_font_sizes/font_size = 8
 text = "Food: 5"
 horizontal_alignment = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -3.0
+offset_top = -3.0
+offset_right = -3.0
+offset_bottom = -3.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/separation = 3
 
 [editable path="VBoxContainer/HealthBar"]
 [editable path="VBoxContainer/HungerBar"]

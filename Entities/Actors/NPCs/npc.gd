@@ -18,9 +18,9 @@ enum MainState {
 enum ReactState {
 	NONE,
 	PURSUIT = PCG.Action.PURSUIT,
-	INTERACT = PCG.Action.INTERACT,
-	CAUTIOUS = PCG.Action.CAUTIOUS,
 	FLEE = PCG.Action.FLEE,
+	CAUTIOUS = PCG.Action.CAUTIOUS,
+	INTERACT = PCG.Action.INTERACT,
 }
 
 var state := State.new()
@@ -33,6 +33,7 @@ var is_in_knockback := false
 func _ready():
 	super._ready()
 	PCG.threat_present.connect(_on_threat_present)
+	PCG.duty_conducted.connect(on_duty_conducted)
 
 func _physics_process(_delta):
 	if is_in_knockback:
@@ -92,8 +93,9 @@ func face_target(target: Actor) -> void:
 func set_main_state(new_main: MainState, data := {}):
 	assert(state.react == ReactState.NONE, "Cannot set main state while in react state")
 
+	reset_variables()
+
 	if state.main.state == MainState.PLANT:
-		seed_prop.hide()
 		var crop_tile: CropTile = executor.get_blackboard_value("crop_tile")
 
 		if crop_tile != null:
@@ -103,17 +105,20 @@ func set_main_state(new_main: MainState, data := {}):
 	run_main_state(new_main, data)
 
 func set_react_state(new_react: ReactState, data := {}):
-	PCG.stop_evaluation(self)
+	if state.react != ReactState.NONE and state.react < new_react:
+		return
 
-	if state.react == ReactState.INTERACT:
-		emote_bubble.deactivate()
-		WorldState.set_status(self, ActorState.State.FREE)
+	PCG.stop_evaluation(self)
+	reset_variables()
 
 	state.react = new_react
 
 	if new_react == ReactState.NONE:
 		run_main_state(state.main.state, state.main.data)
 		return
+	
+	if new_react == ReactState.PURSUIT:
+		WorldState.set_status(self, ActorState.State.INDISPOSED)
 	elif new_react == ReactState.INTERACT:
 		emote_bubble.activate()
 		WorldState.set_status(self, ActorState.State.OCCUPIED)
@@ -122,28 +127,39 @@ func set_react_state(new_react: ReactState, data := {}):
 
 func run_main_state(main_state: MainState, data := {}):
 	if main_state == MainState.WANDER:
-		PCG.run_evaluation(self)
+		if WorldState.actor_in_status(self, ActorState.State.FREE):
+			PCG.run_evaluation(self)
+	elif main_state == MainState.EAT:
+		WorldState.set_status(self, ActorState.State.OCCUPIED)
+	elif main_state == MainState.PURSUIT:
+		WorldState.set_status(self, ActorState.State.INDISPOSED)
 	elif main_state == MainState.PLANT:
 		seed_prop.show()
 	
 	executor.start_action(main_state as int, data)
 
+func reset_variables():
+	WorldState.set_status(self, ActorState.State.FREE)
+	emote_bubble.deactivate()
+	seed_prop.hide()
+
 func handle_assault(target: Actor):
-	if not WorldState.actor_has_trait(self, "lawful"):
+	if not WorldState.npc_manager.has_trait(self, "lawful"):
 		set_react_state(NPC.ReactState.FLEE, {"target": target})
 		return
 	
-	set_react_state(NPC.ReactState.PURSUIT, {"target": target, "is_reactive": true})
+	if WorldState.is_interceptable(target):
+		set_react_state(NPC.ReactState.PURSUIT, {"target": target, "is_reactive": true})
 
 func handle_crime_committed(crime: Crime):
 	handle_assault(crime.criminal)
 
 func do_handle_detainment(_detainer: Actor):
 	PCG.stop_evaluation(self)
-	executor.disable()
+	executor.current_tree.disable()
 
 func do_handle_captivity(_detainer: Actor):
-	executor.enable()
+	executor.current_tree.enable()
 
 func actor_pressed():
 	radial_menu.toggle()
@@ -153,6 +169,16 @@ func _on_threat_present(source: Actor, recipient: Actor):
 		return
 
 	set_react_state(NPC.ReactState.CAUTIOUS, {"target": source})
+
+func on_duty_conducted(actor: Actor, is_success: bool):
+	if actor != self:
+		return
+	
+	float_text_controller.show_float_text(
+		PCG.ResourceType.DUTY,
+		str(30 if is_success else -1),
+		true
+	)
 
 func _on_npc_agent_action_evaluated(action_data: ActionData):
 	set_main_state(action_data.action as int, action_data.data)

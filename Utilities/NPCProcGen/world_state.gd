@@ -80,7 +80,7 @@ func set_status(actor, status):
 func actor_in_status(actor, status) -> bool:
 	return _actor_state[actor].status == status
 
-func is_valid_target(target: Actor) -> bool:
+func is_interactable(target: Actor) -> bool:
 	if not _actor_state.has(target):
 		return false
 
@@ -89,12 +89,17 @@ func is_valid_target(target: Actor) -> bool:
 		return true
 	return status == ActorState.State.OCCUPIED
 
-func is_actor_busy(actor: Actor) -> bool:
+func is_busy(actor: Actor) -> bool:
+	if not _actor_state.has(actor):
+		return false
+
 	return _actor_state[actor].status == ActorState.State.OCCUPIED
 
-func actor_has_trait(actor: Actor, trait_name: String) -> bool:
-	if actor is Player: return false
-	return npc_manager.has_trait(actor, trait_name)
+func is_interceptable(target: Actor) -> bool:
+	if not _actor_state.has(target):
+		return false
+
+	return _actor_state[target].status != ActorState.State.CAPTURED
 
 func add_pending_crime(crime: Crime):
 	_pending_crimes.append(crime)
@@ -108,6 +113,9 @@ func get_available_prison() -> Prison:
 			return prison
 	
 	return null
+
+func has_actor(actor: Actor) -> bool:
+	return _actor_state.has(actor)
 
 func has_crimes() -> bool:
 	return _pending_crimes.size() > 0

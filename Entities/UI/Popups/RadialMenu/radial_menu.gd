@@ -30,11 +30,6 @@ func _process(delta):
 	if timer <= 0:
 		timer = DURATION
 		hide_menu()
-	
-func _unhandled_input(event):
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			accept_event()
 
 func toggle():
 	if disabled:

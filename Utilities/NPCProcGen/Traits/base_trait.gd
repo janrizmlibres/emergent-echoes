@@ -38,7 +38,7 @@ func get_actor_candidates(
 		if not WorldState.resource_manager.holds_resource(actor, resource_type):
 			continue
 
-		if WorldState.is_valid_target(actor):
+		if WorldState.is_interactable(actor):
 			candidates.append(actor)
 	
 	return candidates

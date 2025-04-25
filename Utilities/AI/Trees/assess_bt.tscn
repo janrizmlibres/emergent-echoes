@@ -1,15 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://csldpt483k7ww"]
+[gd_scene load_steps=5 format=3 uid="uid://csldpt483k7ww"]
 
 [ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_4gn70"]
 [ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="2_6smhw"]
 [ext_resource type="PackedScene" uid="uid://5p51sjohtuli" path="res://Utilities/AI/Nodes/assess_case.tscn" id="2_mkex5"]
-[ext_resource type="Script" uid="uid://dbb3wv7xh4hj0" path="res://addons/beehave/nodes/leaves/action.gd" id="4_utklq"]
-[ext_resource type="PackedScene" uid="uid://5fj0qtxhah7q" path="res://Utilities/AI/Nodes/end_action.tscn" id="5_glu2n"]
+[ext_resource type="Script" uid="uid://b3s5btxaymfxy" path="res://Utilities/AI/Scripts/end_case.gd" id="4_6smhw"]
 
 [node name="AssessBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_4gn70")
-blackboard = NodePath("@Node@23193")
-actor = NodePath("")
+blackboard = NodePath("@Node@23139")
+actor = NodePath("..")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
 [node name="SequenceComposite" type="Node" parent="."]
@@ -18,9 +17,6 @@ metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
 [node name="AssessCase" parent="SequenceComposite" instance=ExtResource("2_mkex5")]
 
-[node name="IncreaseDuty" type="Node" parent="SequenceComposite"]
-script = ExtResource("4_utklq")
+[node name="EndCase" type="Node" parent="SequenceComposite"]
+script = ExtResource("4_6smhw")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
-
-[node name="EndAction" parent="SequenceComposite" instance=ExtResource("5_glu2n")]
-is_reactive = false

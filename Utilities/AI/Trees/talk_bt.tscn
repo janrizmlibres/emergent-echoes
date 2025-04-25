@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://cigo0bvj4vp0i" path="res://Utilities/AI/Scripts/get_random_target.gd" id="6_nmur2"]
 [ext_resource type="PackedScene" uid="uid://5fj0qtxhah7q" path="res://Utilities/AI/Nodes/end_action.tscn" id="7_7v0nh"]
 [ext_resource type="Script" uid="uid://ddsynpu03eev2" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="8_a657f"]
-[ext_resource type="PackedScene" uid="uid://cualnqewkna60" path="res://Utilities/AI/Nodes/is_target_valid.tscn" id="9_opvra"]
+[ext_resource type="PackedScene" uid="uid://cualnqewkna60" path="res://Utilities/AI/Nodes/is_target_interactable.tscn" id="9_opvra"]
 [ext_resource type="PackedScene" uid="uid://bo5mx8ex74q0o" path="res://Utilities/AI/Nodes/is_target_reached.tscn" id="10_7nexs"]
 [ext_resource type="Script" uid="uid://lc1dnoc2x4b" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="11_anpka"]
 [ext_resource type="PackedScene" uid="uid://iv5s8ex501af" path="res://Utilities/AI/Nodes/is_target_busy.tscn" id="12_3unsg"]
@@ -23,7 +23,7 @@
 
 [node name="TalkBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_ua0k4")
-blackboard = NodePath("@Node@102121")
+blackboard = NodePath("@Node@74111")
 actor = NodePath("..")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
@@ -49,7 +49,7 @@ metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 script = ExtResource("4_ydwgd")
 metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
-[node name="IsTargetValid" parent="SelectorReactiveComposite/SequenceComposite/SelectorComposite/InverterDecorator2" instance=ExtResource("9_opvra")]
+[node name="IsTargetInteractable" parent="SelectorReactiveComposite/SequenceComposite/SelectorComposite/InverterDecorator2" instance=ExtResource("9_opvra")]
 
 [node name="GetRandomTarget" type="Node" parent="SelectorReactiveComposite/SequenceComposite"]
 script = ExtResource("6_nmur2")

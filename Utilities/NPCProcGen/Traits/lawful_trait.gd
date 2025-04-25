@@ -18,12 +18,16 @@ func _ready():
 	investigation_timer.wait_time = 300
 	investigation_timer.one_shot = true
 	investigation_timer.timeout.connect(_on_investigation_timeout)
+	add_child(investigation_timer)
 
 func evaluation_proactive_action():
 	if not has_case():
 		return
 	
-	if current_case.is_closed():
+	if current_case.all_participants_cleared():
+		if not current_case.is_closed():
+			current_case.close_case()
+		
 		if current_case.is_solved():
 			add_action(PCG.Action.PURSUIT, PCG.ResourceType.DUTY, {
 				"target": current_case.criminal,

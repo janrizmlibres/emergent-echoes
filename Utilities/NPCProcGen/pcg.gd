@@ -2,6 +2,8 @@ extends Node
 
 signal crime_committed(crime: Crime)
 signal threat_present(source: Actor, recipient: Actor)
+signal duty_conducted(actor: Actor, is_success: bool)
+signal satiation_depleted(actor: Actor)
 
 enum ResourceType {
 	NONE,
@@ -30,9 +32,9 @@ enum Action {
 	ASSESS,
 	PLANT,
 	HARVEST,
-	INTERACT,
+	FLEE,
 	CAUTIOUS,
-	FLEE
+	INTERACT,
 }
 
 var food_lower_threshold := 5
@@ -42,7 +44,8 @@ func run_evaluation(npc: NPC) -> void:
 	WorldState.npc_manager.evaluators[npc].start_timer()
 
 func stop_evaluation(npc: NPC) -> void:
-	WorldState.npc_manager.evaluators[npc].stop_timer()
+	if WorldState.has_actor(npc):
+		WorldState.npc_manager.evaluators[npc].stop_timer()
 
 func execute_petition(
 	petitioner: Actor,
@@ -66,6 +69,12 @@ func emit_crime_committed(crime: Crime) -> void:
 
 func emit_threat_present(source: Actor, recipient: Actor) -> void:
 	threat_present.emit(source, recipient)
+
+func emit_duty_conducted(actor: Actor, is_success: bool) -> void:
+	duty_conducted.emit(actor, is_success)
+
+func emit_satiation_depleted(actor: Actor) -> void:
+	satiation_depleted.emit(actor)
 
 func resource_to_string(type: ResourceType) -> String:
 	match type:

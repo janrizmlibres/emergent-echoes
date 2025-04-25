@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=4 uid="uid://7ju7mpc0by18"]
+[gd_scene load_steps=20 format=4 uid="uid://7ju7mpc0by18"]
 
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/base_camera.tscn" id="1_pp8dq"]
 [ext_resource type="Script" uid="uid://b3y4asqmbsqma" path="res://Stages/Island/world.gd" id="1_x2f32"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://drbup72u7bkho" path="res://Entities/Structures/Shop/shop.tscn" id="6_17gdt"]
 [ext_resource type="PackedScene" uid="uid://d2icout5w8g1e" path="res://Entities/Actors/NPCs/Toblin/toblin.tscn" id="6_ylrlt"]
 [ext_resource type="PackedScene" uid="uid://jh8w0jv3rc0f" path="res://Entities/Actors/Player/player.tscn" id="9_6moo3"]
+[ext_resource type="PackedScene" uid="uid://gbb818jb3u6v" path="res://Entities/Actors/NPCs/Garreth/garreth.tscn" id="9_a75b7"]
 [ext_resource type="Script" uid="uid://b17xihha22jmn" path="res://Entities/Camera/main_camera.gd" id="11_6moo3"]
 [ext_resource type="AudioStream" uid="uid://tew8c1dpq51f" path="res://Assets/Music/world_bg.mp3" id="14_a75b7"]
 
@@ -44,7 +45,8 @@ metadata/_edit_lock_ = true
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
-[node name="Interface" parent="HUD" instance=ExtResource("2_6moo3")]
+[node name="HUDInterface" parent="HUD" instance=ExtResource("2_6moo3")]
+unique_name_in_owner = true
 
 [node name="Maps" type="Node2D" parent="."]
 use_parent_material = true
@@ -337,20 +339,23 @@ remote_path = NodePath("../../../Camera2D")
 [node name="Toblin" parent="YSort" instance=ExtResource("6_ylrlt")]
 position = Vector2(712, 459)
 
-[node name="Toblin2" parent="YSort" instance=ExtResource("6_ylrlt")]
-position = Vector2(733, 460)
-
 [node name="Silas" parent="YSort" instance=ExtResource("5_jsgrx")]
 position = Vector2(658, 493)
 
 [node name="Silas2" parent="YSort" instance=ExtResource("5_jsgrx")]
-position = Vector2(680, 494)
+position = Vector2(622, 491)
 
 [node name="Pimble" parent="YSort" instance=ExtResource("6_6moo3")]
 position = Vector2(658, 433)
 
 [node name="Pimble2" parent="YSort" instance=ExtResource("6_6moo3")]
-position = Vector2(680, 450)
+position = Vector2(709, 424)
+
+[node name="Garreth" parent="YSort" instance=ExtResource("9_a75b7")]
+position = Vector2(611, 430)
+
+[node name="Garreth2" parent="YSort" instance=ExtResource("9_a75b7")]
+position = Vector2(633, 413)
 
 [node name="NavRegions" type="Node2D" parent="."]
 visible = false
@@ -400,6 +405,7 @@ food_amount = 40
 process_mode = 3
 stream = ExtResource("14_a75b7")
 autoplay = true
+parameters/looping = true
 
 [connection signal="body_entered" from="PlayerShop" to="YSort/Player" method="_on_player_shop_body_entered"]
 [connection signal="body_exited" from="PlayerShop" to="YSort/Player" method="_on_player_shop_body_exited"]

@@ -24,6 +24,7 @@ func register_actor(actor: Actor, agent: PCGAgent):
 	store_resource(actor, food_resource, "Food", actor_container)
 
 	var satiation_resource := SatiationResource.new(
+		actor,
 		agent.satiation_final_amount,
 		agent.satiation_final_weight
 	)

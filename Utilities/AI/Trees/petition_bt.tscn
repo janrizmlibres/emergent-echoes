@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_ssoqa"]
 [ext_resource type="Script" uid="uid://ddsynpu03eev2" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="2_ssoqa"]
-[ext_resource type="PackedScene" uid="uid://cualnqewkna60" path="res://Utilities/AI/Nodes/is_target_valid.tscn" id="3_iuhl5"]
+[ext_resource type="PackedScene" uid="uid://cualnqewkna60" path="res://Utilities/AI/Nodes/is_target_interactable.tscn" id="3_iuhl5"]
 [ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="4_ghrxy"]
 [ext_resource type="Script" uid="uid://cx07pxr1bsjba" path="res://addons/beehave/nodes/decorators/inverter.gd" id="5_mnrfe"]
 [ext_resource type="PackedScene" uid="uid://bo5mx8ex74q0o" path="res://Utilities/AI/Nodes/is_target_reached.tscn" id="6_kkt6y"]
@@ -20,7 +20,7 @@
 
 [node name="PetitionBT" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_ssoqa")
-blackboard = NodePath("@Node@104976")
+blackboard = NodePath("@Node@57361")
 actor = NodePath("..")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
@@ -36,7 +36,7 @@ metadata/_custom_type_script = "uid://jst6onxl5bwx"
 script = ExtResource("5_mnrfe")
 metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
-[node name="IsTargetValid" parent="SelectorReactiveComposite/SequenceComposite/InverterDecorator" instance=ExtResource("3_iuhl5")]
+[node name="IsTargetInteractable" parent="SelectorReactiveComposite/SequenceComposite/InverterDecorator" instance=ExtResource("3_iuhl5")]
 
 [node name="EndAction" parent="SelectorReactiveComposite/SequenceComposite" instance=ExtResource("6_ssoqa")]
 is_reactive = false

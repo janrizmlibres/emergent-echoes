@@ -3,7 +3,7 @@ extends ActionLeaf
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
   var peers = WorldState.get_peer_actors(actor).filter(
-    func(x): return WorldState.is_valid_target(x)
+    func(x): return WorldState.is_interactable(x)
   )
 
   if peers.is_empty():

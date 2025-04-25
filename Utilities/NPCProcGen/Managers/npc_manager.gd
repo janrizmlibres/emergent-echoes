@@ -72,8 +72,5 @@ func end_case(npc: NPC):
 	var lawful_mod: LawfulTrait = get_trait(npc, "lawful")
 	lawful_mod.current_case = null
 
-func run_evaluation(npc: NPC) -> void:
-	evaluators[npc].start_timer()
-
 func has_trait(npc: NPC, trait_name: String) -> bool:
 	return _traits[npc].has(trait_name)

@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://c124x0mip4ii3" path="res://Utilities/AI/Nodes/assess_completed.tscn" id="5_yhykp"]
 [ext_resource type="PackedScene" uid="uid://5p51sjohtuli" path="res://Utilities/AI/Nodes/assess_case.tscn" id="6_pbtui"]
 [ext_resource type="Script" uid="uid://ddsynpu03eev2" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="7_kfqta"]
-[ext_resource type="PackedScene" uid="uid://cualnqewkna60" path="res://Utilities/AI/Nodes/is_target_valid.tscn" id="8_l6hfx"]
+[ext_resource type="PackedScene" uid="uid://cualnqewkna60" path="res://Utilities/AI/Nodes/is_target_interactable.tscn" id="8_l6hfx"]
 [ext_resource type="PackedScene" uid="uid://bo5mx8ex74q0o" path="res://Utilities/AI/Nodes/is_target_reached.tscn" id="9_n2ilk"]
 [ext_resource type="PackedScene" uid="uid://iv5s8ex501af" path="res://Utilities/AI/Nodes/is_target_busy.tscn" id="11_kspjj"]
 [ext_resource type="PackedScene" uid="uid://0sjgm3h7274m" path="res://Utilities/AI/Nodes/get_wait_position.tscn" id="12_k7qtj"]
@@ -22,8 +22,8 @@
 
 [node name="InterrogateBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_j1snq")
-blackboard = NodePath("@Node@23189")
-actor = NodePath("")
+blackboard = NodePath("@Node@60695")
+actor = NodePath("..")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
 [node name="SelectorReactiveComposite" type="Node" parent="."]
@@ -38,7 +38,7 @@ metadata/_custom_type_script = "uid://jst6onxl5bwx"
 script = ExtResource("4_3prar")
 metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
-[node name="IsTargetValid" parent="SelectorReactiveComposite/SequenceComposite3/InverterDecorator" instance=ExtResource("8_l6hfx")]
+[node name="IsTargetInteractable" parent="SelectorReactiveComposite/SequenceComposite3/InverterDecorator" instance=ExtResource("8_l6hfx")]
 
 [node name="EndAction" parent="SelectorReactiveComposite/SequenceComposite3" instance=ExtResource("20_co1py")]
 is_reactive = false

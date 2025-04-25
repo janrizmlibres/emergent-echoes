@@ -13,15 +13,17 @@ texture = ExtResource("2_8j1os")
 [node name="SeedProp" parent="." index="2"]
 position = Vector2(0, -17)
 
-[node name="AnimationTree" parent="." index="9"]
+[node name="AnimationTree" parent="." index="10"]
 parameters/Idle/blend_position = 0.00240386
 
 [node name="NPCAgent" parent="." index="13"]
-survival = 0.8
+survival = 0.6
 thief = 0.8
+money_weight = 0.8
+food_weight = 0.8
 
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
-blackboard = NodePath("@Node@82720")
+blackboard = NodePath("@Node@23259")
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

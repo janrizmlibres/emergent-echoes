@@ -1,6 +1,6 @@
 class_name TalkController
 
-const RELATIONSHIP_INCREASE := 1
+const RELATIONSHIP_INCREASE := 5
 const SELF_COMPANION_INCREASE := 20
 const TARGET_COMPANION_INCREASE := 5
 

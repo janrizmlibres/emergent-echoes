@@ -25,29 +25,18 @@ func store_data(actor: Actor, query: Actor, container: Node) -> void:
 	_memories[actor][query] = ActorData.new()
 	_memories[actor][query].name = query.name
 	container.add_child(_memories[actor][query])
-	_memories[actor][query].last_known_position = query.global_position
 
 func is_friendly(actor: Actor, query: Actor) -> bool:
-	return _memories[actor][query].relationship >= 5
+	return _memories[actor][query].relationship >= 10
 
 func is_trusted(actor: Actor, query: Actor) -> bool:
-	return _memories[actor][query].relationship >= 15
+	return _memories[actor][query].relationship >= 20
 
 func is_close(actor: Actor, query: Actor) -> bool:
-	return _memories[actor][query].relationship >= 25
+	return _memories[actor][query].relationship >= 30
 
 func get_relationship(actor: Actor, query: Actor) -> float:
 	return _memories[actor][query].relationship
 
 func modify_relationship(actor: Actor, query: Actor, amount: int) -> void:
 	_memories[actor][query].relationship += amount
-
-func get_last_known_position(actor: Actor, query: Actor) -> Vector2:
-	return _memories[actor][query].last_known_position
-
-func set_last_known_position(actor: Actor, query: Actor, position: Vector2) -> void:
-	if actor not in _memories or query not in _memories[actor]:
-		print("MemoryManager: Actor or query not registered.")
-		return
-
-	_memories[actor][query].last_known_position = position

@@ -5,7 +5,6 @@
 
 [node name="Toblin" instance=ExtResource("1_gkis2")]
 motion_mode = 0
-acceleration = 8
 
 [node name="Sprite2D" parent="." index="0"]
 texture = ExtResource("2_4hnsp")
@@ -13,17 +12,19 @@ texture = ExtResource("2_4hnsp")
 [node name="SeedProp" parent="." index="2"]
 position = Vector2(0, -17)
 
-[node name="AnimationTree" parent="." index="9"]
+[node name="AnimationTree" parent="." index="10"]
 parameters/Idle/blend_position = 0.00240386
 
-[node name="NPCAgent" parent="." index="12"]
-satiation_amount = 20.0
+[node name="NPCAgent" parent="." index="13"]
+money_amount = 0
+food_amount = 0
+satiation_amount = 1.0
 satiation_weight = 0.9
 companionship_amount = 20.0
 companionship_weight = 0.9
 
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
-blackboard = NodePath("@Node@23064")
+blackboard = NodePath("@Node@301434")
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

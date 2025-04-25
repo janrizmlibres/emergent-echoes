@@ -1,7 +1,7 @@
 class_name PetitionController
 
-const RELATIONSHIP_INCREASE := 3
-const RELATIONSHIP_DECREASE := 1
+const RELATIONSHIP_INCREASE := 5
+const RELATIONSHIP_DECREASE := 2
 
 static func execute(
 	petitioner: Actor,

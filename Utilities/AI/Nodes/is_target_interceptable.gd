@@ -7,4 +7,4 @@ func tick(_actor: Node, blackboard: Blackboard) -> int:
 	if target == null:
 		return FAILURE
 
-	return SUCCESS if WorldState.is_valid_target(target) else FAILURE
+	return SUCCESS if WorldState.is_interceptable(target) else FAILURE

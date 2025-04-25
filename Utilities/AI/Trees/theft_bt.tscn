@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://lc1dnoc2x4b" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="2_cw0yj"]
 [ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="3_etc7g"]
 [ext_resource type="Script" uid="uid://cx07pxr1bsjba" path="res://addons/beehave/nodes/decorators/inverter.gd" id="4_46mtq"]
-[ext_resource type="PackedScene" uid="uid://cualnqewkna60" path="res://Utilities/AI/Nodes/is_target_valid.tscn" id="5_d8rvc"]
+[ext_resource type="PackedScene" uid="uid://c05kpy8sgqtp7" path="res://Utilities/AI/Nodes/is_target_interceptable.tscn" id="5_1awmj"]
 [ext_resource type="PackedScene" uid="uid://5fj0qtxhah7q" path="res://Utilities/AI/Nodes/end_action.tscn" id="6_buoyx"]
 [ext_resource type="Script" uid="uid://ddsynpu03eev2" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="7_uvo3o"]
 [ext_resource type="PackedScene" uid="uid://dk8go1ye7kdwd" path="res://Utilities/AI/Nodes/get_target_position.tscn" id="9_lc8sa"]
@@ -14,8 +14,8 @@
 
 [node name="TheftBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_uf0po")
-blackboard = NodePath("@Node@23198")
-actor = NodePath("")
+blackboard = NodePath("@Node@74288")
+actor = NodePath("..")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
 [node name="SelectorReactiveComposite" type="Node" parent="."]
@@ -30,7 +30,7 @@ metadata/_custom_type_script = "uid://jst6onxl5bwx"
 script = ExtResource("4_46mtq")
 metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
-[node name="IsTargetValid" parent="SelectorReactiveComposite/SequenceComposite/InverterDecorator" instance=ExtResource("5_d8rvc")]
+[node name="IsTargetInterceptable" parent="SelectorReactiveComposite/SequenceComposite/InverterDecorator" instance=ExtResource("5_1awmj")]
 
 [node name="EndAction" parent="SelectorReactiveComposite/SequenceComposite" instance=ExtResource("6_buoyx")]
 is_reactive = false

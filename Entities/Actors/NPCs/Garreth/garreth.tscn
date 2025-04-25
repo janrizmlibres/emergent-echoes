@@ -13,12 +13,20 @@ texture = ExtResource("2_7ptt5")
 [node name="SeedProp" parent="." index="2"]
 position = Vector2(0, -19)
 
-[node name="AnimationTree" parent="." index="9"]
+[node name="AnimationTree" parent="." index="10"]
 parameters/Attack/blend_position = 0
 parameters/Eat/blend_position = 0
 parameters/Harvest/blend_position = 0
 
-[node name="NavigationAgent2D" parent="." index="15"]
+[node name="NPCAgent" parent="." index="13"]
+survival = 0.6
+lawful = 1.0
+duty_weight = 0.8
+
+[node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
+blackboard = NodePath("@Node@164201")
+
+[node name="NavigationAgent2D" parent="." index="16"]
 navigation_layers = 3
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

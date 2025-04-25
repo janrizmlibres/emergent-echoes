@@ -47,22 +47,17 @@ func cleanse_actor(actor: Actor):
 
 func select_participant():
 	var filtered_participants = _participants.keys().filter(func(p):
+		if p == null: return false
 		if _verifiers.has(p): return false
 		if _falsifiers.has(p): return false
 		return true
 	)
 
-	return filtered_participants.pick_random()
+	return filtered_participants.pick_random() if not filtered_participants.is_empty() else null
 
 func all_participants_cleared():
 	var cleared_count = _verifiers.size() + _falsifiers.size()
 	return cleared_count == _participants.size()
-
-func get_participants_count() -> int:
-	return _participants.size()
-
-func get_verifiers_count() -> int:
-	return _verifiers.size()
 
 func close_case():
 	assert(not is_closed(), "Crime is already closed")
@@ -85,30 +80,3 @@ func reset() -> void:
 	_verifiers.clear()
 	_falsifiers.clear()
 	_outcome = Outcome.PENDING
-
-# func close(duty_increase: float) -> bool:
-# 	if randf() >= get_solve_probability():
-# 		status = Status.UNSOLVED
-# 		complete_investigation(duty_increase)
-# 		return true
-
-# 	if not is_instance_valid(criminal) or WorldState.is_captured(criminal):
-# 		status = Status.SOLVED
-# 		complete_investigation(duty_increase)
-# 		return true
-	
-# 	return false
-
-# func complete_investigation(duty_increase: float):
-# 	pass
-	# investigator.lawful_trait.assigned_case = null
-	# WorldState.resource_manager.modify_resource(
-	# 	investigator,
-	# 	PCG.ResourceType.DUTY,
-	# 	duty_increase
-	# )
-	# investigator.float_text_controller.show_float_text(
-	# 	PCG.ResourceType.DUTY,
-	# 	str(duty_increase),
-	# 	true
-	# )

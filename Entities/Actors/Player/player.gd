@@ -17,18 +17,29 @@ func _physics_process(_delta):
 		State.ATTACK:
 			attack_state()
 
+func _unhandled_input(event):
+	if event.is_action_pressed("use"):
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+			var click_direction := global_position.direction_to(get_global_mouse_position())
+			set_blend_positions(click_direction.x)
+		
+		state = State.ATTACK
+
 func _unhandled_key_input(event):
-	if event is InputEventKey and event.pressed:
+	if event.pressed:
 		if event.keycode == KEY_J:
 			if can_buy:
 				buy_food()
 			else:
-				EventManager.emit_info_dialog_requested(self)
+				eat_food()
 		elif event.keycode == KEY_L:
-			eat_food()
+			EventManager.emit_info_dialog_requested(self)
 
 func buy_food():
 	if WorldState.resource_manager.get_resource(self, PCG.ResourceType.MONEY).amount < 10:
+		return
+	
+	if WorldState.shop.food_amount <= 0:
 		return
 
 	var resource_mgr := WorldState.resource_manager
@@ -56,13 +67,6 @@ func eat_food() -> void:
 func active_state():
 	var input_vector = Input.get_vector("left", "right", "up", "down")
 	move(input_vector)
-
-	if Input.is_action_just_pressed("use"):
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			var click_direction := global_position.direction_to(get_global_mouse_position())
-			set_blend_positions(click_direction.x)
-
-		state = State.ATTACK
 	
 func attack_state():
 	velocity = Vector2.ZERO
