@@ -22,6 +22,7 @@ WorldState="*res://Utilities/NPCProcGen/world_state.gd"
 Dialogic="*res://addons/dialogic/Core/DialogicGameHandler.gd"
 PCG="*res://Utilities/NPCProcGen/pcg.gd"
 EventManager="*res://Utilities/Game/event_manager.gd"
+GameManager="*res://Utilities/Game/CropManager/game_manager.gd"
 
 [dialogic]
 

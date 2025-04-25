@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://c1sx3c4qsy70e"]
+
+[ext_resource type="PackedScene" uid="uid://8w0pyr8skfw7" path="res://Entities/Actors/NPCs/npc.tscn" id="1_i5q7m"]
+
+[node name="NPC" instance=ExtResource("1_i5q7m")]
+
+[node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
+blackboard = NodePath("@Node@23208")
+
+[editable path="CarryProp"]
+[editable path="EmoteBubble"]

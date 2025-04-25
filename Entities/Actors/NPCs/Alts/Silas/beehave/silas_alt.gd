@@ -1,13 +1,13 @@
 extends CharacterBody2D
 
+@onready var float_text_controller = $FloatTextController
 @onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
 @onready var animation_tree: AnimationTree = $AnimationTree
 @onready var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/playback")
+@onready var blackboard = $Blackboard
 
 @export var FRICTION: int = 4
 @export var movement_speed: int = 60
-@export var money = 100
-@export var food = 5
 
 const npc_name: String = "Silas"
 
@@ -19,6 +19,7 @@ func _physics_process(_delta: float) -> void:
 		navigation_agent_2d.target_position = current_location
 		
 		if navigation_agent_2d.is_navigation_finished():
+			blackboard.set_value("agent_arrived", true)
 			npc_active = false
 			velocity = velocity.move_toward(Vector2.ZERO, FRICTION)
 		else:
@@ -33,6 +34,8 @@ func _physics_process(_delta: float) -> void:
 			
 		handle_animation()
 		move_and_slide()
+	else:
+		velocity = velocity.move_toward(Vector2.ZERO, FRICTION)
 
 func handle_animation() -> void:
 	if velocity.x != 0:
@@ -48,7 +51,20 @@ func move_actor(patrol_location: Vector2):
 	current_location = patrol_location
 	npc_active = true
 	pass # Replace with function body.
+	
+func set_animation_to_idle():
+	animation_state.travel("Idle")
+	
+func face_target(target):
+	var direction = global_position.direction_to(target.global_position)
+	animation_tree.set("parameters/Idle/blend_position", direction.x)	
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
 	velocity = safe_velocity
+	pass # Replace with function body.
+
+func _on_hurt_box_area_entered(area: Area2D) -> void:
+	if area.get_name() == "Weapon":
+		queue_free()
+		return
 	pass # Replace with function body.

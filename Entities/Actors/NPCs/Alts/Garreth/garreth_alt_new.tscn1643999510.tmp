@@ -1,0 +1,266 @@
+[gd_scene load_steps=42 format=3 uid="uid://cm27gbsg4tx7c"]
+
+[ext_resource type="PackedScene" uid="uid://c1sx3c4qsy70e" path="res://Entities/Actors/NPCs/Alts/npc_alt.tscn" id="1_5uib8"]
+[ext_resource type="Script" uid="uid://karntkdpbtuc" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/garreth_alt.gd" id="2_6lo3h"]
+[ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Interactions/npc_alt_detector.tscn" id="3_ujkrr"]
+[ext_resource type="Script" uid="uid://cfeqjpwo537ir" path="res://addons/beehave/blackboard.gd" id="4_0uneb"]
+[ext_resource type="Script" uid="uid://bysexhtn0u2vc" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/physiological.gd" id="5_f5tlx"]
+[ext_resource type="Script" uid="uid://cody1kvr17cm1" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/personality.gd" id="6_ghyw0"]
+[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="7_bv3vk"]
+[ext_resource type="Script" uid="uid://cmlopw75b05c1" path="res://addons/beehave/nodes/composites/selector.gd" id="8_kmjgv"]
+[ext_resource type="Script" uid="uid://de0uw4x8bwrbx" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/resume_patrol.gd" id="9_akseu"]
+[ext_resource type="Script" uid="uid://gwojr7topmnw" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/eat_food.gd" id="10_kwmbc"]
+[ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="11_0if7g"]
+[ext_resource type="Script" uid="uid://baxrohffjrq07" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/is_the_food_resource_low.gd" id="12_768xk"]
+[ext_resource type="Script" uid="uid://otmluk2mhrrq" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/go_to_market.gd" id="13_26e61"]
+[ext_resource type="Script" uid="uid://kwmt5grb7ehy" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/buy_food.gd" id="14_62afx"]
+[ext_resource type="Script" uid="uid://ceqhy6041g2kg" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/Is The Agent Idle.gd" id="15_3b6go"]
+[ext_resource type="Script" uid="uid://df8gmwihjxif7" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/shout_for_petition.gd" id="16_7ud7u"]
+[ext_resource type="Script" uid="uid://drvl0ch3ngsy4" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/patrol_action.gd" id="17_ik2o6"]
+[ext_resource type="Script" uid="uid://ccocc43ysrl8o" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/chase_agent.gd" id="18_qmis3"]
+[ext_resource type="Script" uid="uid://2d30pyjtp7c6" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/ask_for_petition.gd" id="19_kgbim"]
+[ext_resource type="Script" uid="uid://bd0r882ubr8gb" path="res://Entities/Actors/NPCs/Alts/Garreth/hear_the_report_from_toblin.gd" id="20_cls8a"]
+[ext_resource type="Script" uid="uid://bqlrwrwhs34cs" path="res://addons/beehave/nodes/decorators/delayer.gd" id="21_yck37"]
+[ext_resource type="Script" uid="uid://cekncdxx5an8b" path="res://Entities/Actors/NPCs/Alts/Garreth/finished_hearing_report_from_toblin.gd" id="22_248vu"]
+[ext_resource type="Script" uid="uid://djq0qri57hmgs" path="res://Entities/Actors/NPCs/Alts/Garreth/going_to_silas.gd" id="23_okl8v"]
+[ext_resource type="Script" uid="uid://brdu3a4skd2tg" path="res://Entities/Actors/NPCs/Alts/Garreth/interrogate_silas.gd" id="24_fmr5x"]
+[ext_resource type="Script" uid="uid://bynxffii6y5y3" path="res://Entities/Actors/NPCs/Alts/Garreth/finished_interrogating_silas.gd" id="25_2tguf"]
+[ext_resource type="Script" uid="uid://cqf3k4gpgi5dl" path="res://Entities/Actors/NPCs/Alts/Garreth/go_to_farm.gd" id="26_fd00p"]
+[ext_resource type="Script" uid="uid://mcve7iskve1e" path="res://Entities/Actors/NPCs/Alts/Garreth/go_to_bonfire.gd" id="27_7bjkg"]
+[ext_resource type="Script" uid="uid://cn06qjcejhk7x" path="res://Entities/Actors/NPCs/Alts/Garreth/finished_discussing_with_group.gd" id="28_w8gbf"]
+[ext_resource type="Script" uid="uid://fmh3h65pag26" path="res://Entities/Actors/NPCs/Alts/Garreth/idle_at_the_bonfire.gd" id="29_7k22w"]
+[ext_resource type="Script" uid="uid://0s5jy8lj13m8" path="res://Entities/Actors/NPCs/Alts/Garreth/hear_the_information_from_toblin.gd" id="30_lhkgv"]
+[ext_resource type="Script" uid="uid://biklsts2dpni0" path="res://Entities/Actors/NPCs/Alts/Garreth/finished_hearing_information_from_toblin.gd" id="31_a3vv3"]
+[ext_resource type="Script" uid="uid://bigh50663sc3j" path="res://Entities/Actors/NPCs/Alts/Garreth/go_to_the_player.gd" id="32_s6oam"]
+[ext_resource type="Script" uid="uid://chqqdxcij00hn" path="res://Entities/Actors/NPCs/Alts/Garreth/talk_to_the_player.gd" id="33_ushq4"]
+[ext_resource type="Script" uid="uid://drl63clegh8kv" path="res://Entities/Actors/NPCs/Alts/Garreth/finished_talking_to_t_he_player.gd" id="34_dd2fp"]
+[ext_resource type="Script" uid="uid://beyhcdixdtgid" path="res://Entities/Actors/NPCs/Alts/Garreth/imprison_the_player.gd" id="35_ol7vx"]
+[ext_resource type="Script" uid="uid://conwroltvxp0d" path="res://Entities/Actors/NPCs/Alts/Garreth/go_to_prison.gd" id="36_jqxyh"]
+[ext_resource type="Script" uid="uid://2pphnhkl24vw" path="res://Entities/Actors/NPCs/Alts/Garreth/go_to_market_to_buy_food.gd" id="37_kbkgd"]
+[ext_resource type="Script" uid="uid://daa8vct6nnx26" path="res://Entities/Actors/NPCs/Alts/Garreth/death_by_being_hungry.gd" id="38_j0xrr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1t7d7"]
+size = Vector2(24, 30)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_w3rlb"]
+radius = 44.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j42uk"]
+size = Vector2(19, 20)
+
+[node name="GarrethAlt" instance=ExtResource("1_5uib8")]
+script = ExtResource("2_6lo3h")
+FRICTION = 4
+movement_speed = 60
+money = 100
+food = 5
+
+[node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
+blackboard = NodePath("@Node@97090")
+
+[node name="PetitionArea" type="Area2D" parent="." index="18"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PetitionArea" index="0"]
+position = Vector2(0, -6)
+shape = SubResource("RectangleShape2D_1t7d7")
+
+[node name="NpcAltDetector" parent="." index="19" instance=ExtResource("3_ujkrr")]
+NPCName = "Garreth"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NpcAltDetector" index="0"]
+shape = SubResource("CircleShape2D_w3rlb")
+
+[node name="CutsceneDetector" type="Area2D" parent="." index="20"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CutsceneDetector" index="0"]
+position = Vector2(-0.5, -6)
+shape = SubResource("RectangleShape2D_j42uk")
+
+[node name="Blackboard" type="Node" parent="." index="21"]
+script = ExtResource("4_0uneb")
+blackboard = {
+"agent_arrived": false,
+"current_state": "idle",
+"food_inventory": 10,
+"is_full": 100,
+"last_patrol_location": Vector2(672, 384),
+"money": 100
+}
+
+[node name="Timer" type="Timer" parent="." index="22"]
+wait_time = 3.0
+one_shot = true
+
+[node name="HungerTimer" type="Timer" parent="." index="23"]
+wait_time = 30.0
+
+[node name="ConversationTimer" type="Timer" parent="." index="24"]
+wait_time = 5.0
+one_shot = true
+
+[node name="Physiological" type="Node" parent="." index="25"]
+script = ExtResource("5_f5tlx")
+
+[node name="Personality" type="Node" parent="." index="26"]
+script = ExtResource("6_ghyw0")
+
+[node name="GarrethBehaviour" type="Node" parent="." index="27" node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("7_bv3vk")
+blackboard = NodePath("@Node@97123")
+actor = NodePath("..")
+
+[node name="SelectorComposite" type="Node" parent="GarrethBehaviour" index="0"]
+script = ExtResource("8_kmjgv")
+
+[node name="Resume Patrol" type="Node" parent="GarrethBehaviour/SelectorComposite" index="0"]
+script = ExtResource("9_akseu")
+
+[node name="Eat Food" type="Node" parent="GarrethBehaviour/SelectorComposite" index="1"]
+script = ExtResource("10_kwmbc")
+
+[node name="Buy Food" type="Node" parent="GarrethBehaviour/SelectorComposite" index="2"]
+script = ExtResource("11_0if7g")
+
+[node name="Is The Food Resource Low" type="Node" parent="GarrethBehaviour/SelectorComposite/Buy Food" index="0"]
+script = ExtResource("12_768xk")
+
+[node name="Go To Market" type="Node" parent="GarrethBehaviour/SelectorComposite/Buy Food" index="1"]
+script = ExtResource("13_26e61")
+
+[node name="Buy Food" type="Node" parent="GarrethBehaviour/SelectorComposite/Buy Food" index="2"]
+script = ExtResource("14_62afx")
+
+[node name="Patrol" type="Node" parent="GarrethBehaviour/SelectorComposite" index="3"]
+script = ExtResource("11_0if7g")
+
+[node name="Is The Agent Idle" type="Node" parent="GarrethBehaviour/SelectorComposite/Patrol" index="0"]
+script = ExtResource("15_3b6go")
+
+[node name="Shout For Petition" type="Node" parent="GarrethBehaviour/SelectorComposite/Patrol" index="1"]
+script = ExtResource("16_7ud7u")
+
+[node name="Patrol Action" type="Node" parent="GarrethBehaviour/SelectorComposite/Patrol" index="2"]
+script = ExtResource("17_ik2o6")
+
+[node name="Petitioning" type="Node" parent="GarrethBehaviour/SelectorComposite" index="4"]
+script = ExtResource("11_0if7g")
+
+[node name="Chase Agent" type="Node" parent="GarrethBehaviour/SelectorComposite/Petitioning" index="0"]
+script = ExtResource("18_qmis3")
+
+[node name="Ask For Petition" type="Node" parent="GarrethBehaviour/SelectorComposite/Petitioning" index="1"]
+script = ExtResource("19_kgbim")
+
+[node name="Cutscene" type="Node" parent="GarrethBehaviour/SelectorComposite" index="5"]
+script = ExtResource("11_0if7g")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="Hear The Report From Toblin" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="0"]
+script = ExtResource("20_cls8a")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="1"]
+script = ExtResource("21_yck37")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Finished Hearing Report From Toblin" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene/DelayDecorator" index="0"]
+script = ExtResource("22_248vu")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Going To Silas" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="2"]
+script = ExtResource("23_okl8v")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Interrogate Silas" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="3"]
+script = ExtResource("24_fmr5x")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator2" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="4"]
+script = ExtResource("21_yck37")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Finished Interrogating Silas" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene/DelayDecorator2" index="0"]
+script = ExtResource("25_2tguf")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Go To Farm" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="5"]
+script = ExtResource("26_fd00p")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator4" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="6"]
+script = ExtResource("21_yck37")
+wait_time = 2.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Go To Bonfire" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene/DelayDecorator4" index="0"]
+script = ExtResource("27_7bjkg")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator3" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="7"]
+script = ExtResource("21_yck37")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Finished Discussing With Group" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene/DelayDecorator3" index="0"]
+script = ExtResource("28_w8gbf")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Idle At The Bonfire" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="8"]
+script = ExtResource("29_7k22w")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Hear The Information From Toblin" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="9"]
+script = ExtResource("30_lhkgv")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator5" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="10"]
+script = ExtResource("21_yck37")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Finished Hearing Information From Toblin" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene/DelayDecorator5" index="0"]
+script = ExtResource("31_a3vv3")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Go To The Player" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="11"]
+script = ExtResource("32_s6oam")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Talk To The Player" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="12"]
+script = ExtResource("33_ushq4")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator6" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="13"]
+script = ExtResource("21_yck37")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Finished Talking To The Player" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene/DelayDecorator6" index="0"]
+script = ExtResource("34_dd2fp")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Imprison The Player" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="14"]
+script = ExtResource("35_ol7vx")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Go To Prison" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="15"]
+script = ExtResource("36_jqxyh")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Go To Market To Buy Food" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="16"]
+script = ExtResource("37_kbkgd")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator7" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene" index="17"]
+script = ExtResource("21_yck37")
+wait_time = 10.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Death By Being Hungry" type="Node" parent="GarrethBehaviour/SelectorComposite/Cutscene/DelayDecorator7" index="0"]
+script = ExtResource("38_j0xrr")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[editable path="CarryProp"]
+[editable path="EmoteBubble"]
