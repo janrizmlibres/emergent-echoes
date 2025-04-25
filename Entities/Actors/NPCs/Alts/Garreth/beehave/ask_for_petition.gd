@@ -29,7 +29,7 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	if blackboard.get_value("current_state") == "petition answered":
 		conversation_timer.stop()
 				
-		float_text_controller.show_float_text(Globals.ResourceType.MONEY, "10", true)
+		actor.float_text_controller.show_float_text(PCG.ResourceType.MONEY, "10", true)
 		blackboard.set_value("money", blackboard.get_value("money") + 10)
 		
 		if blackboard.get_value("actor").get_name() == "Player":

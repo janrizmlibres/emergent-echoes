@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="2_0wisk"]
 [ext_resource type="Texture2D" uid="uid://cnxf1yrr65keq" path="res://Entities/Actors/NPCs/Pimble/Art/pimble.png" id="2_fr5lo"]
 [ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Props/Weapon/Art/sword.png" id="3_s0tkn"]
-[ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="4_nlchm"]
+[ext_resource type="PackedScene" uid="uid://2m12kxf7rpad" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="4_nlchm"]
 [ext_resource type="Script" uid="uid://6bjuegffhhld" path="res://Entities/Props/Weapon/weapon.gd" id="5_4rmvr"]
 [ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="8_852xc"]
 [ext_resource type="PackedScene" uid="uid://c45btaj8rrou0" path="res://Entities/UI/Indicators/EmoteBubble/emote_bubble.tscn" id="8_r32o7"]

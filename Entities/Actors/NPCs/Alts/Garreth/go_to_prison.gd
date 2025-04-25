@@ -21,7 +21,7 @@ func tick(_actor: Node, blackboard: Blackboard) -> int:
 		
 		GameManager.set_total_food("0")
 		
-		float_text_controller.show_float_text(Globals.ResourceType.SATIATION, "10", false)
+		_actor.float_text_controller.show_float_text(PCG.ResourceType.SATIATION, "10", false)
 		
 		GameManager.cutscene_market()
 		blackboard.set_value("agent_arrived", false)

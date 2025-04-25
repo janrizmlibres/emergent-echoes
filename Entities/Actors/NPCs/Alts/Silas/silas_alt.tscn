@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://u6qjhno0n6dl" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_hdw1b"]
 [ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="3_qtwxn"]
 [ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Interactions/npc_alt_detector.tscn" id="4_acgvc"]
-[ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="4_q63qr"]
+[ext_resource type="PackedScene" uid="uid://2m12kxf7rpad" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="4_q63qr"]
 [ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_vmoef"]
 [ext_resource type="Script" uid="uid://cmlopw75b05c1" path="res://addons/beehave/nodes/composites/selector.gd" id="5_a23i0"]
 [ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="5_l6iaq"]
@@ -1066,7 +1066,7 @@ wait_time = 30.0
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -19)
+position = Vector2(0, -18)
 texture = ExtResource("3_qtwxn")
 hframes = 6
 vframes = 2

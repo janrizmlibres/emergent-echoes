@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="3_v3cxx"]
 [ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="4_s0dao"]
 [ext_resource type="PackedScene" uid="uid://cshkpaxgeioxd" path="res://Utilities/Interactions/npc_alt_detector.tscn" id="4_t4ib7"]
-[ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="4_vvu4n"]
+[ext_resource type="PackedScene" uid="uid://2m12kxf7rpad" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="4_vvu4n"]
 [ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Props/Weapon/Art/sword.png" id="5_dt2xc"]
 [ext_resource type="Script" uid="uid://cmlopw75b05c1" path="res://addons/beehave/nodes/composites/selector.gd" id="5_x35se"]
 [ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="6_6gfsl"]
@@ -1109,7 +1109,7 @@ interval_range = Vector2(1, 3)
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -17)
+position = Vector2(0, -19)
 texture = ExtResource("3_v3cxx")
 hframes = 6
 vframes = 2

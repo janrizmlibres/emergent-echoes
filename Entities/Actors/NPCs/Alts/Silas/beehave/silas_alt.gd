@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+@onready var float_text_controller = $FloatTextController
 @onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
 @onready var animation_tree: AnimationTree = $AnimationTree
 @onready var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/playback")
