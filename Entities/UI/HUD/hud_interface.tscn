@@ -1,0 +1,59 @@
+[gd_scene load_steps=5 format=3 uid="uid://bl0lf3j2kaill"]
+
+[ext_resource type="PackedScene" uid="uid://6li2ci8s3tqh" path="res://Entities/UI/HUD/LifeBar/health_bar.tscn" id="1_00wiu"]
+[ext_resource type="Script" uid="uid://dexj432b4xlbu" path="res://Entities/UI/HUD/hud_interface.gd" id="1_ynxb6"]
+[ext_resource type="PackedScene" uid="uid://jvn4mcn3jeji" path="res://Entities/UI/HUD/HungerBar/hunger_bar.tscn" id="3_7apao"]
+[ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/press_start_regular.ttf" id="4_linqv"]
+
+[node name="HUDInterface" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_ynxb6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 209.0
+offset_bottom = 110.0
+scale = Vector2(0.2, 0.2)
+theme_override_constants/separation = -1
+
+[node name="HealthBar" parent="VBoxContainer" instance=ExtResource("1_00wiu")]
+layout_mode = 2
+
+[node name="HungerBar" parent="VBoxContainer" instance=ExtResource("3_7apao")]
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -51.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = 43.0
+grow_horizontal = 0
+
+[node name="MoneyLabel" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_linqv")
+theme_override_font_sizes/font_size = 8
+text = "Money: 10"
+horizontal_alignment = 2
+
+[node name="FoodLabel" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_linqv")
+theme_override_font_sizes/font_size = 8
+text = "Food: 5"
+horizontal_alignment = 2
+
+[editable path="VBoxContainer/HealthBar"]
+[editable path="VBoxContainer/HungerBar"]

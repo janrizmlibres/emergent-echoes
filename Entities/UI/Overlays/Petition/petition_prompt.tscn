@@ -1,19 +1,25 @@
-[gd_scene load_steps=4 format=3 uid="uid://dl04joan3y8xu"]
+[gd_scene load_steps=6 format=3 uid="uid://1ahdjk5hs2eo"]
 
-[ext_resource type="Texture2D" uid="uid://dd3qohvdaotmt" path="res://Entities/UI/Overlays/Petition/Art/background.png" id="1_reh2p"]
+[ext_resource type="Script" uid="uid://cytom381u3nvf" path="res://Entities/UI/Overlays/Petition/petition_prompt.gd" id="1_mu3c2"]
 [ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/press_start_regular.ttf" id="2_c720p"]
+[ext_resource type="Script" uid="uid://b8ji86ym0invn" path="res://Entities/UI/Overlays/Petition/ConfirmationLabel.cs" id="2_nx383"]
 [ext_resource type="FontFile" uid="uid://brdooo1e25vgt" path="res://Assets/Fonts/overlay_font.ttf" id="3_7y64k"]
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_buxb1"]
+load_path = "res://.godot/imported/background.png-1acba565230c58e71a45482052340df5.ctex"
+
 [node name="PetitionPrompt" type="CanvasLayer"]
+process_mode = 2
 layer = 10
-scale = Vector2(0.67, 0.55)
-transform = Transform2D(0.67, 0, 0, 0.55, 0, 0)
+script = ExtResource("1_mu3c2")
 
 [node name="Prompt" type="Control" parent="."]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 480.0
-offset_bottom = 384.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="BlackOverlay" type="ColorRect" parent="Prompt"]
 layout_mode = 1
@@ -25,21 +31,36 @@ grow_vertical = 2
 color = Color(0, 0, 0, 0.392157)
 
 [node name="TextureRect" type="TextureRect" parent="Prompt"]
-layout_mode = 0
-offset_left = 88.0597
-offset_top = 70.9091
-offset_right = 1203.06
-offset_bottom = 725.909
-scale = Vector2(0.27, 0.27)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -557.5
+offset_top = -327.5
+offset_right = 557.5
+offset_bottom = 327.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.25, 0.25)
+pivot_offset = Vector2(557, 327)
 size_flags_vertical = 4
-texture = ExtResource("1_reh2p")
+texture = SubResource("CompressedTexture2D_buxb1")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Prompt"]
-layout_mode = 0
-offset_left = 136.418
-offset_top = 119.636
-offset_right = 344.418
-offset_bottom = 204.636
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -104.0
+offset_top = -42.5
+offset_right = 104.0
+offset_bottom = 42.5
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 30
 
 [node name="ConfirmationLabel" type="Label" parent="Prompt/VBoxContainer"]
@@ -48,25 +69,27 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_c720p")
 theme_override_font_sizes/font_size = 9
-text = "ARE YOU SURE YOU WANT TO GIVE [ResourceType] TO [ActorName]?"
+text = "ARE YOU SURE YOU WANT TO GIVE [Quantity] [ResourceType] TO [ActorName]?"
 horizontal_alignment = 1
 autowrap_mode = 3
+script = ExtResource("2_nx383")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Prompt/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 100
 alignment = 1
 
-[node name="Yes" type="Label" parent="Prompt/VBoxContainer/HBoxContainer"]
+[node name="Yes" type="Button" parent="Prompt/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_7y64k")
 theme_override_font_sizes/font_size = 10
-text = "[E] Yes"
+text = "Yes"
 
-[node name="No" type="Label" parent="Prompt/VBoxContainer/HBoxContainer"]
+[node name="No" type="Button" parent="Prompt/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_7y64k")
 theme_override_font_sizes/font_size = 10
-text = "[F] No"
+text = "No"
+
+[connection signal="pressed" from="Prompt/VBoxContainer/HBoxContainer/Yes" to="." method="_on_yes_pressed"]
+[connection signal="pressed" from="Prompt/VBoxContainer/HBoxContainer/No" to="." method="_on_no_pressed"]

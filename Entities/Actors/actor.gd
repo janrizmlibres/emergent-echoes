@@ -1,17 +1,14 @@
 class_name Actor
 extends CharacterBody2D
 
-@export var hit_points: float = 1
-@export var max_speed: int = 40
-@export var acceleration: int = 8
-@export var friction: int = 4
+@export var hit_points := 5
+@export var max_speed := 40
+@export var acceleration := 8
+@export var friction := 4
 
-var resources: Array[ResourceStat] = []
-var actors_in_range: Array[Actor] = []
+var actors_in_range := {}
 
-@onready var memorizer: Memorizer = $Memorizer
 @onready var seed_prop: Sprite2D = $SeedProp
-@onready var actor_detector: Area2D = $ActorDetector
 @onready var rear_marker: Marker2D = $RearMarker/RearMarker
 @onready var carry_prop: CarryProp = $CarryProp
 
@@ -24,6 +21,7 @@ var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("par
 
 func _ready():
 	animation_tree.active = true
+	PCG.crime_committed.connect(_on_crime_committed)
 
 func set_blend_positions(x: float):
 	animation_tree.set("parameters/Idle/blend_position", x)
@@ -32,48 +30,20 @@ func set_blend_positions(x: float):
 	animation_tree.set("parameters/Harvest/blend_position", x)
 	animation_tree.set("parameters/Attack/blend_position", x)
 
-func holds_resource(type: Globals.ResourceType) -> bool:
-	var resource = get_resource(type)
-	return resource.amount > 0 if resource != null else false
+func apply_damage(attacker: Actor = null):
+	hit_points -= 1
 
-func resource_deficient(type: Globals.ResourceType) -> bool:
-	var resource = get_resource(type)
-	assert(resource != null, "Actor must have resource")
-	return resource.amount < resource.lower_threshold
+	if hit_points <= 0:
+		if attacker != null:
+			var crime := Crime.new(Crime.Category.MURDER, attacker)
+			WorldState.add_pending_crime(crime)
+			PCG.emit_crime_committed(crime)
 
-func get_resource(type: Globals.ResourceType) -> ResourceStat:
-	var idx = resources.find_custom(func(res: ResourceStat): return res.type == type)
-	return resources[idx] if idx != -1 else null
-
-func get_resource_amount(type: Globals.ResourceType) -> float:
-	var resource = get_resource(type)
-	return resource.amount if resource != null else 0
-
-func modify_resource(type: Globals.ResourceType, amount: float):
-	var resource = get_resource(type)
-	if resource == null: return
-	resource.amount += amount
-
-func give_resource(receiver: Actor, resource_type: Globals.ResourceType, amount: float):
-	var sender_resource = get_resource(resource_type)
-	var receiver_resource = receiver.get_resource(resource_type)
-	sender_resource.amount -= amount
-	receiver_resource.amount += amount
-
-func is_trackable(initiator: Actor) -> bool:
-	var target_last_position = initiator.memorizer.get_last_known_position(self)
-	if target_last_position != Vector2.INF: return true
-	if initiator.actors_in_range.has(self): return true
-	return false
-
-func is_valid_target() -> bool:
-	if is_queued_for_deletion(): return false
-	if not WorldState.is_available(self): return false
-	return not WorldState.is_captured(self)
-
-func is_lawful() -> bool:
-	if self is Player: return false
-	return (self as NPC).lawful_trait != null
+		WorldState.unregister_actor(self)
+		queue_free()
+	elif attacker != null:
+		PCG.emit_threat_present(attacker, self)
+		handle_assault(attacker)
 
 func start_interaction(_target):
 	pass
@@ -81,17 +51,44 @@ func start_interaction(_target):
 func stop_interaction():
 	pass
 
-func _on_actor_detector_body_entered(body: Node2D):
-	if body == self or body is not Actor: return
-	actors_in_range.append(body as Actor)
-
-func _on_actor_detector_body_exited(body: Node2D):
-	if body == self or body is not Actor: return
-	if body.is_queued_for_deletion(): return
+func handle_detainment(detainer: Actor):
+	detainer.carry_prop.set_texture(name)
+	detainer.carry_prop.show_sprite()
+	visible = false
+	WorldState.set_status(self, ActorState.State.CAPTURED)
 	
-	var actor = body as Actor
-	memorizer.set_last_known_position(actor, actor.global_position)
-	actors_in_range.erase(actor)
+	do_handle_detainment(detainer)
+
+func handle_captivity(detainer: Actor, prison: Prison):
+	detainer.carry_prop.hide_sprite()
+	global_position = prison.global_position
+	visible = true
+	WorldState.npc_manager.end_case(detainer)
+	
+	do_handle_captivity(detainer)
+
+func do_handle_detainment(_detainer: Actor):
+	pass
+
+func do_handle_captivity(_detainer: Actor):
+	pass
+	
+func handle_crime_committed(_crime: Crime):
+	pass
+
+func handle_assault(_attacker: Actor):
+	pass
+
+func apply_knockback(_direction: Vector2, _force: float):
+	pass
+
+func actor_pressed():
+	pass
+	
+func _on_hover_area_input_event(_viewport, event, _shape_idx):
+	if event is InputEventMouseButton:
+		if event.is_released() and event.button_index == MOUSE_BUTTON_RIGHT:
+			actor_pressed()
 
 func _on_animation_tree_animation_finished(_anim_name: StringName):
 	pass
@@ -104,29 +101,10 @@ func _on_hurt_box_area_entered(area):
 	apply_knockback(direction, weapon.knockback)
 	apply_damage(weapon.actor)
 
-func apply_damage(damager: Actor = null):
-	hit_points -= 1
-	if hit_points > 0: return
-
-	if self is NPC:
-		(self as NPC).executor.procedural_tree.disable()
-
-	WorldState.queue_free_actor(self)
-	queue_free()
-	
-	if damager == null:
-		Logger.info(name + " has perished!")
+func _on_crime_committed(crime: Crime):
+	if crime.criminal == self:
 		return
 
-	var participants = damager.actors_in_range.duplicate()
-	var crime: Crime = Crime.new(Crime.Category.MURDER, damager, participants)
-	WorldState.crimes.append(crime)
-
-	Logger.info(damager.name + " murdered " + name)
-
-	for participant in participants:
-		if participant is NPC:
-			(participant as NPC).crime_witnessed(crime)
-
-func apply_knockback(_direction: Vector2, _force: float):
-	pass
+	if crime.criminal in actors_in_range:
+		crime.record_participant(self)
+		handle_crime_committed(crime)

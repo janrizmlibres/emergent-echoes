@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://cualnqewkna60"]
-
-[ext_resource type="Script" uid="uid://cv332uqdwgww4" path="res://Entities/Actors/NPCs/AI/Nodes/is_target_valid.gd" id="1_142o4"]
-
-[node name="IsTargetValid" type="Node"]
-script = ExtResource("1_142o4")
-metadata/_custom_type_script = "uid://dxlpexlc4dupq"

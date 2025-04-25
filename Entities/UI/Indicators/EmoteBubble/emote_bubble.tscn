@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://c45btaj8rrou0"]
 
-[ext_resource type="Script" path="res://Entities/UI/Indicators/EmoteBubble/emote_bubble.gd" id="1_o5cn6"]
+[ext_resource type="Script" uid="uid://cynn012vufduk" path="res://Entities/UI/Indicators/EmoteBubble/emote_bubble.gd" id="1_o5cn6"]
 [ext_resource type="Texture2D" uid="uid://bkr5hlk7r2bec" path="res://Entities/UI/Indicators/EmoteBubble/Art/bubble_emotes.png" id="2_5smw3"]
 
 [sub_resource type="Animation" id="Animation_xf20v"]

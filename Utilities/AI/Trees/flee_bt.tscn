@@ -1,0 +1,36 @@
+[gd_scene load_steps=8 format=3 uid="uid://duay2jxwu74pg"]
+
+[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_8lcwy"]
+[ext_resource type="Script" uid="uid://lc1dnoc2x4b" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="2_0koo8"]
+[ext_resource type="Script" uid="uid://ddsynpu03eev2" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="3_qpac4"]
+[ext_resource type="PackedScene" uid="uid://cxryovwvqkj2u" path="res://Utilities/AI/Nodes/get_threat_distance.tscn" id="4_gbaw6"]
+[ext_resource type="PackedScene" uid="uid://qwnvuvh4d71a" path="res://Utilities/AI/Nodes/move_to_position.tscn" id="5_fgykr"]
+[ext_resource type="Script" uid="uid://bqlrwrwhs34cs" path="res://addons/beehave/nodes/decorators/delayer.gd" id="6_5qh58"]
+[ext_resource type="PackedScene" uid="uid://5fj0qtxhah7q" path="res://Utilities/AI/Nodes/end_action.tscn" id="7_uw8bp"]
+
+[node name="FleeBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("1_8lcwy")
+blackboard = NodePath("@Node@23195")
+actor = NodePath("")
+metadata/_custom_type_script = "uid://da7jagy6am60c"
+
+[node name="SelectorReactiveComposite" type="Node" parent="."]
+script = ExtResource("2_0koo8")
+metadata/_custom_type_script = "uid://lc1dnoc2x4b"
+
+[node name="SequenceReactiveComposite" type="Node" parent="SelectorReactiveComposite"]
+script = ExtResource("3_qpac4")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="GetThreatDistance" parent="SelectorReactiveComposite/SequenceReactiveComposite" instance=ExtResource("4_gbaw6")]
+threat_distance = 180.0
+
+[node name="MoveToPosition" parent="SelectorReactiveComposite/SequenceReactiveComposite" instance=ExtResource("5_fgykr")]
+
+[node name="DelayDecorator" type="Node" parent="SelectorReactiveComposite"]
+script = ExtResource("6_5qh58")
+wait_time = 12.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="EndAction" parent="SelectorReactiveComposite/DelayDecorator" instance=ExtResource("7_uw8bp")]
+is_reactive = true

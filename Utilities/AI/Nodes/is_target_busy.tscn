@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://iv5s8ex501af"]
+
+[ext_resource type="Script" uid="uid://dmjil1cc34f3h" path="res://Utilities/AI/Nodes/is_target_busy.gd" id="1_cl7yg"]
+
+[node name="IsTargetBusy" type="Node"]
+script = ExtResource("1_cl7yg")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"

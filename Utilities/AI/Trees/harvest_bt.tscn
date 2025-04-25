@@ -1,0 +1,49 @@
+[gd_scene load_steps=10 format=3 uid="uid://bs8meix2fqbti"]
+
+[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_jcr8g"]
+[ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="2_ehbrq"]
+[ext_resource type="Script" uid="uid://xir4dkvi8wq3" path="res://addons/beehave/nodes/decorators/until_fail.gd" id="3_d411m"]
+[ext_resource type="Script" uid="uid://pjnt4it6euru" path="res://addons/beehave/nodes/decorators/time_limiter.gd" id="4_lvyey"]
+[ext_resource type="PackedScene" uid="uid://c8mncoh4iemp3" path="res://Utilities/AI/Nodes/get_crop_tile.tscn" id="5_iyrkb"]
+[ext_resource type="PackedScene" uid="uid://qwnvuvh4d71a" path="res://Utilities/AI/Nodes/move_to_position.tscn" id="6_n8vs4"]
+[ext_resource type="PackedScene" uid="uid://u3lyh1wujfr0" path="res://Utilities/AI/Nodes/modify_crop.tscn" id="7_y77qe"]
+[ext_resource type="Script" uid="uid://cgexvh6s1rans" path="res://Utilities/AI/Scripts/harvest_crop.gd" id="8_xtay2"]
+[ext_resource type="PackedScene" uid="uid://5fj0qtxhah7q" path="res://Utilities/AI/Nodes/end_action.tscn" id="9_utxc1"]
+
+[node name="HarvestBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("1_jcr8g")
+blackboard = NodePath("@Node@69901")
+actor = NodePath("..")
+metadata/_custom_type_script = "uid://da7jagy6am60c"
+
+[node name="SequenceComposite" type="Node" parent="."]
+script = ExtResource("2_ehbrq")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="UntilFailDecorator" type="Node" parent="SequenceComposite"]
+script = ExtResource("3_d411m")
+metadata/_custom_type_script = "uid://xir4dkvi8wq3"
+
+[node name="TimeLimiterDecorator" type="Node" parent="SequenceComposite/UntilFailDecorator"]
+script = ExtResource("4_lvyey")
+wait_time = 60.0
+metadata/_custom_type_script = "uid://pjnt4it6euru"
+
+[node name="SequenceComposite" type="Node" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator"]
+script = ExtResource("2_ehbrq")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="GetCropTile" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator/SequenceComposite" instance=ExtResource("5_iyrkb")]
+status = 2
+
+[node name="MoveToPosition" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator/SequenceComposite" instance=ExtResource("6_n8vs4")]
+
+[node name="ModifyCrop" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator/SequenceComposite" instance=ExtResource("7_y77qe")]
+status = 0
+
+[node name="HarvestCrop" type="Node" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator/SequenceComposite"]
+script = ExtResource("8_xtay2")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="EndAction" parent="SequenceComposite" instance=ExtResource("9_utxc1")]
+is_reactive = false

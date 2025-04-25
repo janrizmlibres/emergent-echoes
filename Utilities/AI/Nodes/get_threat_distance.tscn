@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://cxryovwvqkj2u"]
+
+[ext_resource type="Script" uid="uid://bg6uyy2mk0scv" path="res://Utilities/AI/Nodes/get_threat_distance.gd" id="1_offan"]
+
+[node name="GetThreatDistance" type="Node"]
+script = ExtResource("1_offan")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"

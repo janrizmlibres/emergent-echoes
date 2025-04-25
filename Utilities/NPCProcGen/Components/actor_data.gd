@@ -1,29 +1,28 @@
 class_name ActorData
+extends Node
 
-const DECAY_DURATION: float = 60.0
-const PETITION_INTERVAL: float = 15.0
+const DECAY_DURATION := 60.0
 
-var relationship: float = 0.0:
+var relationship := 0.0:
 	get:
 		return relationship
 	set(value):
 		relationship = clamp(value, -35.0, 35.0)
 
-var last_known_position: Vector2 = Vector2.INF:
+var last_known_position := Vector2.INF:
 	get:
 		return last_known_position
 	set(value):
 		last_known_position = value
 		decay_timer.start()
 
-var decay_timer: Timer
+var decay_timer := Timer.new()
 
-func _init(memorizer: Memorizer):
-	decay_timer = Timer.new()
+func _ready():
 	decay_timer.wait_time = DECAY_DURATION
 	decay_timer.one_shot = true
 	decay_timer.timeout.connect(_on_decay_timer_timeout)
-	memorizer.add_child(decay_timer)
+	add_child(decay_timer)
 
 func _on_decay_timer_timeout() -> void:
 	last_known_position = Vector2.INF

@@ -1,18 +1,17 @@
-[gd_scene load_steps=51 format=3 uid="uid://cmcj7lmi8c5yw"]
+[gd_scene load_steps=50 format=3 uid="uid://cmcj7lmi8c5yw"]
 
 [ext_resource type="Script" uid="uid://cb1rxtodur2tm" path="res://Entities/Actors/actor.gd" id="1_fjhqg"]
-[ext_resource type="Script" uid="uid://b8wl584h3jq0m" path="res://Utilities/NPCProcGen/Internal/memorizer.gd" id="2_3ijp3"]
 [ext_resource type="Texture2D" uid="uid://jvowy0xvcekr" path="res://Entities/Actors/Player/Art/player.png" id="2_f3284"]
 [ext_resource type="Texture2D" uid="uid://l0c4m00kywv" path="res://Entities/Structures/CropTile/Art/crops.png" id="4_f3284"]
 [ext_resource type="Script" uid="uid://6bjuegffhhld" path="res://Entities/Props/Weapon/weapon.gd" id="5_62n8s"]
 [ext_resource type="PackedScene" uid="uid://c45btaj8rrou0" path="res://Entities/UI/Indicators/EmoteBubble/emote_bubble.tscn" id="5_jou52"]
 [ext_resource type="Texture2D" uid="uid://bspmyqr5k2fwr" path="res://Entities/Props/Weapon/Art/sword.png" id="5_uxave"]
-[ext_resource type="PackedScene" uid="uid://bk10dt7i8uqo6" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="6_7qwyo"]
+[ext_resource type="PackedScene" uid="uid://2m12kxf7rpad" path="res://Entities/Props/CarryProp/carry_prop.tscn" id="6_7qwyo"]
 [ext_resource type="PackedScene" uid="uid://dt0tf8aaxnjcl" path="res://Utilities/Game/FloatTextController/float_text_controller.tscn" id="8_7qwyo"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fjhqg"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_62n8s"]
 radius = 3.0
-height = 10.0
+height = 14.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wrnt0"]
 radius = 6.0
@@ -21,8 +20,8 @@ height = 16.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f3284"]
 size = Vector2(26, 20)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_fjhqg"]
-radius = 70.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7qwyo"]
+size = Vector2(14, 18)
 
 [sub_resource type="Animation" id="Animation_n10kc"]
 resource_name = "RESET"
@@ -646,7 +645,7 @@ tracks/5/keys = {
 "values": [0]
 }
 
-[sub_resource type="Animation" id="Animation_bv4e4"]
+[sub_resource type="Animation" id="Animation_ywa66"]
 resource_name = "idle_left"
 length = 0.8
 loop_mode = 1
@@ -700,7 +699,7 @@ tracks/3/keys = {
 "values": [Vector2(-4, -17), Vector2(-4, -18), Vector2(-4, -17), Vector2(-4, -16)]
 }
 
-[sub_resource type="Animation" id="Animation_33yfl"]
+[sub_resource type="Animation" id="Animation_1qgyj"]
 resource_name = "idle_right"
 length = 0.8
 loop_mode = 1
@@ -754,7 +753,7 @@ tracks/3/keys = {
 "values": [Vector2(-4, -17), Vector2(-4, -18), Vector2(-4, -17), Vector2(-4, -16)]
 }
 
-[sub_resource type="Animation" id="Animation_f3284"]
+[sub_resource type="Animation" id="Animation_hog1j"]
 resource_name = "move_left"
 length = 0.4
 loop_mode = 1
@@ -808,7 +807,7 @@ tracks/3/keys = {
 "values": [Vector2(-4, -18), Vector2(-4, -19), Vector2(-4, -20), Vector2(-4, -19)]
 }
 
-[sub_resource type="Animation" id="Animation_jou52"]
+[sub_resource type="Animation" id="Animation_p56hr"]
 resource_name = "move_right"
 length = 0.4
 loop_mode = 1
@@ -871,10 +870,10 @@ _data = {
 &"eat_right": SubResource("Animation_wrnt0"),
 &"harvest_left": SubResource("Animation_7qwyo"),
 &"harvest_right": SubResource("Animation_uxave"),
-&"idle_left": SubResource("Animation_bv4e4"),
-&"idle_right": SubResource("Animation_33yfl"),
-&"move_left": SubResource("Animation_f3284"),
-&"move_right": SubResource("Animation_jou52")
+&"idle_left": SubResource("Animation_ywa66"),
+&"idle_right": SubResource("Animation_1qgyj"),
+&"move_left": SubResource("Animation_hog1j"),
+&"move_right": SubResource("Animation_p56hr")
 }
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_62n8s"]
@@ -989,30 +988,23 @@ texture = ExtResource("2_f3284")
 hframes = 8
 vframes = 6
 
-[node name="Resources" type="Node" parent="."]
-
-[node name="Memorizer" type="Node" parent="." node_paths=PackedStringArray("actor_owner")]
-script = ExtResource("2_3ijp3")
-actor_owner = NodePath("..")
-metadata/_custom_type_script = "uid://b8wl584h3jq0m"
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
-shape = SubResource("CapsuleShape2D_fjhqg")
+shape = SubResource("CapsuleShape2D_62n8s")
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -17)
+position = Vector2(0, -18)
 texture = ExtResource("4_f3284")
 hframes = 6
 vframes = 2
 frame = 6
 
-[node name="HurtBox" type="Area2D" parent="."]
+[node name="HitBox" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 position = Vector2(0, -5)
 shape = SubResource("CapsuleShape2D_wrnt0")
 
@@ -1035,11 +1027,11 @@ position = Vector2(13, -6)
 shape = SubResource("RectangleShape2D_f3284")
 disabled = true
 
-[node name="ActorDetector" type="Area2D" parent="."]
-visible = false
+[node name="HoverArea" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ActorDetector"]
-shape = SubResource("CircleShape2D_fjhqg")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HoverArea"]
+position = Vector2(0, -5)
+shape = SubResource("RectangleShape2D_7qwyo")
 
 [node name="CropProp" type="Node2D" parent="."]
 
@@ -1064,6 +1056,7 @@ libraries = {
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
+active = false
 tree_root = SubResource("AnimationNodeStateMachine_ifole")
 anim_player = NodePath("../AnimationPlayer")
 parameters/Attack/blend_position = 1.0
@@ -1077,9 +1070,6 @@ position = Vector2(0, -14)
 
 [node name="FloatTextController" parent="." instance=ExtResource("8_7qwyo")]
 
-[connection signal="area_entered" from="HurtBox" to="." method="_on_hurt_box_area_entered"]
-[connection signal="body_entered" from="ActorDetector" to="." method="_on_actor_detector_body_entered"]
-[connection signal="body_exited" from="ActorDetector" to="." method="_on_actor_detector_body_exited"]
+[connection signal="area_entered" from="HitBox" to="." method="_on_hurt_box_area_entered"]
+[connection signal="input_event" from="HoverArea" to="." method="_on_hover_area_input_event"]
 [connection signal="animation_finished" from="AnimationTree" to="." method="_on_animation_tree_animation_finished"]
-
-[editable path="CarryProp"]

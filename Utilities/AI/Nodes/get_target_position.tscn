@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://dk8go1ye7kdwd"]
+
+[ext_resource type="Script" uid="uid://c4821oo6glruw" path="res://Utilities/AI/Nodes/get_target_position.gd" id="1_x72ya"]
+
+[node name="GetTargetPosition" type="Node"]
+script = ExtResource("1_x72ya")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"

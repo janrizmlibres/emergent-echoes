@@ -5,7 +5,7 @@ enum Status {DORMANT, GROWING, MATURE}
 
 @export var growth_duration: float = 60
 
-var status: Status = Status.DORMANT:
+var status := Status.DORMANT:
 	get:
 		return status
 	set(value):
@@ -13,7 +13,7 @@ var status: Status = Status.DORMANT:
 		if status == Status.DORMANT:
 			growth_timer = 0
 	
-var is_attended: bool = false
+var is_attended := false
 var growth_timer: float = 0
 
 @onready var sprite: Sprite2D = $Sprite2D

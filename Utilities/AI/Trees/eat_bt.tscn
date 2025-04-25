@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cj5utlweimk2y"]
+
+[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_oo7mo"]
+[ext_resource type="Script" uid="uid://bjcmrmjkhkaed" path="res://Utilities/AI/Scripts/eat_behavior.gd" id="2_esph7"]
+
+[node name="EatBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("1_oo7mo")
+blackboard = NodePath("@Node@114612")
+actor = NodePath("..")
+metadata/_custom_type_script = "uid://da7jagy6am60c"
+
+[node name="EatBehavior" type="Node" parent="."]
+script = ExtResource("2_esph7")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"

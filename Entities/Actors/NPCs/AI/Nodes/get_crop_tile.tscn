@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8mncoh4iemp3"]
-
-[ext_resource type="Script" uid="uid://dk1f64ygrlrnq" path="res://Entities/Actors/NPCs/AI/Nodes/get_crop_tile.gd" id="1_lspn6"]
-
-[node name="GetCropTile" type="Node"]
-script = ExtResource("1_lspn6")
-metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"

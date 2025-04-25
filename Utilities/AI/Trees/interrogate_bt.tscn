@@ -1,0 +1,98 @@
+[gd_scene load_steps=20 format=3 uid="uid://dxu6vhiceph04"]
+
+[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_j1snq"]
+[ext_resource type="Script" uid="uid://lc1dnoc2x4b" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="2_kknew"]
+[ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="3_26y4y"]
+[ext_resource type="Script" uid="uid://cx07pxr1bsjba" path="res://addons/beehave/nodes/decorators/inverter.gd" id="4_3prar"]
+[ext_resource type="PackedScene" uid="uid://c124x0mip4ii3" path="res://Utilities/AI/Nodes/assess_completed.tscn" id="5_yhykp"]
+[ext_resource type="PackedScene" uid="uid://5p51sjohtuli" path="res://Utilities/AI/Nodes/assess_case.tscn" id="6_pbtui"]
+[ext_resource type="Script" uid="uid://ddsynpu03eev2" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="7_kfqta"]
+[ext_resource type="PackedScene" uid="uid://cualnqewkna60" path="res://Utilities/AI/Nodes/is_target_valid.tscn" id="8_l6hfx"]
+[ext_resource type="PackedScene" uid="uid://bo5mx8ex74q0o" path="res://Utilities/AI/Nodes/is_target_reached.tscn" id="9_n2ilk"]
+[ext_resource type="PackedScene" uid="uid://iv5s8ex501af" path="res://Utilities/AI/Nodes/is_target_busy.tscn" id="11_kspjj"]
+[ext_resource type="PackedScene" uid="uid://0sjgm3h7274m" path="res://Utilities/AI/Nodes/get_wait_position.tscn" id="12_k7qtj"]
+[ext_resource type="PackedScene" uid="uid://qwnvuvh4d71a" path="res://Utilities/AI/Nodes/move_to_position.tscn" id="13_emwye"]
+[ext_resource type="PackedScene" uid="uid://dk8go1ye7kdwd" path="res://Utilities/AI/Nodes/get_target_position.tscn" id="14_8my6g"]
+[ext_resource type="PackedScene" uid="uid://brb88fpudatxy" path="res://Utilities/AI/Nodes/set_target_reached.tscn" id="15_nn4ud"]
+[ext_resource type="Script" uid="uid://u7kder1k34v5" path="res://addons/beehave/nodes/composites/simple_parallel.gd" id="16_sew3t"]
+[ext_resource type="PackedScene" uid="uid://7fudhwikrsk" path="res://Utilities/AI/Nodes/interact_with_target.tscn" id="17_dwfvh"]
+[ext_resource type="PackedScene" uid="uid://cb4fd3upbur04" path="res://Utilities/AI/Nodes/interact_behavior.tscn" id="18_43j0w"]
+[ext_resource type="Script" uid="uid://dfegq6we13byi" path="res://Utilities/AI/Scripts/finish_interrogation.gd" id="19_buogx"]
+[ext_resource type="PackedScene" uid="uid://5fj0qtxhah7q" path="res://Utilities/AI/Nodes/end_action.tscn" id="20_co1py"]
+
+[node name="InterrogateBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("1_j1snq")
+blackboard = NodePath("@Node@23189")
+actor = NodePath("")
+metadata/_custom_type_script = "uid://da7jagy6am60c"
+
+[node name="SelectorReactiveComposite" type="Node" parent="."]
+script = ExtResource("2_kknew")
+metadata/_custom_type_script = "uid://lc1dnoc2x4b"
+
+[node name="SequenceComposite3" type="Node" parent="SelectorReactiveComposite"]
+script = ExtResource("3_26y4y")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="InverterDecorator" type="Node" parent="SelectorReactiveComposite/SequenceComposite3"]
+script = ExtResource("4_3prar")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetValid" parent="SelectorReactiveComposite/SequenceComposite3/InverterDecorator" instance=ExtResource("8_l6hfx")]
+
+[node name="EndAction" parent="SelectorReactiveComposite/SequenceComposite3" instance=ExtResource("20_co1py")]
+is_reactive = false
+
+[node name="SequenceComposite" type="Node" parent="SelectorReactiveComposite"]
+script = ExtResource("3_26y4y")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="InverterDecorator" type="Node" parent="SelectorReactiveComposite/SequenceComposite"]
+script = ExtResource("4_3prar")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="AssessCompleted" parent="SelectorReactiveComposite/SequenceComposite/InverterDecorator" instance=ExtResource("5_yhykp")]
+
+[node name="AssessCase" parent="SelectorReactiveComposite/SequenceComposite" instance=ExtResource("6_pbtui")]
+
+[node name="SequenceReactiveComposite" type="Node" parent="SelectorReactiveComposite"]
+script = ExtResource("7_kfqta")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="InverterDecorator" type="Node" parent="SelectorReactiveComposite/SequenceReactiveComposite"]
+script = ExtResource("4_3prar")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetReached" parent="SelectorReactiveComposite/SequenceReactiveComposite/InverterDecorator" instance=ExtResource("9_n2ilk")]
+
+[node name="IsTargetBusy" parent="SelectorReactiveComposite/SequenceReactiveComposite" instance=ExtResource("11_kspjj")]
+
+[node name="GetWaitPosition" parent="SelectorReactiveComposite/SequenceReactiveComposite" instance=ExtResource("12_k7qtj")]
+
+[node name="MoveToPosition" parent="SelectorReactiveComposite/SequenceReactiveComposite" instance=ExtResource("13_emwye")]
+
+[node name="SequenceComposite2" type="Node" parent="SelectorReactiveComposite"]
+script = ExtResource("3_26y4y")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="SequenceReactiveComposite" type="Node" parent="SelectorReactiveComposite/SequenceComposite2"]
+script = ExtResource("7_kfqta")
+metadata/_custom_type_script = "uid://ddsynpu03eev2"
+
+[node name="GetTargetPosition" parent="SelectorReactiveComposite/SequenceComposite2/SequenceReactiveComposite" instance=ExtResource("14_8my6g")]
+
+[node name="MoveToPosition" parent="SelectorReactiveComposite/SequenceComposite2/SequenceReactiveComposite" instance=ExtResource("13_emwye")]
+
+[node name="SetTargetReached" parent="SelectorReactiveComposite/SequenceComposite2" instance=ExtResource("15_nn4ud")]
+
+[node name="SimpleParallelComposite" type="Node" parent="SelectorReactiveComposite/SequenceComposite2"]
+script = ExtResource("16_sew3t")
+metadata/_custom_type_script = "uid://u7kder1k34v5"
+
+[node name="InteractWithTarget" parent="SelectorReactiveComposite/SequenceComposite2/SimpleParallelComposite" instance=ExtResource("17_dwfvh")]
+
+[node name="InteractBehavior" parent="SelectorReactiveComposite/SequenceComposite2/SimpleParallelComposite" instance=ExtResource("18_43j0w")]
+
+[node name="FinishInterrogation" type="Node" parent="SelectorReactiveComposite/SequenceComposite2"]
+script = ExtResource("19_buogx")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"

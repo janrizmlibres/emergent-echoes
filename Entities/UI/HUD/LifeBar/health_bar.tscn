@@ -3,3 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bdtksr1wy60pd" path="res://Entities/UI/HUD/bar.tscn" id="1_coqb4"]
 
 [node name="HealthBar" instance=ExtResource("1_coqb4")]
+
+[node name="TextureProgressBar" parent="." index="0"]
+max_value = 5.0
+value = 5.0
