@@ -18,6 +18,13 @@ func register_npc(npc: NPC, npc_agent: NPCAgent):
 	npc_container.add_child(evaluators[npc])
 
 func unregister_npc(npc: NPC):
+	if has_trait(npc, "lawful"):
+		var lawful_mod: LawfulTrait = get_trait(npc, "lawful")
+		
+		if lawful_mod.current_case != null:
+			lawful_mod.current_case.cleanse_actor(npc)
+			lawful_mod.current_case.reset()
+
 	get_node(NodePath(npc.name)).queue_free()
 	_traits.erase(npc)
 	evaluators.erase(npc)
@@ -53,6 +60,17 @@ func get_traits(npc: NPC) -> Array:
 
 func get_traits_as_text(npc: NPC) -> Array:
 	return _traits[npc].keys()
+
+func get_npcs_with_trait(trait_name: String) -> Array:
+	return _traits.keys().filter(func(n):
+		return has_trait(n, trait_name)
+	)
+
+func end_case(npc: NPC):
+	assert(has_trait(npc, "lawful"), "NPC must be Lawful")
+
+	var lawful_mod: LawfulTrait = get_trait(npc, "lawful")
+	lawful_mod.current_case = null
 
 func run_evaluation(npc: NPC) -> void:
 	evaluators[npc].start_timer()

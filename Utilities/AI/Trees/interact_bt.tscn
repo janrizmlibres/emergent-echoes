@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://004o5ery3r1n"]
+
+[ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_ckb38"]
+[ext_resource type="PackedScene" uid="uid://cb4fd3upbur04" path="res://Utilities/AI/Nodes/interact_behavior.tscn" id="2_3e5v1"]
+
+[node name="InteractBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("1_ckb38")
+blackboard = NodePath("@Node@23071")
+actor = NodePath("")
+metadata/_custom_type_script = "uid://da7jagy6am60c"
+
+[node name="InteractBehavior" parent="." instance=ExtResource("2_3e5v1")]

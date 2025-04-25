@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://cgutu5snnscr2" path="res://Entities/Actors/NPCs/npc.gd" id="2_36x7w"]
 [ext_resource type="Script" uid="uid://dlxq51song2ga" path="res://Entities/Actors/NPCs/vision_cone.gd" id="3_jlstl"]
 [ext_resource type="Script" uid="uid://4b83pkjjabxr" path="res://Utilities/NPCProcGen/Nodes/npc_agent.gd" id="3_lbp4f"]
-[ext_resource type="PackedScene" uid="uid://88lyt0r5veus" path="res://Entities/Actors/NPCs/AI/Trees/wander_bt.tscn" id="5_jlstl"]
+[ext_resource type="PackedScene" uid="uid://88lyt0r5veus" path="res://Utilities/AI/Trees/wander_bt.tscn" id="5_jlstl"]
 [ext_resource type="PackedScene" uid="uid://5gkp1uhyoheo" path="res://Entities/UI/Popups/RadialMenu/radial_menu.tscn" id="7_sdssa"]
 [ext_resource type="Script" uid="uid://x8h723av8g65" path="res://Utilities/NPCProcGen/Internal/executor.gd" id="13_c1v6p"]
 

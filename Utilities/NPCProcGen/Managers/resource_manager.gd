@@ -22,14 +22,14 @@ func register_actor(actor: Actor, agent: PCGAgent):
 
 	var food_resource := FoodResource.new(agent.food_final_amount, agent.food_final_weight)
 	store_resource(actor, food_resource, "Food", actor_container)
+
+	var satiation_resource := SatiationResource.new(
+		agent.satiation_final_amount,
+		agent.satiation_final_weight
+	)
+	store_resource(actor, satiation_resource, "Satiation", actor_container)
 	
 	if agent is NPCAgent:
-		var satiation_resource := SatiationResource.new(
-			agent.satiation_amount,
-			agent.satiation_weight
-		)
-		store_resource(actor, satiation_resource, "Satiation", actor_container)
-
 		var companionship_resource := CompanionshipResource.new(
 			agent.companionship_amount,
 			agent.companionship_weight

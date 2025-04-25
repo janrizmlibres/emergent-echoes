@@ -81,6 +81,8 @@ func validate_action(action: PCG.Action) -> bool:
 			return WorldState.some_crop_in_status(CropTile.Status.DORMANT)
 		PCG.Action.HARVEST:
 			return WorldState.some_crop_in_status(CropTile.Status.MATURE)
+		PCG.Action.PURSUIT:
+			return WorldState.has_crimes()
 		_:
 			return true
 	

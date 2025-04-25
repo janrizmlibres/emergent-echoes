@@ -1,52 +1,53 @@
 class_name LawfulTrait
 extends BaseTrait
 
-@export var investigation_duration: float = 300
+var investigation_timer := Timer.new()
 
-var assigned_case: Crime = null:
+var current_case: Crime = null:
 	get:
-		return assigned_case
+		return current_case
 	set(value):
-		assigned_case = value
-		timer = investigation_duration
+		current_case = value
 
-var timer: float = investigation_duration
+		if value != null:
+			investigation_timer.start()
+		else:
+			investigation_timer.stop()
 
-func _process(delta):
-	if assigned_case == null: return
-	timer -= delta
+func _ready():
+	investigation_timer.wait_time = 300
+	investigation_timer.one_shot = true
+	investigation_timer.timeout.connect(_on_investigation_timeout)
 
 func evaluation_proactive_action():
-	if timer <= 0:
-		print("Closed case during timeout")
-		resolve_case()
+	if not has_case():
 		return
-
-	if assigned_case == null:
-		assigned_case = WorldState.get_open_case(npc)
 	
-	if assigned_case == null:
-		print("No open cases")
+	if current_case.is_closed():
+		if current_case.is_solved():
+			add_action(PCG.Action.PURSUIT, PCG.ResourceType.DUTY, {
+				"target": current_case.criminal,
+				"is_reactive": false
+			})
+		else:
+			add_action(PCG.Action.ASSESS, PCG.ResourceType.DUTY, {
+				"target": current_case.criminal
+			})
 		return
-
-	print("A case has been assigned to ", npc.name)
-	var target = assigned_case.get_random_participant()
+		
+	var target = current_case.select_participant()
 	if target != null:
 		add_action(PCG.Action.INTERROGATE, PCG.ResourceType.DUTY, {
-			"case": assigned_case,
-			"target": target,
-			"assess_completed": false
+			"case": current_case,
+			"target": target
 		})
 		return
 	
-	if assigned_case.all_participants_cleared():
-		resolve_case()
+func has_case() -> bool:
+	if current_case == null:
+		current_case = WorldState.get_pending_crime()
+	
+	return true if current_case != null else false
 
-func resolve_case():
-	if assigned_case.close(10): return
-
-	add_action(PCG.Action.PURSUIT, PCG.ResourceType.DUTY, {
-		"case": assigned_case,
-		"target": assigned_case.criminal,
-		"assess_completed": false
-	})
+func _on_investigation_timeout():
+	current_case.close_case()

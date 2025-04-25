@@ -38,6 +38,8 @@ func _ready():
 	money_final_weight = money_weight
 	food_final_amount = food_amount
 	food_final_weight = food_weight
+	satiation_final_amount = satiation_amount
+	satiation_final_weight = satiation_weight
 
 func emit_action_evaluated(action_data: ActionData) -> void:
 	action_evaluated.emit(action_data)

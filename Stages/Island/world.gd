@@ -21,6 +21,7 @@ func _ready():
 		WorldState.register_prison(prison)
 	
 	WorldState.register_shop($Shop)
+	$HUD/Interface.initialize()
 
 	EventManager.info_dialog_requested.connect(_on_info_dialog_requested)
 	EventManager.show_player_petition_hud.connect(_on_show_petition_hud)

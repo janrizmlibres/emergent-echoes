@@ -15,5 +15,5 @@ static func execute(npc: NPC, target: Actor, resource_type: PCG.ResourceType) ->
 
 	resource_mgr.transfer_resource(target, npc, resource_type, steal_amount)
 	var crime := Crime.new(Crime.Category.THEFT, npc)
-	WorldState.record_crime(crime)
+	WorldState.add_pending_crime(crime)
 	return steal_amount

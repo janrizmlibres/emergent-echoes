@@ -4,10 +4,9 @@ var npc_manager := NPCManager.new()
 var resource_manager := ResourceManager.new()
 var memory_manager := MemoryManager.new()
 
-var global_events: Array[String] = []
-
 var _actor_state: Dictionary[Actor, ActorState] = {}
-var _crimes: Array[Crime] = []
+
+var _pending_crimes: Array[Crime] = []
 
 var _prisons: Array[Prison] = []
 var _crops: Array[CropTile] = []
@@ -97,11 +96,21 @@ func actor_has_trait(actor: Actor, trait_name: String) -> bool:
 	if actor is Player: return false
 	return npc_manager.has_trait(actor, trait_name)
 
-func record_crime(crime: Crime):
-	_crimes.append(crime)
+func add_pending_crime(crime: Crime):
+	_pending_crimes.append(crime)
+
+func get_pending_crime() -> Crime:
+	return _pending_crimes.pop_front()
+
+func get_available_prison() -> Prison:
+	for prison in _prisons:
+		if prison.current_capacity > 0:
+			return prison
+	
+	return null
 
 func has_crimes() -> bool:
-	return _crimes.size() > 0
+	return _pending_crimes.size() > 0
 
 func some_crop_in_status(status: CropTile.Status) -> bool:
 	for crop in _crops:
@@ -119,7 +128,7 @@ func unregister_actor(actor: Actor):
 	_actor_state[actor].queue_free()
 	_actor_state.erase(actor)
 
-	for crime in _crimes:
+	for crime in _pending_crimes:
 		crime.cleanse_actor(actor)
 	
 	if actor is NPC:
@@ -129,7 +138,7 @@ func unregister_actor(actor: Actor):
 	memory_manager.unregister_actor(actor)
 
 # func get_open_case(investigator: NPC) -> Crime:
-# 	for crime in _crimes:
+# 	for crime in _pending_crimes:
 # 		if not crime.is_open(): continue
 # 		crime.investigator = investigator
 		

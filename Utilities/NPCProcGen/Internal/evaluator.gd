@@ -11,7 +11,7 @@ func _init(_npc: NPC, agent: NPCAgent) -> void:
 
 func _ready():
 	eval_timer.one_shot = true
-	eval_timer.timeout.connect(on_eval_timer_timeout)
+	eval_timer.timeout.connect(_on_eval_timer_timeout)
 	add_child(eval_timer)
 	start_timer()
 
@@ -45,7 +45,42 @@ func start_timer():
 func stop_timer():
 	eval_timer.stop()
 
-func on_eval_timer_timeout() -> void:
+func generate_override() -> ActionData:
+	var resource_mgr := WorldState.resource_manager
+	var satiation := resource_mgr.get_resource(npc, PCG.ResourceType.SATIATION)
+
+	if satiation.amount >= satiation.lower_threshold:
+		return null
+
+	if resource_mgr.holds_resource(npc, PCG.ResourceType.FOOD):
+		return ActionData.new(PCG.Action.EAT)
+
+	var survival_trait: SurvivalTrait = WorldState.npc_manager.get_trait(npc, "survival")
+
+	if resource_mgr.get_resource_amount(npc, PCG.ResourceType.MONEY) < 10:
+		var resource_type := PCG.ResourceType.MONEY if randf() < 0.5 else PCG.ResourceType.FOOD
+		return generate_petition_action(survival_trait, resource_type)
+	
+	if WorldState.shop.food_amount <= 0:
+		return generate_petition_action(survival_trait, PCG.ResourceType.FOOD)
+	
+	return ActionData.new(PCG.Action.SHOP, {"shop": WorldState.shop})
+
+func generate_petition_action(survival_trait: SurvivalTrait, resource_type: PCG.ResourceType):
+	var candidates := survival_trait.get_actor_candidates(resource_type)
+	var target := survival_trait.choose_actor(candidates)
+	return ActionData.new(PCG.Action.PETITION, {
+		"target": target,
+		"resource_type": resource_type
+	})
+
+func _on_eval_timer_timeout() -> void:
+	var override_action := generate_override()
+
+	if override_action != null:
+		npc_agent.emit_action_evaluated(override_action)
+		return
+
 	var action_data := evaluation_action(PCG.SocialPractice.PROACTIVE)
 
 	if action_data == null:

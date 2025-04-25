@@ -10,13 +10,14 @@ enum MainState {
 	THEFT = PCG.Action.THEFT,
 	INTERROGATE = PCG.Action.INTERROGATE,
 	PURSUIT = PCG.Action.PURSUIT,
+	ASSESS = PCG.Action.ASSESS,
 	PLANT = PCG.Action.PLANT,
 	HARVEST = PCG.Action.HARVEST,
 }
 
 enum ReactState {
 	NONE,
-	PURSUIT = PCG.Action.PURSUIT_REACT,
+	PURSUIT = PCG.Action.PURSUIT,
 	INTERACT = PCG.Action.INTERACT,
 	CAUTIOUS = PCG.Action.CAUTIOUS,
 	FLEE = PCG.Action.FLEE,
@@ -125,32 +126,36 @@ func run_main_state(main_state: MainState, data := {}):
 	elif main_state == MainState.PLANT:
 		seed_prop.show()
 	
-	# var action := PCG.map_main_state_to_action(main_state)
 	executor.start_action(main_state as int, data)
 
-# func exit_state( data := {}):
-
-func notify_npc_crime_committed(crime: Crime):
+func handle_assault(target: Actor):
 	if not WorldState.actor_has_trait(self, "lawful"):
-		set_react_state(NPC.ReactState.FLEE, {"target": crime.criminal})
+		set_react_state(NPC.ReactState.FLEE, {"target": target})
 		return
 	
-	set_react_state(NPC.ReactState.PURSUIT, {"target": crime.criminal})
+	set_react_state(NPC.ReactState.PURSUIT, {"target": target, "is_reactive": true})
 
-func react_from_attack(attacker: Actor):
-	pass
-	#! Incomplete
-	# set_react_state(NPC.ReactState.FLEE)
+func handle_crime_committed(crime: Crime):
+	handle_assault(crime.criminal)
 
-func _on_npc_agent_action_evaluated(action_data: ActionData):
-	# var main_state := PCG.map_action_to_main_state(action_data.action)
-	set_main_state(action_data.action as int, action_data.data)
+func do_handle_detainment(_detainer: Actor):
+	PCG.stop_evaluation(self)
+	executor.disable()
+
+func do_handle_captivity(_detainer: Actor):
+	executor.enable()
+
+func actor_pressed():
+	radial_menu.toggle()
 
 func _on_threat_present(source: Actor, recipient: Actor):
 	if source == self or recipient == self or source not in actors_in_range:
 		return
 
 	set_react_state(NPC.ReactState.CAUTIOUS, {"target": source})
+
+func _on_npc_agent_action_evaluated(action_data: ActionData):
+	set_main_state(action_data.action as int, action_data.data)
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity):
 	if not is_in_knockback:
@@ -162,9 +167,6 @@ func _on_animation_tree_animation_finished(anim_name: StringName):
 		executor.set_blackboard_value("eat_finished", true)
 	elif anim_name.contains("harvest"):
 		executor.set_blackboard_value("harvest_finished", true)
-
-func actor_pressed():
-	radial_menu.toggle()
 
 class State:
 	var main := MainData.new(MainState.WANDER)
@@ -178,49 +180,6 @@ class MainData:
 		state = _state
 		data = _data
 
-# func crime_witnessed(crime: Crime):
-# 	if lawful_trait != null:
-# 		crime.investigator = self
-# 		lawful_trait.assigned_case = crime
-		
-# 		var action_data = {
-# 			"action": PCG.Action.PURSUIT,
-# 			"data": {
-# 				"case": crime,
-# 				"target": crime.criminal,
-# 				"assess_completed": true
-# 			}
-# 		}
-# 		executor.start_action(action_data)
-# 		return
-
-# 	match crime.category:
-# 		Crime.Category.MURDER:
-# 			var action_data = {
-# 				"action": PCG.Action.FLEE,
-# 				"data": {}
-# 			}
-# 			executor.start_action(action_data)
-
-# var satiation = WorldState.resource_manager.get_resource(self, PCG.ResourceType.SATIATION)
-	# if satiation.amount < satiation.lower_threshold:
-	# 	if override_evaluation(): return
-# func override_evaluation() -> bool:
-# 	if WorldState.resource_manager.holds_resource(self, PCG.ResourceType.FOOD):
-# 		var action_data = {"action": PCG.Action.EAT, "data": {}}
-# 		executor.start_action(action_data)
-# 		return true
-# 	elif WorldState.resource_manager.get_resource_amount(self, PCG.ResourceType.MONEY) > 10 \
-# 		and WorldState.shop.food_amount > 0:
-# 		var action_data = {"action": PCG.Action.SHOP, "data": {}}
-# 		executor.start_action(action_data)
-# 		return true
-# 	return false
-
 # func _on_satiation_satiation_depleted():
 # 	print(self.name, " took damage due to satiation depletion")
 # 	apply_damage()
-
-# class State:
-# 	var main := MainState.WANDER
-# 	var react := ReactState.NONE

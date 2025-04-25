@@ -1,7 +1,8 @@
-[gd_scene load_steps=18 format=4 uid="uid://7ju7mpc0by18"]
+[gd_scene load_steps=19 format=4 uid="uid://7ju7mpc0by18"]
 
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/base_camera.tscn" id="1_pp8dq"]
 [ext_resource type="Script" uid="uid://b3y4asqmbsqma" path="res://Stages/Island/world.gd" id="1_x2f32"]
+[ext_resource type="PackedScene" uid="uid://bl0lf3j2kaill" path="res://Entities/UI/HUD/hud_interface.tscn" id="2_6moo3"]
 [ext_resource type="TileSet" uid="uid://kmbdo8s7eos" path="res://Stages/Island/island.tres" id="2_am56c"]
 [ext_resource type="PackedScene" uid="uid://dderfoygjxyaf" path="res://Entities/Structures/CropTile/crop_tile.tscn" id="3_6moo3"]
 [ext_resource type="PackedScene" uid="uid://bt3gcxbonxwfd" path="res://Entities/Actors/NPCs/Silas/silas.tscn" id="5_jsgrx"]
@@ -11,7 +12,6 @@
 [ext_resource type="PackedScene" uid="uid://d2icout5w8g1e" path="res://Entities/Actors/NPCs/Toblin/toblin.tscn" id="6_ylrlt"]
 [ext_resource type="PackedScene" uid="uid://jh8w0jv3rc0f" path="res://Entities/Actors/Player/player.tscn" id="9_6moo3"]
 [ext_resource type="Script" uid="uid://b17xihha22jmn" path="res://Entities/Camera/main_camera.gd" id="11_6moo3"]
-[ext_resource type="PackedScene" uid="uid://c6n8kbdjlq0ka" path="res://Entities/UI/HUD/interface.tscn" id="11_jsgrx"]
 [ext_resource type="AudioStream" uid="uid://tew8c1dpq51f" path="res://Assets/Music/world_bg.mp3" id="14_a75b7"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_17gdt"]
@@ -35,10 +35,16 @@ agent_radius = 8.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_17gdt"]
 size = Vector2(46, 15)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_6moo3"]
+
 [node name="World" type="Node2D"]
 script = ExtResource("1_x2f32")
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Interface" parent="HUD" instance=ExtResource("2_6moo3")]
 
 [node name="Maps" type="Node2D" parent="."]
 use_parent_material = true
@@ -377,6 +383,12 @@ script = ExtResource("11_6moo3")
 [node name="BottomRight" parent="Camera2D/Limits" index="1"]
 position = Vector2(1216, 848)
 
+[node name="PlayerShop" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerShop"]
+position = Vector2(960, 391)
+shape = SubResource("CircleShape2D_6moo3")
+
 [node name="Prison" parent="." instance=ExtResource("5_ylrlt")]
 position = Vector2(168, 247)
 
@@ -389,6 +401,7 @@ process_mode = 3
 stream = ExtResource("14_a75b7")
 autoplay = true
 
-[node name="Interface" parent="." instance=ExtResource("11_jsgrx")]
+[connection signal="body_entered" from="PlayerShop" to="YSort/Player" method="_on_player_shop_body_entered"]
+[connection signal="body_exited" from="PlayerShop" to="YSort/Player" method="_on_player_shop_body_exited"]
 
 [editable path="Camera2D"]

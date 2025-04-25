@@ -26,6 +26,7 @@ func _on_yes_pressed():
 	)
 
 	petitioner.set_main_state(NPC.MainState.WANDER)
+	unpause()
 
 func _on_no_pressed():
 	petitioner.float_text_controller.show_float_text(
@@ -34,3 +35,8 @@ func _on_no_pressed():
 		true
 	)
 	petitioner.set_main_state(NPC.MainState.WANDER)
+	unpause()
+
+func unpause() -> void:
+	queue_free()
+	get_tree().paused = false

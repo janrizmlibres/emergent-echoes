@@ -30,11 +30,65 @@ func set_blend_positions(x: float):
 	animation_tree.set("parameters/Harvest/blend_position", x)
 	animation_tree.set("parameters/Attack/blend_position", x)
 
+func apply_damage(attacker: Actor = null):
+	hit_points -= 1
+
+	if hit_points <= 0:
+		if attacker != null:
+			var crime := Crime.new(Crime.Category.MURDER, attacker)
+			WorldState.add_pending_crime(crime)
+			PCG.emit_crime_committed(crime)
+
+		WorldState.unregister_actor(self)
+		queue_free()
+	elif attacker != null:
+		PCG.emit_threat_present(attacker, self)
+		handle_assault(attacker)
+
 func start_interaction(_target):
 	pass
 
 func stop_interaction():
 	pass
+
+func handle_detainment(detainer: Actor):
+	detainer.carry_prop.set_texture(name)
+	detainer.carry_prop.show_sprite()
+	visible = false
+	WorldState.set_status(self, ActorState.State.CAPTURED)
+	
+	do_handle_detainment(detainer)
+
+func handle_captivity(detainer: Actor, prison: Prison):
+	detainer.carry_prop.hide_sprite()
+	global_position = prison.global_position
+	visible = true
+	WorldState.npc_manager.end_case(detainer)
+	
+	do_handle_captivity(detainer)
+
+func do_handle_detainment(_detainer: Actor):
+	pass
+
+func do_handle_captivity(_detainer: Actor):
+	pass
+	
+func handle_crime_committed(_crime: Crime):
+	pass
+
+func handle_assault(_attacker: Actor):
+	pass
+
+func apply_knockback(_direction: Vector2, _force: float):
+	pass
+
+func actor_pressed():
+	pass
+	
+func _on_hover_area_input_event(_viewport, event, _shape_idx):
+	if event is InputEventMouseButton:
+		if event.is_released() and event.button_index == MOUSE_BUTTON_RIGHT:
+			actor_pressed()
 
 func _on_animation_tree_animation_finished(_anim_name: StringName):
 	pass
@@ -53,37 +107,4 @@ func _on_crime_committed(crime: Crime):
 
 	if crime.criminal in actors_in_range:
 		crime.record_participant(self)
-	
-	notify_npc_crime_committed(crime)
-
-func notify_npc_crime_committed(_crime: Crime):
-	pass
-
-func apply_damage(attacker: Actor = null):
-	hit_points -= 1
-
-	if hit_points <= 0:
-		if attacker != null:
-			var crime := Crime.new(Crime.Category.MURDER, attacker)
-			WorldState.record_crime(crime)
-			PCG.emit_crime_committed(crime)
-
-		WorldState.unregister_actor(self)
-		queue_free()
-	elif attacker != null:
-		PCG.emit_threat_present(attacker, self)
-		react_from_attack(attacker)
-
-func react_from_attack(_attacker: Actor):
-	pass
-
-func apply_knockback(_direction: Vector2, _force: float):
-	pass
-
-func _on_hover_area_input_event(_viewport, event, _shape_idx):
-	if event is InputEventMouseButton:
-		if event.is_released() and event.button_index == MOUSE_BUTTON_RIGHT:
-			actor_pressed()
-
-func actor_pressed():
-	pass
+		handle_crime_committed(crime)

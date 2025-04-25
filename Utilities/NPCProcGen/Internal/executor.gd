@@ -9,7 +9,7 @@ func _ready():
 func start_action(action: PCG.Action, data := {}) -> void:
 	var action_string := PCG.action_to_string(action).to_lower()
 	var bt_scene: PackedScene = load(
-		"res://Entities/Actors/NPCs/AI/Trees/" + action_string + "_bt.tscn"
+		"res://Utilities/AI/Trees/" + action_string + "_bt.tscn"
 	)
 	
 	current_tree.queue_free()
@@ -34,6 +34,12 @@ func set_blackboard_value(key: Variant, value: Variant) -> void:
 
 func get_blackboard_value(key: Variant) -> Variant:
 	return current_tree.blackboard.get_value(key)
+
+func enable() -> void:
+	current_tree.enable()
+
+func disable() -> void:
+	current_tree.disable()
 
 # class BTData:
 # 	var action_data: ActionData

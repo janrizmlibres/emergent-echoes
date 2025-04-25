@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://5fj0qtxhah7q"]
+
+[ext_resource type="Script" uid="uid://b77vudfj1qiaj" path="res://Utilities/AI/Nodes/end_action.gd" id="1_qmlgg"]
+
+[node name="EndAction" type="Node"]
+script = ExtResource("1_qmlgg")
+is_reactive = null
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
