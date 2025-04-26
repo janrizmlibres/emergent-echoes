@@ -4,7 +4,7 @@ extends ActionLeaf
 @export var is_reactive := false
 
 func tick(actor: Node, _blackboard: Blackboard) -> int:
-	if actor == null:
+	if not WorldState.has_actor(actor):
 		return FAILURE
 
 	if not is_reactive:

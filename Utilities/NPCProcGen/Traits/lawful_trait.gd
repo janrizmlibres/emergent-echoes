@@ -27,6 +27,7 @@ func evaluation_proactive_action():
 	if current_case.all_participants_cleared():
 		if not current_case.is_closed():
 			current_case.close_case()
+			investigation_timer.stop()
 		
 		if current_case.is_solved():
 			add_action(PCG.Action.PURSUIT, PCG.ResourceType.DUTY, {
