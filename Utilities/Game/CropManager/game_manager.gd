@@ -33,8 +33,8 @@ func cutscene_market():
 func show_perished_message(actor_name):
 	hud_interface.broadcast_event(actor_name + " died from hunger")
 	
-# func set_total_food(food_amount):
-# 	hud[0].text = "Total Food In Market: " + food_amount
+func set_total_food(food_amount):
+	return
 
 func register_actor(actor: CharacterBody2D) -> void:
 	assert(actor not in relationships, "MemoryManager: Actor already registered.")

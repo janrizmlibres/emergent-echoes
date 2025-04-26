@@ -1113,7 +1113,7 @@ interval_range = Vector2(1, 3)
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -18)
+position = Vector2(0, -19)
 texture = ExtResource("3_v3cxx")
 hframes = 6
 vframes = 2

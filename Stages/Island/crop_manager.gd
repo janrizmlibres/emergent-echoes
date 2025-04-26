@@ -2,7 +2,7 @@ extends Node2D
 
 @onready var crops = $"."
 @onready var crop_stage = 0
-@onready var grow_timer = $"../../../GrowTimer"
+@onready var grow_timer = $"../../GrowTimer"
 
 func _on_grow_timer_timeout() -> void:
 	var crops_to_process = crops.get_children()

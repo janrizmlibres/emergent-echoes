@@ -83,7 +83,7 @@ func _on_silas_detector_body_entered(body: Node2D) -> void:
 		silas_reached = true
 		return
 	
-	if blackboard.get_value("cutscene_state") == "go to player" && body.get_name() == "Player":
+	if blackboard.get_value("cutscene_state") == "go to player" && body.get_name() == "PlayerAlt":
 		player_reached = true
 		return
 	pass # Replace with function body.

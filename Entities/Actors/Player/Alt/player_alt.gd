@@ -13,7 +13,7 @@ var satiation := 1.0:
 		satiation = clamp(value, 0, 100)
 
 var money := 20
-var food := 2
+var food := 0
 
 @onready var remote_transform: RemoteTransform2D = $RemoteTransform2D
 
