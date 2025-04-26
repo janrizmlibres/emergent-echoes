@@ -6,7 +6,7 @@ enum State {DORMANT, ACTIVE, ATTACK}
 var state: State = State.ACTIVE
 var can_buy := false
 
-var satiation := 1.0:
+var satiation := 100.0:
 	get:
 		return satiation
 	set(value):
