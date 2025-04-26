@@ -19,11 +19,14 @@ func register_npc(npc: NPC, npc_agent: NPCAgent):
 
 func unregister_npc(npc: NPC):
 	if has_trait(npc, "lawful"):
+		npc.free_captive()
+
 		var lawful_mod: LawfulTrait = get_trait(npc, "lawful")
 		
 		if lawful_mod.current_case != null:
 			lawful_mod.current_case.cleanse_actor(npc)
 			lawful_mod.current_case.reset()
+			WorldState.add_pending_crime(lawful_mod.current_case)
 
 	get_node(NodePath(npc.name)).queue_free()
 	_traits.erase(npc)

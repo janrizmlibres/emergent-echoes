@@ -7,8 +7,8 @@
 
 [node name="AssessBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_4gn70")
-blackboard = NodePath("@Node@23139")
-actor = NodePath("..")
+blackboard = NodePath("@Node@242264")
+actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
 [node name="SequenceComposite" type="Node" parent="."]

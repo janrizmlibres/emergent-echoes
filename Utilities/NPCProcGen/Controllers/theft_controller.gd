@@ -11,7 +11,7 @@ static func execute(npc: NPC, target: Actor, resource_type: PCG.ResourceType) ->
 	var desired_amount = deficiency_point + randf() * max_excess;
 	var steal_amount = max(1, desired_amount - actor_resource.amount);
 	steal_amount = min(steal_amount, target_resource.amount)
-	steal_amount = floor(min(steal_amount, 100))
+	steal_amount = floor(min(steal_amount, 50))
 
 	resource_mgr.transfer_resource(target, npc, resource_type, steal_amount)
 	var crime := Crime.new(Crime.Category.THEFT, npc)

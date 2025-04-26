@@ -8,8 +8,8 @@ enum Status {
 
 @export var status: Status = Status.DORMANT
 
-func tick(_actor: Node, blackboard: Blackboard) -> int:
-	var crop_tile := WorldState.get_crop_in_status(status as int)
+func tick(actor: Node, blackboard: Blackboard) -> int:
+	var crop_tile := WorldState.get_crop_in_status(status as int, actor)
 	
 	if crop_tile != null:
 		crop_tile.is_attended = true

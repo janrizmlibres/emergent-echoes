@@ -59,7 +59,14 @@ func apply_damage(attacker: Actor = null):
 	else:
 		hud.broadcast_event(name + " took damage from hunger")
 
-func start_interaction(_target):
+func face_target(target: Actor) -> void:
+	var direction = global_position.direction_to(target.global_position)
+	set_blend_positions(direction.x)
+
+func idle_state():
+	pass
+
+func start_interaction(_target, _action, _resource_type):
 	pass
 
 func stop_interaction():
@@ -71,16 +78,16 @@ func handle_detainment(detainer: Actor):
 	visible = false
 	do_handle_detainment(detainer)
 
-func handle_captivity(detainer: Actor, prison: Prison):
+func handle_release(detainer: Actor, new_pos: Vector2):
 	detainer.carry_prop.hide_sprite()
-	global_position = prison.global_position
+	global_position = new_pos
 	visible = true
-	do_handle_captivity()
+	do_handle_release()
 
 func do_handle_detainment(_detainer: Actor):
 	pass
 
-func do_handle_captivity():
+func do_handle_release():
 	pass
 	
 func handle_crime_committed(_crime: Crime):
@@ -93,6 +100,9 @@ func apply_knockback(_direction: Vector2, _force: float):
 	pass
 
 func actor_pressed():
+	pass
+
+func _on_attack_finished():
 	pass
 	
 func _on_hover_area_input_event(_viewport, event, _shape_idx):

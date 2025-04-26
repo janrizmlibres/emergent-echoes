@@ -17,7 +17,7 @@ acceleration = 8
 
 [node name="PlayerAgent" type="Node" parent="." index="13"]
 script = ExtResource("3_ngslm")
-satiation_amount = 1.0
+satiation_amount = 80.0
 metadata/_custom_type_script = "uid://ducc6yrseljan"
 
 [node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="." index="14"]

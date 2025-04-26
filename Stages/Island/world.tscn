@@ -335,7 +335,7 @@ unique_name_in_owner = true
 position = Vector2(649, 456)
 
 [node name="Toblin" parent="YSort" instance=ExtResource("6_ylrlt")]
-position = Vector2(712, 459)
+position = Vector2(509, 422)
 
 [node name="Silas" parent="YSort" instance=ExtResource("5_jsgrx")]
 position = Vector2(658, 493)
@@ -399,7 +399,7 @@ max_capacity = 5
 
 [node name="Shop" parent="." instance=ExtResource("6_17gdt")]
 position = Vector2(960, 391)
-food_amount = 40
+food_amount = 10
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 process_mode = 3

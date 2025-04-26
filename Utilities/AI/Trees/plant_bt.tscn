@@ -11,7 +11,7 @@
 
 [node name="PlantBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_co5rt")
-blackboard = NodePath("@Node@23232")
+blackboard = NodePath("@Node@42407")
 actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
@@ -25,7 +25,7 @@ metadata/_custom_type_script = "uid://xir4dkvi8wq3"
 
 [node name="TimeLimiterDecorator" type="Node" parent="SequenceComposite/UntilFailDecorator"]
 script = ExtResource("4_iuafa")
-wait_time = 60.0
+wait_time = 20.0
 metadata/_custom_type_script = "uid://pjnt4it6euru"
 
 [node name="SequenceComposite" type="Node" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator"]
@@ -35,9 +35,7 @@ metadata/_custom_type_script = "uid://jst6onxl5bwx"
 [node name="GetCropTile" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator/SequenceComposite" instance=ExtResource("5_21qvk")]
 
 [node name="MoveToPosition" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator/SequenceComposite" instance=ExtResource("6_yym33")]
-cautious_mode = null
 
 [node name="ModifyCrop" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator/SequenceComposite" instance=ExtResource("7_y74mi")]
 
 [node name="EndAction" parent="SequenceComposite" instance=ExtResource("8_6su4d")]
-is_reactive = false

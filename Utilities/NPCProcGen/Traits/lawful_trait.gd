@@ -29,14 +29,14 @@ func evaluation_proactive_action():
 			current_case.close_case()
 			investigation_timer.stop()
 		
-		if current_case.is_solved():
+		if current_case.is_solved() and current_case.criminal != null:
 			add_action(PCG.Action.PURSUIT, PCG.ResourceType.DUTY, {
 				"target": current_case.criminal,
 				"is_reactive": false
 			})
 		else:
 			add_action(PCG.Action.ASSESS, PCG.ResourceType.DUTY, {
-				"target": current_case.criminal
+				"case": current_case
 			})
 		return
 		

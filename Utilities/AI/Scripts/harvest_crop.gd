@@ -18,4 +18,5 @@ func before_run(actor: Node, _blackboard: Blackboard) -> void:
 func after_run(actor: Node, _blackboard: Blackboard) -> void:
   WorldState.set_status(actor, ActorState.State.FREE)
   WorldState.resource_manager.total_food.amount += 1
+  WorldState.resource_manager.modify_resource(actor, PCG.ResourceType.MONEY, 10)
   WorldState.shop.food_amount += 1

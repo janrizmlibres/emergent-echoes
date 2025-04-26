@@ -49,7 +49,10 @@ func generate_override() -> ActionData:
 	var resource_mgr := WorldState.resource_manager
 	var satiation := resource_mgr.get_resource(npc, PCG.ResourceType.SATIATION)
 
-	if satiation.amount >= satiation.lower_threshold:
+	if satiation.amount > satiation.lower_threshold:
+		return null
+
+	if WorldState.actor_in_status(npc, ActorState.State.CAPTURED):
 		return null
 
 	if resource_mgr.holds_resource(npc, PCG.ResourceType.FOOD):
@@ -79,6 +82,10 @@ func _on_eval_timer_timeout() -> void:
 
 	if override_action != null:
 		npc_agent.emit_action_evaluated(override_action)
+		return
+
+	if WorldState.actor_in_status(npc, ActorState.State.CAPTURED):
+		start_timer()
 		return
 
 	var action_data := evaluation_action(PCG.SocialPractice.PROACTIVE)

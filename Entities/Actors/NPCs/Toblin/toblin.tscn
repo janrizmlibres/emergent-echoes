@@ -15,15 +15,8 @@ position = Vector2(0, -17)
 [node name="AnimationTree" parent="." index="10"]
 parameters/Idle/blend_position = 0.00240386
 
-[node name="NPCAgent" parent="." index="13"]
-money_amount = 0
-food_amount = 0
-satiation_amount = 1.0
-companionship_amount = 20.0
-companionship_weight = 0.9
-
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
-blackboard = NodePath("@Node@154676")
+blackboard = NodePath("@Node@29900")
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

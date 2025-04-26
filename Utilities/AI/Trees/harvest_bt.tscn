@@ -12,8 +12,8 @@
 
 [node name="HarvestBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_jcr8g")
-blackboard = NodePath("@Node@69901")
-actor = NodePath("..")
+blackboard = NodePath("@Node@23229")
+actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
 [node name="SequenceComposite" type="Node" parent="."]
@@ -26,7 +26,7 @@ metadata/_custom_type_script = "uid://xir4dkvi8wq3"
 
 [node name="TimeLimiterDecorator" type="Node" parent="SequenceComposite/UntilFailDecorator"]
 script = ExtResource("4_lvyey")
-wait_time = 60.0
+wait_time = 20.0
 metadata/_custom_type_script = "uid://pjnt4it6euru"
 
 [node name="SequenceComposite" type="Node" parent="SequenceComposite/UntilFailDecorator/TimeLimiterDecorator"]
@@ -46,4 +46,3 @@ script = ExtResource("8_xtay2")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [node name="EndAction" parent="SequenceComposite" instance=ExtResource("9_utxc1")]
-is_reactive = false

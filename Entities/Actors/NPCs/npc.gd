@@ -39,7 +39,7 @@ func _physics_process(_delta):
 	if is_in_knockback:
 		handle_knockback()
 	
-	stop_agent()
+	idle_state()
 
 func move_agent():
 	var destination = navigation_agent.get_next_path_position()
@@ -47,7 +47,7 @@ func move_agent():
 	var new_velocity = velocity.move_toward(direction * max_speed, acceleration)
 	set_agent_velocity(new_velocity)
 
-func stop_agent():
+func idle_state():
 	var new_velocity = velocity.move_toward(Vector2.ZERO, friction)
 	set_agent_velocity(new_velocity)
 	handle_animations()
@@ -80,36 +80,34 @@ func apply_knockback(direction: Vector2, force: float):
 	animation_state.travel("Idle")
 	is_in_knockback = true
 
-func start_interaction(target: Actor):
+func start_interaction(target: Actor, _action, _resource_type):
 	set_react_state(ReactState.INTERACT, {"target": target})
 
 func stop_interaction():
 	set_react_state(ReactState.NONE)
 
-func face_target(target: Actor) -> void:
-	var direction = global_position.direction_to(target.global_position)
-	set_blend_positions(direction.x)
-
 func set_main_state(new_main: MainState, data := {}):
+	if is_queued_for_deletion():
+		return
+
 	state.react = ReactState.NONE
 	reset_variables()
 
-	if state.main.state == MainState.PLANT:
-		var crop_tile: CropTile = executor.get_blackboard_value("crop_tile")
-
-		if crop_tile != null:
-			crop_tile.is_attended = false
-
+	exit_main_state()
 	state.main = MainData.new(new_main, data)
 	run_main_state(new_main, data)
 
 func set_react_state(new_react: ReactState, data := {}):
-	if state.react != ReactState.NONE and state.react < new_react:
-		return
+	if is_queued_for_deletion(): return
+	if state.react == ReactState.PURSUIT and state.react <= new_react: return
+	if state.react != ReactState.NONE and state.react < new_react: return
 
 	PCG.stop_evaluation(self)
 	reset_variables()
 
+	if state.react == ReactState.NONE:
+		exit_main_state()
+	
 	state.react = new_react
 
 	if new_react == ReactState.NONE:
@@ -121,8 +119,24 @@ func set_react_state(new_react: ReactState, data := {}):
 	elif new_react == ReactState.INTERACT:
 		emote_bubble.activate()
 		WorldState.set_status(self, ActorState.State.OCCUPIED)
+	elif new_react == ReactState.FLEE:
+		WorldState.set_status(self, ActorState.State.INDISPOSED)
 	
 	executor.start_action(new_react as int, data)
+
+func exit_main_state():
+	if [MainState.PLANT, MainState.HARVEST].has(state.main.state):
+		var crop_tile: CropTile = executor.get_blackboard_value("crop_tile")
+
+		if crop_tile != null:
+			crop_tile.is_attended = false
+	elif [MainState.PETITION, MainState.TALK].has(state.main.state):
+		var target = executor.get_blackboard_value("data").get("target")
+
+		if target == null or (target is NPC and target.state.react == NPC.ReactState.NONE):
+			return
+
+		target.stop_interaction()
 
 func run_main_state(main_state: MainState, data := {}):
 	if main_state == MainState.WANDER:
@@ -143,6 +157,12 @@ func reset_variables():
 	seed_prop.hide()
 	carry_prop.hide_sprite()
 
+func free_captive():
+	var captive = executor.get_blackboard_value("data").get("target")
+
+	if captive != null and not captive.visible:
+		captive.handle_release(self, global_position)
+
 func handle_assault(target: Actor):
 	if not WorldState.npc_manager.has_trait(self, "lawful"):
 		set_react_state(NPC.ReactState.FLEE, {"target": target})
@@ -159,7 +179,8 @@ func do_handle_detainment(_detainer: Actor):
 	PCG.stop_evaluation(self)
 	executor.current_tree.disable()
 
-func do_handle_captivity():
+func do_handle_release():
+	PCG.run_evaluation(self)
 	executor.current_tree.enable()
 
 func actor_pressed():

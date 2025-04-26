@@ -37,6 +37,12 @@ enum Action {
 	INTERACT,
 }
 
+enum InteractableAction {
+	PETITION = Action.PETITION,
+	TALK = Action.TALK,
+	INTERROGATE = Action.INTERROGATE
+}
+
 var food_lower_threshold := 5
 var food_upper_threshold := 45
 

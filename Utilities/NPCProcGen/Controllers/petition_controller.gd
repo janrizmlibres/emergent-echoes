@@ -1,7 +1,7 @@
 class_name PetitionController
 
-const RELATIONSHIP_INCREASE := 5
-const RELATIONSHIP_DECREASE := 2
+const RELATIONSHIP_INCREASE := 10
+const RELATIONSHIP_DECREASE := 10
 
 static func execute(
 	petitioner: Actor,
@@ -44,16 +44,13 @@ static func execute(
 
 static func get_petition_probability(relationship_level: float) -> float:
 	const THRESHOLDS = {
-		-26: 0.05,
-		-16: 0.20,
-		-6: 0.30,
-		4: 0.40,
-		14: 0.60,
-		24: 0.80
+		10: 0.20,
+		20: 0.40,
+		30: 0.70,
 	}
 	
 	for threshold in THRESHOLDS.keys():
-		if relationship_level <= threshold:
+		if relationship_level < threshold:
 			return THRESHOLDS[threshold]
 
-	return 0.95
+	return 0.90

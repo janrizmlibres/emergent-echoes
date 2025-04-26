@@ -2,13 +2,13 @@
 extends ActionLeaf
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
-	var target: Actor = blackboard.get_value("data").target
+	var target = blackboard.get_value("data").get("target")
 	
-	if target.is_queued_for_deletion():
+	if target == null:
 		return FAILURE
 
 	actor.face_target(target)
-	actor.stop_agent()
+	actor.idle_state()
 	return RUNNING
 
 func interrupt(actor: Node, _blackboard: Blackboard) -> void:

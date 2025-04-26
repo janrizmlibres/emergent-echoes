@@ -83,7 +83,7 @@ func attack_state():
 	velocity = Vector2.ZERO
 	animation_state.travel("Attack")
 
-func idle():
+func idle_state():
 	velocity = velocity.move_toward(Vector2.ZERO, friction)
 	animation_state.travel("Idle")
 
@@ -95,7 +95,7 @@ func move(direction_vector: Vector2):
 		velocity = velocity.move_toward(direction_vector * max_speed, acceleration)
 		animation_state.travel("Move")
 	else:
-		idle()
+		idle_state()
 
 	move_and_slide()
 
@@ -105,7 +105,7 @@ func apply_knockback(direction: Vector2, force: float):
 func do_handle_detainment(detainer: Actor):
 	%Camera2D.current_actor = detainer
 
-func do_handle_captivity():
+func do_handle_release():
 	%Camera2D.current_actor = self
 
 func _on_animation_tree_animation_finished(anim_name: StringName):
@@ -128,7 +128,7 @@ func _on_player_shop_body_exited(body: Node2D):
 	if body == self:
 		can_buy = false
 
-func start_interaction(target):
+func start_interaction(target, _action, _resource_type):
 	var direction = global_position.direction_to(target.global_position)
 	animation_tree.set("parameters/Idle/blend_position", direction.x)
 	state = State.DORMANT

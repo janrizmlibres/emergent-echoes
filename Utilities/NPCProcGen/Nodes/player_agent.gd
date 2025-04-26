@@ -2,8 +2,8 @@ class_name PlayerAgent
 extends PCGAgent
 
 @export_group("Resources")
-@export var money_amount := 20
-@export var food_amount := 2
+@export var money_amount := 200
+@export var food_amount := 10
 @export var satiation_amount := 100.0
 
 func _ready():

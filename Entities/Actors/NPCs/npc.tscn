@@ -14,6 +14,7 @@ acceleration = 8
 
 [node name="NPCAgent" type="Node" parent="." index="13"]
 script = ExtResource("3_lbp4f")
+satiation_amount = 25.0
 metadata/_custom_type_script = "uid://4b83pkjjabxr"
 
 [node name="Executor" type="Node" parent="." index="14"]
@@ -21,7 +22,7 @@ script = ExtResource("13_c1v6p")
 metadata/_custom_type_script = "uid://x8h723av8g65"
 
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("5_jlstl")]
-blackboard = NodePath("@Node@32427")
+blackboard = NodePath("@Node@26971")
 actor = NodePath("../..")
 
 [node name="VisionCone" type="Node2D" parent="." index="15"]

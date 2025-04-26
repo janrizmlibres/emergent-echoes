@@ -2,7 +2,7 @@
 extends Node2D
 
 @export var angle_cone_of_vision := deg_to_rad(160.0)
-@export var max_view_distance := 70.0
+@export var max_view_distance := 100.0
 @export var angle_between_rays := deg_to_rad(5.0)
 
 var npc_owner: NPC

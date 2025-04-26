@@ -13,11 +13,11 @@ texture = ExtResource("2_nokag")
 parameters/Idle/blend_position = 0.00240386
 
 [node name="NPCAgent" parent="." index="13"]
-survival = 0.6
-farmer = 0.7
+survival = 0.7
+farmer = 1.0
 
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
-blackboard = NodePath("@Node@23195")
+blackboard = NodePath("@Node@29561")
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

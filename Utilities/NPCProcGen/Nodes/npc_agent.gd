@@ -14,12 +14,12 @@ signal action_evaluated(action_data: ActionData)
 @export_group("Resources")
 
 @export_subgroup("Money")
-@export_range(0, 1000, 1) var money_amount := 50
-@export_range(0, 1, 0.01) var money_weight := 0.5
+@export_range(0, 1000, 1) var money_amount := 200
+@export_range(0, 1, 0.01) var money_weight := 0.1
 
 @export_subgroup("Food")
-@export_range(0, 50, 1) var food_amount := 5
-@export_range(0, 1, 0.01) var food_weight := 0.5
+@export_range(0, 50, 1) var food_amount := 10
+@export_range(0, 1, 0.01) var food_weight := 0.1
 
 @export_subgroup("Satiation")
 @export_range(0, 100, 1) var satiation_amount := 100.0

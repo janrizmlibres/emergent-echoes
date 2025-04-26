@@ -22,7 +22,7 @@
 
 [node name="PursuitBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_qq0cw")
-blackboard = NodePath("@Node@97605")
+blackboard = NodePath("@Node@245968")
 actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 

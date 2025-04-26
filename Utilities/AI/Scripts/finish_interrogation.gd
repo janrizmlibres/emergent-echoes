@@ -7,25 +7,28 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	var relationship = WorldState.memory_manager.get_relationship(data.target, actor)
 	var probability = get_interrogation_probability(relationship)
 
-	if randf() < probability:
+	var is_success = randf() < probability
+	
+	if is_success:
 		data.case.mark_verifier(data.target)
 	else:
 		data.case.mark_falsifier(data.target)
-
-	if data.case.all_participants_cleared():
-		data.case.close_case()
+	
+	WorldState.resource_manager.modify_resource(
+		actor,
+		PCG.ResourceType.DUTY,
+		30 if is_success else -1
+	)
+	PCG.emit_duty_conducted(actor, is_success)
 
 	actor.set_main_state(NPC.MainState.WANDER)
 	return SUCCESS
 
 func get_interrogation_probability(relationship_level: float):
 	const THRESHOLDS = {
-		-26: 0.30,
-		-16: 0.50,
-		-6: 0.70,
-		4: 0.90,
-		14: 0.92,
-		24: 0.95
+		10: 0.50,
+		20: 0.70,
+		30: 0.90,
 	}
 
 	for threshold in THRESHOLDS.keys():

@@ -17,13 +17,13 @@ position = Vector2(0, -17)
 parameters/Idle/blend_position = 0.00240386
 
 [node name="NPCAgent" parent="." index="13"]
-survival = 0.6
-thief = 0.8
-money_weight = 0.8
-food_weight = 0.8
+survival = 0.8
+thief = 1.0
+money_amount = 150
+food_amount = 5
 
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
-blackboard = NodePath("@Node@23259")
+blackboard = NodePath("@Node@30129")
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

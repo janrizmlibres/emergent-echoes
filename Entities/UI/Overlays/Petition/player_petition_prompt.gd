@@ -40,8 +40,6 @@ func accept_petition():
 			true
 		)
 
-	target.set_react_state(NPC.ReactState.NONE)
-
 func unpause():
 	queue_free()
 	get_tree().paused = false

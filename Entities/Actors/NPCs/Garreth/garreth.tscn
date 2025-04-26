@@ -19,12 +19,10 @@ parameters/Eat/blend_position = 0
 parameters/Harvest/blend_position = 0
 
 [node name="NPCAgent" parent="." index="13"]
-survival = 0.6
 lawful = 0.8
-duty_weight = 0.8
 
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
-blackboard = NodePath("@Node@111756")
+blackboard = NodePath("@Node@29650")
 
 [node name="NavigationAgent2D" parent="." index="16"]
 navigation_layers = 3

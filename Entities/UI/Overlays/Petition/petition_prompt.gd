@@ -18,6 +18,7 @@ func initialize(_petitioner: Actor, _resource_type: PCG.ResourceType, _quantity:
 func _on_yes_pressed():
 	var player := WorldState.get_player()
 	WorldState.resource_manager.transfer_resource(player, petitioner, resource_type, quantity)
+	WorldState.memory_manager.modify_relationship(petitioner, player, 10)
 
 	petitioner.float_text_controller.show_float_text(
 		resource_type,

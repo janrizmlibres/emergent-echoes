@@ -23,7 +23,7 @@
 
 [node name="TalkBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_ua0k4")
-blackboard = NodePath("@Node@74111")
+blackboard = NodePath("@Node@334099")
 actor = NodePath("..")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
@@ -62,7 +62,6 @@ metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 [node name="TargetFound" parent="SelectorReactiveComposite/SequenceComposite/InverterDecorator" instance=ExtResource("5_xccwn")]
 
 [node name="EndAction" parent="SelectorReactiveComposite/SequenceComposite" instance=ExtResource("7_7v0nh")]
-is_reactive = false
 
 [node name="SequenceReactiveComposite" type="Node" parent="SelectorReactiveComposite"]
 script = ExtResource("8_a657f")
@@ -99,6 +98,7 @@ script = ExtResource("17_ulu36")
 metadata/_custom_type_script = "uid://u7kder1k34v5"
 
 [node name="InteractWithTarget" parent="SelectorReactiveComposite/SequenceComposite2/Parallel" instance=ExtResource("18_fefny")]
+action = 2
 
 [node name="InteractBehavior" parent="SelectorReactiveComposite/SequenceComposite2/Parallel" instance=ExtResource("19_mp07o")]
 

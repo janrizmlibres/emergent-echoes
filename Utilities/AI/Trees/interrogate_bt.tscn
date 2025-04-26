@@ -22,7 +22,7 @@
 
 [node name="InterrogateBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_j1snq")
-blackboard = NodePath("@Node@60695")
+blackboard = NodePath("@Node@248025")
 actor = NodePath("..")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
@@ -41,7 +41,6 @@ metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 [node name="IsTargetInteractable" parent="SelectorReactiveComposite/SequenceComposite3/InverterDecorator" instance=ExtResource("8_l6hfx")]
 
 [node name="EndAction" parent="SelectorReactiveComposite/SequenceComposite3" instance=ExtResource("20_co1py")]
-is_reactive = false
 
 [node name="SequenceComposite" type="Node" parent="SelectorReactiveComposite"]
 script = ExtResource("3_26y4y")
@@ -90,6 +89,7 @@ script = ExtResource("16_sew3t")
 metadata/_custom_type_script = "uid://u7kder1k34v5"
 
 [node name="InteractWithTarget" parent="SelectorReactiveComposite/SequenceComposite2/SimpleParallelComposite" instance=ExtResource("17_dwfvh")]
+action = 6
 
 [node name="InteractBehavior" parent="SelectorReactiveComposite/SequenceComposite2/SimpleParallelComposite" instance=ExtResource("18_43j0w")]
 

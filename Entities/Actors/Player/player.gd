@@ -17,7 +17,7 @@ var can_buy := false
 func _physics_process(_delta):
 	match state:
 		State.DORMANT:
-			idle()
+			idle_state()
 		State.ACTIVE:
 			active_state()
 		State.ATTACK:
@@ -78,7 +78,7 @@ func attack_state():
 	velocity = Vector2.ZERO
 	animation_state.travel("Attack")
 
-func idle():
+func idle_state():
 	velocity = velocity.move_toward(Vector2.ZERO, friction)
 	animation_state.travel("Idle")
 
@@ -90,24 +90,45 @@ func move(direction_vector: Vector2):
 		velocity = velocity.move_toward(direction_vector * max_speed, acceleration)
 		animation_state.travel("Move")
 	else:
-		idle()
+		idle_state()
 
 	move_and_slide()
 
 func apply_knockback(direction: Vector2, force: float):
 	velocity = direction * force
 
+func start_interaction(target: Actor, action, resource_type):
+	if action != PCG.InteractableAction.PETITION:
+		face_target(target)
+		state = State.DORMANT
+		return
+	
+	var quantity := 5 if resource_type == PCG.ResourceType.MONEY else 1
+	var amount := WorldState.resource_manager.get_resource_amount(
+		self,
+		resource_type
+	)
+	quantity = min(quantity, amount)
+
+	EventManager.emit_show_npc_petition_hud(
+		target,
+		resource_type,
+		quantity
+	)
+
+func stop_interaction():
+	state = State.ACTIVE
+
 func do_handle_detainment(detainer: Actor):
 	state = State.DORMANT
 	%Camera2D.current_actor = detainer
 
-func do_handle_captivity():
+func do_handle_release():
 	state = State.ACTIVE
 	%Camera2D.current_actor = self
 
-func _on_animation_tree_animation_finished(anim_name: StringName):
-	if anim_name.contains("attack"):
-		state = State.ACTIVE
+func _on_attack_finished():
+	state = State.ACTIVE
 
 func _on_radius_actionable_body_entered(body: Node2D):
 	if body == self or body is not NPC:

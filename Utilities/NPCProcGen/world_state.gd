@@ -75,6 +75,9 @@ func set_current_action(actor, action):
 	_actor_state[actor].current_action = action
 
 func set_status(actor, status):
+	if _actor_state[actor].status == ActorState.State.CAPTURED:
+		return
+		
 	_actor_state[actor].status = status
 
 func actor_in_status(actor, status) -> bool:
@@ -122,11 +125,25 @@ func some_crop_in_status(status: CropTile.Status) -> bool:
 			return true
 	return false
 
-func get_crop_in_status(status: CropTile.Status) -> CropTile:
+func get_crop_in_status(status: CropTile.Status, farmer: Actor) -> CropTile:
+	var selection: Array[CropTile] = []
+
 	for crop in _crops:
 		if crop.status == status and !crop.is_attended:
-			return crop
-	return null
+			selection.append(crop)
+	
+	if selection.is_empty():
+		return null
+
+	var nearest = selection.pop_front()
+
+	for crop in selection:
+		var next_distance := crop.global_position.distance_squared_to(farmer.global_position)
+		var prev_distance = nearest.global_position.distance_squared_to(farmer.global_position)
+		if next_distance < prev_distance:
+			nearest = crop
+
+	return nearest
 
 func unregister_actor(actor: Actor):
 	_actor_state[actor].queue_free()
