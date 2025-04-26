@@ -24,6 +24,7 @@ func initialize():
 
 func _process(_delta):
 	if player == null:
+		health_bar.value = 0
 		return
 		
 	health_bar.value = player.hit_points

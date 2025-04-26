@@ -21,7 +21,7 @@ script = ExtResource("13_c1v6p")
 metadata/_custom_type_script = "uid://x8h723av8g65"
 
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("5_jlstl")]
-blackboard = NodePath("@Node@112983")
+blackboard = NodePath("@Node@32427")
 actor = NodePath("../..")
 
 [node name="VisionCone" type="Node2D" parent="." index="15"]
@@ -30,6 +30,7 @@ script = ExtResource("3_jlstl")
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." index="16"]
 path_desired_distance = 4.0
 target_desired_distance = 2.0
+simplify_path = true
 avoidance_enabled = true
 radius = 7.0
 

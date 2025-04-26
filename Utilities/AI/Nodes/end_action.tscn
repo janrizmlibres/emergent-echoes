@@ -4,5 +4,4 @@
 
 [node name="EndAction" type="Node"]
 script = ExtResource("1_qmlgg")
-is_reactive = null
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"

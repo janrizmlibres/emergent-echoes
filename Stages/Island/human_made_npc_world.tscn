@@ -173,6 +173,7 @@ navigation_polygon = SubResource("NavigationPolygon_iuoid")
 navigation_layers = 2
 
 [node name="Camera2D" parent="." instance=ExtResource("3_ss2fi")]
+unique_name_in_owner = true
 position = Vector2(643, 454)
 
 [node name="PlayerShop" type="Area2D" parent="."]

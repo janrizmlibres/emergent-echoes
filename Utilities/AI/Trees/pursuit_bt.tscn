@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bec6sien0uvpb"]
+[gd_scene load_steps=20 format=3 uid="uid://bec6sien0uvpb"]
 
 [ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_qq0cw"]
 [ext_resource type="Script" uid="uid://lc1dnoc2x4b" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="2_py2n1"]
@@ -7,9 +7,11 @@
 [ext_resource type="PackedScene" uid="uid://bo5mx8ex74q0o" path="res://Utilities/AI/Nodes/is_target_reached.tscn" id="5_rinqc"]
 [ext_resource type="PackedScene" uid="uid://c124x0mip4ii3" path="res://Utilities/AI/Nodes/assess_completed.tscn" id="5_sssf0"]
 [ext_resource type="PackedScene" uid="uid://5p51sjohtuli" path="res://Utilities/AI/Nodes/assess_case.tscn" id="6_o0wxy"]
+[ext_resource type="Script" uid="uid://cmlopw75b05c1" path="res://addons/beehave/nodes/composites/selector.gd" id="6_qvwvd"]
 [ext_resource type="PackedScene" uid="uid://c05kpy8sgqtp7" path="res://Utilities/AI/Nodes/is_target_interceptable.tscn" id="6_rinqc"]
 [ext_resource type="PackedScene" uid="uid://5fj0qtxhah7q" path="res://Utilities/AI/Nodes/end_action.tscn" id="8_2outk"]
 [ext_resource type="Script" uid="uid://dkud8o4ylknf7" path="res://Utilities/AI/Scripts/is_reactive.gd" id="8_peg7s"]
+[ext_resource type="Script" uid="uid://blhaxlym80hi6" path="res://Utilities/AI/Scripts/is_target_present.gd" id="8_qvwvd"]
 [ext_resource type="Script" uid="uid://ddsynpu03eev2" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="9_pttjv"]
 [ext_resource type="PackedScene" uid="uid://dk8go1ye7kdwd" path="res://Utilities/AI/Nodes/get_target_position.tscn" id="10_bq85u"]
 [ext_resource type="PackedScene" uid="uid://qwnvuvh4d71a" path="res://Utilities/AI/Nodes/move_to_position.tscn" id="11_r0poc"]
@@ -20,8 +22,8 @@
 
 [node name="PursuitBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_qq0cw")
-blackboard = NodePath("@Node@77886")
-actor = NodePath("..")
+blackboard = NodePath("@Node@97605")
+actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
 [node name="SelectorReactiveComposite" type="Node" parent="."]
@@ -32,20 +34,31 @@ metadata/_custom_type_script = "uid://lc1dnoc2x4b"
 script = ExtResource("3_5go8b")
 metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="InverterDecorator2" type="Node" parent="SelectorReactiveComposite/SequenceComposite3"]
-script = ExtResource("4_ae3ru")
-metadata/_custom_type_script = "uid://cx07pxr1bsjba"
-
-[node name="IsTargetReached" parent="SelectorReactiveComposite/SequenceComposite3/InverterDecorator2" instance=ExtResource("5_rinqc")]
-
 [node name="InverterDecorator" type="Node" parent="SelectorReactiveComposite/SequenceComposite3"]
 script = ExtResource("4_ae3ru")
 metadata/_custom_type_script = "uid://cx07pxr1bsjba"
 
 [node name="IsTargetInterceptable" parent="SelectorReactiveComposite/SequenceComposite3/InverterDecorator" instance=ExtResource("6_rinqc")]
 
+[node name="SelectorComposite" type="Node" parent="SelectorReactiveComposite/SequenceComposite3"]
+script = ExtResource("6_qvwvd")
+metadata/_custom_type_script = "uid://cmlopw75b05c1"
+
+[node name="InverterDecorator2" type="Node" parent="SelectorReactiveComposite/SequenceComposite3/SelectorComposite"]
+script = ExtResource("4_ae3ru")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetReached" parent="SelectorReactiveComposite/SequenceComposite3/SelectorComposite/InverterDecorator2" instance=ExtResource("5_rinqc")]
+
+[node name="InverterDecorator" type="Node" parent="SelectorReactiveComposite/SequenceComposite3/SelectorComposite"]
+script = ExtResource("4_ae3ru")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetPresent" type="Node" parent="SelectorReactiveComposite/SequenceComposite3/SelectorComposite/InverterDecorator"]
+script = ExtResource("8_qvwvd")
+metadata/_custom_type_script = "uid://dxlpexlc4dupq"
+
 [node name="EndAction" parent="SelectorReactiveComposite/SequenceComposite3" instance=ExtResource("8_2outk")]
-is_reactive = false
 
 [node name="SequenceComposite2" type="Node" parent="SelectorReactiveComposite"]
 script = ExtResource("3_5go8b")

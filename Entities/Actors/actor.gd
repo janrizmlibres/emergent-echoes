@@ -75,12 +75,12 @@ func handle_captivity(detainer: Actor, prison: Prison):
 	detainer.carry_prop.hide_sprite()
 	global_position = prison.global_position
 	visible = true
-	do_handle_captivity(detainer)
+	do_handle_captivity()
 
 func do_handle_detainment(_detainer: Actor):
 	pass
 
-func do_handle_captivity(_detainer: Actor):
+func do_handle_captivity():
 	pass
 	
 func handle_crime_committed(_crime: Crime):

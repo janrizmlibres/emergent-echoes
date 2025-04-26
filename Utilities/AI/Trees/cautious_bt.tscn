@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://k3lh21ox3ncu"]
+[gd_scene load_steps=14 format=3 uid="uid://k3lh21ox3ncu"]
 
 [ext_resource type="Script" uid="uid://da7jagy6am60c" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_qc55a"]
 [ext_resource type="Script" uid="uid://jst6onxl5bwx" path="res://addons/beehave/nodes/composites/sequence.gd" id="2_3fbhc"]
@@ -6,45 +6,65 @@
 [ext_resource type="Script" uid="uid://pjnt4it6euru" path="res://addons/beehave/nodes/decorators/time_limiter.gd" id="3_gxe5k"]
 [ext_resource type="Script" uid="uid://uegdtcpak76x" path="res://Utilities/AI/Scripts/face_target.gd" id="3_hwpet"]
 [ext_resource type="Script" uid="uid://bfb1iie7tep5i" path="res://addons/beehave/nodes/decorators/succeeder.gd" id="3_x5tte"]
+[ext_resource type="Script" uid="uid://cx07pxr1bsjba" path="res://addons/beehave/nodes/decorators/inverter.gd" id="4_nlio4"]
+[ext_resource type="PackedScene" uid="uid://c05kpy8sgqtp7" path="res://Utilities/AI/Nodes/is_target_interceptable.tscn" id="5_escvr"]
 [ext_resource type="Script" uid="uid://ddsynpu03eev2" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="5_hwpet"]
 [ext_resource type="PackedScene" uid="uid://qwnvuvh4d71a" path="res://Utilities/AI/Nodes/move_to_position.tscn" id="7_gxe5k"]
 [ext_resource type="PackedScene" uid="uid://5fj0qtxhah7q" path="res://Utilities/AI/Nodes/end_action.tscn" id="8_gxe5k"]
 [ext_resource type="PackedScene" uid="uid://cxryovwvqkj2u" path="res://Utilities/AI/Nodes/get_threat_distance.tscn" id="8_q52mk"]
+[ext_resource type="Script" uid="uid://lc1dnoc2x4b" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="11_5fhkp"]
 
 [node name="CautiousBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_qc55a")
-blackboard = NodePath("@Node@23197")
+blackboard = NodePath("@Node@89873")
 actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 
-[node name="SequenceComposite" type="Node" parent="."]
+[node name="SelectorReactiveComposite" type="Node" parent="."]
+script = ExtResource("11_5fhkp")
+metadata/_custom_type_script = "uid://lc1dnoc2x4b"
+
+[node name="SequenceComposite2" type="Node" parent="SelectorReactiveComposite"]
 script = ExtResource("2_3fbhc")
 metadata/_custom_type_script = "uid://jst6onxl5bwx"
 
-[node name="AlwaysSucceedDecorator" type="Node" parent="SequenceComposite"]
+[node name="InverterDecorator" type="Node" parent="SelectorReactiveComposite/SequenceComposite2"]
+script = ExtResource("4_nlio4")
+metadata/_custom_type_script = "uid://cx07pxr1bsjba"
+
+[node name="IsTargetInterceptable" parent="SelectorReactiveComposite/SequenceComposite2/InverterDecorator" instance=ExtResource("5_escvr")]
+
+[node name="EndAction" parent="SelectorReactiveComposite/SequenceComposite2" instance=ExtResource("8_gxe5k")]
+is_reactive = true
+
+[node name="SequenceComposite" type="Node" parent="SelectorReactiveComposite"]
+script = ExtResource("2_3fbhc")
+metadata/_custom_type_script = "uid://jst6onxl5bwx"
+
+[node name="AlwaysSucceedDecorator" type="Node" parent="SelectorReactiveComposite/SequenceComposite"]
 script = ExtResource("3_x5tte")
 metadata/_custom_type_script = "uid://bfb1iie7tep5i"
 
-[node name="TimeLimiterDecorator" type="Node" parent="SequenceComposite/AlwaysSucceedDecorator"]
+[node name="TimeLimiterDecorator" type="Node" parent="SelectorReactiveComposite/SequenceComposite/AlwaysSucceedDecorator"]
 script = ExtResource("3_gxe5k")
 wait_time = 12.0
 metadata/_custom_type_script = "uid://pjnt4it6euru"
 
-[node name="SimpleParallelComposite2" type="Node" parent="SequenceComposite/AlwaysSucceedDecorator/TimeLimiterDecorator"]
+[node name="SimpleParallelComposite2" type="Node" parent="SelectorReactiveComposite/SequenceComposite/AlwaysSucceedDecorator/TimeLimiterDecorator"]
 script = ExtResource("3_328xv")
 metadata/_custom_type_script = "uid://u7kder1k34v5"
 
-[node name="FaceTarget" type="Node" parent="SequenceComposite/AlwaysSucceedDecorator/TimeLimiterDecorator/SimpleParallelComposite2"]
+[node name="FaceTarget" type="Node" parent="SelectorReactiveComposite/SequenceComposite/AlwaysSucceedDecorator/TimeLimiterDecorator/SimpleParallelComposite2"]
 script = ExtResource("3_hwpet")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
-[node name="SequenceReactiveComposite" type="Node" parent="SequenceComposite/AlwaysSucceedDecorator/TimeLimiterDecorator/SimpleParallelComposite2"]
+[node name="SequenceReactiveComposite" type="Node" parent="SelectorReactiveComposite/SequenceComposite/AlwaysSucceedDecorator/TimeLimiterDecorator/SimpleParallelComposite2"]
 script = ExtResource("5_hwpet")
 metadata/_custom_type_script = "uid://ddsynpu03eev2"
 
-[node name="GetThreatDistance" parent="SequenceComposite/AlwaysSucceedDecorator/TimeLimiterDecorator/SimpleParallelComposite2/SequenceReactiveComposite" instance=ExtResource("8_q52mk")]
+[node name="GetThreatDistance" parent="SelectorReactiveComposite/SequenceComposite/AlwaysSucceedDecorator/TimeLimiterDecorator/SimpleParallelComposite2/SequenceReactiveComposite" instance=ExtResource("8_q52mk")]
 
-[node name="MoveToPosition" parent="SequenceComposite/AlwaysSucceedDecorator/TimeLimiterDecorator/SimpleParallelComposite2/SequenceReactiveComposite" instance=ExtResource("7_gxe5k")]
+[node name="MoveToPosition" parent="SelectorReactiveComposite/SequenceComposite/AlwaysSucceedDecorator/TimeLimiterDecorator/SimpleParallelComposite2/SequenceReactiveComposite" instance=ExtResource("7_gxe5k")]
 
-[node name="EndAction" parent="SequenceComposite" instance=ExtResource("8_gxe5k")]
+[node name="EndAction" parent="SelectorReactiveComposite/SequenceComposite" instance=ExtResource("8_gxe5k")]
 is_reactive = true

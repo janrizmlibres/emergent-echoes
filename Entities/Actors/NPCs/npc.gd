@@ -91,8 +91,7 @@ func face_target(target: Actor) -> void:
 	set_blend_positions(direction.x)
 
 func set_main_state(new_main: MainState, data := {}):
-	assert(state.react == ReactState.NONE, "Cannot set main state while in react state")
-
+	state.react = ReactState.NONE
 	reset_variables()
 
 	if state.main.state == MainState.PLANT:
@@ -142,6 +141,7 @@ func reset_variables():
 	WorldState.set_status(self, ActorState.State.FREE)
 	emote_bubble.deactivate()
 	seed_prop.hide()
+	carry_prop.hide_sprite()
 
 func handle_assault(target: Actor):
 	if not WorldState.npc_manager.has_trait(self, "lawful"):
@@ -155,10 +155,11 @@ func handle_crime_committed(crime: Crime):
 	handle_assault(crime.criminal)
 
 func do_handle_detainment(_detainer: Actor):
+	set_main_state(MainState.WANDER)
 	PCG.stop_evaluation(self)
 	executor.current_tree.disable()
 
-func do_handle_captivity(_detainer: Actor):
+func do_handle_captivity():
 	executor.current_tree.enable()
 
 func actor_pressed():
@@ -205,7 +206,3 @@ class MainData:
 	func _init(_state: MainState, _data := {}):
 		state = _state
 		data = _data
-
-# func _on_satiation_satiation_depleted():
-# 	print(self.name, " took damage due to satiation depletion")
-# 	apply_damage()

@@ -15,8 +15,6 @@ var satiation := 1.0:
 var money := 20
 var food := 2
 
-@onready var remote_transform: RemoteTransform2D = $RemoteTransform2D
-
 func _physics_process(_delta):
 	match state:
 		State.DORMANT:
@@ -105,12 +103,10 @@ func apply_knockback(direction: Vector2, force: float):
 	velocity = direction * force
 
 func do_handle_detainment(detainer: Actor):
-	remove_child(remote_transform)
-	detainer.add_child(remote_transform)
+	%Camera2D.current_actor = detainer
 
-func do_handle_captivity(detainer: Actor):
-	detainer.remove_child(remote_transform)
-	add_child(remote_transform)
+func do_handle_captivity():
+	%Camera2D.current_actor = self
 
 func _on_animation_tree_animation_finished(anim_name: StringName):
 	if anim_name.contains("attack"):

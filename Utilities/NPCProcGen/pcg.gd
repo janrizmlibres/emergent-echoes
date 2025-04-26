@@ -44,8 +44,7 @@ func run_evaluation(npc: NPC) -> void:
 	WorldState.npc_manager.evaluators[npc].start_timer()
 
 func stop_evaluation(npc: NPC) -> void:
-	if WorldState.has_actor(npc):
-		WorldState.npc_manager.evaluators[npc].stop_timer()
+	WorldState.npc_manager.evaluators[npc].stop_timer()
 
 func execute_petition(
 	petitioner: Actor,

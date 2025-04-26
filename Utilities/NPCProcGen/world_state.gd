@@ -108,11 +108,7 @@ func get_pending_crime() -> Crime:
 	return _pending_crimes.pop_front()
 
 func get_available_prison() -> Prison:
-	for prison in _prisons:
-		if prison.current_capacity > 0:
-			return prison
-	
-	return null
+	return _prisons.pick_random()
 
 func has_actor(actor: Actor) -> bool:
 	return _actor_state.has(actor)
