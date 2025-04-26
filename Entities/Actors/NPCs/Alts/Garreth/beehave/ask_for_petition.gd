@@ -34,6 +34,8 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		
 		if blackboard.get_value("actor").get_name() == "Player":
 			blackboard.get_value("actor").stop_interaction()
+			if blackboard.get_value("actor").money >= 10:
+				blackboard.get_value("actor").money = blackboard.get_value("actor").money - 10
 		else:
 			blackboard.get_value("actor").get_node("Blackboard").set_value("money", blackboard.get_value("actor").get_node("Blackboard").get_value("money") - 10)
 		

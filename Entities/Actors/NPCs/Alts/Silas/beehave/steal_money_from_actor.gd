@@ -15,4 +15,7 @@ func after_run(actor: Node, blackboard: Blackboard) -> void:
 	
 	if blackboard.get_value("actor").get_name() != "Player":
 		blackboard.get_value("actor").get_node_or_null("Blackboard").set_value("money", blackboard.get_value("actor").get_node_or_null("Blackboard").get_value("money") - 10)
+	else:
+		if blackboard.get_value("actor").money >= 10:
+			blackboard.get_value("actor").money = blackboard.get_value("actor").money - 10
 	
