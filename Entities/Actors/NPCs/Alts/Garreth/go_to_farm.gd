@@ -13,6 +13,7 @@ func tick(_actor: Node, blackboard: Blackboard) -> int:
 	if blackboard.get_value("agent_arrived") == true:
 		_actor.current_location = Vector2.ZERO
 		_actor.set_animation_to_idle()
+		_actor.face_target(GameManager.toblin[0])
 		
 		emote_bubble.show_emote_bubble(Globals.Emote.EXCLAMATION)
 		

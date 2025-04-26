@@ -84,7 +84,7 @@ func _on_alt_detector_body_entered(body: Node2D) -> void:
 		garreth_reached = true
 		pass
 	
-	if blackboard.get_value("cutscene_state") == "go to the player" && body.get_name() == "PlayerAlt":
+	if blackboard.get_value("cutscene_state") == "go to the player" && body.get_name() == "Player":
 		player_reached = true
 		pass
 	pass # Replace with function body.

@@ -3,14 +3,14 @@ extends BaseCamera
 @export var floating_speed: int = 100
 var is_attached: bool = true
 
-var player: Player
+var player
 
 func _ready():
 	super._ready()
 	player = get_tree().root.get_node("World/YSort/Player")
 
 func _physics_process(delta):
-	if is_attached:
+	if is_attached and player != null:
 		global_position = player.global_position
 	else:
 		move(delta)

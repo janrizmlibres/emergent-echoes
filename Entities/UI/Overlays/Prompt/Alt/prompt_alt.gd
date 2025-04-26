@@ -36,8 +36,9 @@ func populate_data(actor: CharacterBody2D):
 
 func set_relationships(actor: CharacterBody2D):
 	var peers := GameManager.get_peers(actor)
-
 	for peer in peers:
+		if peer == null:
+			continue
 		var npc_icon: NPCRelationshipAlt = npc_icon_scene.instantiate()
 		relationships.add_child(npc_icon)
 		npc_icon.update_data(actor, peer)

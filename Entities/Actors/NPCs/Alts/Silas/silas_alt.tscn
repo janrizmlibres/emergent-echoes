@@ -1066,7 +1066,7 @@ wait_time = 30.0
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -18)
+position = Vector2(0, -17)
 texture = ExtResource("3_qtwxn")
 hframes = 6
 vframes = 2
