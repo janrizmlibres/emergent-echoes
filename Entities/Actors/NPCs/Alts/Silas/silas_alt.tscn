@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=3 uid="uid://etlq2q1jbury"]
+[gd_scene load_steps=82 format=3 uid="uid://etlq2q1jbury"]
 
 [ext_resource type="Script" uid="uid://26mdhyaoq6g5" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/silas_alt.gd" id="1_17b4c"]
 [ext_resource type="Texture2D" uid="uid://u6qjhno0n6dl" path="res://Entities/Actors/NPCs/Silas/Art/silas.png" id="2_hdw1b"]
@@ -27,9 +27,12 @@
 [ext_resource type="Script" uid="uid://dmmlgm251npvd" path="res://Entities/Actors/NPCs/Alts/Silas/beehave/eat_food.gd" id="21_oqw3x"]
 [ext_resource type="Script" uid="uid://hblafnx31nmj" path="res://Entities/Actors/NPCs/Alts/Silas/be_interrogated_by_garreth.gd" id="26_e8msm"]
 [ext_resource type="Script" uid="uid://bqlrwrwhs34cs" path="res://addons/beehave/nodes/decorators/delayer.gd" id="27_6ymnp"]
+[ext_resource type="Script" uid="uid://csl7r5e8o3xkp" path="res://Entities/Actors/NPCs/Alts/Silas/look_to_the_left.gd" id="28_ncpqv"]
 [ext_resource type="Script" uid="uid://34onbfqwvpxg" path="res://Entities/Actors/NPCs/Alts/Silas/finished_being_interrogated_by_garreth.gd" id="28_qgr1q"]
 [ext_resource type="Script" uid="uid://dokes1clk2mdw" path="res://Entities/Actors/NPCs/Alts/Silas/go_to_farm.gd" id="29_6ymnp"]
+[ext_resource type="Script" uid="uid://bgrmv5qwr2r46" path="res://Entities/Actors/NPCs/Alts/Silas/look_to_the_right.gd" id="29_q4fe7"]
 [ext_resource type="Script" uid="uid://jvafc3a1cspq" path="res://Entities/Actors/NPCs/Alts/Silas/idle_at_the_farm.gd" id="30_a6fwn"]
+[ext_resource type="Script" uid="uid://cilaw2bxbq8nm" path="res://Entities/Actors/NPCs/Alts/Silas/finished_suspicious.gd" id="30_pdwhv"]
 [ext_resource type="Script" uid="uid://ssxiwo2df23q" path="res://Entities/Actors/NPCs/Alts/Silas/go_to_bonfire.gd" id="31_dixl5"]
 [ext_resource type="Script" uid="uid://cxnkgc02ybbpw" path="res://Entities/Actors/NPCs/Alts/Silas/finished_discussing_with_group.gd" id="32_psoa5"]
 [ext_resource type="Script" uid="uid://bgdvnoex84o1r" path="res://Entities/Actors/NPCs/Alts/Silas/idle_at_the_bonfire.gd" id="33_nfsjm"]
@@ -1066,7 +1069,7 @@ wait_time = 30.0
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -18)
+position = Vector2(0, -19)
 texture = ExtResource("3_qtwxn")
 hframes = 6
 vframes = 2
@@ -1189,9 +1192,49 @@ metadata/_custom_type_script = "uid://jst6onxl5bwx"
 script = ExtResource("26_e8msm")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
+[node name="DelayDecorator4" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_6ymnp")
+wait_time = 2.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Look To The Left" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene/DelayDecorator4"]
+script = ExtResource("28_ncpqv")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator5" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_6ymnp")
+wait_time = 2.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Look To The Right" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene/DelayDecorator5"]
+script = ExtResource("29_q4fe7")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator6" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_6ymnp")
+wait_time = 2.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Look To The Left" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene/DelayDecorator6"]
+script = ExtResource("28_ncpqv")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator7" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_6ymnp")
+wait_time = 2.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Look To The Right" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene/DelayDecorator7"]
+script = ExtResource("29_q4fe7")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Finished Suspicious" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("30_pdwhv")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
 [node name="DelayDecorator" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene"]
 script = ExtResource("27_6ymnp")
-wait_time = 10.0
+wait_time = 2.0
 metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
 
 [node name="Finished Being Interrogated By Garreth" type="Node" parent="SilasBehaviour/SelectorComposite/Cutscene/DelayDecorator"]

@@ -1034,7 +1034,7 @@ blackboard = {
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -18)
+position = Vector2(0, -19)
 texture = ExtResource("2_0wisk")
 hframes = 6
 vframes = 2

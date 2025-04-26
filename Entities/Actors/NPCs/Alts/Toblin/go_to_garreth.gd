@@ -1,6 +1,6 @@
 extends ActionLeaf
 
-@onready var emote_bubble = $"../../../../../EmoteBubble"
+@onready var emote_bubble = $"../../../../EmoteBubble"
 
 signal move_actor(set_state: String, patrol_location: Vector2)
 

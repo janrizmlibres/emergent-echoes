@@ -1,4 +1,4 @@
-[gd_scene load_steps=86 format=3 uid="uid://d173wdb7qbni2"]
+[gd_scene load_steps=89 format=3 uid="uid://d173wdb7qbni2"]
 
 [ext_resource type="Script" uid="uid://uifi23m6o7n3" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/toblin_alt.gd" id="1_tx7vv"]
 [ext_resource type="Texture2D" uid="uid://bu4lgseyryu3n" path="res://Entities/Actors/NPCs/Toblin/Art/toblin.png" id="2_0okcu"]
@@ -25,7 +25,10 @@
 [ext_resource type="Script" uid="uid://bk4700gm2nrog" path="res://Entities/Actors/NPCs/Alts/Toblin/is_the_farmer_dead.gd" id="23_clxxx"]
 [ext_resource type="Script" uid="uid://dq15xx8kefr7t" path="res://Entities/Actors/NPCs/Alts/Toblin/inspect_the_farmer.gd" id="24_m8wrh"]
 [ext_resource type="Script" uid="uid://b20t0rwjrm0kf" path="res://Entities/Actors/NPCs/Alts/Toblin/go_to_garreth.gd" id="25_iqtio"]
+[ext_resource type="Script" uid="uid://d1yjn2fh50pa4" path="res://Entities/Actors/NPCs/Alts/Toblin/surprised_to_see_dead_farmer.gd" id="25_ya7yv"]
+[ext_resource type="Script" uid="uid://cuev2cnnskhx6" path="res://Entities/Actors/NPCs/Alts/Toblin/panic_1.gd" id="26_lrxpt"]
 [ext_resource type="Script" uid="uid://dcq1otjonx3i8" path="res://Entities/Actors/NPCs/Alts/Toblin/report_to_garreth.gd" id="26_w1bvq"]
+[ext_resource type="Script" uid="uid://djlxjkxgpu1qi" path="res://Entities/Actors/NPCs/Alts/Toblin/done_panic.gd" id="27_bpca4"]
 [ext_resource type="Script" uid="uid://bqlrwrwhs34cs" path="res://addons/beehave/nodes/decorators/delayer.gd" id="27_cbbtj"]
 [ext_resource type="Script" uid="uid://bvaocvct58plx" path="res://Entities/Actors/NPCs/Alts/Toblin/finished_reporting_to_garreth.gd" id="28_uf7mv"]
 [ext_resource type="Script" uid="uid://di6tlp785dcfm" path="res://Entities/Actors/NPCs/Alts/Toblin/go_to_farm.gd" id="29_w1bvq"]
@@ -1045,7 +1048,7 @@ shape = SubResource("CapsuleShape2D_fjhqg")
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -19)
+position = Vector2(0, -18)
 texture = ExtResource("3_gpb4r")
 hframes = 6
 vframes = 2
@@ -1212,10 +1215,54 @@ metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
 [node name="DelayDecorator2" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
 script = ExtResource("27_cbbtj")
-wait_time = 10.0
+wait_time = 1.0
 metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
 
-[node name="Go To Garreth" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator2"]
+[node name="Panic 1" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator2"]
+script = ExtResource("25_ya7yv")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator7" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_cbbtj")
+wait_time = 1.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Panic 2" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator7"]
+script = ExtResource("26_lrxpt")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator8" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_cbbtj")
+wait_time = 1.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Panic 3" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator8"]
+script = ExtResource("25_ya7yv")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator9" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_cbbtj")
+wait_time = 1.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Panic 4" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator9"]
+script = ExtResource("26_lrxpt")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="DelayDecorator10" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_cbbtj")
+wait_time = 1.0
+metadata/_custom_type_script = "uid://bqlrwrwhs34cs"
+
+[node name="Panic 5" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator10"]
+script = ExtResource("25_ya7yv")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Done Panic" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
+script = ExtResource("27_bpca4")
+metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
+
+[node name="Go To Garreth" type="Node" parent="ToblinBehaviour/SelectorComposite/Cutscene"]
 script = ExtResource("25_iqtio")
 metadata/_custom_type_script = "uid://dbb3wv7xh4hj0"
 
@@ -1333,7 +1380,12 @@ offset_bottom = -13.0
 [connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Buy Food/Go To Market" to="." method="move_actor"]
 [connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Patrol/Patrol Action" to="." method="move_actor"]
 [connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/Inspect The Farmer" to="." method="move_actor"]
-[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator2/Go To Garreth" to="." method="move_actor"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator2/Panic 1" to="." method="move_actor"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator7/Panic 2" to="." method="move_actor"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator8/Panic 3" to="." method="move_actor"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator9/Panic 4" to="." method="move_actor"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/DelayDecorator10/Panic 5" to="." method="move_actor"]
+[connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/Go To Garreth" to="." method="move_actor"]
 [connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/Go To Farm" to="." method="move_actor"]
 [connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/Go To Bonfire" to="." method="move_actor"]
 [connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/Go To The Player" to="." method="move_actor"]
