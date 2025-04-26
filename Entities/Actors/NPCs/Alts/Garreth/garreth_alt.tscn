@@ -1,4 +1,4 @@
-[gd_scene load_steps=89 format=3 uid="uid://c46vvjqepxr5c"]
+[gd_scene load_steps=91 format=3 uid="uid://c46vvjqepxr5c"]
 
 [ext_resource type="Script" uid="uid://karntkdpbtuc" path="res://Entities/Actors/NPCs/Alts/Garreth/beehave/garreth_alt.gd" id="1_0w5gq"]
 [ext_resource type="Texture2D" uid="uid://bq8qo5fpoqcxt" path="res://Entities/Actors/NPCs/Garreth/Art/garreth.png" id="2_ykyr2"]
@@ -44,6 +44,7 @@
 [ext_resource type="Script" uid="uid://conwroltvxp0d" path="res://Entities/Actors/NPCs/Alts/Garreth/go_to_prison.gd" id="42_t1d5s"]
 [ext_resource type="Script" uid="uid://2pphnhkl24vw" path="res://Entities/Actors/NPCs/Alts/Garreth/go_to_market_to_buy_food.gd" id="43_t1d5s"]
 [ext_resource type="Script" uid="uid://daa8vct6nnx26" path="res://Entities/Actors/NPCs/Alts/Garreth/death_by_being_hungry.gd" id="44_833f0"]
+[ext_resource type="PackedScene" uid="uid://5gkp1uhyoheo" path="res://Entities/UI/Popups/RadialMenu/radial_menu.tscn" id="45_trry7"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tfsnf"]
 radius = 3.0
@@ -1020,6 +1021,9 @@ size = Vector2(26, 20)
 [sub_resource type="LabelSettings" id="LabelSettings_833f0"]
 font_size = 12
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trry7"]
+size = Vector2(14, 18)
+
 [node name="GarrethAlt" type="CharacterBody2D"]
 texture_filter = 1
 script = ExtResource("1_0w5gq")
@@ -1109,7 +1113,7 @@ interval_range = Vector2(1, 3)
 
 [node name="SeedProp" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(0, -19)
+position = Vector2(0, -18)
 texture = ExtResource("3_v3cxx")
 hframes = 6
 vframes = 2
@@ -1324,6 +1328,17 @@ offset_bottom = 20.0
 text = "Garreth"
 label_settings = SubResource("LabelSettings_833f0")
 
+[node name="HoverArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HoverArea"]
+position = Vector2(0, -5)
+shape = SubResource("RectangleShape2D_trry7")
+
+[node name="RadialMenu" parent="." instance=ExtResource("45_trry7")]
+visible = false
+offset_top = -13.0
+offset_bottom = -13.0
+
 [connection signal="animation_finished" from="AnimationTree" to="GarrethBehaviour/SelectorComposite/Eat Food" method="_on_animation_tree_animation_finished"]
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="body_entered" from="PetitionArea" to="GarrethBehaviour/SelectorComposite/Petitioning/Chase Agent" method="_on_petition_area_body_entered"]
@@ -1343,6 +1358,7 @@ label_settings = SubResource("LabelSettings_833f0")
 [connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Cutscene/Go To The Player" to="." method="move_actor"]
 [connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Cutscene/Go To Prison" to="." method="move_actor"]
 [connection signal="move_actor" from="GarrethBehaviour/SelectorComposite/Cutscene/Go To Market To Buy Food" to="." method="move_actor"]
+[connection signal="input_event" from="HoverArea" to="." method="_on_hover_area_input_event"]
 
 [editable path="EmoteBubble"]
 [editable path="CarryProp"]

@@ -1,5 +1,7 @@
 extends Node
 
+var hud_interface: HUDInterfaceAlt = null
+
 @onready var checkpoint = 0
 @onready var crop_matured = false
 @onready var are_there_crops = false
@@ -9,6 +11,11 @@ extends Node
 @onready var silas = get_tree().get_nodes_in_group("Silas")
 @onready var player = get_tree().get_nodes_in_group("Player")
 @onready var hud = get_tree().get_nodes_in_group("Hud")
+
+var relationships: Dictionary[CharacterBody2D, Dictionary] = {}
+
+func _ready():
+	hud_interface = get_tree().get_first_node_in_group("HUD")
 
 func cutscene_start():
 	toblin[0].get_node("Blackboard").set_value("current_state", "interrupted")
@@ -24,7 +31,29 @@ func cutscene_market():
 	garreth[0].get_node("Blackboard").set_value("cutscene_state", "go to market")
 	
 func show_perished_message(actor_name):
-	hud[1].text = hud[1].text + "\n " + actor_name + " has perished from hunger"
+	hud_interface.broadcast_event(actor_name + " died from hunger")
 	
-func set_total_food(food_amount):
-	hud[0].text = "Total Food In Market: " + food_amount
+# func set_total_food(food_amount):
+# 	hud[0].text = "Total Food In Market: " + food_amount
+
+func register_actor(actor: CharacterBody2D) -> void:
+	assert(actor not in relationships, "MemoryManager: Actor already registered.")
+
+	var peer_actors := relationships.keys()
+	relationships[actor] = {}
+
+	for peer_actor in peer_actors:
+		store_data(actor, peer_actor)
+		store_data(peer_actor, actor)
+
+func store_data(actor: CharacterBody2D, query: CharacterBody2D) -> void:
+	var values = [0, 10, 20, 30]
+	relationships[actor][query] = values.pick_random()
+	
+func get_peers(actor: CharacterBody2D) -> Array[CharacterBody2D]:
+	var peer_actors := relationships.keys().duplicate()
+	peer_actors.erase(actor)
+	return peer_actors
+
+func get_relationship(actor: CharacterBody2D, query: CharacterBody2D) -> float:
+	return relationships[actor][query]

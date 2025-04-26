@@ -23,6 +23,9 @@ func initialize():
 	food_resource = resource_mgr.get_resource(player, PCG.ResourceType.FOOD)
 
 func _process(_delta):
+	if player == null:
+		return
+		
 	health_bar.value = player.hit_points
 	satiation_bar.value = satiation_resource.amount
 	money_label.text = "Money: " + str(money_resource.amount as int)

@@ -11,7 +11,7 @@ const HUNGER_DMG_INTERVAL := 2
 var actors_in_range := {}
 var hunger_dmg_cooldown := 0.0
 
-@onready var hud: HUDInterface = %HUDInterface
+@onready var hud = %HUDInterface
 @onready var seed_prop: Sprite2D = $SeedProp
 @onready var rear_marker: Marker2D = $RearMarker/RearMarker
 @onready var carry_prop: CarryProp = $CarryProp

@@ -1,0 +1,161 @@
+[gd_scene load_steps=11 format=3 uid="uid://bkiu87s4csbxo"]
+
+[ext_resource type="Script" uid="uid://dr75sq72tklp7" path="res://Entities/UI/Overlays/Petition/Alt/player_petition_prompt_alt.gd" id="1_alaa0"]
+[ext_resource type="Texture2D" uid="uid://brmnoxys67cqu" path="res://Entities/UI/Overlays/Petition/Art/money_or_food.png" id="2_a6g5p"]
+[ext_resource type="Texture2D" uid="uid://blq5o010g7ra8" path="res://Entities/UI/Overlays/Petition/Art/button_disabled.png" id="3_dos1s"]
+[ext_resource type="Texture2D" uid="uid://crn6n1l0jv2q" path="res://Entities/UI/Overlays/Petition/Art/button_pressed.png" id="4_6rq8k"]
+[ext_resource type="Texture2D" uid="uid://ctb5b3ex5i2t1" path="res://Entities/UI/Indicators/FloatingText/Art/money.png" id="5_6qg8a"]
+[ext_resource type="Texture2D" uid="uid://c5rojmrfyk17j" path="res://Entities/UI/Indicators/FloatingText/Art/food.png" id="6_skygu"]
+[ext_resource type="Texture2D" uid="uid://cwb0apf0b32kg" path="res://Entities/UI/Overlays/Petition/Art/player_petition.png" id="7_v34ja"]
+[ext_resource type="Texture2D" uid="uid://b5nu6e4lalsdt" path="res://Entities/UI/Overlays/Petition/Art/plus.png" id="8_bj02e"]
+[ext_resource type="Texture2D" uid="uid://c00k2xv0jfhg3" path="res://Entities/UI/Overlays/Petition/Art/minus.png" id="9_ng1vf"]
+[ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/press_start_regular.ttf" id="10_1lnn3"]
+
+[node name="PlayerPetitionPrompt" type="CanvasLayer"]
+process_mode = 2
+script = ExtResource("1_alaa0")
+
+[node name="Prompt" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BlackOverlay" type="ColorRect" parent="Prompt"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -90.0
+offset_right = 160.0
+offset_bottom = 90.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.392157)
+
+[node name="MoneyorFood" type="TextureRect" parent="Prompt"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -70.0
+offset_top = 8.0
+offset_right = 70.0
+offset_bottom = 48.0
+grow_horizontal = 2
+texture = ExtResource("2_a6g5p")
+
+[node name="Money" type="TextureButton" parent="Prompt/MoneyorFood"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 18.0
+offset_bottom = 17.0
+scale = Vector2(2.4, 2.4)
+toggle_mode = true
+button_pressed = true
+texture_normal = ExtResource("3_dos1s")
+texture_pressed = ExtResource("4_6rq8k")
+
+[node name="Food" type="TextureButton" parent="Prompt/MoneyorFood"]
+layout_mode = 0
+offset_left = 107.5
+offset_top = 5.0
+offset_right = 120.5
+offset_bottom = 17.0
+scale = Vector2(2.4, 2.4)
+toggle_mode = true
+texture_normal = ExtResource("3_dos1s")
+texture_pressed = ExtResource("4_6rq8k")
+
+[node name="MoneyTexture" type="TextureRect" parent="Prompt/MoneyorFood"]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 7.5
+offset_right = 70.0
+offset_bottom = 28.5
+texture = ExtResource("5_6qg8a")
+
+[node name="FoodTexture" type="TextureRect" parent="Prompt/MoneyorFood"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 7.5
+offset_right = 97.0
+offset_bottom = 30.5
+texture = ExtResource("6_skygu")
+
+[node name="ControlButtons" type="TextureRect" parent="Prompt"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -79.0
+offset_top = -48.0
+offset_right = 79.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("7_v34ja")
+
+[node name="Plus" type="TextureButton" parent="Prompt/ControlButtons"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -43.0
+offset_top = -9.0
+offset_right = -25.0
+offset_bottom = 9.0
+grow_horizontal = 0
+grow_vertical = 2
+scale = Vector2(2, 2)
+pivot_offset = Vector2(9, 9)
+texture_normal = ExtResource("8_bj02e")
+stretch_mode = 3
+
+[node name="Minus" type="TextureButton" parent="Prompt/ControlButtons"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 25.0
+offset_top = -9.0
+offset_right = 43.0
+offset_bottom = 9.0
+grow_vertical = 2
+scale = Vector2(2, 2)
+pivot_offset = Vector2(9, 9)
+texture_normal = ExtResource("9_ng1vf")
+stretch_mode = 3
+
+[node name="Number" type="Label" parent="Prompt/ControlButtons"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -6.0
+offset_top = -6.0
+offset_right = 6.0
+offset_bottom = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("10_1lnn3")
+theme_override_font_sizes/font_size = 12
+text = "0"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="Prompt/MoneyorFood/Money" to="." method="_on_money_pressed"]
+[connection signal="pressed" from="Prompt/MoneyorFood/Food" to="." method="_on_food_pressed"]
+[connection signal="pressed" from="Prompt/ControlButtons/Plus" to="." method="_on_plus_pressed"]
+[connection signal="pressed" from="Prompt/ControlButtons/Minus" to="." method="_on_minus_pressed"]

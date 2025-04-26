@@ -5,6 +5,7 @@ extends CharacterBody2D
 @onready var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/playback")
 @onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
 @onready var blackboard = $Blackboard
+@onready var radial_menu: RadialMenu = $RadialMenu
 
 @export var FRICTION: int = 4
 @export var movement_speed: int = 60
@@ -54,7 +55,7 @@ func handle_animation() -> void:
 		
 func face_target(target):
 	var direction = global_position.direction_to(target.global_position)
-	animation_tree.set("parameters/Idle/blend_position", direction.x)		
+	animation_tree.set("parameters/Idle/blend_position", direction.x)
 
 func move_actor(patrol_location: Vector2):
 	current_location = patrol_location
@@ -86,3 +87,11 @@ func _on_silas_detector_body_entered(body: Node2D) -> void:
 		player_reached = true
 		return
 	pass # Replace with function body.
+
+func _on_hover_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
+	if event is InputEventMouseButton:
+		if event.is_released() and event.button_index == MOUSE_BUTTON_RIGHT:
+			actor_pressed()
+
+func actor_pressed():
+	radial_menu.toggle()

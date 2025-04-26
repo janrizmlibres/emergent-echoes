@@ -1,4 +1,4 @@
-class_name NPCRelationship
+class_name NPCRelationshipAlt
 extends VBoxContainer
 
 @onready var sprite2d: Sprite2D = $Sprite2D
@@ -10,12 +10,12 @@ var silas_texture = preload("res://Entities/Actors/NPCs/Silas/Art/silas.png")
 var garreth_texture = preload("res://Entities/Actors/NPCs/Garreth/Art/garreth.png")
 var pimble_texture = preload("res://Entities/Actors/NPCs/Pimble/Art/pimble.png")
 
-func update_data(actor: Actor, peer: Actor):
+func update_data(actor: CharacterBody2D, peer: CharacterBody2D):
 	sprite2d.texture = get_texture(peer.name)
 	heartbar.ChangeHealth(get_hearts_count(actor, peer))
 
 func get_texture(actor_name: String) -> Texture2D:
-	if actor_name == "Player":
+	if actor_name == "PlayerAlt":
 		return player_texture
 	elif actor_name.contains("Toblin"):
 		return toblin_texture
@@ -29,11 +29,11 @@ func get_texture(actor_name: String) -> Texture2D:
 	return player_texture
 
 func get_hearts_count(actor, peer):
-	if WorldState.memory_manager.is_close(actor, peer):
+	if GameManager.get_relationship(actor, peer) >= 30:
 		return 3
-	elif WorldState.memory_manager.is_trusted(actor, peer):
+	elif GameManager.get_relationship(actor, peer) >= 20:
 		return 2
-	elif WorldState.memory_manager.is_friendly(actor, peer):
+	elif GameManager.get_relationship(actor, peer) >= 10:
 		return 1
 	else:
 		return 0

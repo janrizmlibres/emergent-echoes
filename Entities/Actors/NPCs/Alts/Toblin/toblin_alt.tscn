@@ -1,4 +1,4 @@
-[gd_scene load_steps=84 format=3 uid="uid://d173wdb7qbni2"]
+[gd_scene load_steps=86 format=3 uid="uid://d173wdb7qbni2"]
 
 [ext_resource type="Script" uid="uid://uifi23m6o7n3" path="res://Entities/Actors/NPCs/Alts/Toblin/beehave/toblin_alt.gd" id="1_tx7vv"]
 [ext_resource type="Texture2D" uid="uid://bu4lgseyryu3n" path="res://Entities/Actors/NPCs/Toblin/Art/toblin.png" id="2_0okcu"]
@@ -41,6 +41,7 @@
 [ext_resource type="Script" uid="uid://fm0tcmhagykm" path="res://Entities/Actors/NPCs/Alts/Toblin/idle_at_the_bonfire.gd" id="39_bdn6w"]
 [ext_resource type="Script" uid="uid://bvj4ywql6eabn" path="res://Entities/Actors/NPCs/Alts/Toblin/go_to_market_to_buy_food.gd" id="40_tx6q2"]
 [ext_resource type="Script" uid="uid://dgo8hlp7k0u5a" path="res://Entities/Actors/NPCs/Alts/Toblin/death_by_being_hungry.gd" id="41_t7t42"]
+[ext_resource type="PackedScene" uid="uid://5gkp1uhyoheo" path="res://Entities/UI/Popups/RadialMenu/radial_menu.tscn" id="42_bdn6w"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w1bvq"]
 size = Vector2(19, 20)
@@ -1011,6 +1012,9 @@ graph_offset = Vector2(-66.349, -26.1609)
 [sub_resource type="LabelSettings" id="LabelSettings_t7t42"]
 font_size = 12
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ya7yv"]
+size = Vector2(14, 18)
+
 [node name="ToblinAlt" type="CharacterBody2D"]
 collision_mask = 3
 script = ExtResource("1_tx7vv")
@@ -1308,6 +1312,17 @@ offset_bottom = 20.0
 text = "Toblin"
 label_settings = SubResource("LabelSettings_t7t42")
 
+[node name="HoverArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HoverArea"]
+position = Vector2(0, -5)
+shape = SubResource("RectangleShape2D_ya7yv")
+
+[node name="RadialMenu" parent="." instance=ExtResource("42_bdn6w")]
+visible = false
+offset_top = -13.0
+offset_bottom = -13.0
+
 [connection signal="body_entered" from="AltDetector" to="." method="_on_alt_detector_body_entered"]
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="area_entered" from="HurtBox" to="." method="_on_hurt_box_area_entered"]
@@ -1324,6 +1339,7 @@ label_settings = SubResource("LabelSettings_t7t42")
 [connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/Go To The Player" to="." method="move_actor"]
 [connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/Go To Garreth To Inform" to="." method="move_actor"]
 [connection signal="move_actor" from="ToblinBehaviour/SelectorComposite/Cutscene/Go To Market To Buy Food" to="." method="move_actor"]
+[connection signal="input_event" from="HoverArea" to="." method="_on_hover_area_input_event"]
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

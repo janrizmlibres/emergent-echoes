@@ -4,6 +4,7 @@ extends CharacterBody2D
 @onready var animation_tree: AnimationTree = $AnimationTree
 @onready var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/playback")
 @onready var blackboard = $Blackboard
+@onready var radial_menu: RadialMenu = $RadialMenu
 
 @export var FRICTION: int = 4
 @export var movement_speed: int = 60
@@ -87,3 +88,11 @@ func _on_alt_detector_body_entered(body: Node2D) -> void:
 		player_reached = true
 		pass
 	pass # Replace with function body.
+
+func _on_hover_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
+	if event is InputEventMouseButton:
+		if event.is_released() and event.button_index == MOUSE_BUTTON_RIGHT:
+			actor_pressed()
+
+func actor_pressed():
+	radial_menu.toggle()

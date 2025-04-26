@@ -6,12 +6,11 @@ const DURATION := 4.0
 @export var radius := 20
 @export var speed := 0.25
 
-var actor: Actor
+var actor = null
 
 var num: int
 var active := false
 var disabled := false
-
 var timer := DURATION
 
 @onready var petition_button: TextureButton = $PetitionButton

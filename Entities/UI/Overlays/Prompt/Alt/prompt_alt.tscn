@@ -1,0 +1,121 @@
+[gd_scene load_steps=8 format=3 uid="uid://dqv5qngypoi3o"]
+
+[ext_resource type="Script" uid="uid://btplaqs6hlsi5" path="res://Entities/UI/Overlays/Prompt/Alt/prompt_alt.gd" id="1_4j1fx"]
+[ext_resource type="Texture2D" uid="uid://difnjcve3hdij" path="res://Entities/UI/Overlays/Prompt/Prompt BG.png" id="2_2bbxn"]
+[ext_resource type="FontFile" uid="uid://bb2yucnp7oqck" path="res://Assets/Fonts/press_start_regular.ttf" id="3_krntc"]
+[ext_resource type="Script" uid="uid://dqf2vaa58h0bf" path="res://Entities/UI/Overlays/Prompt/Scripts/NpcName.cs" id="4_e21xp"]
+[ext_resource type="FontFile" uid="uid://brdooo1e25vgt" path="res://Assets/Fonts/overlay_font.ttf" id="5_cir8l"]
+[ext_resource type="Script" uid="uid://dwe0ss5rjt8wf" path="res://Entities/UI/Overlays/Prompt/Scripts/NpcDescription.cs" id="6_05fd0"]
+[ext_resource type="Script" uid="uid://6k6c3gtma8kb" path="res://Entities/UI/Overlays/Prompt/Scripts/Traits.cs" id="7_vuafb"]
+
+[node name="DescriptionPrompt" type="CanvasLayer"]
+process_mode = 2
+script = ExtResource("1_4j1fx")
+
+[node name="Prompt" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BlackOverlay" type="ColorRect" parent="Prompt"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -90.0
+offset_right = 160.0
+offset_bottom = 90.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.392157)
+
+[node name="TextureRect" type="TextureRect" parent="Prompt"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -557.5
+offset_top = -327.5
+offset_right = 557.5
+offset_bottom = 327.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.25, 0.25)
+pivot_offset = Vector2(557, 327)
+size_flags_vertical = 4
+texture = ExtResource("2_2bbxn")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Prompt"]
+custom_minimum_size = Vector2(820, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -410.0
+offset_top = -239.5
+offset_right = 410.0
+offset_bottom = 239.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.25, 0.25)
+pivot_offset = Vector2(410, 239)
+theme_override_constants/separation = 40
+
+[node name="NPCName" type="Label" parent="Prompt/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_krntc")
+theme_override_font_sizes/font_size = 28
+text = "LOREM IPSUM"
+horizontal_alignment = 1
+script = ExtResource("4_e21xp")
+
+[node name="NPCDescription" type="Label" parent="Prompt/VBoxContainer"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_cir8l")
+theme_override_font_sizes/font_size = 24
+text = " Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum "
+horizontal_alignment = 1
+autowrap_mode = 3
+script = ExtResource("6_05fd0")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Prompt/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="TraitLabel" type="Label" parent="Prompt/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_krntc")
+theme_override_font_sizes/font_size = 28
+text = "TRAITS:"
+horizontal_alignment = 1
+
+[node name="Traits" type="Label" parent="Prompt/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_cir8l")
+theme_override_font_sizes/font_size = 28
+text = "Lorem Ipsum, Lorem Ipsum"
+horizontal_alignment = 1
+script = ExtResource("7_vuafb")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Prompt/VBoxContainer"]
+layout_mode = 2
+vertical_scroll_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Prompt/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/separation = 68

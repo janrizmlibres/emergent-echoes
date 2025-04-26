@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://b34vifoy3iq2x"]
+[gd_scene load_steps=17 format=4 uid="uid://b34vifoy3iq2x"]
 
 [ext_resource type="PackedScene" uid="uid://bl0lf3j2kaill" path="res://Entities/UI/HUD/hud_interface.tscn" id="1_4ofr6"]
 [ext_resource type="Script" uid="uid://cpd6c6570mfac" path="res://Stages/Island/world_alt.gd" id="1_022xf"]
@@ -35,8 +35,6 @@ polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(156, 286, 180, 286, 180, 331, 156, 331)])
 agent_radius = 8.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_022xf"]
-
 [node name="World" type="Node2D"]
 z_as_relative = false
 y_sort_enabled = true
@@ -45,8 +43,7 @@ script = ExtResource("1_022xf")
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
-[node name="HUDInterface" parent="HUD" groups=["HUD"] instance=ExtResource("1_4ofr6")]
-unique_name_in_owner = true
+[node name="Interface" parent="HUD" instance=ExtResource("1_4ofr6")]
 script = ExtResource("2_ukkkd")
 
 [node name="Maps" type="Node2D" parent="."]
@@ -137,6 +134,7 @@ tile_map_data = PackedByteArray("AAAGABEACgACAAAAAAAHAAUAAQADAAEAAAAHABMAAgADAAU
 tile_set = ExtResource("2_4crdb")
 
 [node name="PlayerAlt" parent="YSort" groups=["Player"] instance=ExtResource("4_4ofr6")]
+unique_name_in_owner = true
 position = Vector2(643, 454)
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="YSort/PlayerAlt"]
@@ -175,14 +173,6 @@ navigation_layers = 2
 [node name="Camera2D" parent="." instance=ExtResource("3_ss2fi")]
 position = Vector2(643, 454)
 
-[node name="PlayerShop" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerShop"]
-position = Vector2(960, 391)
-shape = SubResource("CircleShape2D_022xf")
-
 [connection signal="timeout" from="GrowTimer" to="YSort/Crops" method="_on_grow_timer_timeout"]
-[connection signal="body_entered" from="PlayerShop" to="YSort/PlayerAlt" method="_on_player_shop_body_entered"]
-[connection signal="body_exited" from="PlayerShop" to="YSort/PlayerAlt" method="_on_player_shop_body_exited"]
 
 [editable path="Camera2D"]

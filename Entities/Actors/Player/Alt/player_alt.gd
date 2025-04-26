@@ -6,6 +6,15 @@ enum State {DORMANT, ACTIVE, ATTACK}
 var state: State = State.ACTIVE
 var can_buy := false
 
+var satiation := 1.0:
+	get:
+		return satiation
+	set(value):
+		satiation = clamp(value, 0, 100)
+
+var money := 20
+var food := 2
+
 @onready var remote_transform: RemoteTransform2D = $RemoteTransform2D
 
 func _physics_process(_delta):
@@ -17,23 +26,38 @@ func _physics_process(_delta):
 		State.ATTACK:
 			attack_state()
 
+func _process(delta):
+	satiation -= delta * 0.2
+
+	if satiation <= 0 and hunger_dmg_cooldown <= 0:
+		hunger_dmg_cooldown = HUNGER_DMG_INTERVAL
+		apply_damage()
+
+func _unhandled_input(event):
+	if event.is_action_pressed("use"):
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+			var click_direction := global_position.direction_to(get_global_mouse_position())
+			set_blend_positions(click_direction.x)
+		
+		state = State.ATTACK
+
 func _unhandled_key_input(event):
-	if event is InputEventKey and event.pressed:
+	if event.pressed:
 		if event.keycode == KEY_J:
 			if can_buy:
 				buy_food()
 			else:
-				EventManager.emit_info_dialog_requested(self)
+				eat_food()
 		elif event.keycode == KEY_L:
-			eat_food()
+			EventManager.emit_info_dialog_requested(self)
 
 func buy_food():
-	if WorldState.resource_manager.get_resource(self, PCG.ResourceType.MONEY).amount < 10:
+	if money < 10:
 		return
 
-	var resource_mgr := WorldState.resource_manager
-	resource_mgr.modify_resource(self, PCG.ResourceType.FOOD, 1)
-	resource_mgr.modify_resource(self, PCG.ResourceType.MONEY, -10)
+	food += 1
+	money -= 10
+
 	float_text_controller.show_float_text(
 		PCG.ResourceType.FOOD,
 		str(1),
@@ -41,12 +65,12 @@ func buy_food():
 	)
 
 func eat_food() -> void:
-	if WorldState.resource_manager.get_resource(self, PCG.ResourceType.FOOD).amount <= 0:
+	if food <= 0:
 		return
 
-	var resource_mgr := WorldState.resource_manager
-	resource_mgr.modify_resource(self, PCG.ResourceType.FOOD, -1)
-	resource_mgr.modify_resource(self, PCG.ResourceType.SATIATION, 30)
+	food -= 1
+	satiation += 30
+	
 	float_text_controller.show_float_text(
 		PCG.ResourceType.SATIATION,
 		str(30),
@@ -56,13 +80,6 @@ func eat_food() -> void:
 func active_state():
 	var input_vector = Input.get_vector("left", "right", "up", "down")
 	move(input_vector)
-
-	if Input.is_action_just_pressed("use"):
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			var click_direction := global_position.direction_to(get_global_mouse_position())
-			set_blend_positions(click_direction.x)
-
-		state = State.ATTACK
 	
 func attack_state():
 	velocity = Vector2.ZERO
@@ -100,16 +117,12 @@ func _on_animation_tree_animation_finished(anim_name: StringName):
 		state = State.ACTIVE
 
 func _on_radius_actionable_body_entered(body: Node2D):
-	if body == self or body is not NPC:
-		return
-	
-	body.radial_menu.enable_petition()
+	if body != self and body.has_node_and_resource("RadialMenu"):
+		body.radial_menu.enable_petition()
 
 func _on_radius_actionable_body_exited(body: Node2D):
-	if body is not NPC:
-		return
-	
-	body.radial_menu.disable_petition()
+	if body.has_node_and_resource("RadialMenu"):
+		body.radial_menu.disable_petition()
 
 func _on_player_shop_body_entered(body: Node2D):
 	if body == self:

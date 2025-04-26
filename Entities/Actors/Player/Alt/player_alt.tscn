@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://c27rcdohyjih5"]
+[gd_scene load_steps=5 format=3 uid="uid://c27rcdohyjih5"]
 
 [ext_resource type="PackedScene" uid="uid://cmcj7lmi8c5yw" path="res://Entities/Actors/actor.tscn" id="1_nmndn"]
 [ext_resource type="Script" uid="uid://dfr7fnansedqw" path="res://Entities/Actors/Player/Alt/player_alt.gd" id="2_kv7ua"]
 [ext_resource type="Script" uid="uid://ducc6yrseljan" path="res://Utilities/NPCProcGen/Nodes/player_agent.gd" id="3_6qiq3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kv7ua"]
+radius = 18.0
 
 [node name="Player" instance=ExtResource("1_nmndn")]
 script = ExtResource("2_kv7ua")
@@ -15,6 +18,14 @@ metadata/_custom_type_script = "uid://ducc6yrseljan"
 
 [node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="." index="14"]
 radius = 6.0
+
+[node name="RadiusActionable" type="Area2D" parent="." index="15"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RadiusActionable" index="0"]
+shape = SubResource("CircleShape2D_kv7ua")
+
+[connection signal="body_entered" from="RadiusActionable" to="." method="_on_radius_actionable_body_entered"]
+[connection signal="body_exited" from="RadiusActionable" to="." method="_on_radius_actionable_body_exited"]
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

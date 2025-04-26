@@ -21,7 +21,7 @@ script = ExtResource("13_c1v6p")
 metadata/_custom_type_script = "uid://x8h723av8g65"
 
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("5_jlstl")]
-blackboard = NodePath("@Node@91786")
+blackboard = NodePath("@Node@112983")
 actor = NodePath("../..")
 
 [node name="VisionCone" type="Node2D" parent="." index="15"]
