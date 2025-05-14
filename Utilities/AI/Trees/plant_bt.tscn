@@ -11,7 +11,7 @@
 
 [node name="PlantBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_co5rt")
-blackboard = NodePath("@Node@42407")
+blackboard = NodePath("@Node@23231")
 actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 

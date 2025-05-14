@@ -5,7 +5,7 @@
 
 [node name="EatBt" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_oo7mo")
-blackboard = NodePath("@Node@23231")
+blackboard = NodePath("@Node@23233")
 actor = NodePath("")
 metadata/_custom_type_script = "uid://da7jagy6am60c"
 

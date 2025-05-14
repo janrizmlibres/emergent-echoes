@@ -17,7 +17,7 @@ survival = 0.7
 farmer = 1.0
 
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
-blackboard = NodePath("@Node@29561")
+blackboard = NodePath("@Node@23345")
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]
