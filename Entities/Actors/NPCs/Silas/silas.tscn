@@ -18,12 +18,12 @@ parameters/Idle/blend_position = 0.00240386
 
 [node name="NPCAgent" parent="." index="13"]
 survival = 0.8
-lawful = 0.7
+thief = 1.0
 money_amount = 150
 food_amount = 5
 
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
-blackboard = NodePath("@Node@23273")
+blackboard = NodePath("@Node@33105")
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://ch2yb46jvrx33"]
+[gd_scene load_steps=16 format=4 uid="uid://ch2yb46jvrx33"]
 
 [ext_resource type="TileSet" uid="uid://c73rp2734t5j4" path="res://Stages/Interior/Interior.tres" id="1_ec57e"]
 [ext_resource type="Script" uid="uid://bisnmyq3kj3rb" path="res://Stages/Interior/interior_house.gd" id="1_j4wx8"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://0esw0i5rv0cx" path="res://Entities/Camera/base_camera.tscn" id="3_303mc"]
 [ext_resource type="PackedScene" uid="uid://d2icout5w8g1e" path="res://Entities/Actors/NPCs/Toblin/toblin.tscn" id="4_6wfj8"]
 [ext_resource type="Script" uid="uid://cr03djtcwpj0r" path="res://Entities/Camera/base_camera.gd" id="4_303mc"]
-[ext_resource type="PackedScene" uid="uid://cmcj7lmi8c5yw" path="res://Entities/Actors/actor.tscn" id="5_l8yvl"]
 [ext_resource type="AudioStream" uid="uid://b28jy5hdkn50g" path="res://Assets/SFX/door_open.mp3" id="6_g5w5v"]
 [ext_resource type="AudioStream" uid="uid://nsstbqge75hk" path="res://Assets/Music/opening_cutscene.mp3" id="8_j4wx8"]
 
@@ -90,27 +89,27 @@ tracks/2/keys = {
 "update": 0,
 "values": [Vector2(120, 102)]
 }
-tracks/3/type = "value"
+tracks/3/type = "animation"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("YSort/Toblin:position")
+tracks/3/path = NodePath("YSort/Toblin/AnimationPlayer")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
+"clips": PackedStringArray("move_right", "idle_left", "move_left"),
+"times": PackedFloat32Array(4.8, 6.3, 6.9)
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("YSort/Toblin:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
 "times": PackedFloat32Array(0, 4.8, 6.3, 6.9, 8),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 0,
 "values": [Vector2(168, 222), Vector2(168, 222), Vector2(168, 170.571), Vector2(168, 170.571), Vector2(168, 130)]
-}
-tracks/4/type = "animation"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("YSort/Toblin/AnimationPlayer")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"clips": PackedStringArray("move_right", "idle_left", "move_left"),
-"times": PackedFloat32Array(4.8, 6.3, 6.9)
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -149,27 +148,27 @@ tracks/6/keys = {
 resource_name = "fail_exit"
 length = 4.5
 step = 0.1
-tracks/0/type = "value"
+tracks/0/type = "animation"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("YSort/Toblin:position")
+tracks/0/path = NodePath("YSort/Toblin/AnimationPlayer")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
+"clips": PackedStringArray("idle_left", "move_right"),
+"times": PackedFloat32Array(0, 0.5)
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("YSort/Toblin:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.5, 3.5),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector2(168, 130), Vector2(168, 130), Vector2(168, 223)]
-}
-tracks/1/type = "animation"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("YSort/Toblin/AnimationPlayer")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"clips": PackedStringArray("idle_left", "move_right"),
-"times": PackedFloat32Array(0, 0.5)
 }
 tracks/2/type = "animation"
 tracks/2/imported = false
@@ -206,27 +205,27 @@ tracks/3/keys = {
 resource_name = "give_object"
 length = 8.5
 step = 0.1
-tracks/0/type = "animation"
+tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("YSort/Toblin/AnimationPlayer")
+tracks/0/path = NodePath("YSort/Toblin:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"clips": PackedStringArray("move_right", "idle_left"),
-"times": PackedFloat32Array(0, 1.5)
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("YSort/Toblin:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0, 1.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(168, 130), Vector2(193, 180)]
+}
+tracks/1/type = "animation"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("YSort/Toblin/AnimationPlayer")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"clips": PackedStringArray("move_right", "idle_left"),
+"times": PackedFloat32Array(0, 1.5)
 }
 tracks/2/type = "animation"
 tracks/2/imported = false
@@ -287,27 +286,27 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector2(175, 180), Vector2(168, 157)]
 }
-tracks/1/type = "animation"
+tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("YSort/Toblin/AnimationPlayer")
+tracks/1/path = NodePath("YSort/Toblin:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"clips": PackedStringArray("idle_left", "move_left"),
-"times": PackedFloat32Array(0, 1.5)
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("YSort/Toblin:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
 "times": PackedFloat32Array(0, 1.5, 2.5, 4),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
 "values": [Vector2(193, 180), Vector2(193, 180), Vector2(168, 180), Vector2(168, 222)]
+}
+tracks/2/type = "animation"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("YSort/Toblin/AnimationPlayer")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"clips": PackedStringArray("idle_left", "move_left"),
+"times": PackedFloat32Array(0, 1.5)
 }
 tracks/3/type = "animation"
 tracks/3/imported = false
@@ -368,17 +367,13 @@ tile_set = ExtResource("1_ec57e")
 
 [node name="Player" parent="YSort" instance=ExtResource("2_ti1wb")]
 position = Vector2(120, 102)
-acceleration = 8
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="YSort/Player"]
 
 [node name="Toblin" parent="YSort" instance=ExtResource("4_6wfj8")]
 position = Vector2(168, 222)
-script = null
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="YSort/Toblin"]
-
-[node name="Actor" parent="YSort" instance=ExtResource("5_l8yvl")]
 
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_right = 320.0
@@ -418,5 +413,4 @@ autoplay = "enter_toblin"
 
 [connection signal="body_entered" from="Exit" to="." method="_on_exit_body_entered"]
 
-[editable path="YSort/Actor"]
 [editable path="Camera2D"]

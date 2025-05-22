@@ -16,7 +16,7 @@ position = Vector2(0, -17)
 parameters/Idle/blend_position = 0.00240386
 
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
-blackboard = NodePath("@Node@23237")
+blackboard = NodePath("@Node@44145")
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

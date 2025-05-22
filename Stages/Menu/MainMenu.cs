@@ -68,7 +68,7 @@ namespace EmergentEchoes
 
 		private void ChangeSceneToOpening()
 		{
-			GetTree().ChangeSceneToFile("res://Stages/Interior/interior_house.tscn");
+			GetTree().ChangeSceneToFile("res://Stages/Island/world.tscn");
 		}
 	}
 }

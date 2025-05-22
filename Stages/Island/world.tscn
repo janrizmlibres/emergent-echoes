@@ -335,25 +335,16 @@ unique_name_in_owner = true
 position = Vector2(649, 456)
 
 [node name="Toblin" parent="YSort" instance=ExtResource("6_ylrlt")]
-position = Vector2(509, 422)
+position = Vector2(724, 449)
 
 [node name="Silas" parent="YSort" instance=ExtResource("5_jsgrx")]
 position = Vector2(658, 493)
 
-[node name="Silas2" parent="YSort" instance=ExtResource("5_jsgrx")]
-position = Vector2(622, 491)
-
 [node name="Pimble" parent="YSort" instance=ExtResource("6_6moo3")]
 position = Vector2(658, 433)
 
-[node name="Pimble2" parent="YSort" instance=ExtResource("6_6moo3")]
-position = Vector2(709, 424)
-
 [node name="Garreth" parent="YSort" instance=ExtResource("9_a75b7")]
 position = Vector2(611, 430)
-
-[node name="Garreth2" parent="YSort" instance=ExtResource("9_a75b7")]
-position = Vector2(633, 413)
 
 [node name="NavRegions" type="Node2D" parent="."]
 visible = false
