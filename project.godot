@@ -65,7 +65,6 @@ runtime/balloon_path="res://Utilities/Dialogue/Balloon.tscn"
 
 window/size/viewport_width=320
 window/size/viewport_height=180
-window/size/mode=3
 window/size/window_width_override=1024
 window/size/window_height_override=480
 window/stretch/mode="canvas_items"

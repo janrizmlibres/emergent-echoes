@@ -23,7 +23,7 @@ money_amount = 150
 food_amount = 5
 
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
-blackboard = NodePath("@Node@33105")
+blackboard = NodePath("@Node@23163")
 
 [editable path="CarryProp"]
 [editable path="EmoteBubble"]

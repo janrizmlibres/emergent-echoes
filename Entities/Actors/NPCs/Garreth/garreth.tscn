@@ -24,7 +24,7 @@ lawful = 0.8
 duty_weight = 0.8
 
 [node name="WanderBt" parent="Executor" index="0" node_paths=PackedStringArray("blackboard")]
-blackboard = NodePath("@Node@28913")
+blackboard = NodePath("@Node@23127")
 
 [node name="NavigationAgent2D" parent="." index="16"]
 navigation_layers = 3
