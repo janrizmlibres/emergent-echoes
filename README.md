@@ -138,8 +138,8 @@ To get this project up and running in your local computer, follow these step-by-
 
 We need to install or make sure that these tools are pre-installed on your machine:
 
-- [Node.js](https://nodejs.org/en) (The specific version used for development is Godot 4.1.1, but newer 4.x versions should be compatible).
-- [Git](https://git-scm.com/downloads) (if you intend to modify or compile the C# scripts). Godot 4.x with C# requires the .NET SDK
+- [Godot Engine 4.x](https://godotengine.org/)
+- [.NET SDK](https://dotnet.microsoft.com/en-us/download) (if you intend to modify or compile the C# scripts). Godot 4.x with C# requires the .NET SDK
 
 ### 🚀 Install Project
 
