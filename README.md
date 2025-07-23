@@ -6,6 +6,10 @@
 ![Main Menu](Screenshots/menu.png)
 ![Gameplay](Screenshots/gameplay-new.png)
 
+## 📄 Full Paper
+
+The full ACM paper can be found here: http://dx.doi.org/10.13140/RG.2.2.16168.48642
+
 ## 📝 Description
 
 This repository contains the implementation of an undergraduate thesis project entitled **"A Resource-Based AI Decision Algorithm for Invoking Narratives Through Non-Playable Characters in a 2D Simulation"** from Xavier University - Ateneo de Cagayan, Department of Computer Science.
