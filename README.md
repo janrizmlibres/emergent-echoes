@@ -171,7 +171,7 @@ This repository primarily serves as the public facing artifact of an undergradua
 
 ### 📩 Bug Report
 
-If you find a bug, kindly open an issue [here](https://github.com/janrizmlibres/devflow-clone-app/issues/new) by including a description of your problem and the expected result.
+If you find a bug, kindly open an issue [here](https://github.com/janrizmlibres/emergent-echoes/issues/new) by including a description of your problem and the expected result.
 
 ## 📜 Credits
 
